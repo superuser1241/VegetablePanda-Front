@@ -1,0 +1,6 @@
+node_modules
+package-lock.json
+log.txt
+output.yaml
+out.yaml
+*.tgz

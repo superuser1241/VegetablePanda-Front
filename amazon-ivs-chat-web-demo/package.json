@@ -1,0 +1,16 @@
+{
+  "name": "react",
+  "version": "1.0.0",
+  "description": "amazon-ivs-chat-web-demo",
+  "main": "index.js",
+  "author": "youngjun",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-ivschat": "^3.682.0",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "cross-env": "^7.0.3"
+  }
+}
