@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './common/Header';
 import Footer from './common/Footer';
 import MainPage from './MainPage/MainPage';
@@ -26,20 +26,12 @@ function App() {
         navigateTo('main');
     };
 
-    const handleLogout = async () => {
-        try {
-            await axios.post('http://localhost:9001/api/logout', {}, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            });
-            localStorage.removeItem('token');
-            setUserName('');
-            setUserRole('');
-            navigateTo('login');
-            alert('로그아웃 되었습니다.');
-        } catch (error) {
-            console.error('로그아웃 실패:', error);
-            alert('사용자 정보가 틀립니다');
-        }
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setUserName('');
+        setUserRole('');
+        navigateTo('main');
+        alert('로그아웃 되었습니다.');
     };
 
     const handleJoinRoom = (room) => {
@@ -64,6 +56,30 @@ function App() {
         setCurrentRoomId(null);
         navigateTo('main');
     };
+
+    useEffect(() => {
+        const checkAuthStatus = () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    // JWT 토큰 디코딩 시 한글 처리
+                    const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
+                    if (Date.now() >= payload.exp * 1000) {
+                        localStorage.removeItem('token');
+                        setUserName('');
+                        setUserRole('');
+                        navigateTo('login');
+                    } else {
+                        setUserName(payload.name);
+                        setUserRole(payload.role);
+                    }
+                } catch (error) {
+                    // ... 에러 처리 ...
+                }
+            }
+        };
+        checkAuthStatus();
+    }, []);
 
     return (
         <div className="App">

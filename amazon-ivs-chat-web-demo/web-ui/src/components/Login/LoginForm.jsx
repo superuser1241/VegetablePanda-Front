@@ -27,15 +27,8 @@ function LoginForm({ onLoginSuccess }) {
 
             if (token) {
                 localStorage.setItem('token', token);
-
-                const userResponse = await axios.get('http://localhost:9001/api/user', {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-
-                if (userResponse.status === 200) {
-                    const userData = userResponse.data;
-                    onLoginSuccess(userData.name, userData.role);
-                }
+                const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
+                onLoginSuccess(payload.name, payload.role);
             } else {
                 setMessage('Failed to retrieve token.');
             }
