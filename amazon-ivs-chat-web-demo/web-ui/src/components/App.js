@@ -7,7 +7,7 @@ import StreamingParticular from './StreamingSetting/StreamingParticular';
 import ConfirmationPage from './StreamingSetting/ConfirmationPage';
 import Chat from './chat/Chat';
 import AdminApprovalPage from './Admin/AdminApprovalPage';
-import axios from 'axios';
+import AdminMyPage from './Admin/AdminMyPage';
 
 function App() {
     const [currentPage, setCurrentPage] = useState('main');
@@ -120,6 +120,9 @@ function App() {
                         streamingRoom={streamingRoom}
                         setStreamingRoom={setStreamingRoom}
                     />
+                )}
+                {currentPage === 'admin-mypage' && userRole === 'ROLE_ADMIN' && (
+                    <AdminMyPage />
                 )}
             </main>
             <Footer />

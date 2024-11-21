@@ -11,7 +11,6 @@ const Header = ({ navigateTo, userName, userRole, handleLogout }) => {
                 <img src={logo} alt="로고" />
             </div>
             <nav className="nav">
-                {/* Home 메뉴는 항상 표시 */}
                 <a
                     href="#"
                     onClick={(e) => {
@@ -26,20 +25,30 @@ const Header = ({ navigateTo, userName, userRole, handleLogout }) => {
                 {userName ? (
                     <>
                         {userRole === 'ROLE_ADMIN' && (
-                            // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                            <a
-                                href="#"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    navigateTo('admin');
-                                }}
-                                className="nav-item"
-                            >
-                                Admin
-                            </a>
+                            <>
+                                <a
+                                    href="#"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        navigateTo('admin');
+                                    }}
+                                    className="nav-item"
+                                >
+                                    Admin
+                                </a>
+                                <a
+                                    href="#"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        navigateTo('admin-mypage');
+                                    }}
+                                    className="nav-item"
+                                >
+                                    마이페이지
+                                </a>
+                            </>
                         )}
                         {userRole === 'ROLE_FARMER' && (
-                            // eslint-disable-next-line jsx-a11y/anchor-is-valid
                             <a
                                 href="#"
                                 onClick={(e) => {
@@ -62,7 +71,6 @@ const Header = ({ navigateTo, userName, userRole, handleLogout }) => {
                         </div>
                     </>
                 ) : (
-                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
                     <a
                         href="#"
                         onClick={(e) => {
