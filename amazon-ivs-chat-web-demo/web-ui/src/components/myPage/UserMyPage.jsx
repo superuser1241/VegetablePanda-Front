@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserMyPage.css';
 
-const UserMyPage = ({ navigateTo }) => {
+const UserMyPage = () => {
     const [watchHistory, setWatchHistory] = useState([]);
     const [chargeAmount, setChargeAmount] = useState('');
     const token = localStorage.getItem('token');

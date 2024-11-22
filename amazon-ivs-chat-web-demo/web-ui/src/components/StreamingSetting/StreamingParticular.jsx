@@ -99,12 +99,10 @@ function StreamingParticular({ streamingRoom, setStreamingRoom, setCurrentRoomId
                     </div>
                 ) : (
                     <div>
-                        <p>아래에서 채팅방을 선택하세요:</p>
-                        {[...Array(6)].map((_, i) => (
-                            <button key={i} onClick={() => handleRoomClick(`chatRoom${i + 1}`)}>
-                                채팅방 {i + 1}
-                            </button>
-                        ))}
+                        <p>채팅방 입장하기</p>
+                        <button onClick={() => handleRoomClick('auto')}>
+                            채팅방 입장
+                        </button>
                     </div>
                 )}
             </div>

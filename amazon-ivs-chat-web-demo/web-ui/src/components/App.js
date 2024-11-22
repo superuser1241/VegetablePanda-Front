@@ -67,14 +67,15 @@ function App() {
                         localStorage.removeItem('token');
                         setUserName('');
                         setUserRole('');
-                        navigate('/login');
                     } else {
                         setUserName(payload.name);
                         setUserRole(payload.role);
                     }
                 } catch (error) {
                     console.error('토큰 디코딩 실패:', error);
-                    navigate('/login');
+                    localStorage.removeItem('token');
+                    setUserName('');
+                    setUserRole('');
                 }
             }
         };
