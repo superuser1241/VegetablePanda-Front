@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Header from './common/Header';
 import Footer from './common/Footer';
 import MainPage from './MainPage/MainPage';
@@ -13,51 +14,47 @@ import CompanyMyPage from './myPage/CompanyMyPage';
 import FarmerMyPage from './myPage/FarmerMyPage';
 
 function App() {
-    const [currentPage, setCurrentPage] = useState('main');
     const [userName, setUserName] = useState('');
     const [userRole, setUserRole] = useState('');
     const [streamingRoom, setStreamingRoom] = useState(null);
     const [currentRoomId, setCurrentRoomId] = useState(null);
-
-    const navigateTo = (page) => {
-        setCurrentPage(page);
-    };
+    const navigate = useNavigate();
 
     const handleLoginSuccess = (name, role) => {
         setUserName(name);
         setUserRole(role);
-        navigateTo('main');
+        navigate('/');
     };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         setUserName('');
         setUserRole('');
-        navigateTo('main');
+        navigate('/');
         alert('로그아웃 되었습니다.');
     };
 
     const handleJoinRoom = (room) => {
         setStreamingRoom(room);
         setCurrentRoomId(room.chatRoomId);
-        navigateTo(userRole !== 'ROLE_FARMER' ? 'chat' : 'confirmation');
+        navigate(userRole !== 'ROLE_FARMER' ? '/chat' : '/confirmation');
     };
 
     const handleConfirm = () => {
         console.log('입장 확인 - streamingRoom:', streamingRoom);
-        navigateTo('chat');
+        navigate('/chat');
     };
 
     const handleCancel = () => {
         alert('입장이 취소되었습니다.');
-        navigateTo('main');
+        navigate('/');
     };
 
     const handleExitChat = () => {
         alert('채팅방에서 나왔습니다.');
         setStreamingRoom(null);
         setCurrentRoomId(null);
-        navigateTo('main');
+        navigate('/');
     };
 
     useEffect(() => {
@@ -65,77 +62,70 @@ function App() {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    // JWT 토큰 디코딩 시 한글 처리
                     const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
                     if (Date.now() >= payload.exp * 1000) {
                         localStorage.removeItem('token');
                         setUserName('');
                         setUserRole('');
-                        navigateTo('login');
+                        navigate('/login');
                     } else {
                         setUserName(payload.name);
                         setUserRole(payload.role);
                     }
                 } catch (error) {
-                    // ... 에러 처리 ...
+                    console.error('토큰 디코딩 실패:', error);
+                    navigate('/login');
                 }
             }
         };
         checkAuthStatus();
-    }, []);
+    }, [navigate]);
 
     return (
         <div className="App">
             <Header
-                navigateTo={navigateTo}
                 userName={userName}
                 userRole={userRole}
                 handleLogout={handleLogout}
             />
             <main style={{ minHeight: '80vh', padding: '20px' }}>
-                {currentPage === 'main' && <MainPage onJoinRoom={handleJoinRoom} />}
-                {currentPage === 'login' && <LoginForm onLoginSuccess={handleLoginSuccess} />}
-                {currentPage === 'streaming' && (
-                    <StreamingParticular
-                        streamingRoom={streamingRoom}
-                        setStreamingRoom={setStreamingRoom}
-                        setCurrentRoomId={setCurrentRoomId}
-                        onEnterChat={() => navigateTo('confirmation')}
-                    />
-                )}
-                {currentPage === 'confirmation' && (
-                    <ConfirmationPage
-                        streamingRoom={streamingRoom}
-                        onConfirm={handleConfirm}
-                        onCancel={handleCancel}
-                    />
-                )}
-                {currentPage === 'chat' && (
-                    <Chat
-                        streamingRoom={streamingRoom}
-                        userName={userName}
-                        chatRoomId={currentRoomId}
-                        handleExitChat={handleExitChat}
-                    />
-                )}
-                {currentPage === 'admin' && (
-                    <AdminApprovalPage
-                        streamingRoom={streamingRoom}
-                        setStreamingRoom={setStreamingRoom}
-                    />
-                )}
-                {currentPage === 'admin-mypage' && userRole === 'ROLE_ADMIN' && (
-                    <AdminMyPage navigateTo={navigateTo} />
-                )}
-                {currentPage === 'user-mypage' && userRole === 'ROLE_USER' && (
-                    <UserMyPage navigateTo={navigateTo} />
-                )}
-                {currentPage === 'company-mypage' && userRole === 'ROLE_COMPANY' && (
-                    <CompanyMyPage navigateTo={navigateTo} />
-                )}
-                {currentPage === 'farmer-mypage' && userRole === 'ROLE_FARMER' && (
-                    <FarmerMyPage navigateTo={navigateTo} />
-                )}
+                <Routes>
+                    <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} />} />
+                    <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
+                    <Route path="/streaming" element={
+                        <StreamingParticular
+                            streamingRoom={streamingRoom}
+                            setStreamingRoom={setStreamingRoom}
+                            setCurrentRoomId={setCurrentRoomId}
+                            onEnterChat={() => navigate('/confirmation')}
+                        />
+                    } />
+                    <Route path="/confirmation" element={
+                        <ConfirmationPage
+                            streamingRoom={streamingRoom}
+                            onConfirm={handleConfirm}
+                            onCancel={handleCancel}
+                        />
+                    } />
+                    <Route path="/chat" element={
+                        <Chat
+                            streamingRoom={streamingRoom}
+                            userName={userName}
+                            chatRoomId={currentRoomId}
+                            handleExitChat={handleExitChat}
+                        />
+                    } />
+                    <Route path="/admin" element={
+                        <AdminApprovalPage
+                            streamingRoom={streamingRoom}
+                            setStreamingRoom={setStreamingRoom}
+                        />
+                    } />
+                    <Route path="/admin-mypage" element={userRole === 'ROLE_ADMIN' && <AdminMyPage navigateTo={navigate} />} />
+                    <Route path="/user-mypage" element={userRole === 'ROLE_USER' && <UserMyPage navigateTo={navigate} />} />
+                    <Route path="/company-mypage" element={userRole === 'ROLE_COMPANY' && <CompanyMyPage navigateTo={navigate} />} />
+                    <Route path="/farmer-mypage" element={userRole === 'ROLE_FARMER' && <FarmerMyPage navigateTo={navigate} />} />
+                </Routes>
             </main>
             <Footer />
         </div>

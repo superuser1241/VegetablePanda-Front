@@ -1,6 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './FarmerMyPage.css';
 
-const FarmerMyPage = ({ navigateTo }) => {
+const FarmerMyPage = () => {
+    const navigate = useNavigate();
+
     return (
         <div className="farmer-mypage">
             <h2>농부 마이페이지</h2>
@@ -10,7 +14,7 @@ const FarmerMyPage = ({ navigateTo }) => {
                 <div className="streaming-buttons">
                     <button 
                         className="streaming-btn"
-                        onClick={() => navigateTo('streaming')}
+                        onClick={() => navigate('/streaming')}
                     >
                         채팅방 선택하기
                     </button>

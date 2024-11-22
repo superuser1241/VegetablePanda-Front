@@ -1,0 +1,62 @@
+.farmer-mypage {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.farmer-mypage h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.streaming-section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.streaming-section h3 {
+    color: #444;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.streaming-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.streaming-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.streaming-btn:hover {
+    background-color: #45a049;
+}
+
+.streaming-btn:active {
+    background-color: #3d8b40;
+}
+
+@media (max-width: 600px) {
+    .farmer-mypage {
+        padding: 10px;
+    }
+
+    .streaming-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+} 
