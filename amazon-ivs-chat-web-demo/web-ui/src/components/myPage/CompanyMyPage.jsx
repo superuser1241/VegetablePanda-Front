@@ -18,14 +18,6 @@ const CompanyMyPage = ({ navigateTo }) => {
         }
     }, [token]);
 
-    useEffect(() => {
-        // URL에서 payment 경로 체크
-        if (window.location.pathname.includes('/payment/')) {
-            alert('포인트 충전이 완료되었습니다.');
-            window.location.href = '/company-mypage';  // 마이페이지로 리다이렉트
-        }
-    }, []);
-
     const handleCharge = async () => {
         try {
             if (!userId || !chargeAmount) {
@@ -47,7 +39,7 @@ const CompanyMyPage = ({ navigateTo }) => {
 
             if (response.data) {
                 setChargeAmount('');
-                window.location.href = `http://localhost:5173${response.data}`;
+                window.location.href = response.data;
             }
         } catch (error) {
             console.error('충전 실패:', error);

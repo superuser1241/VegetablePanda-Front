@@ -30,7 +30,6 @@ function StreamingParticular({ streamingRoom, setStreamingRoom, setCurrentRoomId
                                 setCurrentRoomId(chatRoomId);
                                 setStreamingRoom(updatedRoom);
                                 setIsJoinable(false);
-                                onEnterChat();
                             })
                             .catch((error) => {
                                 console.error('Failed to request streaming:', error);
@@ -114,3 +113,4 @@ function StreamingParticular({ streamingRoom, setStreamingRoom, setCurrentRoomId
 }
 
 export default StreamingParticular;
+

@@ -38,7 +38,7 @@ const UserMyPage = ({ navigateTo }) => {
             
             if (response.data) {
                 setChargeAmount('');
-                window.location.href = `http://localhost:5173${response.data}`;
+                window.location.href = response.data;
             }
         } catch (error) {
             console.error('포인트 충전 실패:', error);
