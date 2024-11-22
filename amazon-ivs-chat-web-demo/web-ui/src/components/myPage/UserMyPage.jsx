@@ -1,38 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './UserMyPage.css';
 
-const UserMyPage = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
+const UserMyPage = ({ navigateTo }) => {
     const [watchHistory, setWatchHistory] = useState([]);
     const [chargeAmount, setChargeAmount] = useState('');
     const token = localStorage.getItem('token');
     const [userId, setUserId] = useState('');
-
-    useEffect(() => {
-        // 결제 완료 메시지 체크
-        if (location.state?.message) {
-            alert(location.state.message);
-            navigate('.', { replace: true, state: {} });
-        }
-    }, [location, navigate]);
-
-    useEffect(() => {
-        const fetchWatchHistory = async () => {
-            try {
-                const response = await axios.get('/api/user/watch-history', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setWatchHistory(response.data);
-            } catch (error) {
-                console.error('시청 기록 조회 실패:', error);
-            }
-        };
-
-        fetchWatchHistory();
-    }, [token]);
 
     useEffect(() => {
         if (token) {
@@ -64,7 +38,6 @@ const UserMyPage = () => {
             
             if (response.data) {
                 setChargeAmount('');
-                // 프론트엔드 도메인의 payment 경로로 이동
                 window.location.href = `http://localhost:5173${response.data}`;
             }
         } catch (error) {

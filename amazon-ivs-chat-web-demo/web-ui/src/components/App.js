@@ -7,7 +7,10 @@ import StreamingParticular from './StreamingSetting/StreamingParticular';
 import ConfirmationPage from './StreamingSetting/ConfirmationPage';
 import Chat from './chat/Chat';
 import AdminApprovalPage from './admin/AdminApprovalPage';
-import AdminMyPage from './admin/AdminMyPage';
+import AdminMyPage from './myPage/AdminMyPage';
+import UserMyPage from './myPage/UserMyPage';
+import CompanyMyPage from './myPage/CompanyMyPage';
+import FarmerMyPage from './myPage/FarmerMyPage';
 
 function App() {
     const [currentPage, setCurrentPage] = useState('main');
@@ -122,7 +125,16 @@ function App() {
                     />
                 )}
                 {currentPage === 'admin-mypage' && userRole === 'ROLE_ADMIN' && (
-                    <AdminMyPage />
+                    <AdminMyPage navigateTo={navigateTo} />
+                )}
+                {currentPage === 'user-mypage' && userRole === 'ROLE_USER' && (
+                    <UserMyPage navigateTo={navigateTo} />
+                )}
+                {currentPage === 'company-mypage' && userRole === 'ROLE_COMPANY' && (
+                    <CompanyMyPage navigateTo={navigateTo} />
+                )}
+                {currentPage === 'farmer-mypage' && userRole === 'ROLE_FARMER' && (
+                    <FarmerMyPage navigateTo={navigateTo} />
                 )}
             </main>
             <Footer />

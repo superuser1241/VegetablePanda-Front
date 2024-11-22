@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './AdminMyPage.css';
 
-const AdminMyPage = () => {
-    const navigate = useNavigate();
+const AdminMyPage = ({ navigateTo }) => {
     const [adminInfo, setAdminInfo] = useState({
         name: '',
         id: '',
@@ -40,7 +38,7 @@ const AdminMyPage = () => {
             <div className="admin-actions">
                 <button 
                     className="admin-button"
-                    onClick={() => navigate('/admin')}
+                    onClick={() => navigateTo('admin')}
                 >
                     스트리밍 승인 관리
                 </button>

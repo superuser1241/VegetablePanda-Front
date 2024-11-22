@@ -30,16 +30,6 @@ const Header = ({ navigateTo, userName, userRole, handleLogout }) => {
                                     href="#"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        navigateTo('admin');
-                                    }}
-                                    className="nav-item"
-                                >
-                                    Admin
-                                </a>
-                                <a
-                                    href="#"
-                                    onClick={(e) => {
-                                        e.preventDefault();
                                         navigateTo('admin-mypage');
                                     }}
                                     className="nav-item"
@@ -53,11 +43,35 @@ const Header = ({ navigateTo, userName, userRole, handleLogout }) => {
                                 href="#"
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    navigateTo('streaming');
+                                    navigateTo('farmer-mypage');
                                 }}
                                 className="nav-item"
                             >
-                                Streaming
+                                마이페이지
+                            </a>
+                        )}
+                        {userRole === 'ROLE_USER' && (
+                            <a
+                                href="#"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    navigateTo('user-mypage');
+                                }}
+                                className="nav-item"
+                            >
+                                마이페이지
+                            </a>
+                        )}
+                        {userRole === 'ROLE_COMPANY' && (
+                            <a
+                                href="#"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    navigateTo('company-mypage');
+                                }}
+                                className="nav-item"
+                            >
+                                마이페이지
                             </a>
                         )}
                         <div className="user-actions">

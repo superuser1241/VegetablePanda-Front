@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './CompanyMyPage.css';
 
-const CompanyMyPage = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
+const CompanyMyPage = ({ navigateTo }) => {
     const [chargeAmount, setChargeAmount] = useState('');
     const [userId, setUserId] = useState('');
-    const token = localStorage.getItem('token'); // 로컬 스토리지에서 JWT 토큰 가져오기
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         if (token) {
             try {
                 const payload = JSON.parse(atob(token.split('.')[1]));
-                setUserId(payload.user_seq); // id -> user_seq로 변경
-                console.log('추출된 사용자 시퀀스:', payload.user_seq);
+                setUserId(payload.user_seq);
             } catch (error) {
-                console.error('JWT 토큰 파싱 오류:', error);
+                console.error('토큰 파싱 실패:', error);
             }
         }
     }, [token]);
