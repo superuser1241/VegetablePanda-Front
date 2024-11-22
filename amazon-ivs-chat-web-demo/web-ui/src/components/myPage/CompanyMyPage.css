@@ -1,0 +1,69 @@
+.company-mypage {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.company-mypage h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.company-mypage h3 {
+    color: #34495e;
+    margin-bottom: 20px;
+    font-size: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.charge-section {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.charge-input-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.charge-input {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid #e1e1e1;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.charge-input:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+.charge-button {
+    background-color: #3498db;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.charge-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.charge-button:active {
+    transform: translateY(0);
+} 
