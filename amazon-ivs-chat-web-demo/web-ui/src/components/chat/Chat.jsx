@@ -36,6 +36,38 @@ const Chat = ({streamingRoom,handleExitChat }) => {
   const chatRef = createRef();
   const messagesEndRef = createRef();
 
+  const [currentBid, setCurrentBid] = useState(50000); // 시작가
+  const [timeLeft, setTimeLeft] = useState('05:00');
+
+  const handleBid = () => {
+    setCurrentBid(prev => prev + 10);
+    // TODO: 서버에 입찰 정보 전송
+  };
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const [minutes, seconds] = timeLeft.split(':').map(Number);
+      let totalSeconds = minutes * 60 + seconds;
+      
+      if (totalSeconds > 0) {
+        totalSeconds -= 1;
+        const newMinutes = Math.floor(totalSeconds / 60);
+        const newSeconds = totalSeconds % 60;
+        setTimeLeft(`${String(newMinutes).padStart(2, '0')}:${String(newSeconds).padStart(2, '0')}`);
+      } else {
+        clearInterval(timer);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
   useEffect(() => {
     // 컴포넌트 언마운트 시 실행
     return () => {
@@ -629,6 +661,39 @@ const Chat = ({streamingRoom,handleExitChat }) => {
         </div>
         {showSignIn && <SignIn handleSignIn={handleSignIn} />}
       </div>
+      <div className="auction-container">
+                <div className="product-section">
+                  <div className="product-image">
+                    <img src="../../image/상품1.png" alt="상품 이미지" />
+                  </div>
+                  <div className="product-info">
+                    <h3 className="product-title">프리미엄 기계식 키보드</h3>
+                    <p className="product-description">
+                      Cherry MX 청축 스위치, PBT 키캡, RGB 백라이트 탑재
+                    </p>
+                  </div>
+                </div>
+                <div className="bidding-section">
+                  <div className="auction-info">
+                    <div className="current-price">
+                      <h3>현재 입찰가</h3>
+                      <p>{currentBid.toLocaleString()}원</p>
+                    </div>
+                    <div className="time-left">
+                      <h3>남은 시간</h3>
+                      <p>{timeLeft}</p>
+                    </div>
+                  </div>
+                  <div className="bidding-form">
+                    <button 
+                      onClick={handleBid}
+                      className="bid-button"
+                    >
+                      +10원 입찰하기
+                    </button>
+                  </div>
+                </div>
+              </div>
     </>
   );
 };

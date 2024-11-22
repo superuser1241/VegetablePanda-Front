@@ -12,7 +12,7 @@
 }
 
 .main {
-  height: calc(100vh - var(--header-height));
+  height: calc(70vh - var(--header-height));
 }
 
 .content-wrapper {
@@ -485,5 +485,140 @@ button.item-container {
   }
   100% {
     transform: scale3d(1, 1, 1);
+  }
+}
+
+.auction-container {
+  display: flex;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 15px;
+  margin-top: 10px;
+  height: 150px;
+}
+
+.product-section {
+  flex: 1;
+  display: flex;
+  gap: 15px;
+  padding-right: 15px;
+  border-right: 1px solid #eee;
+}
+
+.product-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.product-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.product-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.bidding-section {
+  width: 250px;
+  padding-left: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.auction-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.current-price, .time-left {
+  text-align: center;
+}
+
+.current-price h3, .time-left h3 {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 5px 0;
+}
+
+.current-price p, .time-left p {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.current-price p {
+  color: #e74c3c;
+}
+
+.bidding-form {
+  display: flex;
+  justify-content: center;
+}
+
+.bid-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.bid-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.bid-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 1080px) {
+  .auction-container {
+    flex-direction: column;
+    height: auto;
+    gap: 15px;
+  }
+
+  .product-section {
+    border-right: none;
+    border-bottom: 1px solid #eee;
+    padding-right: 0;
+    padding-bottom: 15px;
+  }
+
+  .bidding-section {
+    width: 100%;
+    padding-left: 0;
   }
 }
