@@ -6,8 +6,8 @@ import LoginForm from './Login/LoginForm';
 import StreamingParticular from './StreamingSetting/StreamingParticular';
 import ConfirmationPage from './StreamingSetting/ConfirmationPage';
 import Chat from './chat/Chat';
-import AdminApprovalPage from './Admin/AdminApprovalPage';
-import AdminMyPage from './Admin/AdminMyPage';
+import AdminApprovalPage from './admin/AdminApprovalPage';
+import AdminMyPage from './admin/AdminMyPage';
 
 function App() {
     const [currentPage, setCurrentPage] = useState('main');
