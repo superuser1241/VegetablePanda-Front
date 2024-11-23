@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './common/Header';
 import Footer from './common/Footer';
 import MainPage from './MainPage/MainPage';
@@ -12,6 +12,9 @@ import AdminMyPage from './myPage/AdminMyPage';
 import UserMyPage from './myPage/UserMyPage';
 import CompanyMyPage from './myPage/CompanyMyPage';
 import FarmerMyPage from './myPage/FarmerMyPage';
+import UserRegister from './Register/UserRegister';
+import FarmerRegister from './Register/FarmerRegister';
+import CompanyRegister from './Register/CompanyRegister';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -93,6 +96,10 @@ function App() {
                 <Routes>
                     <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} />} />
                     <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
+                    <Route path="/UserRegister" element={<UserRegister />} />
+                    <Route path="/CompanyRegister" element={<CompanyRegister />} />
+                    <Route path="/FarmerRegister" element={<FarmerRegister />} />
+
                     <Route path="/streaming" element={
                         <StreamingParticular
                             streamingRoom={streamingRoom}
