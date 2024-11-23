@@ -7,11 +7,12 @@ import LoginForm from './Login/LoginForm';
 import StreamingParticular from './StreamingSetting/StreamingParticular';
 import ConfirmationPage from './StreamingSetting/ConfirmationPage';
 import Chat from './chat/Chat';
-import AdminApprovalPage from './admin/AdminApprovalPage';
+import AdminApprovalPage from './Admin/AdminApprovalPage';
 import AdminMyPage from './myPage/AdminMyPage';
 import UserMyPage from './myPage/UserMyPage';
 import CompanyMyPage from './myPage/CompanyMyPage';
 import FarmerMyPage from './myPage/FarmerMyPage';
+import NotiSet from './Notification/NotiSet';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -89,6 +90,7 @@ function App() {
                 userRole={userRole}
                 handleLogout={handleLogout}
             />
+            <NotiSet/>
             <main style={{ minHeight: '80vh', padding: '20px' }}>
                 <Routes>
                     <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} />} />
