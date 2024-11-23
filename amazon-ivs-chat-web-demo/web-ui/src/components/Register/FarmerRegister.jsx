@@ -10,10 +10,10 @@ function FarmerRegister() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [name, setName] = useState(""); // 'ownerName' -> 'name'
-  const [codePart1, setCodePart1] = useState(""); // 사업자 등록번호
-  const [codePart2, setCodePart2] = useState(""); // 사업자 등록번호
-  const [codePart3, setCodePart3] = useState(""); // 사업자 등록번호
+  const [name, setName] = useState("");
+  const [codePart1, setCodePart1] = useState("");
+  const [codePart2, setCodePart2] = useState("");
+  const [codePart3, setCodePart3] = useState("");
   const [intro, setIntro] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ function FarmerRegister() {
   };
 
   const handleImageReset = () => {
-    setImage(null); // 사진을 초기화
+    setImage(null);
   };
 
   const handlePhoneChange = (e) => {
@@ -37,9 +37,9 @@ function FarmerRegister() {
     setPhone(value);
   };
   const handleCodeChange = (e, setCodePart, maxLength) => {
-    let value = e.target.value.replace(/[^0-9]/g, ""); // 숫자만 허용
+    let value = e.target.value.replace(/[^0-9]/g, "");
     if (value.length > maxLength) {
-      value = value.slice(0, maxLength); // 자릿수 제한
+      value = value.slice(0, maxLength);
     }
     setCodePart(value);
   };
@@ -73,14 +73,14 @@ function FarmerRegister() {
 
     setLoading(true);
 
-    const formattedPhone = formatPhoneNumber(phone); // 수정된 부분
+    const formattedPhone = formatPhoneNumber(phone);
 
     const code = `${codePart1}-${codePart2}-${codePart3}`;
 
     const farmerData = {
       id,
       email,
-      phone: formattedPhone, // 수정된 부분
+      phone: formattedPhone,
       address,
       name,
       code,
@@ -89,13 +89,12 @@ function FarmerRegister() {
       content: "farmer",
     };
 
-   try {
+    try {
       const formData = new FormData();
       if (image) {
         formData.append("image", image);
       }
 
-      // 이미지 업로드 요청 (이미지가 없으면 빈 이미지 URL을 반환하도록 처리)
       const imageResponse = image
         ? await axios.post("http://localhost:9001/upload", formData, {
             headers: {
@@ -104,7 +103,7 @@ function FarmerRegister() {
           })
         : { status: 200, data: { imageUrl: "" } };
 
-      const imageUrl = imageResponse.data.imageUrl || ""; // 이미지가 없으면 빈 문자열로 설정
+      const imageUrl = imageResponse.data.imageUrl || "";
 
       const response = await axios.post("http://localhost:9001/members", {
         ...farmerData,
@@ -123,7 +122,7 @@ function FarmerRegister() {
       console.error(error);
     } finally {
       setLoading(false);
-    } 
+    }
   };
 
   return (
@@ -132,7 +131,6 @@ function FarmerRegister() {
         판매자 회원가입
       </h2>
       <form onSubmit={handleSubmit} className="register-form farmer-form">
-        {/* 이미지 업로드 및 리셋 버튼 */}
         <div className="image-upload-container">
           <label>프로필 사진</label>
           <input
@@ -170,7 +168,6 @@ function FarmerRegister() {
           )}
         </div>
 
-        {/* 아이디, 비밀번호, 전화번호 등 */}
         <div className="input-group farmer-input-group">
           <input
             type="text"
@@ -219,7 +216,7 @@ function FarmerRegister() {
           <input
             type="text"
             value={phone}
-            onChange={handlePhoneChange} // 수정된 부분
+            onChange={handlePhoneChange}
             required
             maxLength="11"
             placeholder="전화번호를 입력하세요"
@@ -261,48 +258,48 @@ function FarmerRegister() {
         </div>
 
         <div className="input-group business-number-group">
-    <label className="business-number-label1">사업자 등록번호</label>
-    <div className="business-number-input-wrapper">
-      <input
-        type="text"
-        value={codePart1}
-        onChange={(e) => handleCodeChange(e, setCodePart1, 3)}
-        maxLength="3"
-        required
-        className="business-number-input"
-        placeholder="XXX"
-      />
-      -
-      <input
-        type="text"
-        value={codePart2}
-        onChange={(e) => handleCodeChange(e, setCodePart2, 2)}
-        maxLength="2"
-        required
-        className="business-number-input"
-        placeholder="XX"
-      />
-      -
-      <input
-        type="text"
-        value={codePart3}
-        onChange={(e) => handleCodeChange(e, setCodePart3, 5)}
-        maxLength="5"
-        required
-        className="business-number-input"
-        placeholder="XXXXX"
-      />
-    </div>
-  </div>
+          <label className="business-number-label1">사업자 등록번호</label>
+          <div className="business-number-input-wrapper">
+            <input
+              type="text"
+              value={codePart1}
+              onChange={(e) => handleCodeChange(e, setCodePart1, 3)}
+              maxLength="3"
+              required
+              className="business-number-input"
+              placeholder="XXX"
+            />
+            -
+            <input
+              type="text"
+              value={codePart2}
+              onChange={(e) => handleCodeChange(e, setCodePart2, 2)}
+              maxLength="2"
+              required
+              className="business-number-input"
+              placeholder="XX"
+            />
+            -
+            <input
+              type="text"
+              value={codePart3}
+              onChange={(e) => handleCodeChange(e, setCodePart3, 5)}
+              maxLength="5"
+              required
+              className="business-number-input"
+              placeholder="XXXXX"
+            />
+          </div>
+        </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="register-button"
-          >
-            {loading ? "회원가입 중..." : "회원가입"}
-          </button>
-          {message && <p className="error-message">{message}</p>}
+        <button
+          type="submit"
+          disabled={loading}
+          className="register-button"
+        >
+          {loading ? "회원가입 중..." : "회원가입"}
+        </button>
+        {message && <p className="error-message">{message}</p>}
       </form>
     </div>
   );
