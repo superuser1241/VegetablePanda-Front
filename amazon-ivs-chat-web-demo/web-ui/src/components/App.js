@@ -7,7 +7,6 @@ import LoginForm from './Login/LoginForm';
 import StreamingParticular from './StreamingSetting/StreamingParticular';
 import ConfirmationPage from './StreamingSetting/ConfirmationPage';
 import Chat from './chat/Chat';
-import AdminApprovalPage from './admin/AdminApprovalPage';
 import AdminMyPage from './myPage/AdminMyPage';
 import UserMyPage from './myPage/UserMyPage';
 import CompanyMyPage from './myPage/CompanyMyPage';
@@ -121,12 +120,6 @@ function App() {
                             userName={userName}
                             chatRoomId={currentRoomId}
                             handleExitChat={handleExitChat}
-                        />
-                    } />
-                    <Route path="/admin" element={
-                        <AdminApprovalPage
-                            streamingRoom={streamingRoom}
-                            setStreamingRoom={setStreamingRoom}
                         />
                     } />
                     <Route path="/admin-mypage" element={userRole === 'ROLE_ADMIN' && <AdminMyPage navigateTo={navigate} />} />
