@@ -25,13 +25,15 @@
     border-bottom: 1px solid #eee;
 }
 
-.streaming-buttons {
+.streaming-buttons, .register-stock-buttons {
     display: flex;
     justify-content: center;
     gap: 15px;
 }
 
-.streaming-btn {
+.streaming-btn, .register-stock-btn {
+    display: inline-flex;
+    align-items: center;
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -42,11 +44,11 @@
     transition: background-color 0.3s;
 }
 
-.streaming-btn:hover {
+.streaming-btn:hover, .register-stock-btn:hover {
     background-color: #45a049;
 }
 
-.streaming-btn:active {
+.streaming-btn:active, .register-stock-btn:active {
     background-color: #3d8b40;
 }
 
@@ -60,3 +62,16 @@
         font-size: 14px;
     }
 } 
+
+.stock-register-section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.stock-register-section h3 {
+    color: #444;
+    padding-bottom: 10px;
+}

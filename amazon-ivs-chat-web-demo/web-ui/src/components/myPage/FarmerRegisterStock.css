@@ -1,0 +1,54 @@
+.RegisterStock h2 {
+    text-align: center;
+}
+
+.RegisterStock select {
+    display: inline-flex;
+}
+
+.RegisterStock .btn {
+    display: flex;
+    justify-content: center;
+    background-color: transparent;
+    gap: 10px;
+}
+
+.stock-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    margin-right: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.stock-reset-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #9b9b9b;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    margin-right: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.stock-submit-btn:hover, .stock-register-btn:hover {
+    background-color: #36833a;
+}
+
+.stock-submit-btn:active {
+    background-color: #3d8b40;
+}
+
+.stock-reset-btn:hover {
+    background-color: rgb(97, 97, 97);
+}

@@ -12,6 +12,7 @@ import AdminMyPage from './myPage/AdminMyPage';
 import UserMyPage from './myPage/UserMyPage';
 import CompanyMyPage from './myPage/CompanyMyPage';
 import FarmerMyPage from './myPage/FarmerMyPage';
+import FarmerRegisterStock from './myPage/FarmerRegisterStock';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -122,6 +123,8 @@ function App() {
                             setStreamingRoom={setStreamingRoom}
                         />
                     } />
+                    <Route path="/register-stock" element = {<FarmerRegisterStock/> }/>
+                    
                     <Route path="/admin-mypage" element={userRole === 'ROLE_ADMIN' && <AdminMyPage navigateTo={navigate} />} />
                     <Route path="/user-mypage" element={userRole === 'ROLE_USER' && <UserMyPage navigateTo={navigate} />} />
                     <Route path="/company-mypage" element={userRole === 'ROLE_COMPANY' && <CompanyMyPage navigateTo={navigate} />} />
