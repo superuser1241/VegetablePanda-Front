@@ -1,0 +1,234 @@
+.register-form-container.farmer-register {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.register-form-header.farmer-register-header {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.business-number {
+    display: block;
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.hr {
+    border: 0;
+    border-top: 2px solid #ccc;
+    margin: 20px 0;
+}
+
+.register-form.farmer-form {
+    width: 100%;
+}
+
+.input-farmer-input-group {
+    margin-bottom: 20px;
+}
+
+.input-label.farmer-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.address-input.farmer-input,
+.email-input.farmer-input,
+.phone-input.farmer-input,
+.username-input.farmer-input,
+.password-input.farmer-input,
+.business-input.farmer-input,
+.intro-input.farmer-input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.address-input.farmer-input:focus,
+.email-input.farmer-input:focus,
+.phone-input.farmer-input:focus,
+.username-input.farmer-input:focus,
+.password-input.farmer-input:focus,
+.business-input.farmer-input:focus,
+.intro-input.farmer-input:focus {
+    border-color: #4caf50;
+    outline: none;
+}
+
+.email-input-wrapper.farmer-email-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.email-input.farmer-input {
+    width: 280px;
+    padding: 10px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.email-separator.farmer-email-separator {
+    margin: 0 5px;
+    font-size: 14px;
+}
+
+.phone-input-wrapper.farmer-phone-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.phone-input.farmer-input {
+    width: 30%;
+    padding: 10px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.phone-separator.farmer-phone-separator {
+    margin: 0 5px;
+    font-size: 14px;
+}
+
+.business-input-wrapper.farmer-business-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.business-input.farmer-input {
+    width: 30%;
+    padding: 10px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.business-separator.farmer-business-separator {
+    margin: 0 5px;
+    font-size: 14px;
+}
+
+.intro-input.farmer-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    min-height: 100px;
+    resize: none;
+    margin-bottom: 5px;
+}
+
+.char-count {
+    text-align: right;
+    font-size: 14px;
+    color: #888;
+    margin-top: 5px;
+}
+
+.register-button.farmer-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.register-button.farmer-button:disabled {
+    background-color: #ddd;
+}
+
+.error-message.farmer-error-message {
+    text-align: center;
+    color: red;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.register-form-container.farmer-register a {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.register-form-container.farmer-register a:hover {
+    color: #45a049;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+input.farmer-input, textarea.farmer-input {
+    color: #333;
+}
+
+.divider1 {
+    border-top: 2px solid #ccc;
+    margin: 30px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.business-number-label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.farmer-submit-button {
+    width: 100%;
+    padding: 14px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.farmer-submit-button:hover {
+    background-color: #45a049;
+}
+
+.farmer-submit-button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+.error-message.farmer-error-message {
+    text-align: center;
+    color: red;
+    margin-top: 15px;
+    font-size: 14px;
+}

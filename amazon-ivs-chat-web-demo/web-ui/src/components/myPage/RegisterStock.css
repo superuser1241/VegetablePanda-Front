@@ -6,9 +6,10 @@
     display: inline-flex;
 }
 
-.RegisterStock .btn {
+.btn {
+    width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     background-color: transparent;
     gap: 10px;
 }
@@ -41,14 +42,15 @@
     transition: background-color 0.3s;
 }
 
-.stock-submit-btn:hover, .stock-register-btn:hover {
+.stock-submit-btn:hover {
     background-color: #36833a;
-}
-
-.stock-submit-btn:active {
-    background-color: #3d8b40;
 }
 
 .stock-reset-btn:hover {
     background-color: rgb(97, 97, 97);
+}
+
+.stock-submit-btn:active, .stock-reset-btn:active {
+    background-color: #2e2e2e;
+    border: none;
 }

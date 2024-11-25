@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './common/Header';
 import Footer from './common/Footer';
 import MainPage from './MainPage/MainPage';
@@ -7,12 +7,18 @@ import LoginForm from './Login/LoginForm';
 import StreamingParticular from './StreamingSetting/StreamingParticular';
 import ConfirmationPage from './StreamingSetting/ConfirmationPage';
 import Chat from './chat/Chat';
-import AdminApprovalPage from './admin/AdminApprovalPage';
+// import AdminApprovalPage from './Admin/AdminApprovalPage';
 import AdminMyPage from './myPage/AdminMyPage';
 import UserMyPage from './myPage/UserMyPage';
 import CompanyMyPage from './myPage/CompanyMyPage';
 import FarmerMyPage from './myPage/FarmerMyPage';
-import FarmerRegisterStock from './myPage/FarmerRegisterStock';
+import FarmerRegisterStock from './myPage/RegisterStock';
+import NotiSet from './Notification/NotiSet';
+import UserRegister from './Register/UserRegister';
+import FarmerRegister from './Register/FarmerRegister';
+import CompanyRegister from './Register/CompanyRegister';
+import Purchase from './Purchase/Purchase';
+import Payment from './Purchase/Payment';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -90,10 +96,15 @@ function App() {
                 userRole={userRole}
                 handleLogout={handleLogout}
             />
-            <main style={{ minHeight: '80vh', padding: '20px' }}>
+            <NotiSet/>
+            <main style={{ minHeight: '80vh'}}>
                 <Routes>
                     <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} />} />
                     <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
+                    <Route path="/UserRegister" element={<UserRegister />} />
+                    <Route path="/CompanyRegister" element={<CompanyRegister />} />
+                    <Route path="/FarmerRegister" element={<FarmerRegister />} />
+
                     <Route path="/streaming" element={
                         <StreamingParticular
                             streamingRoom={streamingRoom}
@@ -117,18 +128,20 @@ function App() {
                             handleExitChat={handleExitChat}
                         />
                     } />
-                    <Route path="/admin" element={
+                    {/* <Route path="/admin" element={
                         <AdminApprovalPage
                             streamingRoom={streamingRoom}
                             setStreamingRoom={setStreamingRoom}
                         />
-                    } />
+                    } /> */}
                     <Route path="/register-stock" element = {<FarmerRegisterStock/> }/>
                     
                     <Route path="/admin-mypage" element={userRole === 'ROLE_ADMIN' && <AdminMyPage navigateTo={navigate} />} />
                     <Route path="/user-mypage" element={userRole === 'ROLE_USER' && <UserMyPage navigateTo={navigate} />} />
                     <Route path="/company-mypage" element={userRole === 'ROLE_COMPANY' && <CompanyMyPage navigateTo={navigate} />} />
                     <Route path="/farmer-mypage" element={userRole === 'ROLE_FARMER' && <FarmerMyPage navigateTo={navigate} />} />
+                    <Route path="/purchase" element={<Purchase />} />
+                    <Route path="/payment" element={<Payment />} />
                 </Routes>
             </main>
             <Footer />
