@@ -96,7 +96,7 @@ function App() {
                 handleLogout={handleLogout}
             />
             <NotiSet/>
-            <main style={{ minHeight: '80vh', padding: '20px' }}>
+            <main style={{ minHeight: '80vh'}}>
                 <Routes>
                     <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} />} />
                     <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
