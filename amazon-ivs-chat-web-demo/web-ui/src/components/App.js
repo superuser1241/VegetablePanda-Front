@@ -16,6 +16,8 @@ import NotiSet from './Notification/NotiSet';
 import UserRegister from './Register/UserRegister';
 import FarmerRegister from './Register/FarmerRegister';
 import CompanyRegister from './Register/CompanyRegister';
+import Purchase from './Purchase/Purchase';
+import Payment from './Purchase/Payment';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -129,6 +131,8 @@ function App() {
                     <Route path="/user-mypage" element={userRole === 'ROLE_USER' && <UserMyPage navigateTo={navigate} />} />
                     <Route path="/company-mypage" element={userRole === 'ROLE_COMPANY' && <CompanyMyPage navigateTo={navigate} />} />
                     <Route path="/farmer-mypage" element={userRole === 'ROLE_FARMER' && <FarmerMyPage navigateTo={navigate} />} />
+                    <Route path="/purchase" element={<Purchase />} />
+                    <Route path="/payment" element={<Payment />} />
                 </Routes>
             </main>
             <Footer />
