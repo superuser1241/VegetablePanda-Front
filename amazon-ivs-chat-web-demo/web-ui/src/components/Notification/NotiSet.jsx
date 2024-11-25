@@ -23,13 +23,11 @@ const NotiSet = () => {
           console.log("Connected to WebSocket");
 
           client.subscribe("/bid/notifications", (message) => {
-            console.log("123");
             setShowMessage(!showMessage);
             setMessages((prevMessages) => message.body);
           });
 
           client.subscribe("/topic/notifications", (message) => {
-            console.log("123");
             setShowMessage(!showMessage);
             setMessages((prevMessages) => message.body);
           });
