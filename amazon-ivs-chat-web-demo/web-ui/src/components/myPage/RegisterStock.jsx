@@ -28,7 +28,7 @@ const RegisterStock = () => {
     const [selectedOrganic, setSelectedOrganic] = useState('');
     const [selectedColor, setSelectedColor] = useState('#8f8f8f'); // 초기 색상
 
-    const [uploadImgUrl, setUploadImgUrl] = useState("");
+    const [uploadImg, setUploadImg] = useState("");
 
     useEffect(() => {
         if (token) {
@@ -146,6 +146,10 @@ const RegisterStock = () => {
     // };
 
     const handleProductSubmit = async (e) => {
+        if(!newProduct.color) return alert('색상을 선택해주세요.');
+        if(!newProduct.count) return alert('수량을 입력해주세요.');
+        if(!newProduct.content) return alert('내용을 입력해주세요.');
+        
         try{
             e.preventDefault();
 
@@ -157,7 +161,6 @@ const RegisterStock = () => {
                 color: newProduct.color,
                 count: parseInt(newProduct.count),
                 content: newProduct.content,
-                status: 2
             };
 
             const response = await axios.post(url, stockData, {
@@ -202,15 +205,29 @@ const RegisterStock = () => {
         handleProductChange(e);
     };
 
-    const onchangeImageUpload = (e)=> {
-        const {files} = e.target;
-        const uploadFile = files[0];
-        const reader = new FileReader();
-        reader.readAsDataURL(uploadFile);
-        reader.onloadend = ()=> {
-        setUploadImgUrl(reader.result);
-     }
+    const handleImageChange = (e)=> {
+        setUploadImg(e.target.files[0]);
    }
+
+   // 이미지 업로드 메소드
+   const handleUpload = async () => {
+    if (!uploadImg) return alert("파일을 선택해주세요.");
+
+    const formData = new FormData();
+    formData.append("image", uploadImg);
+
+    try {
+        const response = await axios.post("http://localhost:9001/s3/upload", formData, {
+            headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
+        });
+        alert("업로드 성공: " + response.data);
+    } catch (error) {
+        console.error("업로드 실패:", error);
+        alert("업로드 실패");
+    }
+  };
+
+
 
     return (
         <div className='RegisterStock'>
@@ -310,10 +327,9 @@ const RegisterStock = () => {
                         </div>
                         <div className="form-group">
                         <label>상품 사진 등록</label>
-                            <input type = "file" accept = "image/*" onChange = {onchangeImageUpload}/>
+                            <input type = "file" accept = "image/*" onChange = {(e)=>{setUploadImg(e.target.files[0]);}}/>
                         </div>
                     
-
                     </div>
                     <div className='btn'>
                             <button type='submit' className='stock-submit-btn'>등록</button> 
