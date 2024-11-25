@@ -14,6 +14,8 @@ import FarmerMyPage from './myPage/FarmerMyPage';
 import UserRegister from './Register/UserRegister';
 import FarmerRegister from './Register/FarmerRegister';
 import CompanyRegister from './Register/CompanyRegister';
+import Purchase from './Purchase/Purchase';
+import Payment from './Purchase/Payment';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -91,7 +93,7 @@ function App() {
                 userRole={userRole}
                 handleLogout={handleLogout}
             />
-            <main style={{ minHeight: '80vh', padding: '20px' }}>
+            <main style={{ minHeight: '80vh'}}>
                 <Routes>
                     <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} />} />
                     <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
@@ -126,6 +128,8 @@ function App() {
                     <Route path="/user-mypage" element={userRole === 'ROLE_USER' && <UserMyPage navigateTo={navigate} />} />
                     <Route path="/company-mypage" element={userRole === 'ROLE_COMPANY' && <CompanyMyPage navigateTo={navigate} />} />
                     <Route path="/farmer-mypage" element={userRole === 'ROLE_FARMER' && <FarmerMyPage navigateTo={navigate} />} />
+                    <Route path="/purchase" element={<Purchase />} />
+                    <Route path="/payment" element={<Payment />} />
                 </Routes>
             </main>
             <Footer />

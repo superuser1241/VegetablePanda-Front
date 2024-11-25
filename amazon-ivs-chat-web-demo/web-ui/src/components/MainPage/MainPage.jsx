@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './MainPage.css';
+import { useNavigate } from 'react-router-dom';
+import productImage from '../../image/상품1.png';
 
 const slides = [
     { id: 1, text: 'Welcome to 농산물 판다!', backgroundColor: '#f8d7da' },
@@ -14,7 +16,9 @@ const MainPage = ({ onJoinRoom }) => {
     const [shopItems, setShopItems] = useState([]);
     const [error, setError] = useState('');
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [visibleItems, setVisibleItems] = useState(4);
+    const [visibleRooms, setVisibleRooms] = useState(4);
+    const [visibleShops, setVisibleShops] = useState(4);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchActiveRooms = async () => {
@@ -48,8 +52,12 @@ const MainPage = ({ onJoinRoom }) => {
         return () => clearInterval(slideInterval);
     }, []);
 
-    const handleLoadMore = () => {
-        setVisibleItems(prev => prev + 4);
+    const handleLoadMoreRooms = () => {
+        setVisibleRooms(prev => prev + 4);
+    };
+
+    const handleLoadMoreShops = () => {
+        setVisibleShops(prev => prev + 4);
     };
 
     return (
@@ -66,7 +74,7 @@ const MainPage = ({ onJoinRoom }) => {
                 <section className="streaming-section">
                     <h2 className="section-title">실시간 스트리밍</h2>
                     <div className="room-list">
-                        {rooms.slice(0, visibleItems).map((room) => (
+                        {rooms.slice(0, visibleRooms).map((room) => (
                             <div key={room.streamingSeq} className="room-card">
                                 <h3>Room ID: {room.chatRoomId}</h3>
                                 <button
@@ -78,8 +86,8 @@ const MainPage = ({ onJoinRoom }) => {
                             </div>
                         ))}
                     </div>
-                    {rooms.length > visibleItems && (
-                        <button className="load-more-button" onClick={handleLoadMore}>
+                    {rooms.length > visibleRooms && (
+                        <button className="load-more-button" onClick={handleLoadMoreRooms}>
                             더보기
                         </button>
                     )}
@@ -88,8 +96,11 @@ const MainPage = ({ onJoinRoom }) => {
                 <section className="shop-section">
                     <h2 className="section-title">일반 상품 목록</h2>
                     <div className="shop-list">
-                        {shopItems.slice(0, visibleItems).map((item) => (
+                        {shopItems.slice(0, visibleShops).map((item) => (
                             <div key={item.shopSeq} className="shop-card">
+                                <div className="shop-image">
+                                    <img src={productImage} alt={item.productName} />
+                                </div>
                                 <h3>{item.content}</h3>
                                 <div className="shop-info">
                                     <p><span>가격:</span> {item.price.toLocaleString()}원</p>
@@ -98,12 +109,17 @@ const MainPage = ({ onJoinRoom }) => {
                                     <p><span>등급:</span> {item.stockGrade}</p>
                                     <p><span>인증:</span> {item.stockOrganic}</p>
                                 </div>
-                                <button className="buy-button">구매하기</button>
+                                <button 
+                                    className="buy-button" 
+                                    onClick={() => navigate('/purchase', { state: { item } })}
+                                >
+                                    구매하기
+                                </button>
                             </div>
                         ))}
                     </div>
-                    {shopItems.length > visibleItems && (
-                        <button className="load-more-button" onClick={handleLoadMore}>
+                    {shopItems.length > visibleShops && (
+                        <button className="load-more-button" onClick={handleLoadMoreShops}>
                             더보기
                         </button>
                     )}

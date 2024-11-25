@@ -663,7 +663,6 @@ const Chat = ({streamingRoom,handleExitChat }) => {
         {showSignIn && <SignIn handleSignIn={handleSignIn} />}
       </div>
       <div className="auction-container">
-                <div className="product-section">
                   <div className="product-image">
                     <img src={productImage} alt="상품 이미지" />
                   </div>
@@ -674,7 +673,6 @@ const Chat = ({streamingRoom,handleExitChat }) => {
                       윤성바오가 파는 맛있는 양파입니다.
                     </p>
                   </div>
-                </div>
                 <div className="bidding-section">
                   <div className="auction-info">
                     <div className="current-price">

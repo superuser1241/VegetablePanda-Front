@@ -1,0 +1,122 @@
+.purchase-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.purchase-container h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.purchase-details {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 30px;
+}
+
+.product-info {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.product-info h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.description {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.specs p {
+    margin: 8px 0;
+    color: #666;
+}
+
+.specs span {
+    font-weight: bold;
+    color: #34495e;
+    margin-right: 8px;
+}
+
+.purchase-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.quantity-selector label {
+    font-weight: bold;
+    color: #34495e;
+}
+
+.quantity-selector input {
+    width: 80px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.total-price {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: right;
+}
+
+.total-price h4 {
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.total-price p {
+    font-size: 24px;
+    font-weight: bold;
+    color: #27ae60;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn {
+    background-color: #e9ecef;
+    color: #2c3e50;
+}
+
+.purchase-btn {
+    background-color: #27ae60;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #dee2e6;
+}
+
+.purchase-btn:hover {
+    background-color: #219a52;
+} 
