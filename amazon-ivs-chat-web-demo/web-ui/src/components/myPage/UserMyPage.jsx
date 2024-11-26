@@ -66,8 +66,11 @@ const UserMyPage = () => {
 
     const fetchPoint = async (seq) => {
         try {
-            const response = await axios.post(`http://localhost:9001/myPage/point/${seq}`, {
-                headers: { Authorization: `Bearer ${token}` }
+            const response = await axios.get(`http://localhost:9001/myPage/point/${seq}`, {
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
             });
             setPoint(response.data);
         } catch (error) {
