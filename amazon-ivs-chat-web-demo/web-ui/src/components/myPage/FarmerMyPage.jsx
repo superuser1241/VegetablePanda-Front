@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './FarmerMyPage.css';
+import RegisterStock from './RegisterStock';
 
 const FarmerMyPage = () => {
     const navigate = useNavigate();
@@ -358,8 +359,8 @@ const FarmerMyPage = () => {
                     )}
 
                     {activeTab === 'product' && (
-                        <div className="product-section">
-                            <h3>상품 등록</h3>
+                        <div >
+                            {/* <h3>상품 등록</h3>
                             <div className="product-form">
                                 <div className="form-group">
                                     <label>상품 카테고리</label>
@@ -458,7 +459,8 @@ const FarmerMyPage = () => {
                                         상품 등록
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
+                            <RegisterStock/>
                         </div>
                     )}
                 </div>

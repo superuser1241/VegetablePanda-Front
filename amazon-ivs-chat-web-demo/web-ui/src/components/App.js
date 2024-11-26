@@ -11,6 +11,8 @@ import AdminMyPage from './myPage/AdminMyPage';
 import UserMyPage from './myPage/UserMyPage';
 import CompanyMyPage from './myPage/CompanyMyPage';
 import FarmerMyPage from './myPage/FarmerMyPage';
+import FarmerRegisterStock from './myPage/RegisterStock';
+import NotiSet from './Notification/NotiSet';
 import UserRegister from './Register/UserRegister';
 import FarmerRegister from './Register/FarmerRegister';
 import CompanyRegister from './Register/CompanyRegister';
@@ -128,6 +130,14 @@ function App() {
                             handleExitChat={handleExitChat}
                         />
                     } />
+                    {/* <Route path="/admin" element={
+                        <AdminApprovalPage
+                            streamingRoom={streamingRoom}
+                            setStreamingRoom={setStreamingRoom}
+                        />
+                    } /> */}
+                    <Route path="/register-stock" element = {<FarmerRegisterStock/> }/>
+                    
                     <Route path="/admin-mypage" element={userRole === 'ROLE_ADMIN' && <AdminMyPage navigateTo={navigate} />} />
                     <Route path="/user-mypage" element={userRole === 'ROLE_USER' && <UserMyPage navigateTo={navigate} />} />
                     <Route path="/company-mypage" element={userRole === 'ROLE_COMPANY' && <CompanyMyPage navigateTo={navigate} />} />

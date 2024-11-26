@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserMyPage.css';
+import * as ChargePoint from './ChargePoint.jsx'
+import iamport from 'https://cdn.iamport.kr/v1/iamport.js'
 
 const UserMyPage = () => {
     const [chargeAmount, setChargeAmount] = useState('');
@@ -64,7 +66,7 @@ const UserMyPage = () => {
 
     const fetchPoint = async (seq) => {
         try {
-            const response = await axios.get(`http://localhost:9001/myPage/point/${seq}`, {
+            const response = await axios.post(`http://localhost:9001/myPage/point/${seq}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setPoint(response.data);
@@ -91,6 +93,7 @@ const UserMyPage = () => {
                 return;
             }
 
+            // 충전금액 및 주문정보 등록
             const response = await axios.post('http://localhost:9001/charge', {
                 managementUserSeq: parseInt(userId),
                 price: parseInt(chargeAmount)
@@ -100,11 +103,53 @@ const UserMyPage = () => {
                     'Content-Type': 'application/json'
                 }
             });
+
+            // 주문번호 받아오기
+            const response2 = await axios.get('http://localhost:9001/payment/' + response.data + '?status=1', {
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            // 결제창 호출
+            let IMP = window.IMP;
+            IMP.init("imp68111618");
+            const response4 = ChargePoint.requestPay(response2, token, IMP);
+
             
-            if (response.data) {
+            // .then((result)=>{
+            //     console.log(result.data);
+
+            //     axios({
+            //         // 주문번호 받아오기
+            //         url: "http://localhost:9001/payment/" + result.data + "?status=1",
+            //         method: "GET",
+            //         headers: {
+            //             Authorization: `Bearer ${token}`,
+            //             "Content-Type": "application/json",
+            //         },
+            //     })
+            //     .then((result)=>{
+            //         // 결제에 필요한 정보
+            //         console.log(result.data);
+            //         // 결제창 호출
+            //         let IMP = window.IMP;
+            //         IMP.init("imp68111618");
+            //         ChargePoint.requestPay(result, token, IMP);
+            //     })
+            //     .catch((err)=>{
+            //         console.log(err);
+            //     })
+            // });
+            
+            if (response) {
+                console.log("if response 받는 구문")
+                console.log(response4)
                 setChargeAmount('');
-                window.location.href = response.data;
+                //window.location.href = response.data;
             }
+
         } catch (error) {
             console.error('포인트 충전 실패:', error);
             alert('포인트 충전에 실패했습니다.');
