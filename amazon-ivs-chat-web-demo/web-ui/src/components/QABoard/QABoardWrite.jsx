@@ -38,6 +38,7 @@ const QABoardWrite = () => {
         {
           subject: formData.subject,
           content: formData.content,
+          managementUser: payload.user_seq
         },
         {
           headers: {
