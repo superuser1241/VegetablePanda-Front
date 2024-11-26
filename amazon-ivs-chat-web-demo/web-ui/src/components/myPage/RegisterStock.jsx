@@ -23,9 +23,6 @@ const RegisterStock = () => {
     const [organic, setOrganic] = useState([]);
 
     const [selectedCategory, setSelectedCategory] = useState('');
-    const [selectedProduct, setSelectedProduct] = useState('');
-    const [selectedGrade, setSelectedGrade] = useState('');
-    const [selectedOrganic, setSelectedOrganic] = useState('');
     const [selectedColor, setSelectedColor] = useState('#8f8f8f'); // 초기 색상
 
     const [uploadImg, setUploadImg] = useState("");
