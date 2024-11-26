@@ -22,6 +22,7 @@ import QABoardEdit from './QABoard/QABoardEdit';
 import QABoardDetail from './QABoard/QABoardDetail';
 import Purchase from './Purchase/Purchase';
 import Payment from './Purchase/Payment';
+import axios from 'axios';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -72,17 +73,23 @@ function App() {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
-                    if (Date.now() >= payload.exp * 1000) {
+                    axios.get('http://localhost:9001/api/user', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    .then(response => {
+                        const userData = response.data;
+                        setUserName(userData.name);
+                        setUserRole(userData.role);
+                    })
+                    .catch(() => {
                         localStorage.removeItem('token');
                         setUserName('');
                         setUserRole('');
-                    } else {
-                        setUserName(payload.name);
-                        setUserRole(payload.role);
-                    }
+                    });
                 } catch (error) {
-                    console.error('토큰 디코딩 실패:', error);
+                    console.error('인증 확인 실패:', error);
                     localStorage.removeItem('token');
                     setUserName('');
                     setUserRole('');
@@ -90,7 +97,7 @@ function App() {
             }
         };
         checkAuthStatus();
-    }, [navigate]);
+    }, []);
 
     return (
         <div className="App">
