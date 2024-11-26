@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@csstools/normalize.css": "^12.1.1",
     "@stomp/stompjs": "^7.0.0",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^12.1.2",
@@ -14,6 +15,7 @@
     "linkify-react": "^4.0.2",
     "linkifyjs": "^4.0.2",
     "node-forge": ">=0.10.0",
+    "postcss-normalize": "^13.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.3.0",

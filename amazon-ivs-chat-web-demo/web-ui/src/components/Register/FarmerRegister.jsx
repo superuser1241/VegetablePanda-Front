@@ -218,7 +218,7 @@ function FarmerRegister() {
             value={phone}
             onChange={handlePhoneChange}
             required
-            maxLength="11"
+            maxLength={11}
             placeholder="전화번호를 입력하세요"
             className="farmer-input"
           />
@@ -267,7 +267,7 @@ function FarmerRegister() {
               maxLength="3"
               required
               className="business-number-input"
-              placeholder="XXX"
+              placeholder="000"
             />
             -
             <input
@@ -277,7 +277,7 @@ function FarmerRegister() {
               maxLength="2"
               required
               className="business-number-input"
-              placeholder="XX"
+              placeholder="00"
             />
             -
             <input
@@ -287,7 +287,7 @@ function FarmerRegister() {
               maxLength="5"
               required
               className="business-number-input"
-              placeholder="XXXXX"
+              placeholder="00000"
             />
           </div>
         </div>

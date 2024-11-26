@@ -4,6 +4,19 @@
     padding: 20px;
 }
 
+.button-container {
+    gap: 20px; 
+  }
+  
+  .update-button {
+    background-color: greenyellow;
+  }
+  
+  .delete-button {
+    background-color: gray;
+    margin-left: 20px;
+  }
+
 .user-mypage h2 {
     color: #333;
     text-align: center;

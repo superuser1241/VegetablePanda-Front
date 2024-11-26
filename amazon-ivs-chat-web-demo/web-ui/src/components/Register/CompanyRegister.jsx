@@ -236,6 +236,7 @@ function CompanyRegister() {
             onChange={handlePhoneChange}
             required
             placeholder="전화번호를 입력하세요"
+            maxLength={11}
             className="phone-input company-input"
           />
         </div>

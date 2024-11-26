@@ -20,6 +20,42 @@ function UserRegister() {
   const handleImageReset = () => {
     setImage(null);
   };
+
+// 중복체크 결과 값을 저장 할 idCheckResult
+ const [idCheckResult , setIdCheckResult] = useState(""); //중복입니다. or 사용가능합니다.
+
+// 아이디 중복여부에 따른 css 를 적용하기 위해 상태 변수
+  const [isCheckResult , setIsCheckResult] = useState(false); //true이면 중복, false이면 사용가능
+
+//각 text 박스에 값이 변경되었을 때
+  const changeValue = (e) => {
+  
+    //id 입력박스에 값이 입력될때마다 axios를 이용해서 비동기통신 - 중복여부 체크
+    if (e.target.name === id && e.target.value !== "") {
+      axios({
+        method: "GET",
+        url: "http://localhost:9001/members/" + e.target.name,
+      })
+        .then((res) => {
+          console.log(res);
+          setIdCheckResult(res.data);
+           res.data==="중복입니다" ? setIsCheckResult(true) : setIsCheckResult(false); 
+        })
+
+        .catch((err) => {
+          //실패
+          let errMessage = err.response.data.type + "\n";
+          errMessage += err.response.data.title + "\n";
+          errMessage += err.response.data.detail + "\n";
+
+          errMessage += err.response.data.status + "\n";
+          errMessage += err.response.data.instance + "\n";
+          errMessage += err.response.data.timestamp;
+          alert(errMessage);
+        });
+    }
+  };
+
   const handlePhoneEmailChange = (e, setter, type) => {
     let value = e.target.value;
     if (type === "email") {
@@ -155,6 +191,7 @@ function UserRegister() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            onClick={changeValue}
             placeholder="이름을 입력하세요"
             className="name-input"
           />
@@ -169,8 +206,9 @@ function UserRegister() {
             placeholder="아이디를 입력하세요"
             className="username-input"
           />
+        <p className="idText" style={ isCheckResult ? {color: "red"} : {color: "blue" } }>{idCheckResult}</p>
         </div>
-
+     
         <div className="input-group">
           <input
             type="password"
@@ -211,6 +249,7 @@ function UserRegister() {
             onChange={(e) => handlePhoneEmailChange(e, setPhone, "phone")}
             required
             placeholder="전화번호를 입력하세요"
+            maxLength={11}
             className="email-phone-input"
           />
         </div>
