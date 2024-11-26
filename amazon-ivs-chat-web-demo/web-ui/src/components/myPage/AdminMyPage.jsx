@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AdminMyPage.css';
 
 const AdminMyPage = () => {
-    const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const [activeTab, setActiveTab] = useState('info');
     const [pendingProducts, setPendingProducts] = useState([]);

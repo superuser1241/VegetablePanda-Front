@@ -12,7 +12,6 @@ import UserMyPage from './myPage/UserMyPage';
 import CompanyMyPage from './myPage/CompanyMyPage';
 import FarmerMyPage from './myPage/FarmerMyPage';
 import FarmerRegisterStock from './myPage/RegisterStock';
-import NotiSet from './Notification/NotiSet';
 import UserRegister from './Register/UserRegister';
 import FarmerRegister from './Register/FarmerRegister';
 import CompanyRegister from './Register/CompanyRegister';
@@ -22,7 +21,6 @@ import QABoardEdit from './QABoard/QABoardEdit';
 import QABoardDetail from './QABoard/QABoardDetail';
 import Purchase from './Purchase/Purchase';
 import Payment from './Purchase/Payment';
-
 function App() {
     const [userName, setUserName] = useState('');
     const [userRole, setUserRole] = useState('');
