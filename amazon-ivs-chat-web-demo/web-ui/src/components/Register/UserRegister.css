@@ -1,0 +1,165 @@
+.register-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.register-form-header {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+    text-align: left;
+}
+
+.name-input, .username-input, .password-input, .confirm-password-input, .email-phone-input, .address-input {
+    width: 500px;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.name-input:focus, .username-input:focus, .password-input:focus, .confirm-password-input:focus, .email-phone-input:focus, .address-input:focus {
+    border-color: #4caf50;
+    outline: none;
+}
+
+.email-phone-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.register-button {
+    width: 80%;
+    padding: 12px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    align-self: center;
+}
+
+.register-button:disabled {
+    background-color: #ddd;
+}
+
+.error-message {
+    text-align: center;
+    color: red;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.user-gender {
+    display: flex;
+    width: 100%;
+    max-width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.user-gender-radio {
+    display: none;
+}
+
+.gender-label {
+    flex: 1;
+    height: 50px;
+    text-align: center;
+    line-height: 35px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.gender-label:hover {
+    background-color: #f0f0f0;
+}
+
+.user-gender-radio:checked + .gender-label {
+    background-color: #4caf50;
+    color: white;
+}
+
+.user-gender-radio:checked + .gender-label:hover {
+    background-color: #45a049;
+}
+
+.user-gender .gender-label:nth-of-type(1) {
+    border-right: 2px solid #ccc;
+}
+
+.image-upload-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.image-upload-input {
+    display: none;
+}
+
+.image-upload-btn {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    align-self: center;
+}
+
+.image-upload-btn:hover {
+    background-color: #45a049;
+}
+
+.image-preview-container {
+    margin-top: 10px;
+    width: 150px;
+    height: 150px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

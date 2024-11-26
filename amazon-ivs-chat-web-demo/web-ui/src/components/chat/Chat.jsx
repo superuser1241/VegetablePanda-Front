@@ -11,6 +11,7 @@ import {
   SendMessageRequest,
 } from 'amazon-ivs-chat-messaging';
 import { uuidv4 } from '../../helpers';
+import productImage from '../../image/상품1.png';
 
 // Components
 import VideoPlayer from '../videoPlayer/VideoPlayer';
@@ -35,6 +36,45 @@ const Chat = ({streamingRoom,handleExitChat }) => {
 
   const chatRef = createRef();
   const messagesEndRef = createRef();
+
+  const [currentBid, setCurrentBid] = useState(50000); // 시작가
+  const [timeLeft, setTimeLeft] = useState('05:00');
+
+  const handleBid = () => {
+    setCurrentBid(prev => prev + 10);
+    // TODO: 서버에 입찰 정보 전송
+  };
+
+  useEffect(() => {
+    if (messagesEndRef.current && messages.length > 0) {
+      // 현재 스크롤 위치 확인
+      const chatContainer = document.querySelector('.messages');
+      const isScrolledToBottom = chatContainer.scrollHeight - chatContainer.clientHeight <= chatContainer.scrollTop + 100;
+      
+      // 맨 아래에 있을 때만 자동 스크롤
+      if (isScrolledToBottom) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [messages]); // 메시지가 추가될 때만 실행
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const [minutes, seconds] = timeLeft.split(':').map(Number);
+      let totalSeconds = minutes * 60 + seconds;
+      
+      if (totalSeconds > 0) {
+        totalSeconds -= 1;
+        const newMinutes = Math.floor(totalSeconds / 60);
+        const newSeconds = totalSeconds % 60;
+        setTimeLeft(`${String(newMinutes).padStart(2, '0')}:${String(newSeconds).padStart(2, '0')}`);
+      } else {
+        clearInterval(timer);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]);
 
   useEffect(() => {
     // 컴포넌트 언마운트 시 실행
@@ -186,13 +226,6 @@ const Chat = ({streamingRoom,handleExitChat }) => {
       unsubscribeOnMessageDeleted();
     };
   }, [chatRoom]);
-
-  useEffect(() => {
-    const scrollToBottom = () => {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    };
-    scrollToBottom();
-  });
 
   useEffect(() => {
     previousRaiseHandUsername.current = usernameRaisedHand;
@@ -629,6 +662,42 @@ const Chat = ({streamingRoom,handleExitChat }) => {
         </div>
         {showSignIn && <SignIn handleSignIn={handleSignIn} />}
       </div>
+      <div className="auction-container">
+                  <div className="product-image">
+                    <img src={productImage} alt="상품 이미지" />
+                  </div>
+                  <div className="product-info">
+                    <span className="product-category">채소/과일</span>
+                    <h3 className="product-title">맛있는 양파</h3>
+                    <p className="product-description">
+                      윤성바오가 파는 맛있는 양파입니다.
+                    </p>
+                  </div>
+                <div className="bidding-section">
+                  <div className="auction-info">
+                    <div className="current-price">
+                      <h3>현재 입찰가</h3>
+                      <p>{currentBid.toLocaleString()}원</p>
+                    </div>
+                    <div className="quantity">
+                      <h3>수량</h3>
+                      <p>5kg</p>
+                    </div>
+                    <div className="time-left">
+                      <h3>남은 시간</h3>
+                      <p>{timeLeft}</p>
+                    </div>
+                  </div>
+                  <div className="bidding-form">
+                    <button 
+                      onClick={handleBid}
+                      className="bid-button"
+                    >
+                      +10원 입찰하기
+                    </button>
+                  </div>
+                </div>
+              </div>
     </>
   );
 };

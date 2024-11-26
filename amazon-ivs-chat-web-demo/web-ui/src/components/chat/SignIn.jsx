@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Avatars from "./Avatars";
 
 const SignIn = ({ handleSignIn }) => {
@@ -9,7 +8,7 @@ const SignIn = ({ handleSignIn }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const fetchUserData = async () => {
+    const getUserDataFromToken = () => {
         const token = localStorage.getItem("token");
         if (!token) {
             setError("No token found. Please login again.");
@@ -18,27 +17,25 @@ const SignIn = ({ handleSignIn }) => {
         }
 
         try {
-            const response = await axios.get("http://localhost:9001/api/user", {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            if (response.data && response.data.name) {
-                setUsername(response.data.name);
-                setModerator(response.data.role === "ROLE_FARMER");
+            const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
+            
+            if (payload.name) {
+                setUsername(payload.name);
+                setModerator(payload.role === "ROLE_FARMER");
                 setError(null);
             } else {
-                setError("Failed to retrieve user data.");
+                setError("Invalid token data.");
             }
         } catch (err) {
-            console.error("Failed to fetch user data:", err);
-            setError("Failed to fetch user data. Please try again.");
+            console.error("Failed to decode token:", err);
+            setError("Failed to get user data. Please try again.");
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchUserData();
+        getUserDataFromToken();
     }, []);
 
     if (loading) {
