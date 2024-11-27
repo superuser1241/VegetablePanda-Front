@@ -5,15 +5,17 @@ import './BidPage.css';
 
 const BidPage = () => {
     const { highestBid, auction, bid } = useAuctionData(5); // userSeq 5로 하드코딩된 값 사용
-    const { bidAmount, handleIncrease, handleDecrease, handleBid } = useBidding(highestBid, 2);
+    const { bidAmount, handleIncrease, handleDecrease, handleBid } = useBidding(highestBid, 3);
 
     const onBidSubmit = async () => {
         console.log('입찰 시도:', { bidAmount, auctionId: 2 });
         await handleBid();
     };
+    
 
     return (
         <div className="auction-container">
+            {/* <AllBidNotiSet/> */}
             {highestBid ? (
                 <div className="bidding-section">
                     <div className="auction-info">

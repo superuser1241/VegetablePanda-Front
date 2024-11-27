@@ -21,6 +21,7 @@ import QABoardEdit from './QABoard/QABoardEdit';
 import QABoardDetail from './QABoard/QABoardDetail';
 import Purchase from './Purchase/Purchase';
 import Payment from './Purchase/Payment';
+import NotiSet from './Notification/NotiSet';
 function App() {
     const [userName, setUserName] = useState('');
     const [userRole, setUserRole] = useState('');
@@ -92,6 +93,7 @@ function App() {
 
     return (
         <div className="App">
+            {userName&&<NotiSet/>}
             <Header
                 userName={userName}
                 userRole={userRole}
