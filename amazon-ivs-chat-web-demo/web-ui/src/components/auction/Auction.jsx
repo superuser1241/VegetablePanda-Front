@@ -48,7 +48,6 @@ const Auction = () => {
                     <h3>판매자 전화번호: {stockInfo.farmerUserPhone}</h3>
                 </div>
             )}
-            {!stockInfo && <p>상품 정보를 불러오는 중...</p>}
         </div>
     );
     
