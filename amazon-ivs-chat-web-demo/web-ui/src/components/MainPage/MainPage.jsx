@@ -42,6 +42,7 @@ const MainPage = ({ onJoinRoom }) => {
 
         fetchActiveRooms();
         fetchShopItems();
+        console.log(shopItems);
     }, []);
 
     useEffect(() => {

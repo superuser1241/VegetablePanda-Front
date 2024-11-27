@@ -45,10 +45,6 @@ const RegisterStock = () => {
         console.log("카테고리 정보")
         console.log(productCategory)
         
-        // fetchProductInfo();
-        // console.log('상품 정보');
-        // console.log(product);
-        
         fetchStockGrade();
         console.log('등급 분류 정보');
         console.log(grade);
@@ -123,25 +119,6 @@ const RegisterStock = () => {
         console.log(products);
     }
 
-    // const changeProduct = (e) => {
-    //     let value = e.target.value;
-    //     console.log('선택된 상품:' + value);
-
-    //     setSelectedProduct(value);
-    // }
-
-    // const changeGrade = (e) => {
-    //     const value = e.target.value;
-    //     console.log('선택된 등급:', value);
-    //     setSelectedGrade(value);
-    // };
-
-    // const changeOrganic = (e) => {
-    //     const value = e.target.value;
-    //     console.log('선택된 유기농 분류:', value);
-    //     setSelectedOrganic(value);
-    // };
-
     const handleProductSubmit = async (e) => {
         if(!newProduct.color) return alert('색상을 선택해주세요.');
         if(!newProduct.count) return alert('수량을 입력해주세요.');
@@ -151,16 +128,23 @@ const RegisterStock = () => {
             e.preventDefault();
 
             // URL에 쿼리 파라미터 추가
-            const url = `http://localhost:9001/stock?productSeq=${newProduct.productSeq}&stockGradeSeq=${newProduct.stockGradeSeq}&stockOrganicSeq=${newProduct.stockOrganicSeq}&farmerSeq=${userId}`;
+            //const url = `http://localhost:9001/stock?productSeq=${newProduct.productSeq}&stockGradeSeq=${newProduct.stockGradeSeq}&stockOrganicSeq=${newProduct.stockOrganicSeq}&farmerSeq=${userId}`;
+            const url = `http://localhost:9001/stock?farmerSeq=${userId}`;
             
             // body 데이터
             const stockData = {
+                productSeq:parseInt(newProduct.productSeq),
+                stockGradeSeq: parseInt(newProduct.stockGradeSeq),
+                stockOrganicSeq: parseInt(newProduct.stockOrganicSeq),
                 color: newProduct.color,
                 count: parseInt(newProduct.count),
                 content: newProduct.content,
             };
 
-            const response = await axios.post(url, stockData, {
+            console.log(newProduct);
+            console.log(stockData);
+
+            const response = await axios.post(url, newProduct, {
                 headers: { 
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -190,6 +174,7 @@ const RegisterStock = () => {
 
     const handleProductChange = (e) => {
         const { name, value } = e.target;
+        
         setNewProduct(prev => ({
             ...prev,
             [name]: value
@@ -235,12 +220,20 @@ const RegisterStock = () => {
                         <div className='form-group'>
                             <label>상품 카테고리</label>
                             <select name="product-category" id="product-category" value = {selectedCategory} onChange={changeCategory}>
-                                <option value="default">---</option>
-                                {
+                                {/* 한번 설정되면 바뀌지 않는 값이므로 직접 넣기 */}
+                                <option value="default">카테고리 선택</option>
+                                <option value="1">식량작물</option>
+                                <option value="2">엽채류</option>
+                                <option value="3">과채류</option>
+                                <option value="4">근채류</option>
+                                <option value="5">양채류</option>
+                                <option value="6">과수</option>
+                                <option value="7">기타작물</option>
+                                {/* {
                                     productCategory.map((item) => {
                                         return <option key = {item.productCategorySeq} id = {item.productCategorySeq} value = {item.productCategorySeq}>{item.content}</option>
                                     })
-                                }
+                                } */}
                             </select>
                         </div>
                         <div className='form-group'>
