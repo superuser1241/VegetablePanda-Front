@@ -1,22 +1,22 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 
-const Auction = () => {
+const Auction = ({ streamingRoom }) => {
   
     const [stockInfo, setStockInfo] = useState(null);
-
+    console.log('streamingRoom:', streamingRoom);
+    console.log('hi 방입장');
     useEffect (() =>{
         const findStockById = async () =>{
             const token = localStorage.getItem('token');
             try {
 
-                const result = await axios.get("http://localhost:9001/auctionStock/5",{
+                const result = await axios.get(`http://localhost:9001/auctionStock/${streamingRoom.farmerUser.userSeq}`,{
                  headers: {
                     'Authorization': `Bearer ${token}`
                 }
 
              });
-
              setStockInfo(result.data);
              console.log('설정된 데이터:', result.data);
 

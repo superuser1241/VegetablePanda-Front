@@ -9,6 +9,7 @@ import { Pie, Line, Chart } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import AuctionStatus from '../auction/AuctionStatus';
+import AuctionRegisterPage from '../auction/AuctionRegisterPage';
 
 ChartJS.register(
     ArcElement, 
@@ -44,6 +45,7 @@ const MainPage = ({ onJoinRoom }) => {
             try {
                 const response = await axios.get('http://localhost:9001/api/streaming/active-rooms');
                 setRooms(response.data);
+                console.log('rooms:', rooms);
             } catch (err) {
                 setError('Failed to fetch active rooms. Please try again.');
                 console.error(err);
@@ -337,6 +339,7 @@ const MainPage = ({ onJoinRoom }) => {
                 <section className="streaming-section">
                     <h2 className="section-title">실시간 스트리밍</h2>
                     <div className="room-list">
+                         console.log('rooms:', rooms);
                         {rooms.slice(0, visibleRooms).map((room) => (
                             <div key={room.streamingSeq} className="room-card">
                                 <h3>Room ID: {room.chatRoomId}</h3>
@@ -389,6 +392,9 @@ const MainPage = ({ onJoinRoom }) => {
                 </section>
             </div>
             <AuctionStatus />
+            <Auction/>
+            <BidPage/>
+            <AuctionRegisterPage/>
         </>
     );
 };

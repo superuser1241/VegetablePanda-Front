@@ -1,14 +1,16 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { useAuctionData } from './useAuctionData';
 import { useBidding } from './useBidding';
 import './BidPage.css';
 
 const BidPage = () => {
     const { highestBid, auction, bid } = useAuctionData(5); // userSeq 5로 하드코딩된 값 사용
+    const { auctionSeq } = useParams();
     const { bidAmount, handleIncrease, handleDecrease, handleBid } = useBidding(highestBid, 3);
 
     const onBidSubmit = async () => {
-        console.log('입찰 시도:', { bidAmount, auctionId: 2 });
+        console.log('입찰 시도:', { bidAmount, auctionId: auctionSeq });
         await handleBid();
     };
     
