@@ -26,17 +26,24 @@ function LoginForm({ onLoginSuccess }) {
 
             const authHeader = loginResponse.headers['authorization'];
             const token = authHeader ? authHeader.split(' ')[1] : null;
+            
+            console.log('Login Response:', loginResponse);
+            console.log('Auth Header:', authHeader);
+            console.log('Token:', token);
 
             if (token) {
                 localStorage.setItem('token', token);
-                const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
-                onLoginSuccess(payload.name, payload.role);
+                localStorage.setItem('userSeq', loginResponse.data.user_seq);
+                console.log(loginResponse.data.user_seq);
+                const userData = loginResponse.data;
+                onLoginSuccess(userData.name, userData.role);
             } else {
-                setMessage('Failed to retrieve token.');
+                setMessage('토큰을 받아올 수 없습니다.');
             }
         } catch (error) {
+            console.error('Login Error:', error);
             setMessage(
-                error.response?.status === 401 ? 'Invalid credentials' : 'An error occurred. Please try again.'
+                error.response?.status === 401 ? '아이디 또는 비밀번호가 올바르지 않습니다.' : '로그인 중 오류가 발생했습니다.'
             );
         }
     };

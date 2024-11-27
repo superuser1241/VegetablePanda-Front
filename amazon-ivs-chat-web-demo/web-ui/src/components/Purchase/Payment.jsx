@@ -3,8 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Payment.css';
 import productImage from '../../image/상품1.png';
+import * as PortOne from './PortOne.jsx'
 
 const Payment = () => {
+    const [userId, setUserId] = useState('');
     const location = useLocation();
     const navigate = useNavigate();
     const { item, quantity } = location.state || {};
@@ -38,6 +40,8 @@ const Payment = () => {
                     phone: response.data.phone,
                     address: response.data.address
                 });
+
+                setUserId(response.data.user_seq);
             } catch (error) {
                 console.error('사용자 정보 조회 실패:', error);
                 if (error.response?.status === 401) {
@@ -81,6 +85,17 @@ const Payment = () => {
                 }
             };
 
+            const orderData2 = {
+                userSeq: userId,
+                state:5,
+                totalPrice: item.price * quantity, //+ 3000,
+                userBuyDetailDTOs: [{
+                    price: item.price,
+                    count: item.quantity,
+                    stockSeq: item.stockSeq
+                }]
+            };
+        
             // // 주문 API 호출
             // await axios.post('http://localhost:9001/api/orders', orderData, {
             //     headers: {
@@ -88,8 +103,40 @@ const Payment = () => {
             //     }
             // });
 
-            alert('결제가 완료되었습니다.');
-            navigate('/');
+            // 주문 API 호출
+            // 주문정보 등록
+            const response = await axios.post('http://localhost:9001/shop/purchase', orderData2, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            console.log("주문번호");
+            console.log(response.data);
+
+            // 주문번호 받아오기
+            const response2 = await axios.get('http://localhost:9001/payment/' + response.data + '?status=2', {
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            console.log("response2");
+            console.log(response2);
+
+            // 결제창 호출
+            let IMP = window.IMP;
+            IMP.init("imp68111618");
+            const response3 = PortOne.requestPay(response2, token, IMP);
+
+            console.log("response3");
+            console.log(response3);
+            
+            if(response3.data.success === true) {
+                alert('결제가 완료되었습니다.');
+                navigate('/');
+            }
+            
         } catch (error) {
             console.error('결제 처리 실패:', error);
             alert('결제 처리 중 오류가 발생했습니다.');

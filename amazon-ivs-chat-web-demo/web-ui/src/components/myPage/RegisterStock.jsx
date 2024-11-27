@@ -10,11 +10,12 @@ const RegisterStock = () => {
     const [newProduct, setNewProduct] = useState({
         color: '',
         count: '',
-        status: 2,
+        status: 0,
         content: '',
         productSeq: '',
         stockGradeSeq: '',
-        stockOrganicSeq: ''
+        stockOrganicSeq: '',
+        regDate: new Date().toISOString()
     });
 
     const [productCategory, setProductCategory] = useState([]);
@@ -32,7 +33,7 @@ const RegisterStock = () => {
             try {
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 setUserId(payload.user_seq);
-                console.log(userId);
+                console.log("사용자 시퀀스 : ", userId);
             } catch (error) {
                 console.error('토큰 파싱 실패:', error);
             }
@@ -120,25 +121,26 @@ const RegisterStock = () => {
     }
 
     const handleProductSubmit = async (e) => {
+        e.preventDefault();
+        
         if(!newProduct.color) return alert('색상을 선택해주세요.');
         if(!newProduct.count) return alert('수량을 입력해주세요.');
         if(!newProduct.content) return alert('내용을 입력해주세요.');
         
+
         try{
             e.preventDefault();
 
-            // URL에 쿼리 파라미터 추가
-            //const url = `http://localhost:9001/stock?productSeq=${newProduct.productSeq}&stockGradeSeq=${newProduct.stockGradeSeq}&stockOrganicSeq=${newProduct.stockOrganicSeq}&farmerSeq=${userId}`;
             const url = `http://localhost:9001/stock?farmerSeq=${userId}`;
             
-            // body 데이터
             const stockData = {
                 productSeq:parseInt(newProduct.productSeq),
                 stockGradeSeq: parseInt(newProduct.stockGradeSeq),
                 stockOrganicSeq: parseInt(newProduct.stockOrganicSeq),
-                color: newProduct.color,
-                count: parseInt(newProduct.count),
+                color: parseInt(newProduct.color),
                 content: newProduct.content,
+                status: 0,
+                regDate: new Date().toISOString()
             };
 
             console.log(newProduct);
@@ -152,25 +154,28 @@ const RegisterStock = () => {
             });
 
             if (response.status === 201) {
-                alert('상품이 등록되었습니다. 관리자 승인 후 판매가 시작됩니다.');
+                alert('상품이 등록되었습니다.');
+                // 폼 초기화
                 setNewProduct({
                     color: '',
                     count: '',
-                    status: 2,
+                    status: 0,
                     content: '',
                     productSeq: '',
                     stockGradeSeq: '',
-                    stockOrganicSeq: ''
+                    stockOrganicSeq: '',
+                    regDate: new Date().toISOString()
                 });
-                setSelectedCategory('');
-                setSelectedColor('#8f8f8f');
             }
         } catch (error) {
+            if (error.response?.status === 400) {
+                alert('하루에 한 상품만 등록할 수 있습니다.');
+            } else {
+                alert('상품 등록에 실패했습니다.');
+            }
             console.error('상품 등록 실패:', error);
-            console.error('요청 URL:', error.config?.url);
-            console.error('요청 데이터:', error.config?.data);
         }
-    }
+    };
 
     const handleProductChange = (e) => {
         const { name, value } = e.target;

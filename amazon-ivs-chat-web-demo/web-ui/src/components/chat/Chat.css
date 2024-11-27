@@ -677,3 +677,34 @@ button.item-container {
     margin-top: 12px;
   }
 }
+
+/* SignIn 모달의 버튼 스타일 수정 */
+.modal .btn--primary {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #22c55e, #16a34a); /* 녹색 계열로 변경 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center; /* 텍스트 중앙 정렬 */
+    display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+}
+
+.modal .btn--primary:hover {
+    background: linear-gradient(135deg, #16a34a, #15803d); /* 호버 시 더 진한 녹색 */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(22, 163, 74, 0.3); /* 그림자 색상도 녹색으로 변경 */
+}
+
+.modal .btn--primary:disabled {
+    background: #e5e7eb;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}

@@ -26,7 +26,7 @@ export const requestPay = async (result, token, IMP) => {
           
           const sendValidateData = async () => {
             try {
-                const response3 = await axios.post('http://localhost:9001/payment/validate?status=1', {
+                const response3 = await axios.post('http://localhost:9001/payment/validate?status=2', {
                         orderUid: rsp.merchant_uid, 
                         paymentUid: rsp.imp_uid
                 },
@@ -45,25 +45,11 @@ export const requestPay = async (result, token, IMP) => {
         
           sendValidateData();
         
-
-        //   axios({
-        //     url : 'http://localhost:9001/payment/charge',
-        //     method : "post",
-        //     headers : {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'},
-        //     data : {orderUid: rsp.merchant_uid, paymentUid: rsp.imp_uid}
-        //   })
-        //   .then((result)=>{
-        //     console.log(result);
-        //   })
-        //   .catch((err)=>{
-        //     console.log(err);
-        //   });
-
         } else {
           console.log('결제실패')
           console.log(rsp);
           
-          alert("포인트 결제 실패");
+          alert("상품 결제 실패");
           
         }
       }
