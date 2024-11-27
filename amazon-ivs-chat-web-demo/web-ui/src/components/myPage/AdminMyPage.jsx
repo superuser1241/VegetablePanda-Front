@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AdminMyPage.css';
+import AuctionStatus from '../auction/AuctionStatus';
 
 const AdminMyPage = () => {
     const token = localStorage.getItem('token');
@@ -95,6 +96,9 @@ const AdminMyPage = () => {
                     <li onClick={() => setActiveTab('streaming')} className={activeTab === 'streaming' ? 'active' : ''}>
                         스트리밍 승인
                     </li>
+                    <li onClick={() => setActiveTab('auctions')} className={activeTab === 'auctions' ? 'active' : ''}>
+                        실시간 경매 현황
+                    </li>
                     <li onClick={() => setActiveTab('stats')} className={activeTab === 'stats' ? 'active' : ''}>
                         통계
                     </li>
@@ -147,6 +151,13 @@ const AdminMyPage = () => {
                                 </tbody>
                             </table>
                         )}
+                    </div>
+                )}
+
+                {activeTab === 'auctions' && (
+                    <div className="auctions-section">
+                        <h2>실시간 경매 현황</h2>
+                        <AuctionStatus />
                     </div>
                 )}
 
