@@ -146,21 +146,21 @@ const RegisterStock = () => {
     // };
 
     const handleProductSubmit = async (e) => {
+        e.preventDefault();
+        
         if(!newProduct.color) return alert('색상을 선택해주세요.');
         if(!newProduct.count) return alert('수량을 입력해주세요.');
         if(!newProduct.content) return alert('내용을 입력해주세요.');
         
-        try{
-            e.preventDefault();
-
-            // URL에 쿼리 파라미터 추가
+        try {
             const url = `http://localhost:9001/stock?productSeq=${newProduct.productSeq}&stockGradeSeq=${newProduct.stockGradeSeq}&stockOrganicSeq=${newProduct.stockOrganicSeq}&farmerSeq=${userId}`;
             
-            // body 데이터
             const stockData = {
-                color: newProduct.color,
+                color: parseInt(newProduct.color),
                 count: parseInt(newProduct.count),
                 content: newProduct.content,
+                status: 0,
+                regDate: new Date().toISOString()
             };
 
             const response = await axios.post(url, stockData, {
@@ -171,25 +171,28 @@ const RegisterStock = () => {
             });
 
             if (response.status === 201) {
-                alert('상품이 등록되었습니다. 관리자 승인 후 판매가 시작됩니다.');
+                alert('상품이 등록되었습니다.');
+                // 폼 초기화
                 setNewProduct({
                     color: '',
                     count: '',
-                    status: 2,
+                    status: 0,
                     content: '',
                     productSeq: '',
                     stockGradeSeq: '',
-                    stockOrganicSeq: ''
+                    stockOrganicSeq: '',
+                    regDate: new Date().toISOString()
                 });
-                setSelectedCategory('');
-                setSelectedColor('#8f8f8f');
             }
         } catch (error) {
+            if (error.response?.status === 400) {
+                alert('하루에 한 상품만 등록할 수 있습니다.');
+            } else {
+                alert('상품 등록에 실패했습니다.');
+            }
             console.error('상품 등록 실패:', error);
-            console.error('요청 URL:', error.config?.url);
-            console.error('요청 데이터:', error.config?.data);
         }
-    }
+    };
 
     const handleProductChange = (e) => {
         const { name, value } = e.target;
