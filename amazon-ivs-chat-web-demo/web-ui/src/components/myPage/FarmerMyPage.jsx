@@ -25,7 +25,7 @@ const FarmerMyPage = () => {
         content: '',
         productSeq: '',
         stockGradeSeq: '',
-        stockOrganicSeq: ''
+        stockOrganicSeq: '',
     });
     const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -182,7 +182,7 @@ const FarmerMyPage = () => {
                 setNewProduct({
                     color: '',
                     count: '',
-                    status: 2,
+                    status: 0,
                     content: '',
                     productSeq: '',
                     stockGradeSeq: '',
