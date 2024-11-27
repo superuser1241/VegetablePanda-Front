@@ -8,6 +8,7 @@ import BidPage from '../auction/BidPage';
 import { Pie, Line, Chart } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import AuctionStatus from '../auction/AuctionStatus';
 
 ChartJS.register(
     ArcElement, 
@@ -387,6 +388,7 @@ const MainPage = ({ onJoinRoom }) => {
                     )}
                 </section>
             </div>
+            <AuctionStatus />
         </>
     );
 };
