@@ -36,7 +36,10 @@ export const requestPay = async (result, token, IMP) => {
                           'Content-Type': 'application/json'
                       }
                 });
+                console.log("response3");
                 console.log(response3);
+
+                alert('결제가 완료되었습니다.');
 
             } catch(err) {
                 console.log(err);
@@ -44,6 +47,7 @@ export const requestPay = async (result, token, IMP) => {
           }
         
           sendValidateData();
+          //navigate('/');
         
         } else {
           console.log('결제실패')
