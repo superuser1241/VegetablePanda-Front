@@ -75,7 +75,7 @@ const CompanyMyPage = () => {
     }
   }, [userId]);
 
-  const fetchCompanyInfo = async (seq) => {
+  const fetchCompanyInfo = async (userId) => {
     try {
       const response = await axios.get(
         `http://localhost:9001/myPage/company/list/${userId}`,
@@ -89,7 +89,7 @@ const CompanyMyPage = () => {
     }
   };
 
-  const fetchPoint = async (seq) => {
+  const fetchPoint = async (userId) => {
     try {
       const response = await axios.get(
         `http://localhost:9001/myPage/point/${userId}`,
@@ -268,7 +268,7 @@ const CompanyMyPage = () => {
 
     if (confirmDelete) {
       try {
-        const response = await axios.post(
+        const response = await axios.put(
           `http://localhost:9001/myPage/company/delete/${userId}`,
           { userId },
           {
@@ -325,6 +325,7 @@ const CompanyMyPage = () => {
             >
               회원 정보 수정
             </li>
+        
             <li
               onClick={() => setActiveTab("buyList")}
               className={activeTab === "buyList" ? "active" : ""}

@@ -18,7 +18,7 @@ const UserMyPage = () => {
   const [point, setPoint] = useState(0);
   const [review, setreview] = useState([]);
   const [editedUser, setEditedUser] = useState({
-    password: "",
+    pw: "",
     name: "",
     gender: "",
     regDate: "",
@@ -44,7 +44,7 @@ const UserMyPage = () => {
   useEffect(() => {
     if (userInfo) {
       setEditedUser({
-        password: "",
+        pw: "",
         name: userInfo.name,
         address: userInfo.address,
         phone: userInfo.phone,
@@ -263,6 +263,7 @@ const UserMyPage = () => {
           name: editedUser.name,
           email: editedUser.email,
           phone: formattedPhone,
+          pw: editedUser.pw,
           address: editedUser.address,
           gender: editedUser.gender,
           profileImage: imagePreview || userInfo.profileImage,
@@ -282,8 +283,8 @@ const UserMyPage = () => {
 
     if (confirmDelete) {
       try {
-        const response = await axios.post(
-          `http://localhost:9001/myPage/user/delete/${userId}`,
+        const response = await axios.put(
+          `http://localhost:9001/myPage/delete/${userId}`,
           { userId },
           {
             headers: {

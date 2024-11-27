@@ -11,21 +11,20 @@ const FarmerMyPage = () => {
   const [image, setImage] = useState(null);
   const [codePart1, setCodePart1] = useState("");
   const [codePart2, setCodePart2] = useState("");
-  const [review, setReview] = useState([]);
   const [codePart3, setCodePart3] = useState("");
+  const [review, setReview] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
   const [farmerInfo, setFarmerInfo] = useState(null);
   const [editedFarmer, setEditedFarmer] = useState({
-    comName: "",
-    ownerName: "",
-    regName: "",
     email: "",
-    code: "",
-    address: "",
     phone: "",
+    code: "",
+    name: "",
     pw: "",
+    address: "",
   });
-  const [activeTab, setActiveTab] = useState("product"); // 기본 탭을 product로 변경
+
+  const [activeTab, setActiveTab] = useState("info"); // 기본 탭을 info로 변경
   const [newProduct, setNewProduct] = useState({
     color: "",
     count: "",
@@ -44,7 +43,7 @@ const FarmerMyPage = () => {
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         setUserId(payload.user_seq);
-         fetchfarmerInfo(payload.user_seq);  // 회원정보 조회 주석
+        fetchFarmerInfo(payload.user_seq); // 회원정보 조회 주석
       } catch (error) {
         console.error("토큰 파싱 실패:", error);
       }
@@ -60,14 +59,13 @@ const FarmerMyPage = () => {
     if (farmerInfo) {
       setEditedFarmer({
         email: farmerInfo.email || "",
-        id: farmerInfo.companyId || "",
+        farmerId: farmerInfo.farmerId || "",
         phone: farmerInfo.phone || "",
-        comName: farmerInfo.comName || "",
-        ownerName: farmerInfo.ownerName || "",
+        name: farmerInfo.name || "",
         address: farmerInfo.address || "",
         code: farmerInfo.code || "",
+        grade: farmerInfo.grade || "",
         pw: farmerInfo.pw || "",
-        regName: farmerInfo.regName || "",
         regDate: farmerInfo.regDate || "",
         profileImage: farmerInfo.profileImage || null,
       });
@@ -77,8 +75,8 @@ const FarmerMyPage = () => {
 
   useEffect(() => {
     if (userId) {
-      fetchfarmerInfo(userId);
-      fetchReviews(userId);
+      fetchFarmerInfo(userId);
+      fetchreview(userId);
     }
   }, [userId]);
 
@@ -88,27 +86,40 @@ const FarmerMyPage = () => {
     }
   }, [token]);
 
-  const fetchfarmerInfo = async (seq) => {
+  const fetchFarmerInfo = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/list/${seq}`,
+        `http://localhost:9001/myPage/farmer/list/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         }
       );
-      setFarmerInfo(response.data);
+      const farmerData = response.data;
+
+      // 필요한 데이터만 남기기
+      const simplifiedData = {
+        farmerId: farmerData.farmerId,
+        name: farmerData.name,
+        code: farmerData.code,
+        address: farmerData.address,
+        phone: farmerData.phone,
+        grade: farmerData.grade,
+        regDate: farmerData.regDate,
+        email: farmerData.email,
+      };
+
+      setFarmerInfo(simplifiedData);
     } catch (error) {
       console.error("회원 정보 조회 실패:", error);
     }
   };
 
-  const fetchReviews = async (seq) => {
+  const fetchreview = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:9001/myPage/review/${seq}`,
+        `http://localhost:9001/myPage/review/${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -119,8 +130,8 @@ const FarmerMyPage = () => {
     }
   };
 
-   // 이미지
-   const handleImageChange = (e) => {
+  // 이미지
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImage(file);
@@ -184,9 +195,7 @@ const FarmerMyPage = () => {
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
     const formData = new FormData();
-    formData.append("comName", editedFarmer.comName);
-    formData.append("ownerName", editedFarmer.ownerName);
-    formData.append("regName", editedFarmer.regName);
+    formData.append("name", editedFarmer.name);
     formData.append("email", editedFarmer.email);
     formData.append("code", code);
     formData.append("address", editedFarmer.address);
@@ -213,9 +222,7 @@ const FarmerMyPage = () => {
         alert("정보 수정이 완료되었습니다.");
         setFarmerInfo({
           ...farmerInfo,
-          comName: editedFarmer.comName,
-          ownerName: editedFarmer.ownerName,
-          regName: editedFarmer.regName,
+          name: editedFarmer.name,
           pw: editedFarmer.pw,
           email: editedFarmer.email,
           phone: formattedPhone,
@@ -240,7 +247,7 @@ const FarmerMyPage = () => {
     if (confirmDelete) {
       try {
         const response = await axios.post(
-          `http://localhost:9001/myPage/company/delete/${userId}`,
+          `http://localhost:9001/myPage/farmer/delete/${userId}`,
           { userId },
           {
             headers: {
@@ -359,8 +366,8 @@ const FarmerMyPage = () => {
               정산 신청
             </li>
             <li
-              onClick={() => setActiveTab("reviews")}
-              className={activeTab === "reviews" ? "active" : ""}
+              onClick={() => setActiveTab("review")}
+              className={activeTab === "review" ? "active" : ""}
             >
               나의 리뷰
             </li>
@@ -376,11 +383,18 @@ const FarmerMyPage = () => {
             >
               상품 등록
             </li>
+            <li
+              onClick={() => setActiveTab("stoke")}
+              className={activeTab === "stoke" ? "active" : ""}
+            >
+              내 상품 목록
+            </li>
+        
           </ul>
         </div>
 
         <div className="main-content">
-        {activeTab === "info" && farmerInfo && (
+          {activeTab === "info" && farmerInfo && (
             <div className="user-info-section">
               <h3>회원 정보</h3>
               <div className="user-info-details">
@@ -388,13 +402,10 @@ const FarmerMyPage = () => {
                   <strong>프로필사진</strong> {farmerInfo.file}
                 </p>
                 <p>
-                  <strong>아이디 :</strong> {farmerInfo.companyId}
+                  <strong>아이디 :</strong> {farmerInfo.farmerId}
                 </p>
                 <p>
-                  <strong>업체명 :</strong> {farmerInfo.comName}
-                </p>
-                <p>
-                  <strong>대표자 :</strong> {farmerInfo.ownerName}
+                  <strong>대표자 :</strong> {farmerInfo.name}
                 </p>
                 <p>
                   <strong>이메일 :</strong> {farmerInfo.email}
@@ -409,7 +420,7 @@ const FarmerMyPage = () => {
                   <strong>전화번호 :</strong> {farmerInfo.phone}
                 </p>
                 <p>
-                  <strong>등급 :</strong> {farmerInfo.farmer_grade}
+                  <strong>등급 :</strong> {farmerInfo.grade}
                 </p>
                 <p>
                   <strong>가입일자 :</strong>
@@ -422,8 +433,7 @@ const FarmerMyPage = () => {
             </div>
           )}
 
-
-{activeTab === "update" && (
+          {activeTab === "update" && (
             <div className="user-info-edit-section">
               <h3>업체 정보 수정</h3>
               <form onSubmit={handleUpdateFarmerInfo}>
@@ -471,23 +481,15 @@ const FarmerMyPage = () => {
                     </button>
                   )}
                 </div>
-                <label>업체명</label>
-                <input
-                  type="text"
-                  name="comName"
-                  value={editedFarmer.comName}
-                  onChange={handleChange}
-                  required
-                />
-                <label htmlFor="owner">대표자명</label>
+                <label htmlFor="owner">판매자명</label>
                 <input
                   type="text"
                   name="ownerName"
-                  value={editedFarmer.ownerName}
+                  value={editedFarmer.name}
                   onChange={handleChange}
                   required
                 />
-                
+
                 <label htmlFor="email">이메일</label>
                 <input
                   type="email"
@@ -578,34 +580,49 @@ const FarmerMyPage = () => {
             </div>
           )}
 
-          {/* {activeTab === 'reviews' && (
-                        <div className="reviews-section">
-                            <h3>나의 리뷰 목록</h3>
-                            <div className="reviews-list">
-                                {reviews.map((review) => (
-                                    <div key={review.reviewCommentSeq} className="review-item">
-                                        <div className="review-header">
-                                            <span className="review-score">
-                                                평점: {review.score}점
-                                            </span>
-                                            <span className="review-date">
-                                                {new Date(review.date).toLocaleDateString()}
-                                            </span>
-                                        </div>
-                                        <div className="review-content">
-                                            {review.content}
-                                        </div>
-                                        {review.file && (
-                                            <div className="review-image">
-                                                <img src={review.file.path} alt="리뷰 이미지" />
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )} */}
+         {activeTab === "review" && (
+            <div className="reviews-section">
+              <h3>나에게 작성된 리뷰 목록</h3>
+              <div className="reviews-list">
+                {review.map((review) => (
+                  <div key={review.reviewCommentSeq} className="review-item">
+                    <div className="review-header">
+                      <span className="review-score">
+                        평점: {review.score}점
+                      </span>
+                      <span className="review-date">
+                        {new Date(review.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <div className="review-content">{review.content}</div>
+                    {review.file && (
+                      <div className="review-image">
+                        <img src={review.file.path} alt="리뷰 이미지" />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+         {activeTab === "stoke" && (
+            <div className="reviews-section">
+              <h3>내가 등록한 상품 목록</h3>
 
+
+
+
+            </div>
+          )}
+              {activeTab === "calculate" && (
+            <div className="reviews-section">
+              <h3>정산 신청</h3>
+
+
+
+              
+            </div>
+          )}
           {activeTab === "streaming" && (
             <div className="streaming-section">
               <h3>스트리밍 관리</h3>
