@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './MainPage.css';
 import { useNavigate } from 'react-router-dom';
+import Auction from '../auction/Auction';
 import productImage from '../../image/상품1.png';
+import BidPage from '../auction/BidPage';
 
 const slides = [
     { id: 1, text: 'Welcome to 농산물 판다!', backgroundColor: '#f8d7da' },
@@ -125,6 +127,8 @@ const MainPage = ({ onJoinRoom }) => {
                     )}
                 </section>
             </div>
+            <Auction/>
+            <BidPage/>
         </>
     );
 };
