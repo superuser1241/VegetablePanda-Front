@@ -562,6 +562,7 @@ const CompanyMyPage = () => {
           {activeTab === "review" && (
             <div className="review-section">
               <h3>나의 리뷰 목록</h3>
+              {review.length > 0 ? (
               <div className="review-list">
                 {review.map((review) => (
                   <div key={review.reviewCommentSeq} className="review-item">
@@ -587,11 +588,17 @@ const CompanyMyPage = () => {
                     >
                       삭제
                     </button>
-                  </div>
+                    </div>
                 ))}
               </div>
+           ) : (
+            <div className="no-data-notification">
+              작성한 리뷰가 없습니다.
             </div>
           )}
+        </div>
+      )}
+      
           {activeTab === "buyList" && (
             <div className="user-buyList-history-display">
               <h3>주문 내역</h3>

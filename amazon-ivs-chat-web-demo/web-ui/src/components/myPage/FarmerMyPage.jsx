@@ -268,7 +268,21 @@ const FarmerMyPage = () => {
       }
     }
   };
-
+  const handleDeleteReview = async (revieweq) => {
+    try {
+      await axios.delete(
+        `http://localhost:9001/myPage/review/${userId}/${revieweq}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      alert("리뷰가 삭제되었습니다.");
+      fetchreview(userId);
+    } catch (error) {
+      console.error("리뷰 삭제 실패:", error);
+      alert("리뷰 삭제에 실패했습니다.");
+    }
+  };
   const filteredProducts = selectedCategory
     ? products.filter(
         (product) => product.productCategorySeq === parseInt(selectedCategory)
@@ -580,31 +594,57 @@ const FarmerMyPage = () => {
             </div>
           )}
 
-         {activeTab === "review" && (
-            <div className="reviews-section">
-              <h3>나에게 작성된 리뷰 목록</h3>
-              <div className="reviews-list">
-                {review.map((review) => (
-                  <div key={review.reviewCommentSeq} className="review-item">
-                    <div className="review-header">
-                      <span className="review-score">
-                        평점: {review.score}점
-                      </span>
-                      <span className="review-date">
-                        {new Date(review.date).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="review-content">{review.content}</div>
-                    {review.file && (
+{activeTab === "review" && (
+          <div className="review-section">
+            <h3>내가 작성한 리뷰</h3>
+            {review.length > 0 ? (
+              <table className="review-table">
+                <thead>
+                  <tr>
+                    <th>리뷰번호</th>
+                    <th>사진</th>
+                    <th>내용</th>
+                    <th>점수</th>
+                    <th>작성 날짜</th>
+                    <th>작성자</th>
+                    <th>삭제</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {review.map((review) => (
+                    <tr key={review.reviewCommentSeq}>
+                      <td>{review.reviewCommentSeq}</td>
+                      <td>{review.file && (
                       <div className="review-image">
                         <img src={review.file.path} alt="리뷰 이미지" />
                       </div>
-                    )}
-                  </div>
-                ))}
+                    )}</td>
+                      <td>{review.content}</td>
+                      <td>{review.score}</td>
+                      <td>{new Date(review.date).toLocaleDateString()}</td>
+                      <td>{review.name}</td>
+                      <td>
+                        <button
+                          className=""
+                          onClick={() =>
+                            handleDeleteReview(review.reviewCommentSeq)
+                          }
+                        >
+                          삭제
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="no-data-notification">
+                작성한 리뷰가 없습니다.
               </div>
-            </div>
-          )}
+            )}
+          </div>
+        )}
+
          {activeTab === "stoke" && (
             <div className="reviews-section">
               <h3>내가 등록한 상품 목록</h3>

@@ -594,6 +594,7 @@ const UserMyPage = () => {
           {activeTab === "review" && (
             <div className="review-section">
               <h3>나의 리뷰 목록</h3>
+              {review.length > 0 ? (
               <div className="review-list">
                 {review.map((review) => (
                   <div key={review.reviewCommentSeq} className="review-item">
@@ -611,20 +612,28 @@ const UserMyPage = () => {
                         <img src={review.file.path} alt="리뷰 이미지" />
                       </div>
                     )}
+                    <span className="review-date">
+                        작성날짜 : {new Date(review.date).toLocaleDateString()}
+                      </span><br/>
                     <button
                       onClick={() =>
                         handleDeletereview(review.reviewCommentSeq)
                       }
-                      className="delete-button"
+                      className="review-delete-button"
                     >
                       삭제
                     </button>
                   </div>
                 ))}
               </div>
+           ) : (
+            <div className="no-data-notification">
+              작성한 리뷰가 없습니다.
             </div>
           )}
-
+        </div>
+      )}
+       
           {activeTab === "point" && (
             <div className="point-section">
               <h3>포인트 충전</h3>
