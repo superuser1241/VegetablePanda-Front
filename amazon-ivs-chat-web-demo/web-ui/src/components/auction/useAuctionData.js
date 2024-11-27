@@ -58,13 +58,9 @@ export const useAuctionData = (auctionId) => {
     // WebSocket 연결 및 상태 갱신
     useEffect(() => {
         const client = new Client({
-            brokerURL: "ws://localhost:9001/ws", // WebSocket 서버 URL
+            brokerURL: "ws://localhost:9001/ws", 
             onConnect: () => {
-                console.log('WebSocket 연결됨');
-                // WebSocket 메시지를 구독하고, 메시지가 오면 상태 업데이트
                 client.subscribe("/top/notifications", async (message) => {
-                    console.log('새 메시지 도착:', message.body);
-                    // 메시지 수신 후, Redis 데이터 다시 요청
                     fetchHighestBid();
                     findBidByAuctionId();
                     fetchAuction();
