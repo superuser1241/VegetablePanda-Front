@@ -374,6 +374,13 @@ const FarmerMyPage = () => {
               회원 정보 수정
             </li>
             <li
+              onClick={() => setActiveTab("sale")}
+              className={activeTab === "sale" ? "active" : ""}
+            >
+              판매 내역
+            </li>
+
+            <li
               onClick={() => setActiveTab("calculate")}
               className={activeTab === "calculate" ? "active" : ""}
             >
@@ -654,7 +661,18 @@ const FarmerMyPage = () => {
 
             </div>
           )}
-              {activeTab === "calculate" && (
+
+          {activeTab === "sale" && (
+            <div className="reviews-section">
+              <h3>내가 판매한 내역</h3>
+
+
+
+
+            </div>
+          )}
+
+          {activeTab === "calculate" && (
             <div className="reviews-section">
               <h3>정산 신청</h3>
 
@@ -663,6 +681,7 @@ const FarmerMyPage = () => {
               
             </div>
           )}
+
           {activeTab === "streaming" && (
             <div className="streaming-section">
               <h3>스트리밍 관리</h3>
