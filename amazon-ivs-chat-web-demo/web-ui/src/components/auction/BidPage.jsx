@@ -1,21 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuctionData } from './useAuctionData';
 import { useBidding } from './useBidding';
 import './BidPage.css';
 
-const BidPage = () => {
-    const { highestBid, auction, bid } = useAuctionData(5); // userSeq 5로 하드코딩된 값 사용
+const BidPage = ({ streamingRoom, auctionData, onAuctionEnd }) => {
+   
+
+    const [isAuctionEnded, setIsAuctionEnded] = useState(false);
+
+    useEffect(() => {
+        if (auctionData?.closeTime) {
+            const checkAuctionEnd = () => {
+                const now = new Date();
+                const closeTime = new Date(auctionData.closeTime);
+                if (now >= closeTime && !isAuctionEnded) {
+                    setIsAuctionEnded(true);
+                    onAuctionEnd();
+                }
+            };
+
+            const timer = setInterval(checkAuctionEnd, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [auctionData, isAuctionEnded, onAuctionEnd]);
+
+    console.log('BidPage streamingRoom:', streamingRoom); // 디버깅용
+
+    const { highestBid, auction, bid } = useAuctionData(streamingRoom.farmerUser.userSeq); // userSeq 5로 하드코딩된 값 사용
     const { auctionSeq } = useParams();
-    const { bidAmount, handleIncrease, handleDecrease, handleBid } = useBidding(highestBid, 3);
+    const { bidAmount, handleIncrease, handleDecrease, handleBid } = useBidding(highestBid, auctionData.auctionSeq);
 
     const onBidSubmit = async () => {
         console.log('입찰 시도:', { bidAmount, auctionId: auctionSeq });
         await handleBid();
     };
-    
+    if (!auctionData || !auctionData.auctionSeq) {
+        return <div>경매 정보를 불러오는 중...</div>;
+    }
 
     return (
+        
         <div className="auction-container">
             {/* <AllBidNotiSet/> */}
             {highestBid ? (

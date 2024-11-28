@@ -50,6 +50,8 @@ function App() {
         setStreamingRoom(room);
         setCurrentRoomId(room.chatRoomId);
         navigate(userRole !== 'ROLE_FARMER' ? '/chat' : '/confirmation');
+        // navigate('/chat');
+
     };
 
     const handleConfirm = (confirmedRoom) => {

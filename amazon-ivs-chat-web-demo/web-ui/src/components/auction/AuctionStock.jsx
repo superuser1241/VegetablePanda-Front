@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 
-const Auction = ({ streamingRoom }) => {
+const AuctionStock = ({ streamingRoom }) => {
   
     const [stockInfo, setStockInfo] = useState(null);
     console.log('streamingRoom:', streamingRoom);
@@ -53,4 +53,4 @@ const Auction = ({ streamingRoom }) => {
     
 };
 
-export default Auction;
+export default AuctionStock;

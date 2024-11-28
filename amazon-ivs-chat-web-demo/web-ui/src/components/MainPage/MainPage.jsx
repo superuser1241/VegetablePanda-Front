@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './MainPage.css';
 import { useNavigate } from 'react-router-dom';
-import Auction from '../auction/Auction';
+import Auction from '../auction/AuctionStock';
 import productImage from '../../image/상품1.png';
 import BidPage from '../auction/BidPage';
 import { Pie, Line, Chart } from 'react-chartjs-2';
@@ -392,8 +392,6 @@ const MainPage = ({ onJoinRoom }) => {
                 </section>
             </div>
             <AuctionStatus />
-            <Auction/>
-            <BidPage/>
             <AuctionRegisterPage/>
         </>
     );
