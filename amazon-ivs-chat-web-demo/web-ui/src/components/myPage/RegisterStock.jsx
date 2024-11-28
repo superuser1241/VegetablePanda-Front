@@ -15,8 +15,7 @@ const RegisterStock = () => {
         productSeq: '',
         stockGradeSeq: '',
         stockOrganicSeq: '',
-        fileSeq: '',
-        fileContent: '',
+        file : {fileSeq: '', name: ''},
         regDate: new Date().toISOString(),
         'Content-Type': 'multipart/form-data'
     });
@@ -132,6 +131,16 @@ const RegisterStock = () => {
         console.log(products);
     }
 
+    const changeFileName = (e) => {
+        const { name, value } = e.target;
+        setNewProduct(prev => ({
+            ...prev, 
+            file : {
+                [name] : value,
+            }
+        }));
+    }
+
     const handleProductSubmit = async (e) => {
         e.preventDefault();
         
@@ -153,7 +162,7 @@ const RegisterStock = () => {
                 count: parseInt(newProduct.count),
                 content: newProduct.content,
                 status: 0,
-                fileContent: '',
+                file : {fileSeq: '', name: newProduct.file.name},
                 regDate: new Date().toISOString(),
             };
 
@@ -187,8 +196,7 @@ const RegisterStock = () => {
                     productSeq: '',
                     stockGradeSeq: '',
                     stockOrganicSeq: '',
-                    fileSeq: '',
-                    fileContent: '',
+                    file : {fileSeq: '', name: ''},
                     regDate: new Date().toISOString()
                 });
             }
@@ -417,7 +425,7 @@ const RegisterStock = () => {
                                     </div>
                                 </div>
                                 <div className='stock-image-textarea-container'>
-                                    <textarea placeholder='이미지에 대한 설명을 입력해주세요.' id='fileContent' name = 'fileContent' maxLength={26} value = {newProduct.fileContent} onChange={handleProductChange}/>
+                                    <textarea placeholder='이미지에 대한 설명을 입력해주세요.' id='name' name = 'filename' maxLength={26} value = {newProduct.file.name} onChange={changeFileName}/>
                                 </div>
                             </div>
                             
