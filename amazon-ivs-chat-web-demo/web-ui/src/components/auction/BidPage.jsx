@@ -4,10 +4,28 @@ import { useAuctionData } from './useAuctionData';
 import { useBidding } from './useBidding';
 import './BidPage.css';
 
-const BidPage = ({ streamingRoom, auctionData, onAuctionEnd }) => {
-   
-
+const BidPage = ({ streamingRoom, auctionData, onAuctionEnd, onOpenModal }) => {
     const [isAuctionEnded, setIsAuctionEnded] = useState(false);
+    const [remainingTime, setRemainingTime] = useState('');
+
+    const calculateRemainingTime = (closeTime) => {
+        const now = new Date();
+        const endTime = new Date(closeTime);
+        const diff = endTime - now;
+
+        if (diff <= 0) {
+            return '경매 종료';
+        }
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (hours > 0) {
+            return `${hours}시간 ${minutes}분 ${seconds}초`;
+        }
+        return `${minutes}분 ${seconds}초`;
+    };
 
     useEffect(() => {
         if (auctionData?.closeTime) {
@@ -25,9 +43,19 @@ const BidPage = ({ streamingRoom, auctionData, onAuctionEnd }) => {
         }
     }, [auctionData, isAuctionEnded, onAuctionEnd]);
 
+    useEffect(() => {
+        if (auctionData?.closeTime) {
+            const timer = setInterval(() => {
+                setRemainingTime(calculateRemainingTime(auctionData.closeTime));
+            }, 1000);
+
+            return () => clearInterval(timer);
+        }
+    }, [auctionData?.closeTime]);
+
     console.log('BidPage streamingRoom:', streamingRoom); // 디버깅용
 
-    const { highestBid, auction, bid } = useAuctionData(streamingRoom.farmerUser.userSeq); // userSeq 5로 하드코딩된 값 사용
+    const { highestBid, auction, bid } = useAuctionData(streamingRoom.farmerSeq,auctionData.auctionSeq); // userSeq 5로 하코딩된 값 사용
     const { auctionSeq } = useParams();
     const { bidAmount, handleIncrease, handleDecrease, handleBid } = useBidding(highestBid, auctionData.auctionSeq);
 
@@ -39,12 +67,24 @@ const BidPage = ({ streamingRoom, auctionData, onAuctionEnd }) => {
         return <div>경매 정보를 불러오는 중...</div>;
     }
 
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).replace(/\./g, '-');
+    };
+
     return (
         
-        <div className="auction-container">
+        <>
             {/* <AllBidNotiSet/> */}
             {highestBid ? (
-                <div className="bidding-section">
+                <>
                     <div className="auction-info">
                         <div className="current-price">
                             <h3>현재 입찰가</h3>
@@ -56,21 +96,35 @@ const BidPage = ({ streamingRoom, auctionData, onAuctionEnd }) => {
                         </div>
                         <div className="time-left">
                             <h3>종료 일자</h3>
-                            <p>{auction?.closeTime}</p>
+                            <p>{formatDate(auction?.closeTime)}</p>
                         </div>
-                    </div>
 
-                    <div>
-                        <div className="bidding-section">
-                            {bid ? (
-                                <>
-                                    <span>입찰 횟수: {bid.length}</span>
-                                    <span><a href="#none">[입찰 확인]</a></span>
-                                </>
-                            ) : (
-                                <p>입찰 수: 0</p>
-                            )}
+                    </div>
+                                            <div className="remaining-time">
+                            <h3>남은 시간</h3>
+                            <p>{remainingTime}</p>
                         </div>
+                    <div>
+                        <>
+                            {bid ? (
+                                <div className="bid-status">
+                                    <span>입찰 횟수: {bid.length}</span>
+                                    <button 
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            onOpenModal(bid);
+                                        }}
+                                        className="bid-link"
+                                    >
+                                        [입찰 확인]
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="bid-status">
+                                    <span>입찰 수: 0</span>
+                                </div>
+                            )}
+                        </>
 
                         <div className="bid-controls">
                             <button 
@@ -101,11 +155,11 @@ const BidPage = ({ streamingRoom, auctionData, onAuctionEnd }) => {
                             입찰하기
                         </button>
                     </div>
-                </div>
+                </>
             ) : (
                 <p>상품 정보를 불러오는 중...</p>
             )}
-        </div>
+        </>
     );
 };
 

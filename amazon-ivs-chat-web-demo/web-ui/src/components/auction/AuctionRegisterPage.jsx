@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const AuctionRegisterPage = () => {
+const AuctionRegisterPage = ({ stockSeq, onRegisterSuccess }) => {
     const navigate = useNavigate();
     const [auctionData, setAuctionData] = useState({
         count: '',
         closeTime: '',
-        stockSeq: '1'
+        stockSeq: stockSeq
     });
 
     const handleChange = (e) => {
@@ -45,6 +45,7 @@ const AuctionRegisterPage = () => {
 
             alert('경매가 등록되었습니다.');
             navigate(`/auction/${response.data.auctionSeq}`);
+            onRegisterSuccess();
         } catch (error) {
             console.error('경매 등록 실패:', error);
             alert('경매 등록에 실패했습니다.');
@@ -69,7 +70,7 @@ const AuctionRegisterPage = () => {
 
     return (
         <div className="auction-register-container">
-            <h2>경매 등록</h2>니다  
+            <h2>경매 등록</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label>시작가</label>

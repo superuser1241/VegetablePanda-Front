@@ -1,0 +1,170 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 80vh;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 0 10px;
+}
+
+.modal-header h2 {
+    font-size: 24px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #95a5a6;
+    transition: color 0.2s;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.close-button:hover {
+    color: #e74c3c;
+    background-color: #f8f9fa;
+}
+
+.bid-table {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+}
+
+.bid-table-header {
+    display: flex;
+    background-color: #f8f9fa;
+    padding: 15px;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+    position: sticky;
+    top: 0;
+    color: #2c3e50;
+}
+
+.bid-table-body {
+    overflow-y: auto;
+    max-height: calc(80vh - 150px);
+}
+
+.bid-table-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.bid-table-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.bid-table-body::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+.bid-table-body::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+.bid-table-row {
+    display: flex;
+    padding: 15px;
+    border-bottom: 1px solid #edf2f7;
+    transition: background-color 0.2s;
+}
+
+.bid-table-row:hover {
+    background-color: #f8f9fa;
+}
+
+.bid-column {
+    flex: 1;
+    text-align: center;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bid-column:first-child {
+    flex: 0.5;
+    font-weight: 500;
+    color: #718096;
+}
+
+.bid-column.price {
+    color: #e74c3c;
+    font-weight: 600;
+    font-size: 1.05em;
+}
+
+.bid-column:last-child {
+    flex: 1.5;
+    color: #718096;
+}
+
+.no-bids {
+    text-align: center;
+    padding: 30px;
+    color: #a0aec0;
+    font-size: 1.1em;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .bid-column {
+        font-size: 0.9em;
+    }
+
+    .modal-header h2 {
+        font-size: 20px;
+    }
+} 

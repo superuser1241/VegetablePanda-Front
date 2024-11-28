@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Client } from "@stomp/stompjs";
 
-export const useAuctionData = (auctionId) => {
+export const useAuctionData = (userSeq,auctionSeq) => {
     const [highestBid, setHighestBid] = useState(null);
     const [auction, setAuction] = useState(null);
     const [bid, setBid] = useState(null);
@@ -10,19 +10,19 @@ export const useAuctionData = (auctionId) => {
     const fetchHighestBid = useCallback(async () => {
         const token = localStorage.getItem('token');
         try {
-            const result = await axios.get(`http://localhost:9001/highestBid/${auctionId}`, {
+            const result = await axios.get(`http://localhost:9001/highestBid/${userSeq}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setHighestBid(result.data);
         } catch (error) {
             console.error('최고 입찰가 조회 실패:', error);
         }
-    }, [auctionId]);
+    }, [userSeq]);
 
     const fetchAuction = useCallback(async () => {
         const token = localStorage.getItem('token');
         try {
-            const result = await axios.get(`http://localhost:9001/auction/${auctionId}`, {
+            const result = await axios.get(`http://localhost:9001/auction/${userSeq}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -35,12 +35,12 @@ export const useAuctionData = (auctionId) => {
                 alert('로그인이 필요한 서비스입니다.');
             }
         }
-    }, [auctionId]);
+    }, [userSeq]);
 
     const findBidByAuctionId = useCallback(async () => {
         const token = localStorage.getItem('token');
         try {
-            const result = await axios.get(`http://localhost:9001/bid/${auctionId}`, {
+            const result = await axios.get(`http://localhost:9001/bid/${auctionSeq}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -53,7 +53,7 @@ export const useAuctionData = (auctionId) => {
                 alert('로그인이 필요한 서비스입니다.');
             }
         }
-    }, [auctionId]);
+    }, [auctionSeq]);
 
     // WebSocket 연결 및 상태 갱신
     useEffect(() => {

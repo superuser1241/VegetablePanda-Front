@@ -3,6 +3,8 @@ import Chat from '../chat/Chat';
 import BidPage from './BidPage';
 import AuctionStock from './AuctionStock';
 import AuctionRegisterPage from './AuctionRegisterPage';
+import AuctionStatusPage from './AuctionStatusPage';
+import BidHistoryModal from './BidHistoryModal';
 import axios from 'axios';
 import './AuctionChatPage.css';
 
@@ -10,20 +12,22 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
     const [showRegister, setShowRegister] = useState(false);
     const [auctionData, setAuctionData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [bidHistory, setBidHistory] = useState([]);
     const currentUserSeq = localStorage.getItem('userSeq');
-    const isFarmer = currentUserSeq === String(streamingRoom?.farmerUser?.userSeq);
+    const isFarmer = currentUserSeq === String(streamingRoom?.farmerSeq);
 
     useEffect(() => {
         const checkAuctionStatus = async () => {
             setIsLoading(true);
             try {
                 const token = localStorage.getItem('token');
-                console.log('Checking auction status for farmer:', streamingRoom.farmerUser.userSeq);
+                console.log('Checking auction status for farmer:', streamingRoom.farmerSeq);
                 console.log('Current user is farmer:', isFarmer);
                 console.log('Token:', token);
 
                 const response = await axios.get(
-                    `http://localhost:9001/auction/${streamingRoom.farmerUser.userSeq}`,
+                    `http://localhost:9001/auction/${streamingRoom.farmerSeq}`,
                     {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }
@@ -51,7 +55,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
             }
         };
 
-        if (streamingRoom?.farmerUser?.userSeq) {
+        if (streamingRoom?.farmerSeq) {
             checkAuctionStatus();
         } else {
             console.log('No farmer user seq available');
@@ -63,15 +67,40 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
         setShowRegister(false);
     };
 
-    const handleAuctionEnd = () => {
+    const handleAuctionEnd = async () => {
         if (isFarmer) {
-            setShowRegister(true);
-            setAuctionData(null);
+            try {
+                const token = localStorage.getItem('token');
+                // PATCH로 변경하여 상태값만 업데이트
+                await axios.patch(
+                    `http://localhost:9001/auction/${auctionData.auctionSeq}`,
+                    {},
+                    {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }
+                );
+
+                setShowRegister(true);
+                setAuctionData(null);
+                alert('경매가 종료되었습니다.');
+            } catch (error) {
+                console.error('경매 종료 실패:', error);
+                alert('경매 종료에 실패했습니다.');
+            }
         }
     };
 
+    const handleOpenModal = (bid) => {
+        setBidHistory(bid);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
     if (isLoading) {
-        return <div>경매 정보를 불러오는 중...</div>;
+        return <div>경매 정를 불러오는 중...</div>;
     }
 
     return (
@@ -90,16 +119,27 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                     </div>
                     <div className="bidding-section">
                         {auctionData && auctionData.auctionSeq ? (
-                            <BidPage 
-                                streamingRoom={streamingRoom}
-                                auctionData={auctionData}
-                                onAuctionEnd={handleAuctionEnd}
-                            />
+                            isFarmer ? (
+                                <AuctionStatusPage 
+                                    streamingRoom={streamingRoom}
+                                    auctionData={auctionData}
+                                    onOpenModal={handleOpenModal}
+                                    onEndAuction={handleAuctionEnd}
+                                />
+                            ) : (
+                                <BidPage 
+                                    streamingRoom={streamingRoom}
+                                    auctionData={auctionData}
+                                    onAuctionEnd={handleAuctionEnd}
+                                    onOpenModal={handleOpenModal}
+                                />
+                            )
                         ) : (
                             isFarmer ? (
                                 <AuctionRegisterPage 
                                     streamingRoom={streamingRoom}
                                     onRegisterSuccess={handleAuctionRegister}
+                                    stockSeq={streamingRoom.stockSeq}
                                 />
                             ) : (
                                 <div className="waiting-message">
@@ -110,6 +150,12 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                     </div>
                 </div>
             </div>
+
+            <BidHistoryModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                bidHistory={bidHistory}
+            />
         </div>
     );
 };
