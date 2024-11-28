@@ -21,6 +21,10 @@ import QABoardEdit from './QABoard/QABoardEdit';
 import QABoardDetail from './QABoard/QABoardDetail';
 import Purchase from './Purchase/Purchase';
 import Payment from './Purchase/Payment';
+import NotiSet from './Notification/NotiSet';
+import BidPage from './auction/BidPage';
+import AuctionRegisterPage from './auction/AuctionRegisterPage';
+import AuctionChatPage from './auction/AuctionChatPage';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -47,10 +51,13 @@ function App() {
         setStreamingRoom(room);
         setCurrentRoomId(room.chatRoomId);
         navigate(userRole !== 'ROLE_FARMER' ? '/chat' : '/confirmation');
+        // navigate('/chat');
+
     };
 
-    const handleConfirm = () => {
-        console.log('입장 확인 - streamingRoom:', streamingRoom);
+    const handleConfirm = (confirmedRoom) => {
+        console.log('입장 확인 - streamingRoom:', confirmedRoom);
+        setStreamingRoom(confirmedRoom);
         navigate('/chat');
     };
 
@@ -93,6 +100,7 @@ function App() {
 
     return (
         <div className="App">
+            {userName&&<NotiSet/>}
             <Header
                 userName={userName}
                 userRole={userRole}
@@ -121,11 +129,19 @@ function App() {
                             onCancel={handleCancel}
                         />
                     } />
-                    <Route path="/chat" element={
+
+                    {/* <Route path="/chat" element={
                         <Chat
                             streamingRoom={streamingRoom}
                             userName={userName}
                             chatRoomId={currentRoomId}
+                            handleExitChat={handleExitChat}
+                        />
+                    } /> */}
+                       {/* Chat 라우트를 AuctionChatPage로 변경 */}
+                       <Route path="/chat" element={
+                        <AuctionChatPage
+                            streamingRoom={streamingRoom}
                             handleExitChat={handleExitChat}
                         />
                     } />
@@ -145,6 +161,8 @@ function App() {
                     <Route path="/customer-service/:boardNoSeq" element={<QABoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
                     <Route path="/payment" element={<Payment />} />
+                    <Route path="/auction/register" element={<AuctionRegisterPage />} />
+                    <Route path="/auction/:auctionSeq" element={<BidPage />} />
                 </Routes>
             </main>
             <Footer />

@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './MainPage.css';
 import { useNavigate } from 'react-router-dom';
-import Auction from '../auction/Auction';
+import Auction from '../auction/AuctionStock';
 import productImage from '../../image/상품1.png';
 import BidPage from '../auction/BidPage';
 import { Pie, Line, Chart } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import AuctionStatus from '../auction/AuctionStatus';
+import AuctionRegisterPage from '../auction/AuctionRegisterPage';
 
 ChartJS.register(
     ArcElement, 
@@ -43,6 +45,7 @@ const MainPage = ({ onJoinRoom }) => {
             try {
                 const response = await axios.get('http://localhost:9001/api/streaming/active-rooms');
                 setRooms(response.data);
+                console.log('rooms:', rooms);
             } catch (err) {
                 setError('Failed to fetch active rooms. Please try again.');
                 console.error(err);
@@ -74,17 +77,18 @@ const MainPage = ({ onJoinRoom }) => {
     useEffect(() => {
         const fetchStatistics = async () => {
             try {
-                const startDate = '2024-10-01T00:00:00';
-                const endDate = '2024-10-31T23:59:59';
+                const startDate = '2024-01-01T00:00:00';
+                const endDate = '2024-12-31T23:59:59';
                 
                 const response = await axios.get('http://localhost:9001/api/statistics/products', {
                     params: { startDate, endDate }
                 });
-
+    
+                // 판매 수량(totalQuantity) 기준으로 정렬하고 상위 10개만 선택
                 const sortedData = response.data
                     .sort((a, b) => b.totalQuantity - a.totalQuantity)
                     .slice(0, 10);
-                
+                    
                 setStatistics(sortedData);
             } catch (err) {
                 console.error('통계 데이터를 불러오는데 실패했습니다:', err);
@@ -309,9 +313,9 @@ const MainPage = ({ onJoinRoom }) => {
             </div>
             <div className="container">
                 <section className="statistics-section">
-                    <h2 className="section-title">판매 통계</h2>
                     <div className="charts-container">
                         <div className="chart-container">
+                            <div className="chart-title">최근 실적</div>
                             <Chart 
                                 type='bar'
                                 data={weeklyChartData} 
@@ -319,6 +323,7 @@ const MainPage = ({ onJoinRoom }) => {
                             />
                         </div>
                         <div className="chart-container">
+                            <div className="chart-title">상위 거래품목 (30일 기준)</div>
                             {statistics.length > 0 ? (
                                 <Pie 
                                     data={chartData} 
@@ -335,6 +340,7 @@ const MainPage = ({ onJoinRoom }) => {
                 <section className="streaming-section">
                     <h2 className="section-title">실시간 스트리밍</h2>
                     <div className="room-list">
+                         console.log('rooms:', rooms);
                         {rooms.slice(0, visibleRooms).map((room) => (
                             <div key={room.streamingSeq} className="room-card">
                                 <h3>Room ID: {room.chatRoomId}</h3>
@@ -386,8 +392,8 @@ const MainPage = ({ onJoinRoom }) => {
                     )}
                 </section>
             </div>
-            <Auction/>
-            <BidPage/>
+            <AuctionStatus />
+            <AuctionRegisterPage/>
         </>
     );
 };
