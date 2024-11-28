@@ -9,10 +9,17 @@ const FarmerMyPage = () => {
   const token = localStorage.getItem("token");
   const [userId, setUserId] = useState("");
   const [image, setImage] = useState(null);
+  const [sales, setSales] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [error1, setError1] = useState(null);
   const [codePart1, setCodePart1] = useState("");
   const [codePart2, setCodePart2] = useState("");
   const [codePart3, setCodePart3] = useState("");
   const [review, setReview] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]); // 체크박스를 선택한 항목을 저장
+
+  const [settlements, setSettlements] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
   const [farmerInfo, setFarmerInfo] = useState(null);
   const [editedFarmer, setEditedFarmer] = useState({
@@ -35,7 +42,6 @@ const FarmerMyPage = () => {
     stockOrganicSeq: "",
   });
   const [products, setProducts] = useState([]);
-  const [point, setPoint] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
@@ -76,7 +82,9 @@ const FarmerMyPage = () => {
   useEffect(() => {
     if (userId) {
       fetchFarmerInfo(userId);
-      fetchreview(userId);
+      fetchReview(userId);
+      fetchSettlementHistory(userId);
+      fetchSalesHistory(userId);
     }
   }, [userId]);
 
@@ -85,6 +93,83 @@ const FarmerMyPage = () => {
       fetchProducts();
     }
   }, [token]);
+
+  const fetchSettlementHistory = async (userId) => {
+    try {
+      setLoading(true);
+
+      const response = await axios.get(
+        `http://localhost:9001/myPage/farmer/point/calc/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setSettlements(response.data);
+    } catch (err) {
+      setError1("정산 내역을 불러오는 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchSalesHistory = async (userId) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `http://localhost:9001/myPage/farmer/saleList/${userId}`
+      ); // 판매 내역 가져오는 API
+      setSales(response.data);
+    } catch (err) {
+      setError("판매 내역을 불러오는 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 체크박스를 클릭할 때마다 선택된 항목을 업데이트하는 함수
+  const handleCheckboxChange = (saleSeq) => {
+    setSelectedItems((prevState) => {
+      if (prevState.includes(saleSeq)) {
+        // 이미 선택된 항목이라면 제거
+        return prevState.filter((item) => item !== saleSeq);
+      } else {
+        // 선택되지 않은 항목이라면 추가
+        return [...prevState, saleSeq];
+      }
+    });
+  };
+
+ // 정산 신청 버튼 클릭 시 선택된 항목의 데이터를 서버로 전송하는 함수
+const handleSettlementRequest = async () => {
+  const currentDate = new Date().toISOString().split("T")[0]; // 오늘 날짜 (YYYY-MM-DD)
+
+  // 선택된 항목에 대한 데이터 처리
+  const settlementData = sales
+    .filter((sale) => selectedItems.includes(sale.buySeq))
+    .map((sale) => ({
+      totalPoint: sale.price,
+      insertDate: currentDate,
+    }));
+
+  if (settlementData.length > 0) {
+    try {
+      // SettlementRequestDTO 형태로 감싸서 전송
+      const settlementRequest = { settlements: settlementData };
+
+      // 선택된 데이터를 백엔드로 전송
+      await axios.post(
+        `http://localhost:9001/myPage/farmer/settle/${userId}`,
+        settlementRequest
+      );
+      alert("정산 신청이 완료되었습니다.");
+    } catch (err) {
+      setError("정산 신청 실패");
+    }
+  } else {
+    alert("정산 신청할 항목을 체크하세요.");
+  }
+};
+
 
   const fetchFarmerInfo = async (userId) => {
     try {
@@ -116,12 +201,12 @@ const FarmerMyPage = () => {
     }
   };
 
-  const fetchreview = async (userId) => {
+  const fetchReview = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:9001/myPage/review/${userId}`,
+        `http://localhost:9001/myPage/farmer/review/List/${userId}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
       setReview(response.data);
@@ -277,7 +362,7 @@ const FarmerMyPage = () => {
         }
       );
       alert("리뷰가 삭제되었습니다.");
-      fetchreview(userId);
+      fetchReview(userId);
     } catch (error) {
       console.error("리뷰 삭제 실패:", error);
       alert("리뷰 삭제에 실패했습니다.");
@@ -384,7 +469,7 @@ const FarmerMyPage = () => {
               onClick={() => setActiveTab("calculate")}
               className={activeTab === "calculate" ? "active" : ""}
             >
-              정산 신청
+              정산 내역
             </li>
             <li
               onClick={() => setActiveTab("review")}
@@ -410,7 +495,6 @@ const FarmerMyPage = () => {
             >
               내 상품 목록
             </li>
-        
           </ul>
         </div>
 
@@ -446,9 +530,6 @@ const FarmerMyPage = () => {
                 <p>
                   <strong>가입일자 :</strong>
                   {new Date(farmerInfo.regDate).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>보유 포인트:</strong> {point.toLocaleString()}P
                 </p>
               </div>
             </div>
@@ -601,84 +682,180 @@ const FarmerMyPage = () => {
             </div>
           )}
 
-{activeTab === "review" && (
-          <div className="review-section">
-            <h3>내가 작성한 리뷰</h3>
-            {review.length > 0 ? (
-              <table className="review-table">
-                <thead>
-                  <tr>
-                    <th>리뷰번호</th>
-                    <th>사진</th>
-                    <th>내용</th>
-                    <th>점수</th>
-                    <th>작성 날짜</th>
-                    <th>작성자</th>
-                    <th>삭제</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {review.map((review) => (
-                    <tr key={review.reviewCommentSeq}>
-                      <td>{review.reviewCommentSeq}</td>
-                      <td>{review.file && (
-                      <div className="review-image">
-                        <img src={review.file.path} alt="리뷰 이미지" />
-                      </div>
-                    )}</td>
-                      <td>{review.content}</td>
-                      <td>{review.score}</td>
-                      <td>{new Date(review.date).toLocaleDateString()}</td>
-                      <td>{review.name}</td>
-                      <td>
-                        <button
-                          className=""
-                          onClick={() =>
-                            handleDeleteReview(review.reviewCommentSeq)
-                          }
-                        >
-                          삭제
-                        </button>
-                      </td>
+          {activeTab === "review" && (
+            <div className="review-section">
+              <h3>나에게 작성된 리뷰</h3>
+              {review.length > 0 ? (
+                <table className="review-table">
+                  <thead>
+                    <tr>
+                      <th>리뷰번호</th>
+                      <th>사진</th>
+                      <th>내용</th>
+                      <th>점수</th>
+                      <th>작성 날짜</th>
+                      <th>작성자</th>
+                      <th>삭제</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <div className="no-data-notification">
-                작성한 리뷰가 없습니다.
-              </div>
-            )}
-          </div>
-        )}
+                  </thead>
+                  <tbody>
+                    {review.map((review, index) => (
+                      <tr key={review.reviewCommentSeq}>
+                        <td>{index + 1}</td>
+                        <td>
+                          {review.filePath ? (
+                            <div className="review-image">
+                              <img src={review.filePath} alt="리뷰 이미지" />
+                            </div>
+                          ) : (
+                            <p>이미지가 없습니다.</p>
+                          )}
+                        </td>
+                        <td>{review.content}</td>
+                        <td>{review.score}</td>
+                        <td>{new Date(review.date).toLocaleDateString()}</td>
+                        <td>{review.name}</td>
+                        <td>
+                          <button
+                            className=""
+                            onClick={() =>
+                              handleDeleteReview(review.reviewCommentSeq)
+                            }
+                          >
+                            삭제
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="no-data-notification">
+                  작성된 리뷰가 없습니다.
+                </div>
+              )}
+            </div>
+          )}
 
-         {activeTab === "stoke" && (
+          {activeTab === "stoke" && (
             <div className="reviews-section">
               <h3>내가 등록한 상품 목록</h3>
-
-
-
-
             </div>
           )}
 
           {activeTab === "sale" && (
-            <div className="reviews-section">
+            <div className="sales-history-display">
               <h3>내가 판매한 내역</h3>
+              {loading ? (
+                <div>로딩 중...</div>
+              ) : error ? (
+                <div className="error-message">{error}</div>
+              ) : sales.length > 0 ? (
+                <>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>판매 번호</th>
+                        <th>상품명</th>
+                        <th>수량</th>
+                        <th>금액</th>
+                        <th>판매일자</th>
+                        <th>판매 상태</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sales.map((sale, index) => (
+                        <tr key={sale.buySeq}>
+                          <td>
+                            <input
+                              type="checkbox"
+                              checked={selectedItems.includes(sale.buySeq)}
+                              onChange={() => handleCheckboxChange(sale.buySeq)} // 체크박스 클릭 시 선택 상태 업데이트
+                            />
+                          </td>
+                          <td>{sale.userBuySeq}</td>
+                          <td>{sale.content}</td>
+                          <td>{sale.count}</td>
+                          <td>{sale.price}원</td>
+                          <td>{new Date(sale.buyDate).toLocaleDateString()}</td>
 
-
-
-
+                          <td>
+                            {sale.state === 0
+                              ? "값 뭐넣어야해여?"
+                              : sale.state === 1
+                              ? "값 뭐넣어야해여?"
+                              : sale.state === 2
+                              ? "값 뭐넣어야해여?"
+                              : sale.state === 3
+                              ? "값 뭐넣어야해여?"
+                              : "값 뭐넣어야해여?"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <button onClick={handleSettlementRequest}>정산 신청</button>{" "}
+                </>
+              ) : (
+                <div className="no-data-notification">
+                  판매 내역이 없습니다.
+                </div>
+              )}
             </div>
           )}
 
           {activeTab === "calculate" && (
-            <div className="reviews-section">
-              <h3>정산 신청</h3>
-
-
-
-              
+            <div className="settlement-history-display">
+              <h3>정산 내역</h3>
+              {loading ? (
+                <div>로딩 중...</div>
+              ) : error ? (
+                <div className="error-message">{error}</div>
+              ) : settlements.length > 0 ? (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>번호</th>
+                      <th>판매 금액</th>
+                      <th>세후 금액</th>
+                      <th>신청 날짜</th>
+                      <th>완료 날짜</th>
+                      <th>상태</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {settlements.map((settlement, index) => (
+                      <tr key={settlement.calcPointSeq}>
+                        <td>{index + 1}</td>
+                        <td>{settlement.totalPoint}원</td>
+                        <td>{settlement.pointToCash}원</td>
+                        <td>
+                          {new Date(
+                            settlement.insertDate
+                          ).toLocaleDateString() || "검토중"}
+                        </td>
+                        <td>
+                          {new Date(
+                            settlement.tradeDate
+                          ).toLocaleDateString() || "검토중"}
+                        </td>
+                        <td>
+                          {settlement.state === 0
+                            ? "정산 전"
+                            : settlement.state === 1
+                            ? "정산 중"
+                            : "정산 완료"}
+                        </td>{" "}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="no-data-notification">
+                  정산 내역이 없습니다.
+                </div>
+              )}
             </div>
           )}
 

@@ -4,6 +4,7 @@ import "./UserMyPage.css";
 import * as ChargePoint from "./ChargePoint.jsx";
 import iamport from "https://cdn.iamport.kr/v1/iamport.js";
 import { useNavigate } from "react-router-dom";
+import "../../index.css";
 
 const UserMyPage = () => {
   const [chargeAmount, setChargeAmount] = useState("");
@@ -14,9 +15,13 @@ const UserMyPage = () => {
   const [image, setImage] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [buyList, setbuyList] = useState([]);
+  const [orders, setOrders] = useState([]); 
+  const [loading1, setLoading1] = useState(false); 
   const [auctions, setAuctions] = useState([]);
   const [point, setPoint] = useState(0);
   const [review, setreview] = useState([]);
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
   const [editedUser, setEditedUser] = useState({
     pw: "",
     name: "",
@@ -58,8 +63,41 @@ const UserMyPage = () => {
       fetchUserInfo(userId);
       fetchPoint(userId);
       fetchreview(userId);
+      fetchOrderHistory(userId);
+      fetchAuctionHistory(userId);
     }
   }, [userId]);
+
+  // 주문 내역을 가져오는 함수
+  const fetchOrderHistory = async (userId) => {
+    try {
+      setLoading(true); // 로딩 시작
+      const response = await axios.get(
+        `http://localhost:9001/myPage/buyList/${userId}`
+      );
+      setOrders(response.data); // 가져온 데이터를 상태에 저장
+    } catch (err) {
+      setError("주문 내역을 불러오는 중 오류가 발생했습니다.");
+      console.error(err);
+    } finally {
+      setLoading(false); // 로딩 종료
+    }
+  };
+
+  const fetchAuctionHistory = async (userId) => {
+    try {
+      setLoading1(true); // 로딩 시작
+      const response = await axios.get(
+        `http://localhost:9001/myPage/auction/${userId}`
+      ); // API 엔드포인트
+      setAuctions(response.data); // 데이터 저장
+    } catch (err) {
+      setError("데이터를 불러오는 중 오류가 발생했습니다.");
+      console.error(err);
+    } finally {
+      setLoading1(false); // 로딩 종료
+    }
+  };
 
   const fetchUserInfo = async (userId) => {
     try {
@@ -411,33 +449,55 @@ const UserMyPage = () => {
           {activeTab === "buyList" && (
             <div className="order-history-display">
               <h3>주문 내역</h3>
-              {buyList.length > 0 ? (
+              {loading ? (
+                <div>로딩 중...</div>
+              ) : error ? (
+                <div className="error-message">{error}</div>
+              ) : orders.length > 0 ? (
                 <table>
                   <thead>
                     <tr>
+                      <th>번호</th>
                       <th>주문 번호</th>
                       <th>상품명</th>
                       <th>수량</th>
                       <th>금액</th>
-                      <th>주문일</th>
-                      <th>판매자명</th>
+                      <th>주문일자</th>
+                      <th>주문 상태</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {buyList.map((buyList) => (
-                      <tr key={buyList.id}>
-                        <td>{buyList.id}</td>
-                        <td>{buyList.content}</td>
-                        <td>{buyList.count}</td>
-                        <td>{buyList.price}</td>
-                        <td>{buyList.buyDate}</td>
-                        <td>{buyList.sellerName}</td>
+                    {orders.map((order, index) => (
+                      <tr key={order.orderId}>
+                        <td>{index + 1}</td> {/* 번호 */}
+                        <td>{order.userBuySeq}</td> {/* 주문 번호 */}
+                        <td>{order.content}</td> {/* 상품명 */}
+                        <td>{order.count}</td> {/* 수량 */}
+                        <td>{order.price}원</td> {/* 금액 */}
+                        <td>
+                          {new Date(order.buyDate).toLocaleDateString()}
+                        </td>{" "}
+                        {/* 주문일자 */}
+                        <td>
+                          {order.state === 0
+                            ? "값 뭐넣어야해여?"
+                            : order.state === 1
+                            ? "값 뭐넣어야해여?"
+                            : order.state === 2
+                            ? "값 뭐넣어야해여?"
+                            : order.state === 3
+                            ? "값 뭐넣어야해여?"
+                            : "값 뭐넣어야해여?"}
+                        </td>
+                        {/* 주문 상태 */}
                       </tr>
                     ))}
                   </tbody>
                 </table>
               ) : (
-                <div className="no-data-notification">주문내역이 없습니다.</div>
+                <div className="no-data-notification">
+                  주문 내역이 없습니다.
+                </div>
               )}
             </div>
           )}
@@ -445,23 +505,44 @@ const UserMyPage = () => {
           {activeTab === "auction" && (
             <div className="auction-history-display">
               <h3>경매 참여 내역</h3>
-              {auctions.length > 0 ? (
+              {loading1 ? (
+                <div>로딩 중...</div>
+              ) : error ? (
+                <div className="error-message">{error}</div>
+              ) : auctions.length > 0 ? (
                 <table>
                   <thead>
                     <tr>
-                      <th>경매 번호</th>
+                      <th>번호</th>
                       <th>상품명</th>
-                      <th>최고 입찰가</th>
-                      <th>경매 상태</th>
+                      <th>수량</th>
+                      <th>입찰 금액</th>
+                      <th>참여 날짜</th>
+                      <th>판매자명</th>
+                      <th>현재 상태</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {auctions.map((auction) => (
-                      <tr key={auction.id}>
-                        <td>{auction.id}</td>
-                        <td>{auction.productName}</td>
-                        <td>{auction.highestBid}</td>
-                        <td>{auction.status}</td>
+                    {auctions.map((auction, index) => (
+                      <tr key={auction.bidSeq}>
+                        <td>{index + 1}</td> {/* 번호 */}
+                        <td>{auction.content}</td> {/* 상품명 */}
+                        <td>{auction.count}</td> {/* 수량*/}
+                        <td>{auction.price}원</td> {/* 입찰할 금액 */}
+                        <td>{auction.insertDate}</td> {/* 입찰한 날짜 */}
+                        <td>{auction.name}</td> {/* 판매자명 */}
+                        <td>
+                          {auction.status === 0
+                            ? "값 뭐넣어야해여?"
+                            : auction.status === 1
+                            ? "값 뭐넣어야해여?"
+                            : auction.status === 2
+                            ? "값 뭐넣어야해여?"
+                            : auction.status === 3
+                            ? "값 뭐넣어야해여?"
+                            : "값 뭐넣어야해여?"}
+                        </td>
+                        {/* 현재 상태 */}
                       </tr>
                     ))}
                   </tbody>
@@ -595,45 +676,46 @@ const UserMyPage = () => {
             <div className="review-section">
               <h3>나의 리뷰 목록</h3>
               {review.length > 0 ? (
-              <div className="review-list">
-                {review.map((review) => (
-                  <div key={review.reviewCommentSeq} className="review-item">
-                    <div className="review-header">
-                      <span className="review-score">
-                        평점: {review.score}점
-                      </span>
-                      <span className="review-date">
-                        {new Date(review.date).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="review-content">{review.content}</div>
-                    {review.file && (
-                      <div className="review-image">
-                        <img src={review.file.path} alt="리뷰 이미지" />
+                <div className="review-list">
+                  {review.map((review) => (
+                    <div key={review.reviewCommentSeq} className="review-item">
+                      <div className="review-header">
+                        <span className="review-score">
+                          평점: {review.score}점
+                        </span>
+                        <span className="review-date">
+                          {new Date(review.date).toLocaleDateString()}
+                        </span>
                       </div>
-                    )}
-                    <span className="review-date">
+                      <div className="review-content">{review.content}</div>
+                      {review.file && (
+                        <div className="review-image">
+                          <img src={review.file.path} alt="리뷰 이미지" />
+                        </div>
+                      )}
+                      <span className="review-date">
                         작성날짜 : {new Date(review.date).toLocaleDateString()}
-                      </span><br/>
-                    <button
-                      onClick={() =>
-                        handleDeletereview(review.reviewCommentSeq)
-                      }
-                      className="review-delete-button"
-                    >
-                      삭제
-                    </button>
-                  </div>
-                ))}
-              </div>
-           ) : (
-            <div className="no-data-notification">
-              작성한 리뷰가 없습니다.
+                      </span>
+                      <br />
+                      <button
+                        onClick={() =>
+                          handleDeletereview(review.reviewCommentSeq)
+                        }
+                        className="review-delete-button"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="no-data-notification">
+                  작성한 리뷰가 없습니다.
+                </div>
+              )}
             </div>
           )}
-        </div>
-      )}
-       
+
           {activeTab === "point" && (
             <div className="point-section">
               <h3>포인트 충전</h3>
