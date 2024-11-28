@@ -241,6 +241,12 @@ const FarmerMyPage = () => {
                         >
                             상품 등록
                         </li>
+                        <li 
+                            onClick={() => setActiveTab('productList')}
+                            className={activeTab === 'productList' ? 'active' : ''}
+                        >
+                            상품 목록
+                        </li>
                     </ul>
                 </div>
                 

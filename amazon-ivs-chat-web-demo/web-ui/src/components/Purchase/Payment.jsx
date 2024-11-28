@@ -91,7 +91,7 @@ const Payment = () => {
                 totalPrice: item.price * quantity, //+ 3000,
                 userBuyDetailDTOs: [{
                     price: item.price,
-                    count: item.quantity,
+                    count: quantity,
                     stockSeq: item.stockSeq
                 }]
             };
@@ -161,6 +161,21 @@ const Payment = () => {
                             });
                             console.log("response3");
                             console.log(response3);
+
+                            console.log("item.stockSeq = ");
+                            console.log(item.stockSeq);
+                            const stockSeq = item.stockSeq
+                            
+
+                            if(response3.status === 200){
+                                const response4 = await axios.put('http://localhost:9001/stock/quantity', { stockSeq, quantity }, 
+                                {
+                                    headers: { 
+                                        Authorization: `Bearer ${token}`,
+                                        'Content-Type': 'application/json'
+                                    }
+                                });
+                            }
             
                             alert('결제가 완료되었습니다.');
                             navigate('/');

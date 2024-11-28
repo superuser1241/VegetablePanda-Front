@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './RegisterStock.css';
 import axios from 'axios';
 
@@ -15,7 +15,10 @@ const RegisterStock = () => {
         productSeq: '',
         stockGradeSeq: '',
         stockOrganicSeq: '',
-        regDate: new Date().toISOString()
+        fileSeq: '',
+        fileContent: '',
+        regDate: new Date().toISOString(),
+        'Content-Type': 'multipart/form-data'
     });
 
     const [productCategory, setProductCategory] = useState([]);
@@ -26,14 +29,23 @@ const RegisterStock = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedColor, setSelectedColor] = useState('#8f8f8f'); // 초기 색상
 
-    const [uploadImg, setUploadImg] = useState("");
+    const [image, setImage] = useState(null);
+
+    const textarea = useRef();
+
+    const handleResizeHeight = () => {
+        textarea.current.style.height = 'auto'; //height 초기화
+        textarea.current.style.height = textarea.current.scrollHeight + 'px';
+    };
 
     useEffect(() => {
         if (token) {
             try {
                 const payload = JSON.parse(atob(token.split('.')[1]));
-                setUserId(payload.user_seq);
+                //setUserId(payload.user_seq);
+                setUserId(localStorage.getItem('userSeq'));
                 console.log("사용자 시퀀스 : ", userId);
+                console.log("userSeq : ", localStorage.getItem('userSeq'));
             } catch (error) {
                 console.error('토큰 파싱 실패:', error);
             }
@@ -58,7 +70,7 @@ const RegisterStock = () => {
 
     const fetchProductCategory = async () => {
         try {
-            const response = await axios.get(`http://localhost:9001/productCategory`, {
+            const response = await axios.get(`http://localhost:9001/category`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
                         
@@ -138,18 +150,29 @@ const RegisterStock = () => {
                 stockGradeSeq: parseInt(newProduct.stockGradeSeq),
                 stockOrganicSeq: parseInt(newProduct.stockOrganicSeq),
                 color: parseInt(newProduct.color),
+                count: parseInt(newProduct.count),
                 content: newProduct.content,
                 status: 0,
-                regDate: new Date().toISOString()
+                fileContent: '',
+                regDate: new Date().toISOString(),
             };
 
             console.log(newProduct);
             console.log(stockData);
 
-            const response = await axios.post(url, newProduct, {
+            const formData = new FormData();
+            formData.append("stockDTO", new Blob([JSON.stringify(stockData)], {
+                type: "application/json"
+            }));
+
+            if(image) {
+                formData.append("image", image);
+            }
+
+            const response = await axios.post(url, formData, {
                 headers: { 
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 }
             });
 
@@ -164,6 +187,8 @@ const RegisterStock = () => {
                     productSeq: '',
                     stockGradeSeq: '',
                     stockOrganicSeq: '',
+                    fileSeq: '',
+                    fileContent: '',
                     regDate: new Date().toISOString()
                 });
             }
@@ -193,15 +218,19 @@ const RegisterStock = () => {
     };
 
     const handleImageChange = (e)=> {
-        setUploadImg(e.target.files[0]);
+        setImage(e.target.files[0]);
    }
+
+   const handleImageReset = () => {
+    setImage(null);
+  };
 
    // 이미지 업로드 메소드
    const handleUpload = async () => {
-    if (!uploadImg) return alert("파일을 선택해주세요.");
+    if (!image) return alert("사진을 선택해주세요.");
 
     const formData = new FormData();
-    formData.append("image", uploadImg);
+    formData.append("image", image);
 
     try {
         const response = await axios.post("http://localhost:9001/s3/upload", formData, {
@@ -226,7 +255,7 @@ const RegisterStock = () => {
                             <label>상품 카테고리</label>
                             <select name="product-category" id="product-category" value = {selectedCategory} onChange={changeCategory}>
                                 {/* 한번 설정되면 바뀌지 않는 값이므로 직접 넣기 */}
-                                <option value="default">카테고리 선택</option>
+                                <option value="default">---</option>
                                 <option value="1">식량작물</option>
                                 <option value="2">엽채류</option>
                                 <option value="3">과채류</option>
@@ -317,12 +346,81 @@ const RegisterStock = () => {
                                 name="content"
                                 value={newProduct.content}
                                 onChange={handleProductChange}
-                                placeholder="상품 설명 입력"
+                                placeholder="상품에 대한 설명을 입력해주세요"
                             />
                         </div>
                         <div className="form-group">
                         <label>상품 사진 등록</label>
-                            <input type = "file" accept = "image/*" onChange = {(e)=>{setUploadImg(e.target.files[0]);}}/>
+                            <div className="stock-image-upload-container">
+                                <input
+                                    id="image-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="stock-image-upload-input"
+                                />
+                                {/* <div className="stock-image-preview-container">
+                                    {image && (
+                                    <img
+                                        src={URL.createObjectURL(image)}
+                                        alt="Preview"
+                                        className="stock-image-preview"
+                                    />
+                                    )}
+                                </div>
+                                <button
+                                    type="button"
+                                    className="stock-image-upload-btn"
+                                    onClick={() => document.getElementById("image-upload").click()}
+                                >
+                                    사진 업로드
+                                </button>
+
+                                {image && (
+                                    <button
+                                    type="button"
+                                    className="stock-image-reset-btn"
+                                    onClick={handleImageReset}
+                                    >
+                                    삭제
+                                    </button>
+                                )}
+                            </div> */}
+                                <div className='stock-image-component'>
+                                    <div className="stock-image-preview-container">
+                                        {image && (
+                                        <img
+                                            src={URL.createObjectURL(image)}
+                                            alt="Preview"
+                                            className="stock-image-preview"
+                                        />
+                                        )}
+                                    </div>
+                                    <div className='stock-image-btn'>
+                                        <button
+                                            type="button"
+                                            className="stock-image-upload-btn"
+                                            onClick={() => document.getElementById("image-upload").click()}
+                                        >
+                                            업로드
+                                        </button>
+
+                                        {image && (
+                                            <button
+                                            type="button"
+                                            className="stock-image-reset-btn"
+                                            onClick={handleImageReset}
+                                            >
+                                            삭제
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className='stock-image-textarea-container'>
+                                    <textarea placeholder='이미지에 대한 설명을 입력해주세요.' id='fileContent' name = 'fileContent' maxLength={26} value = {newProduct.fileContent} onChange={handleProductChange}/>
+                                </div>
+                            </div>
+                            
                         </div>
                     
                     </div>
