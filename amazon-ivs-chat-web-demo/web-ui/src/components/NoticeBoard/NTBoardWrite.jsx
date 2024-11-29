@@ -53,7 +53,7 @@ const NotifyBoardWrite = () => {
       console.error('등록 실패:', error);
       if (error.response?.status === 403) {
         alert('권한이 없습니다.');
-        navigate('/login');
+        navigate('/notify-service');
       } else {
         alert('공지 등록에 실패했습니다.');
       }
