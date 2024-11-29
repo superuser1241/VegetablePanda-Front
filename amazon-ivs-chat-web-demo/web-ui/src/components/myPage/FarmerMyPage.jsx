@@ -25,10 +25,11 @@ const FarmerMyPage = () => {
         content: '',
         productSeq: '',
         stockGradeSeq: '',
-        stockOrganicSeq: ''
+        stockOrganicSeq: '',
     });
     const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
+
 
     useEffect(() => {
         if (token) {
@@ -182,7 +183,7 @@ const FarmerMyPage = () => {
                 setNewProduct({
                     color: '',
                     count: '',
-                    status: 2,
+                    status: 0,
                     content: '',
                     productSeq: '',
                     stockGradeSeq: '',
@@ -370,16 +371,13 @@ const FarmerMyPage = () => {
                                         onChange={(e) => setSelectedCategory(e.target.value)}
                                     >
                                         <option value="">카테고리 선택</option>
-                                        <option value="1">채소류</option>
-                                        <option value="2">과일류</option>
-                                        <option value="3">곡물류</option>
-                                        <option value="4">버섯류</option>
-                                        <option value="5">뿌리채소</option>
-                                        <option value="6">잎채소</option>
-                                        <option value="7">쌈채소</option>
-                                        <option value="8">산나물</option>
-                                        <option value="9">건농산물</option>
-                                        <option value="10">견과류</option>
+                                        <option value="1">식량작물</option>
+                                        <option value="2">엽채류</option>
+                                        <option value="3">과채류</option>
+                                        <option value="4">근채류</option>
+                                        <option value="5">양채류</option>
+                                        <option value="6">과수</option>
+                                        <option value="7">기타작물</option>
                                     </select>
                                 </div>
                                 <div className="form-group">
@@ -406,10 +404,12 @@ const FarmerMyPage = () => {
                                         onChange={handleProductChange}
                                     >
                                         <option value="">선택하세요</option>
-                                        <option value="1">특품</option>
-                                        <option value="2">상품</option>
-                                        <option value="3">보통</option>
-                                        <option value="4">저품</option>
+                                        <option value="1">특(1등)</option>
+                                        <option value="2">상(2등)</option>
+                                        <option value="3">중(3등)</option>
+                                        <option value="4">4등</option>
+                                        <option value="5">5등</option>
+                                        <option value="6">9등(등외)</option>
                                     </select>
                                 </div>
                                 <div className="form-group">
@@ -420,9 +420,8 @@ const FarmerMyPage = () => {
                                         onChange={handleProductChange}
                                     >
                                         <option value="">선택하세요</option>
-                                        <option value="1">유기농</option>
-                                        <option value="2">무농약</option>
-                                        <option value="3">일반재배</option>
+                                        <option value="1">유기농(우수농산물)</option>
+                                        <option value="2">일반(일반농산물)</option>
                                     </select>
                                 </div>
                                 <div className="form-group">

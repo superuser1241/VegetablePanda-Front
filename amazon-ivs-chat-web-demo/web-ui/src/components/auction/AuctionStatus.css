@@ -1,0 +1,78 @@
+.auction-status-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.auction-status-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.auction-table-container {
+    overflow-x: auto;
+}
+
+.auction-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.auction-table th,
+.auction-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.auction-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+}
+
+.auction-table tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+.auction-table tr:hover {
+    background-color: #f0f0f0;
+}
+
+.bid-button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.bid-button:hover {
+    background-color: #45a049;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .auction-table {
+        font-size: 14px;
+    }
+
+    .auction-table th,
+    .auction-table td {
+        padding: 8px;
+    }
+
+    .bid-button {
+        padding: 6px 12px;
+    }
+} 

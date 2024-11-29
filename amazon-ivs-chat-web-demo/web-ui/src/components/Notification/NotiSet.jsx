@@ -15,7 +15,6 @@ const NotiSet = () => {
         brokerURL: "ws://localhost:9001/ws", // Spring WebSocket 엔드포인트
         headers: {
           "Content-Type": "application/json",
-          "userSeq":"3",
         },
         debug: (str) => console.log(str), // 디버깅 로그
         reconnectDelay: 5000, // 재연결 딜레이
@@ -31,6 +30,11 @@ const NotiSet = () => {
             setShowMessage(!showMessage);
             setMessages((prevMessages) => message.body);
           });
+
+          // client.subscribe("/top/notifications", (message) => {
+          //   setShowMessage(!showMessage);
+          //   setMessages((prevMessages) => message.body);
+          // });
         },
         onDisconnect: () => console.log("Disconnected from WebSocket"),
       });//useEffect종료
