@@ -21,17 +21,15 @@ import QABoardEdit from './QABoard/QABoardEdit';
 import QABoardDetail from './QABoard/QABoardDetail';
 import Purchase from './Purchase/Purchase';
 import Payment from './Purchase/Payment';
-<<<<<<< HEAD
 import NTBoardList from './NoticeBoard/NTBoardList';
 import NotifyBoardWrite from './NoticeBoard/NTBoardWrite';
 import NTBoardEdit from './NoticeBoard/NTBoardEdit';
 import NotifyBoardDetail from './NoticeBoard/NTBoardDetail';
-=======
 import NotiSet from './Notification/NotiSet';
 import BidPage from './auction/BidPage';
 import AuctionRegisterPage from './auction/AuctionRegisterPage';
 import AuctionChatPage from './auction/AuctionChatPage';
->>>>>>> f9e0bcb4f2fd5f62d9fa7e32fadab9968e7708da
+
 function App() {
     const [userName, setUserName] = useState('');
     const [userRole, setUserRole] = useState('');
