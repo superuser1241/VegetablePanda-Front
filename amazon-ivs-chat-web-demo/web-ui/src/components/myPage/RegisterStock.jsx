@@ -199,6 +199,8 @@ const RegisterStock = () => {
                     file : {fileSeq: '', name: ''},
                     regDate: new Date().toISOString()
                 });
+                
+                handleImageReset();
             }
         } catch (error) {
             if (error.response?.status === 400) {

@@ -74,16 +74,16 @@ const Payment = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const orderData = {
-                shopSeq: item.shopSeq,
-                quantity: quantity,
-                totalPrice: item.price * quantity + 3000,
-                shippingInfo: {
-                    name: shippingInfo.name,
-                    phone: shippingInfo.phone,
-                    address: shippingInfo.address
-                }
-            };
+            // const orderData = {
+            //     shopSeq: item.shopSeq,
+            //     quantity: quantity,
+            //     totalPrice: item.price * quantity + 3000,
+            //     shippingInfo: {
+            //         name: shippingInfo.name,
+            //         phone: shippingInfo.phone,
+            //         address: shippingInfo.address
+            //     }
+            // };
 
             const orderData2 = {
                 userSeq: userId,
@@ -116,6 +116,15 @@ const Payment = () => {
 
             console.log("response2");
             console.log(response2);
+
+            if(response2.success === false) {
+                console("주문실패 : 주문을 삭제합니다.");
+                const deleteResult = await axios.get('http://localhost:9001/shop/cancel?id' + response.data, {
+                    headers: { 
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+            }
 
             // 결제창 호출
             let IMP = window.IMP;
@@ -215,7 +224,7 @@ const Payment = () => {
                     <h3>주문 상품 정보</h3>
                     <div className="product-summary">
                         <div className="product-image">
-                            <img src={productImage} alt={item.productName} />
+                            <img src={item.file} alt={item.productName} />
                         </div>
                         <div className="product-details">
                             <h4>{item.productName}</h4>
