@@ -147,19 +147,21 @@ const handleSettlementRequest = async () => {
   const settlementData = sales
     .filter((sale) => selectedItems.includes(sale.buySeq))
     .map((sale) => ({
+      state: 1,
       totalPoint: sale.price,
       insertDate: currentDate,
+      userSeq:userId
     }));
 
   if (settlementData.length > 0) {
     try {
-      // SettlementRequestDTO 형태로 감싸서 전송
-      const settlementRequest = { settlements: settlementData };
+      // CalculateDTO 형태로 감싸서 전송
+      const CalculateDTO = { settlements: settlementData };
 
       // 선택된 데이터를 백엔드로 전송
       await axios.post(
         `http://localhost:9001/myPage/farmer/settle/${userId}`,
-        settlementRequest
+        CalculateDTO
       );
       alert("정산 신청이 완료되었습니다.");
     } catch (err) {
