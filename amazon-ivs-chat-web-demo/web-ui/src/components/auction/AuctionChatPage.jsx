@@ -5,6 +5,8 @@ import AuctionStock from './AuctionStock';
 import AuctionRegisterPage from './AuctionRegisterPage';
 import AuctionStatusPage from './AuctionStatusPage';
 import BidHistoryModal from './BidHistoryModal';
+import PriceCheckModal from './PriceCheckModal';
+import SalesHistoryModal from './SalesHistoryModal';
 import axios from 'axios';
 import './AuctionChatPage.css';
 
@@ -16,6 +18,13 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
     const [bidHistory, setBidHistory] = useState([]);
     const currentUserSeq = localStorage.getItem('userSeq');
     const isFarmer = currentUserSeq === String(streamingRoom?.farmerSeq);
+    const [showPriceModal, setShowPriceModal] = useState(false);
+    const [showSalesModal, setShowSalesModal] = useState(false);
+    const [priceInfo, setPriceInfo] = useState(null);
+    const [salesHistory, setSalesHistory] = useState(null);
+    const [userWallet, setUserWallet] = useState(null);
+
+    
 
     useEffect(() => {
         const checkAuctionStatus = async () => {
@@ -62,6 +71,27 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
         }
     }, [streamingRoom, isFarmer]);
 
+    useEffect(() => {
+        const fetchUserWallet = async () => {
+            try {
+                const userSeq = localStorage.getItem('userSeq');
+                const token = localStorage.getItem('token');
+                const response = await axios.get(
+                    `http://localhost:9001/userTempWallet/${userSeq}`,
+                    {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }
+                );
+                setUserWallet(response.data);
+                console.log('User wallet:', response.data);
+            } catch (error) {
+                console.error('임시 지갑 정보 조회 실패:', error);
+            }
+        };
+
+        fetchUserWallet();
+    }, []);
+
     const handleAuctionRegister = (newAuction) => {
         console.log('New auction registered:', newAuction);
         setAuctionData(newAuction);
@@ -100,6 +130,40 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
         setIsModalOpen(false);
     };
 
+    const handleCheckPrice = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(
+                `http://localhost:9001/price/${streamingRoom.productName}`,
+                {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }
+            );
+            setPriceInfo(response.data);
+            setShowPriceModal(true);
+        } catch (error) {
+            console.error('가격 정보 조회 실패:', error);
+            alert('가격 정보를 가져오는데 실패했습니다.');
+        }
+    };
+
+    const handleCheckSalesHistory = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(
+                `http://localhost:9001/buy/${streamingRoom.stockSeq}`,
+                {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }
+            );
+            setSalesHistory(response.data);
+            setShowSalesModal(true);
+        } catch (error) {
+            console.error('판매 기록 조회 실패:', error);
+            alert('판매 기록을 가져오는데 실패했습니다.');
+        }
+    };
+
     if (isLoading) {
         return <div>경매 정를 불러오는 중...</div>;
     }
@@ -126,6 +190,8 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                                     auctionData={auctionData}
                                     onOpenModal={handleOpenModal}
                                     onEndAuction={handleAuctionEnd}
+                                    onCheckPrice={handleCheckPrice}
+                                    onCheckSalesHistory={handleCheckSalesHistory}
                                 />
                             ) : (
                                 <BidPage 
@@ -133,6 +199,9 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                                     auctionData={auctionData}
                                     onAuctionEnd={handleAuctionEnd}
                                     onOpenModal={handleOpenModal}
+                                    onCheckPrice={handleCheckPrice}
+                                    onCheckSalesHistory={handleCheckSalesHistory}
+                                    userWallet={userWallet}
                                 />
                             )
                         ) : (
@@ -140,7 +209,8 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                                 <AuctionRegisterPage 
                                     streamingRoom={streamingRoom}
                                     onRegisterSuccess={handleAuctionRegister}
-                                    stockSeq={streamingRoom.stockSeq}
+                                    onCheckPrice={handleCheckPrice}
+                                    onCheckSalesHistory={handleCheckSalesHistory}
                                 />
                             ) : (
                                 <div className="waiting-message">
@@ -156,6 +226,17 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
                 bidHistory={bidHistory}
+            />
+            <PriceCheckModal 
+                isOpen={showPriceModal}
+                onClose={() => setShowPriceModal(false)}
+                priceInfo={priceInfo}
+            />
+            
+            <SalesHistoryModal 
+                isOpen={showSalesModal}
+                onClose={() => setShowSalesModal(false)}
+                salesHistory={salesHistory}
             />
         </div>
     );
