@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AdminMyPage.css';
+import AuctionStatus from '../auction/AuctionStatus';
 
 const AdminMyPage = () => {
-    const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const [activeTab, setActiveTab] = useState('info');
     const [pendingProducts, setPendingProducts] = useState([]);
@@ -73,22 +72,6 @@ const AdminMyPage = () => {
         }
     };
 
-    const handleApprove = async (stockSeq) => {
-        try {
-            await axios.put(`http://localhost:9001/stock/approve/${stockSeq}`, {}, {
-                headers: { 
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            alert('상품이 승인되었습니다.');
-            fetchPendingProducts(); // 목록 새로고침
-        } catch (error) {
-            console.error('상품 승인 실패:', error);
-            alert('상품 승인에 실패했습니다.');
-        }
-    };
-
     const handleApproveStreaming = async (streamingSeq) => {
         try {
             await axios.post(`http://localhost:9001/api/streaming/approve/${streamingSeq}`, null, {
@@ -113,8 +96,8 @@ const AdminMyPage = () => {
                     <li onClick={() => setActiveTab('streaming')} className={activeTab === 'streaming' ? 'active' : ''}>
                         스트리밍 승인
                     </li>
-                    <li onClick={() => setActiveTab('products')} className={activeTab === 'products' ? 'active' : ''}>
-                        상품 승인
+                    <li onClick={() => setActiveTab('auctions')} className={activeTab === 'auctions' ? 'active' : ''}>
+                        실시간 경매 현황
                     </li>
                     <li onClick={() => setActiveTab('stats')} className={activeTab === 'stats' ? 'active' : ''}>
                         통계
@@ -171,48 +154,10 @@ const AdminMyPage = () => {
                     </div>
                 )}
 
-                {activeTab === 'products' && (
-                    <div className="products-section">
-                        <h2>상품 승인 관리</h2>
-                        <div className="pending-products">
-                            {pendingProducts.length === 0 ? (
-                                <p>승인 대기중인 상품이 없습니다.</p>
-                            ) : (
-                                <table className="products-table">
-                                    <thead>
-                                        <tr>
-                                            <th>상품 번호</th>
-                                            <th>설명</th>
-                                            <th>수량</th>
-                                            <th>등급</th>
-                                            <th>재배방식</th>
-                                            <th>액션</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {pendingProducts.map(product => (
-                                            <tr key={product.stockSeq}>
-                                                <td>{product.productSeq}</td>
-                                                <td>{product.content}</td>
-                                                <td>{product.count}</td>
-                                                <td>{product.stockGradeSeq === "1" ? "상" : 
-                                                    product.stockGradeSeq === "2" ? "중" : "하"}</td>
-                                                <td>{product.stockOrganicSeq === "1" ? "유기농" : 
-                                                    product.stockOrganicSeq === "2" ? "무농약" : "일반"}</td>
-                                                <td>
-                                                    <button 
-                                                        onClick={() => handleApprove(product.stockSeq)}
-                                                        className="approve-button"
-                                                    >
-                                                        승인하기
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            )}
-                        </div>
+                {activeTab === 'auctions' && (
+                    <div className="auctions-section">
+                        <h2>실시간 경매 현황</h2>
+                        <AuctionStatus />
                     </div>
                 )}
 

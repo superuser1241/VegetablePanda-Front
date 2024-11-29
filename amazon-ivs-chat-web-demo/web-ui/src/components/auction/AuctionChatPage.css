@@ -1,0 +1,58 @@
+.auction-chat-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+    background: #f5f5f5;
+}
+
+.page-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 채팅 섹션 스타일 */
+.chat-section {
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 하단 섹션 스타일 */
+.bottom-section {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.auction-info-section {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.bidding-section {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .bottom-section {
+        flex-direction: column;
+    }
+    
+    .auction-info-section,
+    .bidding-section {
+        width: 100%;
+    }
+} 

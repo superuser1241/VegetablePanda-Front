@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./CompanyRegister.css";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,14 @@ function CompanyRegister() {
   const [image, setImage] = useState(null);
 
   const navigate = useNavigate();
+
+  const mounted = React.useRef(true);
+
+  useEffect(() => {
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
 
   const handleImageChange = (e) => {
     const uploadedImage = e.target.files[0];
@@ -106,18 +114,40 @@ function CompanyRegister() {
         imageUrl,
       });
 
-      if (response.status === 200) {
-        setMessage("회원가입 성공!");
-        alert("회원가입 성공!");
-        navigate("/");
-      } else {
-        setMessage("회원가입 실패. 다시 시도해주세요.");
+      if (mounted.current) {
+        if (response.status === 200) {
+          setMessage("회원가입 성공!");
+          alert("회원가입 성공!");
+          navigate("/");
+        } else {
+          setMessage("회원가입 실패. 다시 시도해주세요.");
+        }
       }
     } catch (error) {
-      setMessage("서버 오류. 잠시 후 다시 시도해주세요.");
-      console.error(error);
+      if (mounted.current) {
+        setMessage("서버 오류. 잠시 후 다시 시도해주세요.");
+        console.error(error);
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (mounted.current) {
+      if (name === "id") setCompanyId(value);
+      else if (name === "pw") setPassword(value);
+      else if (name === "confirmPassword") setConfirmPassword(value);
+      else if (name === "email") setEmail(value);
+      else if (name === "phone") setPhone(value);
+      else if (name === "address") setAddress(value);
+      else if (name === "comName") setCompanyName(value);
+      else if (name === "ownerName") setOwnerName(value);
+      else if (name === "codePart1") setCodePart1(value);
+      else if (name === "codePart2") setCodePart2(value);
+      else if (name === "codePart3") setCodePart3(value);
+      else if (name === "regName") setRegistrantName(value);
     }
   };
 
@@ -166,8 +196,9 @@ function CompanyRegister() {
         <div className="input-group">
           <input
             type="text"
+            name="id"
             value={id}
-            onChange={(e) => setCompanyId(e.target.value)}
+            onChange={handleChange}
             required
             placeholder="아이디를 입력하세요"
             className="username-input company-input"
@@ -177,8 +208,9 @@ function CompanyRegister() {
         <div className="input-group">
           <input
             type="password"
+            name="pw"
             value={pw}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
             required
             placeholder="비밀번호를 입력하세요"
             className="password-input company-input"
@@ -188,8 +220,9 @@ function CompanyRegister() {
         <div className="input-group">
           <input
             type="password"
+            name="confirmPassword"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={handleChange}
             required
             placeholder="비밀번호를 다시 입력하세요"
             className="password-input company-input"
@@ -199,8 +232,9 @@ function CompanyRegister() {
         <div className="input-group">
           <input
             type="text"
+            name="comName"
             value={comName}
-            onChange={(e) => setCompanyName(e.target.value)}
+            onChange={handleChange}
             required
             placeholder="업체명을 입력하세요"
             className="company-input"
@@ -210,8 +244,9 @@ function CompanyRegister() {
         <div className="input-group">
           <input
             type="text"
+            name="ownerName"
             value={ownerName}
-            onChange={(e) => setOwnerName(e.target.value)}
+            onChange={handleChange}
             required
             placeholder="대표자명을 입력하세요"
             className="company-input"
@@ -221,8 +256,9 @@ function CompanyRegister() {
         <div className="input-group">
           <input
             type="text"
+            name="regName"
             value={regName}
-            onChange={(e) => setRegistrantName(e.target.value)}
+            onChange={handleChange}
             required
             placeholder="가입자명을 입력하세요"
             className="company-input"
@@ -232,6 +268,7 @@ function CompanyRegister() {
         <div className="input-group">
           <input
             type="text"
+            name="phone"
             value={phone}
             onChange={handlePhoneChange}
             required
@@ -244,8 +281,9 @@ function CompanyRegister() {
         <div className="input-group">
           <input
             type="email"
+            name="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleChange}
             required
             placeholder="이메일을 입력하세요"
             className="email-input company-input"
@@ -254,8 +292,9 @@ function CompanyRegister() {
         <div className="input-group">
           <input
             type="text"
+            name="address"
             value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={handleChange}
             required
             placeholder="업체주소를 입력하세요"
             className="address-input company-input"
@@ -267,8 +306,9 @@ function CompanyRegister() {
           <div className="business-number-input-wrapper">
             <input
               type="text"
+              name="codePart1"
               value={codePart1}
-              onChange={(e) => setCodePart1(e.target.value)}
+              onChange={handleChange}
               placeholder="000"
               maxLength="3"
               className="business-number-input"
@@ -276,8 +316,9 @@ function CompanyRegister() {
             - 
             <input
               type="text"
+              name="codePart2"
               value={codePart2}
-              onChange={(e) => setCodePart2(e.target.value)}
+              onChange={handleChange}
               placeholder="00"
               maxLength="2"
               className="business-number-input"
@@ -285,8 +326,9 @@ function CompanyRegister() {
             - 
             <input
               type="text"
+              name="codePart3"
               value={codePart3}
-              onChange={(e) => setCodePart3(e.target.value)}
+              onChange={handleChange}
               placeholder="00000"
               maxLength="5"
               className="business-number-input"

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './QABoard.css';
+import './NTBoard.css';
 
-const QABoardWrite = () => {
+const NotifyBoardWrite = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     subject: '',
@@ -34,7 +34,7 @@ const QABoardWrite = () => {
     try {
       const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
       
-      await axios.post('http://localhost:9001/QABoard/', 
+      await axios.post('http://localhost:9001/notifyBoard/', 
         {
           subject: formData.subject,
           content: formData.content,
@@ -47,23 +47,23 @@ const QABoardWrite = () => {
           }
         }
       );
-      alert('문의가 등록되었습니다.');
-      navigate('/customer-service');
+      alert('공지가 등록되었습니다.');
+      navigate('/Notify-service');
     } catch (error) {
       console.error('등록 실패:', error);
       if (error.response?.status === 403) {
         alert('권한이 없습니다.');
         navigate('/login');
       } else {
-        alert('문의 등록에 실패했습니다.');
+        alert('공지 등록에 실패했습니다.');
       }
     }
   };
 
   return (
-    <div className="qa-write-container">
-      <h2>문의하기</h2>
-      <form onSubmit={handleSubmit} className="qa-form">
+    <div className="nt-write-container">
+      <h2>공지등록</h2>
+      <form onSubmit={handleSubmit} className="nt-form">
         <div className="form-group">
           <label>제목</label>
           <input
@@ -89,7 +89,7 @@ const QABoardWrite = () => {
           <button 
             type="button" 
             className="cancel-button"
-            onClick={() => navigate('/customer-service')}
+            onClick={() => navigate('/Notify-service')}
           >
             취소
           </button>
@@ -99,4 +99,4 @@ const QABoardWrite = () => {
   );
 };
 
-export default QABoardWrite; 
+export default NotifyBoardWrite; 

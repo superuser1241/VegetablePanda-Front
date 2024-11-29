@@ -662,42 +662,6 @@ const Chat = ({streamingRoom,handleExitChat }) => {
         </div>
         {showSignIn && <SignIn handleSignIn={handleSignIn} />}
       </div>
-      <div className="auction-container">
-                  <div className="product-image">
-                    <img src={productImage} alt="상품 이미지" />
-                  </div>
-                  <div className="product-info">
-                    <span className="product-category">채소/과일</span>
-                    <h3 className="product-title">맛있는 양파</h3>
-                    <p className="product-description">
-                      윤성바오가 파는 맛있는 양파입니다.
-                    </p>
-                  </div>
-                <div className="bidding-section">
-                  <div className="auction-info">
-                    <div className="current-price">
-                      <h3>현재 입찰가</h3>
-                      <p>{currentBid.toLocaleString()}원</p>
-                    </div>
-                    <div className="quantity">
-                      <h3>수량</h3>
-                      <p>5kg</p>
-                    </div>
-                    <div className="time-left">
-                      <h3>남은 시간</h3>
-                      <p>{timeLeft}</p>
-                    </div>
-                  </div>
-                  <div className="bidding-form">
-                    <button 
-                      onClick={handleBid}
-                      className="bid-button"
-                    >
-                      +10원 입찰하기
-                    </button>
-                  </div>
-                </div>
-              </div>
     </>
   );
 };

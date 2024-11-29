@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import './QABoard.css';
+import './NTBoard.css';
 
-const QABoardWrite = () => {
+const NTBoardEdit = () => {
   const navigate = useNavigate();
+  const { boardNoSeq } = useParams();
   const [formData, setFormData] = useState({
     subject: '',
     content: '',
@@ -17,7 +18,28 @@ const QABoardWrite = () => {
       navigate('/login');
       return;
     }
-  }, [navigate]);
+
+    // 기존 게시글 데이터 불러오기
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9001/notifyBoard/${boardNoSeq}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setFormData({
+          subject: response.data.subject,
+          content: response.data.content,
+        });
+      } catch (error) {
+        console.error('게시글 로딩 실패:', error);
+        alert('게시글을 불러오는데 실패했습니다.');
+        navigate('/notify-service');
+      }
+    };
+
+    fetchPost();
+  }, [boardNoSeq, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,13 +54,10 @@ const QABoardWrite = () => {
     const token = localStorage.getItem('token');
     
     try {
-      const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
-      
-      await axios.post('http://localhost:9001/QABoard/', 
+      await axios.put(`http://localhost:9001/notifyBoard/${boardNoSeq}`, 
         {
           subject: formData.subject,
           content: formData.content,
-          managementUser: payload.user_seq
         },
         {
           headers: {
@@ -47,23 +66,23 @@ const QABoardWrite = () => {
           }
         }
       );
-      alert('문의가 등록되었습니다.');
-      navigate('/customer-service');
+      alert('문의가 수정되었습니다.');
+      navigate('/notify-service');
     } catch (error) {
-      console.error('등록 실패:', error);
+      console.error('수정 실패:', error);
       if (error.response?.status === 403) {
         alert('권한이 없습니다.');
         navigate('/login');
       } else {
-        alert('문의 등록에 실패했습니다.');
+        alert('문의 수정에 실패했습니다.');
       }
     }
   };
 
   return (
-    <div className="qa-write-container">
-      <h2>문의하기</h2>
-      <form onSubmit={handleSubmit} className="qa-form">
+    <div className="nt-write-container">
+      <h2>문의 수정</h2>
+      <form onSubmit={handleSubmit} className="nt-form">
         <div className="form-group">
           <label>제목</label>
           <input
@@ -85,11 +104,11 @@ const QABoardWrite = () => {
           />
         </div>
         <div className="button-group">
-          <button type="submit" className="submit-button">등록</button>
+          <button type="submit" className="submit-button">수정</button>
           <button 
             type="button" 
             className="cancel-button"
-            onClick={() => navigate('/customer-service')}
+            onClick={() => navigate('/notify-service')}
           >
             취소
           </button>
@@ -99,4 +118,4 @@ const QABoardWrite = () => {
   );
 };
 
-export default QABoardWrite; 
+export default NTBoardEdit;

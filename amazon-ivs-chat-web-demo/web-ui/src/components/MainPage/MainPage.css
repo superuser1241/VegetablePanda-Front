@@ -36,6 +36,10 @@
     margin-bottom: 30px;
 }
 
+.shop-image img {
+    width: 100%;
+}
+
 @media (max-width: 1200px) {
     .room-list, .shop-list {
         grid-template-columns: repeat(3, 1fr);
@@ -148,4 +152,43 @@
     border-radius: 15px;
     padding: 30px;
     margin-bottom: 40px;
+}
+.statistics-section {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+.chart-container {
+    width: 100%;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.chart-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+@media (max-width: 1024px) {
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
 }

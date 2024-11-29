@@ -217,3 +217,63 @@
 .approve-button:hover {
     background-color: #45a049;
 }
+
+.auctions-section {
+    padding: 20px;
+}
+
+.auctions-section h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.auctions-section .auction-status-container {
+    padding: 0;
+}
+
+.auctions-section .auction-table {
+    font-size: 14px;
+}
+
+.auctions-section .auction-table th,
+.auctions-section .auction-table td {
+    padding: 10px;
+}
+
+.auctions-section .auction-table-container {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.auctions-section .auction-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f4f4f4;
+    z-index: 1;
+}
+
+@media (max-width: 1200px) {
+    .auctions-section .auction-table {
+        font-size: 13px;
+    }
+    
+    .auctions-section .auction-table th,
+    .auctions-section .auction-table td {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-mypage {
+        flex-direction: column;
+    }
+    
+    .admin-sidebar {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .auctions-section .auction-table {
+        font-size: 12px;
+    }
+}

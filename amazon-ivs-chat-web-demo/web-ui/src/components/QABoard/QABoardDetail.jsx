@@ -94,7 +94,7 @@ const QABoardDetail = () => {
     e.preventDefault();
     try {
       await axios.post(
-        'http://localhost:9001/QaReplyBoard/',
+        'http://localhost:9001/QaReplyBoard/${boardNoSeq}',
         { 
           comment: replyContent,
           qaBoard: { boardNoSeq: boardNoSeq }
