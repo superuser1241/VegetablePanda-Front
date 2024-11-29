@@ -34,6 +34,8 @@ function LoginForm({ onLoginSuccess }) {
             if (token) {
                 localStorage.setItem('token', token);
                 localStorage.setItem('userSeq', loginResponse.data.user_seq);
+                localStorage.setItem('userRole', loginResponse.data.role);
+                console.log(loginResponse.data.role);
                 console.log(loginResponse.data.user_seq);
                 const userData = loginResponse.data;
                 onLoginSuccess(userData.name, userData.role);

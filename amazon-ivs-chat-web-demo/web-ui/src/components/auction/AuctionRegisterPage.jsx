@@ -4,7 +4,12 @@ import axios from 'axios';
 import PriceCheckModal from './PriceCheckModal';
 import SalesHistoryModal from './SalesHistoryModal';
 
-const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
+const AuctionRegisterPage = ({ 
+    streamingRoom, 
+    onRegisterSuccess, 
+    onCheckPrice, 
+    onCheckSalesHistory 
+}) => {
     const navigate = useNavigate();
     const [auctionData, setAuctionData] = useState({
         count: '',
@@ -48,17 +53,12 @@ const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(
-                `http://localhost:9001/auction?price=${totalPrice}`,
-                { 
-                    ...auctionData,
-                },
-                {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                }
-            );
-            onRegisterSuccess(response.data);
+            await onRegisterSuccess({
+                count: auctionData.count,
+                closeTime: auctionData.closeTime,
+                stockSeq: auctionData.stockSeq,
+                totalPrice: totalPrice
+            });
         } catch (error) {
             console.error('경매 등록 실패:', error);
             alert('경매 등록에 실패했습니다.');
