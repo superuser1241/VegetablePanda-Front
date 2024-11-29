@@ -83,6 +83,7 @@ const MainPage = ({ onJoinRoom }) => {
                 const response = await axios.get('http://localhost:9001/api/statistics/products', {
                     params: { startDate, endDate }
                 });
+                console.log(response.data);
     
                 // 판매 수량(totalQuantity) 기준으로 정렬하고 상위 10개만 선택
                 const sortedData = response.data

@@ -1,0 +1,16 @@
+table {
+    width: 100%;
+}
+
+tr:nth-child(1) {
+    border-bottom: solid grey 2px;
+}
+
+/* th {
+    border-bottom: solid grey 2px;
+    width:50px;
+} */
+
+td {
+    border: solid black 1px;
+}

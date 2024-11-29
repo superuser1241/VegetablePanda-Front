@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './FarmerMyPage.css';
 import RegisterStock from './RegisterStock';
+import StockList from './StockList';
 
 const FarmerMyPage = () => {
     const navigate = useNavigate();
@@ -466,6 +467,11 @@ const FarmerMyPage = () => {
                                 </div>
                             </div> */}
                             <RegisterStock/>
+                        </div>
+                    )}
+                    {activeTab === 'productList' && (
+                        <div className="productList-section">
+                            <StockList/>
                         </div>
                     )}
                 </div>
