@@ -33,19 +33,12 @@ const AuctionRegisterPage = ({ stockSeq, onRegisterSuccess }) => {
             const response = await axios.post(
                 `http://localhost:9001/auction?price=${startPrice}`, 
                 { ...auctionData, 
-                    userSeq :userSeq 
                 },
                 {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 }
             );
-
-            alert('경매가 등록되었습니다.');
-            navigate(`/auction/${response.data.auctionSeq}`);
-            onRegisterSuccess();
+            onRegisterSuccess(response.data);
         } catch (error) {
             console.error('경매 등록 실패:', error);
             alert('경매 등록에 실패했습니다.');

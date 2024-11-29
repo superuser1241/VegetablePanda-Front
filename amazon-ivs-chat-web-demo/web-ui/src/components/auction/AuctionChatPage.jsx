@@ -63,6 +63,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
     }, [streamingRoom, isFarmer]);
 
     const handleAuctionRegister = (newAuction) => {
+        console.log('New auction registered:', newAuction);
         setAuctionData(newAuction);
         setShowRegister(false);
     };
