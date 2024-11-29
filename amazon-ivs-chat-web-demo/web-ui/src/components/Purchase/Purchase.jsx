@@ -35,7 +35,7 @@ const Purchase = () => {
             <div className="purchase-details">
                 <div className="product-info">
                     <div className="product-image">
-                        <img src={productImage} alt={item.productName} />
+                        <img src={item.file} alt={item.productName} />
                     </div>
                     <h3>{item.productName}</h3>
                     <p className="description">{item.content}</p>

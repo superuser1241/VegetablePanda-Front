@@ -36,6 +36,10 @@
     margin-bottom: 30px;
 }
 
+.shop-image img {
+    width: 100%;
+}
+
 @media (max-width: 1200px) {
     .room-list, .shop-list {
         grid-template-columns: repeat(3, 1fr);

@@ -63,6 +63,7 @@ const MainPage = ({ onJoinRoom }) => {
 
         fetchActiveRooms();
         fetchShopItems();
+        console.log(shopItems);
     }, []);
 
     useEffect(() => {
@@ -365,7 +366,7 @@ const MainPage = ({ onJoinRoom }) => {
                         {shopItems.slice(0, visibleShops).map((item) => (
                             <div key={item.shopSeq} className="shop-card">
                                 <div className="shop-image">
-                                    <img src={productImage} alt={item.productName} />
+                                    <img src={item.file} alt={item.productName} />
                                 </div>
                                 <h3>{item.content}</h3>
                                 <div className="shop-info">
