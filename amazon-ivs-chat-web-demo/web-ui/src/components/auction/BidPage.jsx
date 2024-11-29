@@ -4,108 +4,228 @@ import { useAuctionData } from './useAuctionData';
 import { useBidding } from './useBidding';
 import './BidPage.css';
 
-const BidPage = ({ streamingRoom, auctionData, onAuctionEnd }) => {
-   
+const BidPage = ({ 
+    streamingRoom, 
+    auctionData, 
+    onAuctionEnd, 
+    onOpenModal, 
+    onCheckPrice, 
+    onCheckSalesHistory,
+    userWallet 
+}) => {
+    const [remainingTime, setRemainingTime] = useState('');
+    const [pricePerKg, setPricePerKg] = useState(0);
 
-    const [isAuctionEnded, setIsAuctionEnded] = useState(false);
+    const calculateRemainingTime = (closeTime) => {
+        const now = new Date();
+        const endTime = new Date(closeTime);
+        const diff = endTime - now;
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (diff <= 0) {
+            return '마감시간 경과';
+        }
+
+        if (hours > 0) {
+            return `${hours}시간 ${minutes}분 ${seconds}초`;
+        }
+        return `${minutes}분 ${seconds}초`;
+    };
 
     useEffect(() => {
         if (auctionData?.closeTime) {
-            const checkAuctionEnd = () => {
-                const now = new Date();
-                const closeTime = new Date(auctionData.closeTime);
-                if (now >= closeTime && !isAuctionEnded) {
-                    setIsAuctionEnded(true);
-                    onAuctionEnd();
-                }
-            };
+            const timer = setInterval(() => {
+                setRemainingTime(calculateRemainingTime(auctionData.closeTime));
+            }, 1000);
 
-            const timer = setInterval(checkAuctionEnd, 1000);
             return () => clearInterval(timer);
         }
-    }, [auctionData, isAuctionEnded, onAuctionEnd]);
+    }, [auctionData?.closeTime]);
 
     console.log('BidPage streamingRoom:', streamingRoom); // 디버깅용
 
-    const { highestBid, auction, bid } = useAuctionData(streamingRoom.farmerUser.userSeq); // userSeq 5로 하드코딩된 값 사용
-    const { auctionSeq } = useParams();
-    const { bidAmount, handleIncrease, handleDecrease, handleBid } = useBidding(highestBid, auctionData.auctionSeq);
+    const { highestBid, auction, bid } = useAuctionData(streamingRoom.farmerSeq, auctionData.auctionSeq);
+    const { bidAmount, setBidAmount, handleBid } = useBidding(highestBid, auctionData.auctionSeq);
+    console.log('useBidding return values:', { bidAmount, setBidAmount, handleBid }); // 디버깅용
+
+    useEffect(() => {
+        if (auction?.count && bidAmount) {
+            const calculatedPricePerKg = Math.floor(bidAmount / auction.count);
+            setPricePerKg(calculatedPricePerKg);
+        }
+    }, [bidAmount, auction?.count]);
+
+    const handlePriceChange = (amount) => {
+        const newBidAmount = bidAmount + amount;
+        if (newBidAmount > (highestBid?.price || 0)) {
+            handleBidAmountChange(newBidAmount);
+        }
+    };
+
+    const handleBidAmountChange = (newAmount) => {
+        if (newAmount > (highestBid?.price || 0)) {
+            setBidAmount(newAmount);
+        }
+    };
 
     const onBidSubmit = async () => {
-        console.log('입찰 시도:', { bidAmount, auctionId: auctionSeq });
+        console.log('입찰 시도:', { bidAmount, auctionId: auctionData.auctionSeq });
         await handleBid();
     };
     if (!auctionData || !auctionData.auctionSeq) {
         return <div>경매 정보를 불러오는 중...</div>;
     }
 
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).replace(/\./g, '-');
+    };
+
+    const handleOpenBidHistory = (bid) => {
+        onOpenModal(bid);  // bid를 인자로 전달
+    };
+
     return (
         
-        <div className="auction-container">
+        <>
             {/* <AllBidNotiSet/> */}
             {highestBid ? (
-                <div className="bidding-section">
+                <>
                     <div className="auction-info">
-                        <div className="current-price">
-                            <h3>현재 입찰가</h3>
-                            <p>{highestBid.price}원</p>
-                        </div>
-                        <div className="quantity">
-                            <h3>수량</h3>
-                            <p>{auction?.count}</p>
-                        </div>
-                        <div className="time-left">
-                            <h3>종료 일자</h3>
-                            <p>{auction?.closeTime}</p>
-                        </div>
+                        <table className="auction-info-table">
+                            <tbody>
+                                <tr>
+                                    <th>현재 입찰가</th>
+                                    <td>{highestBid.price.toLocaleString()}원</td>
+                                </tr>
+                                <tr>
+                                    <th>수량</th>
+                                    <td>{auction?.count}</td>
+                                </tr>
+                                <tr>
+                                    <th>종료 일자</th>
+                                    <td>{formatDate(auction?.closeTime)}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
-                    <div>
-                        <div className="bidding-section">
-                            {bid ? (
-                                <>
-                                    <span>입찰 횟수: {bid.length}</span>
-                                    <span><a href="#none">[입찰 확인]</a></span>
-                                </>
-                            ) : (
-                                <p>입찰 수: 0</p>
-                            )}
-                        </div>
 
+                    <div className="remaining-time">
+                        <h3>남은 시간</h3>
+                        <p>{remainingTime}</p>
+                    </div>
+                    <div>
+                            <div className="bid-status">
+                                {bid ? (
+                                    <div>
+                                        <span>입찰 횟수: {bid.length}</span>
+                                        <button 
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleOpenBidHistory(bid);  // 수정된 부분
+                                            }}
+                                            className="bid-link"
+                                        >
+                                            [입찰 확인]
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <span>입찰 수: 0</span>
+                                )}
+                            </div>
+                            
+                    <div className="bid-controls-wrapper">
+                        <div className="available-points-container">
+                            <span>사용 가능 포인트:</span>
+                            <span className="point-amount">{userWallet ? `${userWallet.point.toLocaleString()}원` : '로딩 중...'}</span>
+                        </div>
+                        
                         <div className="bid-controls">
                             <button 
-                                onClick={handleDecrease} 
+                                onClick={() => handlePriceChange(-10)} 
                                 disabled={bidAmount <= (highestBid?.price + 10)}
                                 className="bid-control-btn"
                             >
                                 -
                             </button>
-                            <input 
-                                type='text' 
-                                value={bidAmount} 
-                                readOnly 
-                            />
+                            <div className="bid-amount-display">
+                                <input 
+                                    type='text' 
+                                    value={`${bidAmount.toLocaleString()}원`} 
+                                    readOnly 
+                                />
+                                <div className="price-details">
+                                    <span className="price-per-kg">
+                                        (kg당 {pricePerKg.toLocaleString()}원)
+                                    </span>
+                                    <span className="price-deposit">
+                                        (선금 포인트 {Math.floor(bidAmount * 0.1).toLocaleString()}원)
+                                    </span>
+                                </div>
+                            </div>
                             <button 
-                                onClick={handleIncrease}
+                                onClick={() => handlePriceChange(10)}
                                 className="bid-control-btn"
                             >
                                 +
                             </button>
                         </div>
-
-                        <button 
-                            onClick={onBidSubmit} 
-                            className="bid-button"
-                            disabled={!bidAmount || bidAmount <= highestBid?.price}
-                        >
-                            입찰하기
-                        </button>
                     </div>
-                </div>
+                            <button 
+                                onClick={onBidSubmit} 
+                                className="bid-button"
+                                disabled={!bidAmount || bidAmount <= highestBid?.price}
+                            >
+                                입찰하기
+                            </button>
+
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                <button 
+                                    type="button"
+                                    onClick={onCheckPrice}
+                                    style={{
+                                        flex: '1',
+                                        padding: '8px',
+                                        backgroundColor: '#f0f0f0',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    가격 확인
+                                </button>
+                                <button 
+                                    type="button"
+                                    onClick={onCheckSalesHistory}
+                                    style={{
+                                        flex: '1',
+                                        padding: '8px',
+                                        backgroundColor: '#f0f0f0',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    판매 기록
+                                </button>
+                            </div>
+                    </div>
+                </>
             ) : (
                 <p>상품 정보를 불러오는 중...</p>
             )}
-        </div>
+        </>
     );
 };
 

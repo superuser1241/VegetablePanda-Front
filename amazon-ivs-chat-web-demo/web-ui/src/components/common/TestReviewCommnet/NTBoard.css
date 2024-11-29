@@ -1,0 +1,226 @@
+.nt-board-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .nt-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+  }
+  
+  .nt-list th, .nt-list td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .nt-list th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .nt-list tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .write-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #82c91e;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+  }
+  
+  .write-button:hover {
+    background-color: #74b816;
+  }
+  
+  .nt-write-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .nt-form {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  .submit-button,
+  .cancel-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .submit-button {
+    background-color: #82c91e;
+    color: white;
+  }
+  
+  .submit-button:hover {
+    background-color: #74b816;
+  }
+  
+  .cancel-button {
+    background-color: #e9ecef;
+    color: #495057;
+  }
+  
+  .cancel-button:hover {
+    background-color: #dee2e6;
+  }
+  
+  .nt-detail-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .nt-detail-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .detail-header {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .detail-header h3 {
+    margin: 0 0 15px 0;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .detail-info {
+    display: flex;
+    gap: 20px;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .detail-body {
+    min-height: 200px;
+    line-height: 1.6;
+    color: #333;
+    white-space: pre-wrap;
+    padding: 20px 0;
+  }
+  
+  .detail-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+  
+  .detail-buttons .list-button,
+  .detail-buttons .edit-button,
+  .detail-buttons .delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    height: 36px;
+    line-height: 1;
+    padding: 0 16px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 0;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+  
+  .detail-buttons .list-button {
+    background-color: #868e96;
+  }
+  
+  .detail-buttons .edit-button {
+    background-color: #4dabf7;
+  }
+  
+  .detail-buttons .delete-button {
+    background-color: #fa5252;
+  }
+  
+  .detail-buttons .list-button:hover {
+    background-color: #495057;
+  }
+  
+  .detail-buttons .edit-button:hover {
+    background-color: #339af0;
+  }
+  
+  .detail-buttons .delete-button:hover {
+    background-color: #e03131;
+  }
+  .reply-list .reply-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .reply-item .reply-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 0.9em;
+  }
+  
+  .reply-item p {
+    margin: 0;
+    line-height: 1.5;
+  }

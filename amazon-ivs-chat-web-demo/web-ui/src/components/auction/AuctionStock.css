@@ -1,0 +1,162 @@
+.auction-container {
+    width: 100%;
+    background-color: #f8fafc;
+    padding: 20px;
+}
+
+.auction-info {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-image-section {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.product-image-section img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+    border-radius: 15px;
+    object-fit: contain;
+}
+
+.product-details-section {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.product-info-list {
+    display: table;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+    margin: 20px 0;
+}
+
+.product-info-item {
+    display: table-row;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.info-label, .info-value {
+    display: table-cell;
+    padding: 15px 20px;
+    vertical-align: middle;
+}
+
+.info-label {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+    width: 30%;
+    background-color: #e9ecef;
+    border-radius: 8px 0 0 8px;
+}
+
+.info-value {
+    font-size: 1.4rem;
+    color: #34495e;
+    width: 70%;
+    background-color: #ffffff;
+    border-radius: 0 8px 8px 0;
+}
+
+.seller-section {
+    width: 100%;
+    margin-top: 40px;
+    padding: 30px;
+    border-radius: 15px;
+    background: #f8fafc;
+}
+
+.seller-title {
+    font-size: 1.4em;
+    color: #1e293b;
+    margin-bottom: 25px;
+    font-weight: 600;
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.seller-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.seller-info-item {
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.seller-info-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .auction-container {
+        padding: 15px 10px;
+    }
+
+    .auction-info {
+        padding: 20px;
+    }
+
+    .product-image-section {
+        margin-bottom: 20px;
+    }
+
+    .product-image-section img {
+        max-height: 300px;
+    }
+
+    .seller-info {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .seller-section {
+        padding: 20px;
+        margin-top: 30px;
+    }
+
+    .info-label {
+        font-size: 1.3rem;
+        padding: 12px 15px;
+    }
+
+    .info-value {
+        font-size: 1.2rem;
+    }
+
+    .product-info-list {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding: 12px;
+    }
+
+    .product-info-item {
+        flex: 0 0 auto;
+    }
+} 

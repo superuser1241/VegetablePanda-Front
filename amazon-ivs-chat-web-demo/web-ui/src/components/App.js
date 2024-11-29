@@ -21,6 +21,10 @@ import QABoardEdit from './QABoard/QABoardEdit';
 import QABoardDetail from './QABoard/QABoardDetail';
 import Purchase from './Purchase/Purchase';
 import Payment from './Purchase/Payment';
+import NTBoardList from './NoticeBoard/NTBoardList';
+import NotifyBoardWrite from './NoticeBoard/NTBoardWrite';
+import NTBoardEdit from './NoticeBoard/NTBoardEdit';
+import NotifyBoardDetail from './NoticeBoard/NTBoardDetail';
 import NotiSet from './Notification/NotiSet';
 import BidPage from './auction/BidPage';
 import AuctionRegisterPage from './auction/AuctionRegisterPage';
@@ -159,6 +163,10 @@ function App() {
                     <Route path="/customer-service/write" element={<QABoardWrite />} />
                     <Route path="/customer-service/edit/:boardNoSeq" element={<QABoardEdit />} />
                     <Route path="/customer-service/:boardNoSeq" element={<QABoardDetail />} />
+                    <Route path="/notify-service" element={<NTBoardList />} />
+                    <Route path="/notify-service/write" element={<NotifyBoardWrite />} />
+                    <Route path="/notify-service/edit/:boardNoSeq" element={<NTBoardEdit />} />
+                    <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
                     <Route path="/payment" element={<Payment />} />
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />

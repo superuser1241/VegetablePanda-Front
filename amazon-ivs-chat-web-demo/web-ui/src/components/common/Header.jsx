@@ -41,6 +41,9 @@ const Header = ({ userName, userRole, handleLogout }) => {
                         <Link to="/customer-service" className="nav-item">
                             고객센터
                         </Link>
+                        <Link to="/notify-service" className="nav-item">
+                            공지사항
+                        </Link>
                         <div className="user-actions">
                             <span className="welcome-message">{userName}님 환영합니다</span>
                             <button
