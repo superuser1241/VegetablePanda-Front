@@ -54,6 +54,7 @@ export const useBidding = (highestBid, auctionSeq) => {
 
     return {
         bidAmount,
+        setBidAmount,
         handleIncrease,
         handleDecrease,
         handleBid,
