@@ -31,9 +31,9 @@ function CompanyRegister() {
   }, []);
 
   const handleImageChange = (e) => {
-    const uploadedImage = e.target.files[0];
-    if (uploadedImage) {
-      setImage(uploadedImage);
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
     }
   };
 
@@ -80,7 +80,7 @@ function CompanyRegister() {
 
     const code = `${codePart1}-${codePart2}-${codePart3}`;
 
-    const companyData = {
+    const userData = {
       id,
       email,
       phone: formattedPhone,
@@ -95,38 +95,34 @@ function CompanyRegister() {
 
     try {
       const formData = new FormData();
+      formData.append(
+        "userData",
+        new Blob([JSON.stringify(userData)], { type: "application/json" })
+      );
+  
       if (image) {
-        formData.append("image", image);
+        formData.append("image", image); // 이미지 추가
       }
-
-      const imageResponse = image
-        ? await axios.post("http://localhost:9001/upload", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-        : { status: 200, data: { imageUrl: "" } };
-
-      const imageUrl = imageResponse.data.imageUrl || "";
-
-      const response = await axios.post("http://localhost:9001/members", {
-        ...companyData,
-        imageUrl,
-      });
-
-      if (mounted.current) {
-        if (response.status === 200) {
-          setMessage("회원가입 성공!");
-          alert("회원가입 성공!");
-          navigate("/");
-        } else {
-          setMessage("회원가입 실패. 다시 시도해주세요.");
-        }
+  
+      // Axios 요청
+      const response = await axios.post("http://localhost:9001/members", formData);
+  
+      if (response.status === 200) {
+        setMessage("회원가입 성공!");
+        alert("회원가입 성공!");
+        navigate("/");
+      } else {
+        setMessage("회원가입 실패. 다시 시도해주세요.");
+        console.error("Response status:", response.status);
       }
     } catch (error) {
-      if (mounted.current) {
-        setMessage("서버 오류. 잠시 후 다시 시도해주세요.");
-        console.error(error);
+      // 서버 또는 네트워크 오류 처리
+      if (error.response) {
+        console.error("Server Error:", error.response.data);
+        setMessage("서버 오류: " + (error.response.data.message || "다시 시도해주세요."));
+      } else {
+        console.error("Network Error:", error.message);
+        setMessage("네트워크 오류: 다시 시도해주세요.");
       }
     } finally {
       setLoading(false);
@@ -180,7 +176,7 @@ function CompanyRegister() {
             className="image-upload-btn"
             onClick={() => document.getElementById("image-upload").click()}
           >
-            사진 업로드
+            사진 등록
           </button>
 
           {image && (

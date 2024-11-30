@@ -15,6 +15,7 @@ const CompanyMyPage = () => {
     regName: "",
     email: "",
     code: "",
+    path: "",
     address: "",
     phone: "",
     pw: "",
@@ -22,10 +23,10 @@ const CompanyMyPage = () => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [point, setPoint] = useState(0);
-  const [orders, setOrders] = useState([]); 
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(null); 
-  const [loading1, setLoading1] = useState(false); 
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [loading1, setLoading1] = useState(false);
   const [buyList, setBuyList] = useState([]);
   const [codePart1, setCodePart1] = useState("");
   const [codePart2, setCodePart2] = useState("");
@@ -65,9 +66,8 @@ const CompanyMyPage = () => {
         pw: companyInfo.pw || "",
         regName: companyInfo.regName || "",
         regDate: companyInfo.regDate || "",
-        profileImage: companyInfo.profileImage || null,
+        path: companyInfo.path || "",
       });
-      setImagePreview(companyInfo.profileImage);
     }
   }, [companyInfo]);
 
@@ -81,36 +81,36 @@ const CompanyMyPage = () => {
     }
   }, [userId]);
 
-    // 주문 내역을 가져오는 함수
-    const fetchOrderHistory = async (userId) => {
-      try {
-        setLoading(true); // 로딩 시작
-        const response = await axios.get(
-          `http://localhost:9001/myPage/buyList/${userId}`
-        );
-        setOrders(response.data); // 가져온 데이터를 상태에 저장
-      } catch (err) {
-        setError("주문 내역을 불러오는 중 오류가 발생했습니다.");
-        console.error(err);
-      } finally {
-        setLoading(false); // 로딩 종료
-      }
-    };
-  
-    const fetchAuctionHistory = async (userId) => {
-      try {
-        setLoading1(true); // 로딩 시작
-        const response = await axios.get(
-          `http://localhost:9001/myPage/auction/${userId}`
-        ); // API 엔드포인트
-        setAuctions(response.data); // 데이터 저장
-      } catch (err) {
-        setError("데이터를 불러오는 중 오류가 발생했습니다.");
-        console.error(err);
-      } finally {
-        setLoading1(false); // 로딩 종료
-      }
-    };
+  // 주문 내역을 가져오는 함수
+  const fetchOrderHistory = async (userId) => {
+    try {
+      setLoading(true); // 로딩 시작
+      const response = await axios.get(
+        `http://localhost:9001/myPage/buyList/${userId}`
+      );
+      setOrders(response.data); // 가져온 데이터를 상태에 저장
+    } catch (err) {
+      setError("주문 내역을 불러오는 중 오류가 발생했습니다.");
+      console.error(err);
+    } finally {
+      setLoading(false); // 로딩 종료
+    }
+  };
+
+  const fetchAuctionHistory = async (userId) => {
+    try {
+      setLoading1(true); // 로딩 시작
+      const response = await axios.get(
+        `http://localhost:9001/myPage/auction/${userId}`
+      ); // API 엔드포인트
+      setAuctions(response.data); // 데이터 저장
+    } catch (err) {
+      setError("데이터를 불러오는 중 오류가 발생했습니다.");
+      console.error(err);
+    } finally {
+      setLoading1(false); // 로딩 종료
+    }
+  };
 
   const fetchCompanyInfo = async (userId) => {
     try {
@@ -199,11 +199,13 @@ const CompanyMyPage = () => {
   };
 
   const handleImageReset = () => {
-    setImage(null);
+    setCompanyInfo((prevState) => ({
+      ...prevState,
+      path: null,
+    }));
     setImagePreview(null);
   };
 
-  // 사업자 등록번호
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 11);
 
@@ -231,7 +233,6 @@ const CompanyMyPage = () => {
       return;
     }
 
-    // 비밀번호 일치 여부 확인
     if (editedCompany.pw !== editedCompany.pwConfirm) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
@@ -249,19 +250,31 @@ const CompanyMyPage = () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
-    const formData = new FormData();
-    formData.append("comName", editedCompany.comName);
-    formData.append("ownerName", editedCompany.ownerName);
-    formData.append("regName", editedCompany.regName);
-    formData.append("email", editedCompany.email);
-    formData.append("code", code);
-    formData.append("address", editedCompany.address);
-    formData.append("phone", editedCompany.phone);
-    formData.append("pw", editedCompany.pw);
 
-    // 이미지가 있으면 이미지 추가
-    if (image) {
-      formData.append("profileImage", image);
+    const formData = new FormData();
+    formData.append(
+      "companyData",
+      new Blob(
+        [
+          JSON.stringify({
+            comName: editedCompany.comName,
+            ownerName: editedCompany.ownerName,
+            regName: editedCompany.regName,
+            email: editedCompany.email,
+            code: code,
+            address: editedCompany.address,
+            phone: editedCompany.phone,
+            pw: editedCompany.pw,
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
+
+    if (image !== null) {
+      formData.append("image", image); // 새 이미지 추가
+    } else if (image === null) {
+      formData.append("image", null); // 이미지에 null값
     }
 
     try {
@@ -287,7 +300,7 @@ const CompanyMyPage = () => {
           phone: formattedPhone,
           address: editedCompany.address,
           code: code,
-          profileImage: imagePreview || companyInfo.profileImage,
+          path: editedCompany.path,
         });
         setActiveTab("info");
       }
@@ -362,7 +375,7 @@ const CompanyMyPage = () => {
             >
               회원 정보 수정
             </li>
-        
+
             <li
               onClick={() => setActiveTab("buyList")}
               className={activeTab === "buyList" ? "active" : ""}
@@ -395,10 +408,13 @@ const CompanyMyPage = () => {
             <div className="user-info-section">
               <h3>회원 정보</h3>
               <div className="user-info-details">
-                <p>
-                  <strong>프로필사진 :</strong> {companyInfo.file}
-                </p>
-                
+                <strong>프로필 사진</strong>
+                <div className="image-preview-container">
+                  <img
+                    src={imagePreview || companyInfo.path}
+                    alt={companyInfo.path}
+                  />
+                </div>
                 <p>
                   <strong>아이디 :</strong> {companyInfo.companyId}
                 </p>
@@ -440,45 +456,45 @@ const CompanyMyPage = () => {
               <form onSubmit={handleUpdateCompanyInfo}>
                 <div className="image-section">
                   <label>프로필 이미지</label>
-
-                  {/* 미리보기 네모 영역 */}
+                  <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="image-upload-input"
+                  />
                   <div className="image-preview-container">
                     {imagePreview ? (
                       <img
                         src={imagePreview}
-                        alt="Profile Preview"
+                        alt="Preview"
                         className="image-preview"
                       />
-                    ) : (
-                      <div className="image-placeholder">이미지 미리보기</div> // 이미지 미리보기 텍스트
-                    )}
+                    ) : companyInfo.path ? (
+                      <img
+                        src={companyInfo.path}
+                        alt="Previous"
+                        className="image-preview"
+                      />
+                    ) : null}
                   </div>
-
-                  {/* 이미지 업로드 버튼 */}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    style={{ display: "none" }}
-                    id="profileImageInput"
-                  />
                   <button
                     type="button"
+                    className="image-upload-btn"
                     onClick={() =>
-                      document.getElementById("profileImageInput").click()
+                      document.getElementById("image-upload").click()
                     }
                   >
-                    이미지 업로드
+                    사진 등록
                   </button>
 
-                  {/* 이미지 초기화 버튼 */}
                   {imagePreview && (
                     <button
                       type="button"
                       onClick={handleImageReset}
-                      className="reset-btn1"
+                      className="image-reset-btn"
                     >
-                      이미지 초기화
+                      삭제
                     </button>
                   )}
                 </div>
@@ -600,43 +616,43 @@ const CompanyMyPage = () => {
             <div className="review-section">
               <h3>나의 리뷰 목록</h3>
               {review.length > 0 ? (
-              <div className="review-list">
-                {review.map((review) => (
-                  <div key={review.reviewCommentSeq} className="review-item">
-                    <div className="review-header">
-                      <span className="review-score">
-                        평점: {review.score}점
-                      </span>
-                      <span className="review-date">
-                        {new Date(review.date).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="review-content">{review.content}</div>
-                    {review.file && (
-                      <div className="review-image">
-                        <img src={review.file.path} alt="리뷰 이미지" />
+                <div className="review-list">
+                  {review.map((review) => (
+                    <div key={review.reviewCommentSeq} className="review-item">
+                      <div className="review-header">
+                        <span className="review-score">
+                          평점: {review.score}점
+                        </span>
+                        <span className="review-date">
+                          {new Date(review.date).toLocaleDateString()}
+                        </span>
                       </div>
-                    )}
-                    <button
-                      onClick={() =>
-                        handleDeleteReview(review.reviewCommentSeq)
-                      }
-                      className="delete-button"
-                    >
-                      삭제
-                    </button>
+                      <div className="review-content">{review.content}</div>
+                      {review.file && (
+                        <div className="review-image">
+                          <img src={review.file.path} alt="리뷰 이미지" />
+                        </div>
+                      )}
+                      <button
+                        onClick={() =>
+                          handleDeleteReview(review.reviewCommentSeq)
+                        }
+                        className="delete-button"
+                      >
+                        삭제
+                      </button>
                     </div>
-                ))}
-              </div>
-           ) : (
-            <div className="no-data-notification">
-              작성한 리뷰가 없습니다.
+                  ))}
+                </div>
+              ) : (
+                <div className="no-data-notification">
+                  작성한 리뷰가 없습니다.
+                </div>
+              )}
             </div>
           )}
-        </div>
-      )}
-      
-      {activeTab === "buyList" && (
+
+          {activeTab === "buyList" && (
             <div className="order-history-display">
               <h3>주문 내역</h3>
               {loading ? (
@@ -692,7 +708,7 @@ const CompanyMyPage = () => {
             </div>
           )}
 
-{activeTab === "auction" && (
+          {activeTab === "auction" && (
             <div className="auction-history-display">
               <h3>경매 참여 내역</h3>
               {loading1 ? (

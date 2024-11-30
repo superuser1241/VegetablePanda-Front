@@ -77,7 +77,7 @@ function FarmerRegister() {
 
     const code = `${codePart1}-${codePart2}-${codePart3}`;
 
-    const farmerData = {
+    const userData = {
       id,
       email,
       phone: formattedPhone,
@@ -91,35 +91,33 @@ function FarmerRegister() {
 
     try {
       const formData = new FormData();
+      formData.append(
+        "userData",
+        new Blob([JSON.stringify(userData)], { type: "application/json" })
+      );
+  
       if (image) {
         formData.append("image", image);
       }
 
-      const imageResponse = image
-        ? await axios.post("http://localhost:9001/upload", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-        : { status: 200, data: { imageUrl: "" } };
-
-      const imageUrl = imageResponse.data.imageUrl || "";
-
-      const response = await axios.post("http://localhost:9001/members", {
-        ...farmerData,
-        imageUrl,
-      });
-
+      const response = await axios.post("http://localhost:9001/members", formData);
+  
       if (response.status === 200) {
         setMessage("회원가입 성공!");
         alert("회원가입 성공!");
         navigate("/");
       } else {
-        setMessage("정보를 다시 입력해 주세요.");
+        setMessage("회원가입 실패. 다시 시도해주세요.");
+        console.error("Response status:", response.status);
       }
     } catch (error) {
-      setMessage("서버 오류");
-      console.error(error);
+      if (error.response) {
+        console.error("Server Error:", error.response.data);
+        setMessage("서버 오류: " + (error.response.data.message || "다시 시도해주세요."));
+      } else {
+        console.error("Network Error:", error.message);
+        setMessage("네트워크 오류: 다시 시도해주세요.");
+      }
     } finally {
       setLoading(false);
     }

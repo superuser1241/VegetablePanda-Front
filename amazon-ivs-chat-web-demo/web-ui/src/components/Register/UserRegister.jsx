@@ -75,29 +75,28 @@ function UserRegister() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setMessage("");
-
+  
     if (!email.includes("@")) {
       setMessage("올바른 이메일 형식을 입력하세요.");
       return;
     }
-
+  
     if (pw !== confirmPassword) {
       setMessage("비밀번호가 일치하지 않습니다.");
       return;
     }
-
+  
     setLoading(true);
-
+  
+    // 전화번호 포맷팅
     const formattedPhone = phone.replace(/[^0-9]/g, "");
+
     const formattedPhoneWithHyphen =
       formattedPhone.length === 11
-        ? `${formattedPhone.slice(0, 3)}-${formattedPhone.slice(
-            3,
-            7
-          )}-${formattedPhone.slice(7)}`
+        ? `${formattedPhone.slice(0, 3)}-${formattedPhone.slice(3, 7)}-${formattedPhone.slice(7)}`
         : formattedPhone;
-
+  
+    // 유저 데이터 구성
     const userData = {
       id,
       name,
@@ -108,42 +107,41 @@ function UserRegister() {
       gender,
       content: "user",
     };
-
+  
     try {
       const formData = new FormData();
+      formData.append(
+        "userData",
+        new Blob([JSON.stringify(userData)], { type: "application/json" })
+      );
+  
       if (image) {
-        formData.append("image", image);
+        formData.append("image", image); 
       }
-
-      const imageResponse = image
-        ? await axios.post("http://localhost:9001/upload", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-        : { status: 200, data: { imageUrl: "" } };
-
-      const imageUrl = imageResponse.data.imageUrl || "";
-
-      const response = await axios.post("http://localhost:9001/members", {
-        ...userData,
-        imageUrl,
-      });
-
+  
+      const response = await axios.post("http://localhost:9001/members", formData);
+  
       if (response.status === 200) {
         setMessage("회원가입 성공!");
         alert("회원가입 성공!");
         navigate("/");
       } else {
         setMessage("회원가입 실패. 다시 시도해주세요.");
+        console.error("Response status:", response.status);
       }
     } catch (error) {
-      setMessage("서버 오류. 잠시 후 다시 시도해주세요.");
-      console.error(error);
+      if (error.response) {
+        console.error("Server Error:", error.response.data);
+        setMessage("서버 오류: " + (error.response.data.message || "다시 시도해주세요."));
+      } else {
+        console.error("Network Error:", error.message);
+        setMessage("네트워크 오류: 다시 시도해주세요.");
+      }
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="register-form-container">
@@ -172,7 +170,7 @@ function UserRegister() {
             className="image-upload-btn"
             onClick={() => document.getElementById("image-upload").click()}
           >
-            사진 업로드
+            사진 등록
           </button>
 
           {image && (

@@ -15,23 +15,26 @@ const UserMyPage = () => {
   const [image, setImage] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [buyList, setbuyList] = useState([]);
-  const [orders, setOrders] = useState([]); 
-  const [loading1, setLoading1] = useState(false); 
+  const [gender, setGender] = useState("");
+  const [orders, setOrders] = useState([]);
+  const [loading1, setLoading1] = useState(false);
   const [auctions, setAuctions] = useState([]);
   const [point, setPoint] = useState(0);
   const [review, setreview] = useState([]);
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(null); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [editedUser, setEditedUser] = useState({
     pw: "",
     name: "",
     gender: "",
     regDate: "",
+    path:"",
     id: "",
     address: "",
     phone: "",
     email: "",
   });
+  
   const [activeTab, setActiveTab] = useState("info"); // 'info', 'edit', 'review' 탭 관리
   const navigate = useNavigate();
   useEffect(() => {
@@ -50,6 +53,7 @@ const UserMyPage = () => {
     if (userInfo) {
       setEditedUser({
         pw: "",
+        path: userInfo.path,
         name: userInfo.name,
         address: userInfo.address,
         phone: userInfo.phone,
@@ -220,10 +224,8 @@ const UserMyPage = () => {
   };
 
   const handlePhoneChange = (e) => {
-    // 입력된 값에서 숫자만 남기고 하이픈은 제거합니다.
     const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 11);
 
-    // 하이픈을 제거한 전화번호 값을 상태에 저장합니다.
     setEditedUser((prev) => ({ ...prev, phone: value }));
   };
 
@@ -240,8 +242,11 @@ const UserMyPage = () => {
   };
 
   const handleImageReset = () => {
-    setImage(null);
-    setImagePreview(null);
+    setUserInfo(prevState => ({
+      ...prevState,
+      path: null, 
+    }));
+    setImagePreview(null); 
   };
 
   const handleUpdateUserInfo = async (e) => {
@@ -258,7 +263,13 @@ const UserMyPage = () => {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-
+    
+    if (!editedUser.gender) {
+      alert("성별을 선택해 주세요.");
+      return;
+    }
+    const id = userInfo.id;
+    // 전화번호 포맷팅
     const phoneWithoutHyphen = editedUser.phone.replace(/-/g, "");
     const formattedPhone =
       phoneWithoutHyphen.length === 10
@@ -271,19 +282,34 @@ const UserMyPage = () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
 
+    // FormData 구성
     const formData = new FormData();
-    formData.append("name", editedUser.name);
-    formData.append("pw", editedUser.pw);
-    formData.append("address", editedUser.address);
-    formData.append("phone", formattedPhone);
-    formData.append("email", editedUser.email);
-    formData.append("gender", editedUser.gender);
+    formData.append(
+      "userData",
+      new Blob(
+        [
+          JSON.stringify({
+            id,
+            name: editedUser.name,
+            pw: editedUser.pw,
+            address: editedUser.address,
+            phone: formattedPhone,
+            email: editedUser.email,
+            gender: editedUser.gender,
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
 
-    if (image) {
-      formData.append("profileImage", image);
+    if (image !== null) {
+      formData.append("image", image); // 새 이미지 추가
+    } else if (image === null) {
+      formData.append("image", null); // 이미지에 null값
     }
 
     try {
+      // 서버로 PUT 요청
       const response = await axios.put(
         `http://localhost:9001/myPage/user/update/${userId}`,
         formData,
@@ -294,17 +320,19 @@ const UserMyPage = () => {
           },
         }
       );
+
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
+        // 수정된 유저 정보를 상태에 반영
         setUserInfo({
           ...userInfo,
+          path: editedUser.path,
           name: editedUser.name,
           email: editedUser.email,
           phone: formattedPhone,
           pw: editedUser.pw,
           address: editedUser.address,
           gender: editedUser.gender,
-          profileImage: imagePreview || userInfo.profileImage,
         });
         setActiveTab("info");
       }
@@ -319,6 +347,8 @@ const UserMyPage = () => {
       "정말로 회원 탈퇴를 진행하시겠습니까?"
     );
 
+
+  
     if (confirmDelete) {
       try {
         const response = await axios.put(
@@ -417,6 +447,10 @@ const UserMyPage = () => {
             <div className="user-info-section">
               <h3>회원 정보</h3>
               <div className="user-info-details">
+              <strong>프로필 사진</strong> 
+              <div className="image-preview-container">
+                  <img src={imagePreview || userInfo.path} alt={userInfo.path} />
+              </div>
                 <p>
                   <strong>아이디:</strong> {userInfo.id}
                 </p>
@@ -561,45 +595,37 @@ const UserMyPage = () => {
               <form onSubmit={handleUpdateUserInfo}>
                 <div className="image-section">
                   <label>프로필 이미지</label>
-
-                  {/* 미리보기 네모 영역 */}
-                  <div className="image-preview-container">
-                    {imagePreview ? (
-                      <img
-                        src={imagePreview}
-                        alt="Profile Preview"
-                        className="image-preview"
-                      />
-                    ) : (
-                      <div className="image-placeholder">이미지 미리보기</div> // 이미지 미리보기 텍스트
-                    )}
-                  </div>
-
-                  {/* 이미지 업로드 버튼 */}
-                  <input
+                  <input 
+                    id="image-upload"
                     type="file"
                     accept="image/*"
                     onChange={handleImageChange}
-                    style={{ display: "none" }}
-                    id="profileImageInput"
+                    className="image-upload-input"
                   />
+<div className="image-preview-container">
+  {imagePreview ? (
+    <img src={imagePreview} alt="Preview" className="image-preview" />
+  ) : userInfo.path ? (
+    <img src={userInfo.path} alt="Previous" className="image-preview" />
+  ) : null}
+</div>
                   <button
                     type="button"
+                    className="image-upload-btn"
                     onClick={() =>
-                      document.getElementById("profileImageInput").click()
+                      document.getElementById("image-upload").click()
                     }
                   >
-                    이미지 업로드
+                    사진 등록
                   </button>
 
-                  {/* 이미지 초기화 버튼 */}
                   {imagePreview && (
                     <button
                       type="button"
+                      className="image-reset-btn"
                       onClick={handleImageReset}
-                      className="reset-btn1"
                     >
-                      이미지 초기화
+                      삭제
                     </button>
                   )}
                 </div>
@@ -655,6 +681,38 @@ const UserMyPage = () => {
                   onChange={handleChange}
                   required
                 />
+                <div className="input-group">
+                  <div className="user-gender">
+                    <input
+                      type="radio"
+                      id="male"
+                      name="gender"
+                      value="남자"
+                      checked={editedUser.gender === "남자"}
+                      onChange={() =>
+                        setEditedUser({ ...editedUser, gender: "남자" })
+                      } // editedUser.gender 업데이트
+                      className="user-gender-radio"
+                    />
+                    <label htmlFor="male" className="gender-label">
+                      남성
+                    </label>
+                    <input
+                      type="radio"
+                      id="female"
+                      name="gender"
+                      value="여자"
+                      checked={editedUser.gender === "여자"}
+                      onChange={() =>
+                        setEditedUser({ ...editedUser, gender: "여자" })
+                      } // editedUser.gender 업데이트
+                      className="user-gender-radio"
+                    />
+                    <label htmlFor="female" className="gender-label">
+                      여성
+                    </label>
+                  </div>
+                </div>
 
                 <div className="button-container">
                   <button type="submit" className="update-button">

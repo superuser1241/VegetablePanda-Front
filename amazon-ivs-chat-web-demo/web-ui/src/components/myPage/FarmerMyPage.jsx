@@ -12,26 +12,25 @@ const FarmerMyPage = () => {
   const [sales, setSales] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [error1, setError1] = useState(null);
   const [codePart1, setCodePart1] = useState("");
   const [codePart2, setCodePart2] = useState("");
   const [codePart3, setCodePart3] = useState("");
   const [review, setReview] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]); // 체크박스를 선택한 항목을 저장
-
+  const [selectedItems, setSelectedItems] = useState([]);
   const [settlements, setSettlements] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
   const [farmerInfo, setFarmerInfo] = useState(null);
   const [editedFarmer, setEditedFarmer] = useState({
     email: "",
     phone: "",
+    path: "",
     code: "",
     name: "",
     pw: "",
     address: "",
   });
 
-  const [activeTab, setActiveTab] = useState("info"); // 기본 탭을 info로 변경
+  const [activeTab, setActiveTab] = useState("info");
   const [newProduct, setNewProduct] = useState({
     color: "",
     count: "",
@@ -67,15 +66,15 @@ const FarmerMyPage = () => {
         email: farmerInfo.email || "",
         farmerId: farmerInfo.farmerId || "",
         phone: farmerInfo.phone || "",
+        path: farmerInfo.path || "",
         name: farmerInfo.name || "",
         address: farmerInfo.address || "",
         code: farmerInfo.code || "",
         grade: farmerInfo.grade || "",
         pw: farmerInfo.pw || "",
         regDate: farmerInfo.regDate || "",
-        profileImage: farmerInfo.profileImage || null,
+        
       });
-      setImagePreview(farmerInfo.profileImage);
     }
   }, [farmerInfo]);
 
@@ -101,12 +100,13 @@ const FarmerMyPage = () => {
       const response = await axios.get(
         `http://localhost:9001/myPage/farmer/point/calc/${userId}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         }
       );
       setSettlements(response.data);
     } catch (err) {
-      setError1("정산 내역을 불러오는 중 오류가 발생했습니다.");
+      setError("정산 내역을 불러오는 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
@@ -127,51 +127,61 @@ const FarmerMyPage = () => {
   };
 
   // 체크박스를 클릭할 때마다 선택된 항목을 업데이트하는 함수
-  const handleCheckboxChange = (saleSeq) => {
-    setSelectedItems((prevState) => {
-      if (prevState.includes(saleSeq)) {
-        // 이미 선택된 항목이라면 제거
-        return prevState.filter((item) => item !== saleSeq);
-      } else {
-        // 선택되지 않은 항목이라면 추가
-        return [...prevState, saleSeq];
-      }
-    });
+  const handleCheckboxChange = (buySeq) => {
+    if (selectedItems.includes(buySeq)) {
+      // 이미 선택된 항목은 제거
+      setSelectedItems(selectedItems.filter((item) => item !== buySeq));
+    } else {
+      // 선택되지 않은 항목은 추가
+      setSelectedItems([...selectedItems, buySeq]);
+    }
   };
 
- // 정산 신청 버튼 클릭 시 선택된 항목의 데이터를 서버로 전송하는 함수
-const handleSettlementRequest = async () => {
-  const currentDate = new Date().toISOString().split("T")[0]; // 오늘 날짜 (YYYY-MM-DD)
+  const handleSettlementRequest = async () => {
+    // 선택된 항목에 대한 데이터 처리
+    const settlementData = sales
+      .filter((sale) => selectedItems.includes(sale.buySeq)) // selectedItems에 포함된 항목만 필터링
+      .map((sale) => ({
+        totalPoint: sale.price,
+      }));
 
-  // 선택된 항목에 대한 데이터 처리
-  const settlementData = sales
-    .filter((sale) => selectedItems.includes(sale.buySeq))
-    .map((sale) => ({
-      state: 1,
-      totalPoint: sale.price,
-      insertDate: currentDate,
-      userSeq:userId
-    }));
+    if (settlementData.length > 0) {
+      try {
+        // CalculateDTO 형태로 감싸서 전송
+        const CalculateDTO = { settlements: settlementData };
 
-  if (settlementData.length > 0) {
-    try {
-      // CalculateDTO 형태로 감싸서 전송
-      const CalculateDTO = { settlements: settlementData };
+        console.log("전송할 데이터:", CalculateDTO);
 
-      // 선택된 데이터를 백엔드로 전송
-      await axios.post(
-        `http://localhost:9001/myPage/farmer/settle/${userId}`,
-        CalculateDTO
-      );
-      alert("정산 신청이 완료되었습니다.");
-    } catch (err) {
-      setError("정산 신청 실패");
+        // 선택된 데이터를 백엔드로 전송
+        const response = await axios.post(
+          `http://localhost:9001/myPage/farmer/calculate/${userId}`,
+          CalculateDTO,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // 인증 토큰 추가
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log("서버 응답:", response); // 서버 응답 로그
+        alert("정산 신청이 완료되었습니다.");
+
+        // 성공한 항목을 비활성화
+        const updatedSales = sales.map((sale) =>
+          selectedItems.includes(sale.buySeq)
+            ? { ...sale, isDisabled: true } // 성공한 항목에 `isDisabled` 추가
+            : sale
+        );
+
+        setSales(updatedSales);
+      } catch (err) {
+        alert("다시 체크해주세요.");
+      }
+    } else {
+      alert("정산 신청할 항목을 체크하세요.");
     }
-  } else {
-    alert("정산 신청할 항목을 체크하세요.");
-  }
-};
-
+  };
 
   const fetchFarmerInfo = async (userId) => {
     try {
@@ -183,21 +193,7 @@ const handleSettlementRequest = async () => {
           },
         }
       );
-      const farmerData = response.data;
-
-      // 필요한 데이터만 남기기
-      const simplifiedData = {
-        farmerId: farmerData.farmerId,
-        name: farmerData.name,
-        code: farmerData.code,
-        address: farmerData.address,
-        phone: farmerData.phone,
-        grade: farmerData.grade,
-        regDate: farmerData.regDate,
-        email: farmerData.email,
-      };
-
-      setFarmerInfo(simplifiedData);
+      setFarmerInfo(response.data);
     } catch (error) {
       console.error("회원 정보 조회 실패:", error);
     }
@@ -217,25 +213,26 @@ const handleSettlementRequest = async () => {
     }
   };
 
-  // 이미지
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
+        setImagePreview(reader.result);  
       };
       reader.readAsDataURL(file);
     }
   };
-
+  
   const handleImageReset = () => {
-    setImage(null);
-    setImagePreview(null);
+    setFarmerInfo(prevState => ({
+      ...prevState,
+      path: null, 
+    }));
+    setImagePreview(null); 
   };
 
-  // 사업자 등록번호
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 11);
 
@@ -263,7 +260,6 @@ const handleSettlementRequest = async () => {
       return;
     }
 
-    // 비밀번호 일치 여부 확인
     if (editedFarmer.pw !== editedFarmer.pwConfirm) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
@@ -281,17 +277,29 @@ const handleSettlementRequest = async () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
-    const formData = new FormData();
-    formData.append("name", editedFarmer.name);
-    formData.append("email", editedFarmer.email);
-    formData.append("code", code);
-    formData.append("address", editedFarmer.address);
-    formData.append("phone", editedFarmer.phone);
-    formData.append("pw", editedFarmer.pw);
 
-    // 이미지가 있으면 이미지 추가
-    if (image) {
-      formData.append("profileImage", image);
+    const formData = new FormData();
+    formData.append(
+      "farmerData",
+      new Blob(
+        [
+          JSON.stringify({
+            name: editedFarmer.name,
+            email: editedFarmer.email,
+            code: code,
+            address: editedFarmer.address,
+            phone: editedFarmer.phone,
+            pw: editedFarmer.pw,
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
+
+    if (image !== null) {
+      formData.append("image", image); // 새 이미지 추가
+    } else if (image === null) {
+      formData.append("image", null); // 이미지에 null값
     }
 
     try {
@@ -309,13 +317,14 @@ const handleSettlementRequest = async () => {
         alert("정보 수정이 완료되었습니다.");
         setFarmerInfo({
           ...farmerInfo,
+          path: editedFarmer.path,
           name: editedFarmer.name,
           pw: editedFarmer.pw,
           email: editedFarmer.email,
           phone: formattedPhone,
           address: editedFarmer.address,
           code: code,
-          profileImage: imagePreview || farmerInfo.profileImage,
+         
         });
         setActiveTab("info");
       }
@@ -505,9 +514,11 @@ const handleSettlementRequest = async () => {
             <div className="user-info-section">
               <h3>회원 정보</h3>
               <div className="user-info-details">
-                <p>
-                  <strong>프로필사진</strong> {farmerInfo.file}
-                </p>
+              <strong>프로필 사진</strong> 
+                <div className="image-preview-container">
+                  <img src={imagePreview || farmerInfo.path} alt={farmerInfo.path}
+                  />
+                </div>
                 <p>
                   <strong>아이디 :</strong> {farmerInfo.farmerId}
                 </p>
@@ -543,45 +554,45 @@ const handleSettlementRequest = async () => {
               <form onSubmit={handleUpdateFarmerInfo}>
                 <div className="image-section">
                   <label>프로필 이미지</label>
-
-                  {/* 미리보기 네모 영역 */}
+                  <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="image-upload-input"
+                  />
                   <div className="image-preview-container">
                     {imagePreview ? (
                       <img
                         src={imagePreview}
-                        alt="Profile Preview"
+                        alt="Preview"
                         className="image-preview"
                       />
-                    ) : (
-                      <div className="image-placeholder">사진</div> // 이미지 미리보기 텍스트
-                    )}
+                    ) : farmerInfo.path ? (
+                      <img
+                        src={farmerInfo.path}
+                        alt="Previous"
+                        className="image-preview"
+                      />
+                    ) : null}
                   </div>
-
-                  {/* 이미지 업로드 버튼 */}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    style={{ display: "none" }}
-                    id="profileImageInput"
-                  />
                   <button
                     type="button"
+                    className="image-upload-btn"
                     onClick={() =>
-                      document.getElementById("profileImageInput").click()
+                      document.getElementById("image-upload").click()
                     }
                   >
-                    이미지 업로드
+                    사진 등록
                   </button>
 
-                  {/* 이미지 초기화 버튼 */}
                   {imagePreview && (
                     <button
                       type="button"
                       onClick={handleImageReset}
-                      className="reset-btn1"
+                      className="image-reset-btn"
                     >
-                      이미지 초기화
+                      삭제
                     </button>
                   )}
                 </div>
@@ -772,8 +783,9 @@ const handleSettlementRequest = async () => {
                           <td>
                             <input
                               type="checkbox"
-                              checked={selectedItems.includes(sale.buySeq)}
-                              onChange={() => handleCheckboxChange(sale.buySeq)} // 체크박스 클릭 시 선택 상태 업데이트
+                              checked={sale.buySeq}
+                              onChange={() => handleCheckboxChange(sale.buySeq)}
+                              disabled={sale.isDisabled}
                             />
                           </td>
                           <td>{sale.userBuySeq}</td>
@@ -831,22 +843,28 @@ const handleSettlementRequest = async () => {
                       <tr key={settlement.calcPointSeq}>
                         <td>{index + 1}</td>
                         <td>{settlement.totalPoint}원</td>
-                        <td>{settlement.pointToCash}원</td>
+                        <td>
+                          {settlement.pointToCash === null
+                            ? ""
+                            : settlement.pointToCash + "원"}
+                        </td>
                         <td>
                           {new Date(
                             settlement.insertDate
                           ).toLocaleDateString() || "검토중"}
                         </td>
                         <td>
-                          {new Date(
-                            settlement.tradeDate
-                          ).toLocaleDateString() || "검토중"}
+                          {settlement.tradeDate === null
+                            ? ""
+                            : new Date(
+                                settlement.tradeDate
+                              ).toLocaleDateString()}
                         </td>
                         <td>
                           {settlement.state === 0
                             ? "정산 전"
                             : settlement.state === 1
-                            ? "정산 중"
+                            ? "정산 진행 중"
                             : "정산 완료"}
                         </td>{" "}
                       </tr>

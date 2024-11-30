@@ -422,7 +422,7 @@ const RegisterStock = () => {
                                             onClick={handleImageReset}
                                             >
                                             삭제
-                                            </button>
+                                        </button>
                                         )}
                                     </div>
                                 </div>
