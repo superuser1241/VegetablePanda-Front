@@ -1,0 +1,66 @@
+.product-card {
+    /* border: 1px solid #ddd; */
+    /* border-radius: 10px; */
+    border: none;
+    padding: 20px;
+    width: 250px;
+    text-align: left;
+    background-color: white;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+  }
+  
+  .product-card img {
+    width: 210px;
+    height: 210px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    object-fit: cover;
+  }
+  
+  .product-card h2 {
+    font-size: 1.2em;
+    margin: 10px 0;
+  }
+  
+  .product-card p {
+    margin: 5px 0;
+    color: #555;
+  }
+  
+  .product-card button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .product-card button:hover {
+    background-color: #218838;
+  }
+
+  @media (max-width: 768px) {
+    .product-list {
+      grid-template-columns: repeat(2, 1fr); /* 태블릿: 2개씩 */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .product-list {
+      grid-template-columns: 1fr; /* 모바일: 1개씩 */
+    }
+  }
+
+  .product-name {
+  font-size: 1.1em;
+  font-weight: bold;
+  }
+
+  .product-price,
+  .product-count,
+  .product-grade {
+    font-size: 0.9em;
+    margin: 5px 0;
+  }

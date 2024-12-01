@@ -7,7 +7,8 @@
     padding: 15px 30px;
     box-shadow: 0px 3px 6px rgba(255, 255, 255, 0.1);
     border-bottom: 3px solid #ffffff; /* 베이지 테두리 */
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
     height: 100px; /* 헤더 높이 증가 */
     position: static; /* 헤더 고정 제거 */
 }
@@ -35,9 +36,10 @@
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* 네비게이션 아이템 호버 스타일 배경색 대식 글자색만 바꾸는 걸로 수정해보았습니다. */
 .nav-item:hover {
-    background-color: #82c91e; /* 초록색으로 자연 느낌 */
-    color: #ffffff; /* 텍스트 흰색 */
+    /* background-color: #4CAF50; 초록색으로 자연 느낌 */
+    color: #4CAF50; /* 텍스트 흰색 */
 }
 
 /* 환영 메시지 스타일 */

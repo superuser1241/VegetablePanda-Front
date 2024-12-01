@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './FarmerMyPage.css';
 import RegisterStock from './RegisterStock';
+import StreamingStatus from './StreamingStatus';
+import StockList from './StockList';
 
-const FarmerMyPage = () => {
+const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const [userId, setUserId] = useState('');
@@ -29,7 +31,9 @@ const FarmerMyPage = () => {
     });
     const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
-
+    const [streamingStatus, setStreamingStatus] = useState(null);
+    const [availableRoom, setAvailableRoom] = useState(null);
+    const [streamingRoom, setStreamingRoom] = useState(null);
 
     useEffect(() => {
         if (token) {
@@ -127,7 +131,7 @@ const FarmerMyPage = () => {
             fetchUserInfo(userId);
         } catch (error) {
             console.error('회원정보 수정 실패:', error);
-            alert('회원��� 수정에 실패했습니다.');
+            alert('회원 수정에 실패했습니다.');
         }
     };
     */
@@ -145,7 +149,7 @@ const FarmerMyPage = () => {
                 }
             });
             setProducts(response.data);
-            console.log("상품 목록:", response.data);
+            // console.log("상품 목록:", response.data);
         } catch (error) {
             console.error('상품 목록 조회 실패:', error);
         }
@@ -205,6 +209,86 @@ const FarmerMyPage = () => {
             [name]: value
         }));
     };
+
+    const fetchAvailableRoom = async () => {
+        try {
+            const response = await axios.get('http://localhost:9001/api/streaming/available', {
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            setAvailableRoom(response.data);
+        } catch (error) {
+            console.error('사용 가능한 방 조회 실패:', error);
+        }
+    };
+
+    const checkStreamingStatus = async () => {
+        try {
+            const response = await axios.get('http://localhost:9001/api/streaming/pending', {
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.data && response.data.length > 0) {
+                setStreamingStatus('pending');
+            } else {
+                // 승인된 방송 확인
+                const activeResponse = await axios.get('http://localhost:9001/api/streaming/active-rooms', {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (activeResponse.data && activeResponse.data.length > 0) {
+                    setStreamingStatus('approved');
+                    setAvailableRoom(activeResponse.data[0]);
+                }
+            }
+        } catch (error) {
+            console.error('방송 상태 조회 실패:', error);
+        }
+    };
+
+    const handleStreamingRequest = async () => {
+        try {
+            if (!availableRoom) {
+                alert('사용 가능한 방이 없습니다.');
+                return;
+            }
+
+            const response = await axios.post(
+                `http://localhost:9001/api/streaming/request/${availableRoom.streamingSeq}`, 
+                null,
+                {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    params: {
+                        farmerSeq: userId
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                alert('방송 신청이 완료되었습니다. 관리자 승인을 기다려주세요.');
+                setStreamingStatus('pending');
+            }
+        } catch (error) {
+            console.error('방송 신청 실패:', error);
+            alert('방송 신청 중 오류가 발생했습니다.');
+        }
+    };
+
+    useEffect(() => {
+        if (userId) {
+            fetchAvailableRoom();
+            checkStreamingStatus();
+        }
+    }, [userId]);
 
     return (
         <div className="farmer-mypage">
@@ -352,120 +436,21 @@ const FarmerMyPage = () => {
                     )} */}
 
                     {activeTab === 'streaming' && (
-                        <div className="streaming-section">
-                            <h3>스트리밍 관리</h3>
-                            <div className="streaming-buttons">
-                                <button 
-                                    className="streaming-btn"
-                                    onClick={() => navigate('/streaming')}
-                                >
-                                    채팅방 선택하기
-                                </button>
-                            </div>
-                        </div>
+                        <StreamingStatus 
+                            userId={userId} 
+                            token={token}
+                            onStartStreaming={onStartStreaming}
+                        />
                     )}
 
                     {activeTab === 'product' && (
                         <div >
-                            {/* <h3>상품 등록</h3>
-                            <div className="product-form">
-                                <div className="form-group">
-                                    <label>상품 카테고리</label>
-                                    <select 
-                                        name="category"
-                                        value={selectedCategory}
-                                        onChange={(e) => setSelectedCategory(e.target.value)}
-                                    >
-                                        <option value="">카테고리 선택</option>
-                                        <option value="1">식량작물</option>
-                                        <option value="2">엽채류</option>
-                                        <option value="3">과채류</option>
-                                        <option value="4">근채류</option>
-                                        <option value="5">양채류</option>
-                                        <option value="6">과수</option>
-                                        <option value="7">기타작물</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>상품 종류</label>
-                                    <select 
-                                        name="productSeq" 
-                                        value={newProduct.productSeq}
-                                        onChange={handleProductChange}
-                                        disabled={!selectedCategory}
-                                    >
-                                        <option value="">선택하세요</option>
-                                        {filteredProducts.map(product => (
-                                            <option key={product.productSeq} value={product.productSeq}>
-                                                {product.productName}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>등급</label>
-                                    <select 
-                                        name="stockGradeSeq" 
-                                        value={newProduct.stockGradeSeq}
-                                        onChange={handleProductChange}
-                                    >
-                                        <option value="">선택하세요</option>
-                                        <option value="1">특(1등)</option>
-                                        <option value="2">상(2등)</option>
-                                        <option value="3">중(3등)</option>
-                                        <option value="4">4등</option>
-                                        <option value="5">5등</option>
-                                        <option value="6">9등(등외)</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>재배 방식</label>
-                                    <select 
-                                        name="stockOrganicSeq" 
-                                        value={newProduct.stockOrganicSeq}
-                                        onChange={handleProductChange}
-                                    >
-                                        <option value="">선택하세요</option>
-                                        <option value="1">유기농(우수농산물)</option>
-                                        <option value="2">일반(일반농산물)</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>색상 코드</label>
-                                    <input
-                                        type="number"
-                                        name="color"
-                                        value={newProduct.color}
-                                        onChange={handleProductChange}
-                                        placeholder="색상 코드 입력"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>수량</label>
-                                    <input
-                                        type="number"
-                                        name="count"
-                                        value={newProduct.count}
-                                        onChange={handleProductChange}
-                                        placeholder="수량 입력"
-                                    />
-                                </div>
-                                <div className="product-description">
-                                    <label>상품 설명</label>
-                                    <textarea
-                                        name="content"
-                                        value={newProduct.content}
-                                        onChange={handleProductChange}
-                                        placeholder="상품 설명 입력"
-                                    />
-                                </div>
-                                <div className="button-group">
-                                    <button onClick={handleProductSubmit} className="save-button">
-                                        상품 등록
-                                    </button>
-                                </div>
-                            </div> */}
                             <RegisterStock/>
+                        </div>
+                    )}
+                    {activeTab === 'productList' && (
+                        <div className="productList-section">
+                            <StockList/>
                         </div>
                     )}
                 </div>
