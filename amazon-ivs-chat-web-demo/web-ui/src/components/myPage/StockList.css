@@ -1,0 +1,58 @@
+
+.stock-table th {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+}
+
+.stock-table td {
+    padding: 8px;
+    text-align: center;
+}
+
+.stock-table {
+    width: 100%;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* th {
+    border-bottom: solid grey 2px;
+    width:50px;
+} */
+
+
+/* styles.css */
+.stock-list-container {
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+ 
+  
+  tbody tr:hover {
+    background-color: #82c91e83; 
+  }
+
+.stock-status-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.stock-table-container {
+    overflow-x: auto;
+}
+
+.auction-table th,
+.auction-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.stock-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+}

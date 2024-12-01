@@ -3,7 +3,7 @@ import { useAuctionData } from './useAuctionData';
 import './AuctionStatusPage.css';
 
 const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAuction}) => {
-    const { highestBid, auction, bid } = useAuctionData(
+    const { highestBid , bid } = useAuctionData(
         streamingRoom.farmerSeq,
         auctionData.auctionSeq
     );
@@ -14,29 +14,19 @@ const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAucti
         const endTime = new Date(closeTime);
         const diff = endTime - now;
 
-        if (diff <= 0) {
-            return '경매 종료';
-        }
-
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (diff <= 0) {
+            return '마감시간 경과';
+        }
 
         if (hours > 0) {
             return `${hours}시간 ${minutes}분 ${seconds}초`;
         }
         return `${minutes}분 ${seconds}초`;
     };
-
-    useEffect(() => {
-        if (auctionData?.closeTime) {
-            const timer = setInterval(() => {
-                setRemainingTime(calculateRemainingTime(auctionData.closeTime));
-            }, 1000);
-
-            return () => clearInterval(timer);
-        }
-    }, [auctionData?.closeTime]);
 
     const formatDate = (dateString) => {
         if (!dateString) return '';

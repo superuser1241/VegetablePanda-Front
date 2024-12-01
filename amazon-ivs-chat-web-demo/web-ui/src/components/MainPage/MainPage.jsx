@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './MainPage.css';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Auction from '../auction/AuctionStock';
 import productImage from '../../image/상품1.png';
 import BidPage from '../auction/BidPage';
@@ -83,6 +83,7 @@ const MainPage = ({ onJoinRoom }) => {
                 const response = await axios.get('http://localhost:9001/api/statistics/products', {
                     params: { startDate, endDate }
                 });
+                console.log(response.data);
     
                 // 판매 수량(totalQuantity) 기준으로 정렬하고 상위 10개만 선택
                 const sortedData = response.data
@@ -361,12 +362,12 @@ const MainPage = ({ onJoinRoom }) => {
                 </section>
 
                 <section className="shop-section">
-                    <h2 className="section-title">일반 상품 목록</h2>
+                    <h2 className="section-title"><Link to = {"/shop"} className='default-link'>일반 상품 목록</Link></h2>
                     <div className="shop-list">
                         {shopItems.slice(0, visibleShops).map((item) => (
                             <div key={item.shopSeq} className="shop-card">
                                 <div className="shop-image">
-                                    <img src={item.file} alt={item.productName} />
+                                    <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
                                 </div>
                                 <h3>{item.content}</h3>
                                 <div className="shop-info">

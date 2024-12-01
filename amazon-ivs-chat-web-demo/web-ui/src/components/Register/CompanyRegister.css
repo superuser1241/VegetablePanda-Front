@@ -29,8 +29,7 @@ input[type="password"],
 input[type="email"],
 input[type="tel"] {
     width: 100%;
-    padding: 12px;
-    margin-top: 5px;
+    padding: 1px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;

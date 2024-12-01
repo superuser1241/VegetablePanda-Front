@@ -199,7 +199,7 @@ const RegisterStock = () => {
                     file : {fileSeq: '', name: ''},
                     regDate: new Date().toISOString()
                 });
-                
+
                 handleImageReset();
             }
         } catch (error) {
@@ -369,33 +369,7 @@ const RegisterStock = () => {
                                     onChange={handleImageChange}
                                     className="stock-image-upload-input"
                                 />
-                                {/* <div className="stock-image-preview-container">
-                                    {image && (
-                                    <img
-                                        src={URL.createObjectURL(image)}
-                                        alt="Preview"
-                                        className="stock-image-preview"
-                                    />
-                                    )}
-                                </div>
-                                <button
-                                    type="button"
-                                    className="stock-image-upload-btn"
-                                    onClick={() => document.getElementById("image-upload").click()}
-                                >
-                                    사진 업로드
-                                </button>
-
-                                {image && (
-                                    <button
-                                    type="button"
-                                    className="stock-image-reset-btn"
-                                    onClick={handleImageReset}
-                                    >
-                                    삭제
-                                    </button>
-                                )}
-                            </div> */}
+                                
                                 <div className='stock-image-component'>
                                     <div className="stock-image-preview-container">
                                         {image && (
