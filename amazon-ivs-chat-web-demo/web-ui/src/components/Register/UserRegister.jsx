@@ -9,48 +9,66 @@ function UserRegister() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [pw, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [gender, setGender] = useState("");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
+  const [pw, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwMessage, setPwMessage] = useState("");
+  const [message, setMessage] = useState("");
+  const [idCheckResult, setIdCheckResult] = useState("");
+  const [isCheckResult, setIsCheckResult] = useState(false); //true이면 중복, false이면 사용가능
 
   const navigate = useNavigate();
   const handleImageReset = () => {
     setImage(null);
   };
 
-// 중복체크 결과 값을 저장 할 idCheckResult
- const [idCheckResult , setIdCheckResult] = useState(""); //중복입니다. or 사용가능합니다.
+  const handleConfirmPasswordChange = (e) => {
+    const confirmPwd = e.target.value;
+    setConfirmPassword(confirmPwd);
 
-// 아이디 중복여부에 따른 css 를 적용하기 위해 상태 변수
-  const [isCheckResult , setIsCheckResult] = useState(false); //true이면 중복, false이면 사용가능
+    // 비밀번호와 비밀번호 확인이 일치하는지 확인
+    if (pw === "" || confirmPwd === "") {
+      setPwMessage("");
+      return;
+    }
 
-//각 text 박스에 값이 변경되었을 때
+    if (pw === confirmPwd) {
+      setPwMessage("비밀번호가 일치합니다.");
+    } else {
+      setPwMessage("비밀번호가 일치하지 않습니다.");
+    }
+  };
+
   const changeValue = (e) => {
-  
-    //id 입력박스에 값이 입력될때마다 axios를 이용해서 비동기통신 - 중복여부 체크
-    if (e.target.name === id && e.target.value !== "") {
+    const { name, value } = e.target;
+    setUsername(value);
+
+    if (name === "id") {
+      if (!value.trim()) {
+        // 입력 값이 없을 경우
+        setIdCheckResult(""); // 메시지 초기화
+        return;
+      }
+    }
+
+    if (name === "id" && value !== "") {
       axios({
         method: "GET",
-        url: "http://localhost:9001/members/" + e.target.name,
+        url: `http://localhost:9001/members/${value}`,
       })
         .then((res) => {
           console.log(res);
           setIdCheckResult(res.data);
-           res.data==="중복입니다" ? setIsCheckResult(true) : setIsCheckResult(false); 
+          if (res.data === "아이디가 존재합니다.") {
+            setIsCheckResult(true); // 중복된 경우
+          } else {
+            setIsCheckResult(false); // 중복되지 않은 경우
+          }
         })
-
         .catch((err) => {
-          //실패
-          let errMessage = err.response.data.type + "\n";
-          errMessage += err.response.data.title + "\n";
-          errMessage += err.response.data.detail + "\n";
-
-          errMessage += err.response.data.status + "\n";
-          errMessage += err.response.data.instance + "\n";
-          errMessage += err.response.data.timestamp;
+          let errMessage = err.response?.data?.type || "알 수 없는 오류";
           alert(errMessage);
         });
     }
@@ -75,27 +93,33 @@ function UserRegister() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     if (!email.includes("@")) {
       setMessage("올바른 이메일 형식을 입력하세요.");
       return;
     }
-  
+
     if (pw !== confirmPassword) {
       setMessage("비밀번호가 일치하지 않습니다.");
       return;
     }
-  
+    if (isCheckResult) {
+      alert("아이디가 존재합니다. 다른 아이디를 입력해주세요.");
+      return;
+    }
     setLoading(true);
-  
+
     // 전화번호 포맷팅
     const formattedPhone = phone.replace(/[^0-9]/g, "");
 
     const formattedPhoneWithHyphen =
       formattedPhone.length === 11
-        ? `${formattedPhone.slice(0, 3)}-${formattedPhone.slice(3, 7)}-${formattedPhone.slice(7)}`
+        ? `${formattedPhone.slice(0, 3)}-${formattedPhone.slice(
+            3,
+            7
+          )}-${formattedPhone.slice(7)}`
         : formattedPhone;
-  
+
     // 유저 데이터 구성
     const userData = {
       id,
@@ -107,20 +131,23 @@ function UserRegister() {
       gender,
       content: "user",
     };
-  
+
     try {
       const formData = new FormData();
       formData.append(
         "userData",
         new Blob([JSON.stringify(userData)], { type: "application/json" })
       );
-  
+
       if (image) {
-        formData.append("image", image); 
+        formData.append("image", image);
       }
-  
-      const response = await axios.post("http://localhost:9001/members", formData);
-  
+
+      const response = await axios.post(
+        "http://localhost:9001/members",
+        formData
+      );
+
       if (response.status === 200) {
         setMessage("회원가입 성공!");
         alert("회원가입 성공!");
@@ -132,7 +159,9 @@ function UserRegister() {
     } catch (error) {
       if (error.response) {
         console.error("Server Error:", error.response.data);
-        setMessage("서버 오류: " + (error.response.data.message || "다시 시도해주세요."));
+        setMessage(
+          "서버 오류: " + (error.response.data.message || "다시 시도해주세요.")
+        );
       } else {
         console.error("Network Error:", error.message);
         setMessage("네트워크 오류: 다시 시도해주세요.");
@@ -141,7 +170,6 @@ function UserRegister() {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="register-form-container">
@@ -199,14 +227,25 @@ function UserRegister() {
           <input
             type="text"
             value={id}
-            onChange={(e) => setUsername(e.target.value)}
+            name="id"
+            onChange={(e) => {
+              setUsername(e.target.value);
+              changeValue(e);
+            }}
             required
             placeholder="아이디를 입력하세요"
             className="username-input"
           />
-        <p className="idText" style={ isCheckResult ? {color: "red"} : {color: "blue" } }>{idCheckResult}</p>
+          <div
+            className="idText"
+            style={{
+              color: isCheckResult ? "red" : "blue",
+            }}
+          >
+            {idCheckResult}
+          </div>
         </div>
-     
+
         <div className="input-group">
           <input
             type="password"
@@ -216,17 +255,23 @@ function UserRegister() {
             placeholder="비밀번호를 입력하세요"
             className="password-input"
           />
-        </div>
-
-        <div className="input-group">
           <input
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={handleConfirmPasswordChange}
             required
             placeholder="비밀번호를 다시 입력하세요"
             className="password-input"
           />
+
+          <p
+            className="pw-match-message"
+            style={{
+              color: pwMessage === "비밀번호가 일치합니다." ? "green" : "red",
+            }}
+          >
+            {pwMessage}
+          </p>
         </div>
 
         <div className="input-group">

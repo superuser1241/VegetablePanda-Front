@@ -18,6 +18,9 @@ function FarmerRegister() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
+  const [pwMessage, setPwMessage] = useState("");
+  const [idCheckResult, setIdCheckResult] = useState("");
+  const [isCheckResult, setIsCheckResult] = useState(false); //true이면 중복, false이면 사용가능
 
   const navigate = useNavigate();
 
@@ -25,6 +28,56 @@ function FarmerRegister() {
     const uploadedImage = e.target.files[0];
     if (uploadedImage) {
       setImage(uploadedImage);
+    }
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    const confirmPwd = e.target.value;
+    setConfirmPassword(confirmPwd);
+
+    // 비밀번호와 비밀번호 확인이 일치하는지 확인
+    if (pw === "" || confirmPwd === "") {
+      setPwMessage("");
+      return;
+    }
+
+    if (pw === confirmPwd) {
+      setPwMessage("비밀번호가 일치합니다.");
+    } else {
+      setPwMessage("비밀번호가 일치하지 않습니다.");
+    }
+  };
+
+  const changeValue = (e) => {
+    const { name, value } = e.target;
+    setFarmerId(value);
+
+    if (name === "id") {
+      if (!value.trim()) {
+        // 입력 값이 없을 경우
+        setIdCheckResult(""); // 메시지 초기화
+        return;
+      }
+    }
+
+    if (name === "id" && value !== "") {
+      axios({
+        method: "GET",
+        url: `http://localhost:9001/members/${value}`,
+      })
+        .then((res) => {
+          console.log(res);
+          setIdCheckResult(res.data);
+          if (res.data === "아이디가 존재합니다.") {
+            setIsCheckResult(true);
+          } else {
+            setIsCheckResult(false);
+          }
+        })
+        .catch((err) => {
+          let errMessage = err.response?.data?.type || "알 수 없는 오류";
+          alert(errMessage);
+        });
     }
   };
 
@@ -52,7 +105,10 @@ function FarmerRegister() {
     } else if (phoneNumber.length <= 7) {
       formattedPhone = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
     } else {
-      formattedPhone = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
+      formattedPhone = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(
+        3,
+        7
+      )}-${phoneNumber.slice(7, 11)}`;
     }
     return formattedPhone;
   };
@@ -67,10 +123,14 @@ function FarmerRegister() {
     }
 
     if (pw !== confirmPassword) {
-      setMessage("비밀번호가 일치하지 않습니다.");
+      setPwMessage("비밀번호가 일치하지 않습니다.");
       return;
     }
 
+    if (isCheckResult) {
+      alert("아이디가 존재합니다. 다른 아이디를 입력해주세요.");
+      return;
+    }
     setLoading(true);
 
     const formattedPhone = formatPhoneNumber(phone);
@@ -95,13 +155,16 @@ function FarmerRegister() {
         "userData",
         new Blob([JSON.stringify(userData)], { type: "application/json" })
       );
-  
+
       if (image) {
         formData.append("image", image);
       }
 
-      const response = await axios.post("http://localhost:9001/members", formData);
-  
+      const response = await axios.post(
+        "http://localhost:9001/members",
+        formData
+      );
+
       if (response.status === 200) {
         setMessage("회원가입 성공!");
         alert("회원가입 성공!");
@@ -113,7 +176,9 @@ function FarmerRegister() {
     } catch (error) {
       if (error.response) {
         console.error("Server Error:", error.response.data);
-        setMessage("서버 오류: " + (error.response.data.message || "다시 시도해주세요."));
+        setMessage(
+          "서버 오류: " + (error.response.data.message || "다시 시도해주세요.")
+        );
       } else {
         console.error("Network Error:", error.message);
         setMessage("네트워크 오류: 다시 시도해주세요.");
@@ -166,37 +231,55 @@ function FarmerRegister() {
           )}
         </div>
 
-        <div className="input-group farmer-input-group">
+        <div className="input-group">
           <input
             type="text"
             value={id}
-            onChange={(e) => setFarmerId(e.target.value)}
+            name="id"
+            onChange={(e) => {
+              setFarmerId(e.target.value);
+              changeValue(e);
+            }}
             required
             placeholder="아이디를 입력하세요"
-            className="farmer-input"
+            className="username-input"
           />
+          <div
+            className="idText"
+            style={{
+              color: isCheckResult ? "red" : "blue",
+            }}
+          >
+            {idCheckResult}
+          </div>
         </div>
 
-        <div className="input-group farmer-input-group">
+        <div className="input-group">
           <input
             type="password"
             value={pw}
             onChange={(e) => setPassword(e.target.value)}
             required
             placeholder="비밀번호를 입력하세요"
-            className="farmer-input"
+            className="password-input"
           />
-        </div>
-
-        <div className="input-group farmer-input-group">
           <input
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={handleConfirmPasswordChange}
             required
             placeholder="비밀번호를 다시 입력하세요"
-            className="farmer-input"
+            className="password-input"
           />
+
+          <p
+            className="pw-match-message"
+            style={{
+              color: pwMessage === "비밀번호가 일치합니다." ? "green" : "red",
+            }}
+          >
+            {pwMessage}
+          </p>
         </div>
 
         <div className="input-group farmer-input-group">
@@ -290,11 +373,7 @@ function FarmerRegister() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="register-button"
-        >
+        <button type="submit" disabled={loading} className="register-button">
           {loading ? "회원가입 중..." : "회원가입"}
         </button>
         {message && <p className="error-message">{message}</p>}
