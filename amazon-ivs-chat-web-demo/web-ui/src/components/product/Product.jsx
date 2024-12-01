@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Product.css';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const Product = () => {
 
@@ -10,6 +10,8 @@ const Product = () => {
     const product = state?.product;  // 전달받은 상품 정보
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState(1);
+
+    const navigate = useNavigate();
 
     // const renderTabContent = () => {
     //   switch (activeTab) {
@@ -97,7 +99,7 @@ const Product = () => {
                 <p>총 상품 금액: <strong>{product.price * quantity}</strong></p> 
                 <div className='button-container'>
                     <button className="cart-button">장바구니</button>
-                    <button className="product-buy-button">구매</button>
+                    <button className="product-buy-button" onClick={() => navigate('/purchaseD', { state: { item:product, quantity } })}>구매</button>
                 </div>
                 </div>
             </div>

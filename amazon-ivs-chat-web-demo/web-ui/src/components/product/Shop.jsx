@@ -6,10 +6,10 @@ import axios from 'axios';
 const Shop = () => {
   const [shopItems, setShopItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("전체");
-  const [visibleItems, setVisibleItems] = useState(15);
+  const [visibleItems, setVisibleItems] = useState(5);
 
   const showMoreItems = () => {
-    setVisibleItems((prev) => prev + 5 * 3);
+    setVisibleItems((prev) => prev + 5 * 1);
   };
 
   const isAllItemsVisible = visibleItems >= shopItems.length;
@@ -49,8 +49,8 @@ const filteredProducts = selectedCategory === "전체"
             </div>
             {/* 상품 목록 */}
             <div className="product-list">
-              {shopItems.slice(0, visibleItems).map((item) => (
-                <ProductCard key={item.id} product={item} />
+              {filteredProducts.slice(0, visibleItems).map((item) => (
+                  <ProductCard key={item.id} product={item} />
               ))}
             </div>
 

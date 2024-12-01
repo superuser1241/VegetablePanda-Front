@@ -124,7 +124,7 @@
 
   .tab-section-content {
     padding: 20px;
-    min-height: 1000px;  /* 각 섹션의 최소 높이 */
+    min-height: 300px;  /* 각 섹션의 최소 높이 */
     scroll-margin-top: 50px;  /* 스크롤 시 상단 여백 확보 */
   }
   
