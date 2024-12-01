@@ -28,13 +28,13 @@ const UserMyPage = () => {
     name: "",
     gender: "",
     regDate: "",
-    path:"",
+    path: "",
     id: "",
     address: "",
     phone: "",
     email: "",
   });
-  
+
   const [activeTab, setActiveTab] = useState("info"); // 'info', 'edit', 'review' 탭 관리
   const navigate = useNavigate();
   useEffect(() => {
@@ -242,11 +242,12 @@ const UserMyPage = () => {
   };
 
   const handleImageReset = () => {
-    setUserInfo(prevState => ({
+    setUserInfo((prevState) => ({
       ...prevState,
-      path: null, 
+      path: null,
     }));
-    setImagePreview(null); 
+    setImagePreview(null);
+    setImage(null);
   };
 
   const handleUpdateUserInfo = async (e) => {
@@ -263,7 +264,7 @@ const UserMyPage = () => {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-    
+
     if (!editedUser.gender) {
       alert("성별을 선택해 주세요.");
       return;
@@ -282,7 +283,6 @@ const UserMyPage = () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
 
-    // FormData 구성
     const formData = new FormData();
     formData.append(
       "userData",
@@ -347,8 +347,6 @@ const UserMyPage = () => {
       "정말로 회원 탈퇴를 진행하시겠습니까?"
     );
 
-
-  
     if (confirmDelete) {
       try {
         const response = await axios.put(
@@ -447,10 +445,13 @@ const UserMyPage = () => {
             <div className="user-info-section">
               <h3>회원 정보</h3>
               <div className="user-info-details">
-              <strong>프로필 사진</strong> 
-              <div className="image-preview-container">
-                  <img src={imagePreview || userInfo.path} alt={userInfo.path} />
-              </div>
+                <strong>프로필 사진</strong>
+                <div className="image-preview-container">
+                  <img
+                    src={imagePreview || userInfo.path}
+                    alt={userInfo.path}
+                  />
+                </div>
                 <p>
                   <strong>아이디:</strong> {userInfo.id}
                 </p>
@@ -595,20 +596,28 @@ const UserMyPage = () => {
               <form onSubmit={handleUpdateUserInfo}>
                 <div className="image-section">
                   <label>프로필 이미지</label>
-                  <input 
+                  <input
                     id="image-upload"
                     type="file"
                     accept="image/*"
                     onChange={handleImageChange}
                     className="image-upload-input"
                   />
-<div className="image-preview-container">
-  {imagePreview ? (
-    <img src={imagePreview} alt="Preview" className="image-preview" />
-  ) : userInfo.path ? (
-    <img src={userInfo.path} alt="Previous" className="image-preview" />
-  ) : null}
-</div>
+                  <div className="image-preview-container">
+                    {imagePreview ? (
+                      <img
+                        src={imagePreview}
+                        alt="imagePreview"
+                        className="image-preview"
+                      />
+                    ) : userInfo.path ? (
+                      <img
+                        src={userInfo.path}
+                        alt="userInfo.path"
+                        className="image-preview"
+                      />
+                    ) : null}
+                  </div>
                   <button
                     type="button"
                     className="image-upload-btn"
@@ -619,7 +628,7 @@ const UserMyPage = () => {
                     사진 등록
                   </button>
 
-                  {imagePreview && (
+                  {(imagePreview || userInfo.path) && (
                     <button
                       type="button"
                       className="image-reset-btn"

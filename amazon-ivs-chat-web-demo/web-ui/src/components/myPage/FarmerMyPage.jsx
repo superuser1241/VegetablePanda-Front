@@ -21,13 +21,13 @@ const FarmerMyPage = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [farmerInfo, setFarmerInfo] = useState(null);
   const [editedFarmer, setEditedFarmer] = useState({
-    email: "",
-    phone: "",
     path: "",
-    code: "",
     name: "",
-    pw: "",
+    email: "",
+    code: "",
     address: "",
+    phone: "",
+    pw: "",
   });
 
   const [activeTab, setActiveTab] = useState("info");
@@ -63,16 +63,16 @@ const FarmerMyPage = () => {
   useEffect(() => {
     if (farmerInfo) {
       setEditedFarmer({
-        email: farmerInfo.email || "",
-        farmerId: farmerInfo.farmerId || "",
-        phone: farmerInfo.phone || "",
         path: farmerInfo.path || "",
+        farmerId: farmerInfo.farmerId || "",
         name: farmerInfo.name || "",
-        address: farmerInfo.address || "",
+        email: farmerInfo.email || "",
         code: farmerInfo.code || "",
+        address: farmerInfo.address || "",
+        phone: farmerInfo.phone || "",
         grade: farmerInfo.grade || "",
-        pw: farmerInfo.pw || "",
         regDate: farmerInfo.regDate || "",
+        pw: farmerInfo.pw || "",
         
       });
     }
@@ -226,11 +226,12 @@ const FarmerMyPage = () => {
   };
   
   const handleImageReset = () => {
-    setFarmerInfo(prevState => ({
+    setFarmerInfo((prevState) => ({
       ...prevState,
-      path: null, 
+      path: null,
     }));
-    setImagePreview(null); 
+    setImagePreview(null);
+    setImage(null);
   };
 
   const handlePhoneChange = (e) => {
@@ -277,6 +278,8 @@ const FarmerMyPage = () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
+    
+    const farmerId = farmerInfo.farmerId;
 
     const formData = new FormData();
     formData.append(
@@ -284,6 +287,7 @@ const FarmerMyPage = () => {
       new Blob(
         [
           JSON.stringify({
+            id : farmerId,
             name: editedFarmer.name,
             email: editedFarmer.email,
             code: code,
@@ -319,12 +323,11 @@ const FarmerMyPage = () => {
           ...farmerInfo,
           path: editedFarmer.path,
           name: editedFarmer.name,
-          pw: editedFarmer.pw,
           email: editedFarmer.email,
-          phone: formattedPhone,
-          address: editedFarmer.address,
           code: code,
-         
+          address: editedFarmer.address,
+          phone: formattedPhone,
+          pw: editedFarmer.pw,
         });
         setActiveTab("info");
       }
@@ -565,13 +568,13 @@ const FarmerMyPage = () => {
                     {imagePreview ? (
                       <img
                         src={imagePreview}
-                        alt="Preview"
+                        alt="imagePreview"
                         className="image-preview"
                       />
                     ) : farmerInfo.path ? (
                       <img
                         src={farmerInfo.path}
-                        alt="Previous"
+                        alt="farmerInfo.path"
                         className="image-preview"
                       />
                     ) : null}
@@ -586,20 +589,20 @@ const FarmerMyPage = () => {
                     사진 등록
                   </button>
 
-                  {imagePreview && (
-                    <button
-                      type="button"
-                      onClick={handleImageReset}
-                      className="image-reset-btn"
-                    >
-                      삭제
-                    </button>
-                  )}
+                  {(imagePreview || farmerInfo.path) && (
+        <button
+          type="button"
+          className="image-reset-btn"
+          onClick={handleImageReset}
+        >
+          삭제
+        </button>
+      )}
                 </div>
                 <label htmlFor="owner">판매자명</label>
                 <input
                   type="text"
-                  name="ownerName"
+                  name="name"
                   value={editedFarmer.name}
                   onChange={handleChange}
                   required

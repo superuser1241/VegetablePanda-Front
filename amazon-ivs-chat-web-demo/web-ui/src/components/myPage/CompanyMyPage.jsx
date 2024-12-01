@@ -204,6 +204,7 @@ const CompanyMyPage = () => {
       path: null,
     }));
     setImagePreview(null);
+    setImage(null);
   };
 
   const handlePhoneChange = (e) => {
@@ -251,12 +252,15 @@ const CompanyMyPage = () => {
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
 
+    const id = companyInfo.companyId
+
     const formData = new FormData();
     formData.append(
       "companyData",
       new Blob(
         [
           JSON.stringify({
+            id,
             comName: editedCompany.comName,
             ownerName: editedCompany.ownerName,
             regName: editedCompany.regName,
@@ -467,13 +471,13 @@ const CompanyMyPage = () => {
                     {imagePreview ? (
                       <img
                         src={imagePreview}
-                        alt="Preview"
+                        alt="imagePreview"
                         className="image-preview"
                       />
                     ) : companyInfo.path ? (
                       <img
                         src={companyInfo.path}
-                        alt="Previous"
+                        alt="companyInfo.path"
                         className="image-preview"
                       />
                     ) : null}
@@ -488,11 +492,11 @@ const CompanyMyPage = () => {
                     사진 등록
                   </button>
 
-                  {imagePreview && (
+                  {(imagePreview || companyInfo.path) && (
                     <button
                       type="button"
-                      onClick={handleImageReset}
                       className="image-reset-btn"
+                      onClick={handleImageReset}
                     >
                       삭제
                     </button>
