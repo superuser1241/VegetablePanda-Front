@@ -1,20 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import PriceCheckModal from './PriceCheckModal';
+import SalesHistoryModal from './SalesHistoryModal';
 import { Client } from "@stomp/stompjs";
 
-const AuctionRegisterPage = ({ stockSeq, onRegisterSuccess }) => {
+const AuctionRegisterPage = ({ 
+    streamingRoom, 
+    onRegisterSuccess, 
+    onCheckPrice, 
+    onCheckSalesHistory 
+}) => {
     const navigate = useNavigate();
     const [auctionData, setAuctionData] = useState({
         count: '',
         closeTime: '',
-        stockSeq: stockSeq
+        stockSeq: streamingRoom?.stockSeq
     });
+    const [pricePerKg, setPricePerKg] = useState('');
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [showPriceModal, setShowPriceModal] = useState(false);
+    const [priceInfo, setPriceInfo] = useState(null);
+    const [showSalesModal, setShowSalesModal] = useState(false);
+    const [salesHistory, setSalesHistory] = useState(null);
+
+    useEffect(() => {
+        if (streamingRoom?.stockSeq) {
+            setAuctionData(prev => ({
+                ...prev,
+                stockSeq: streamingRoom.stockSeq
+            }));
+        }
+    }, [streamingRoom]);
+
+    useEffect(() => {
+        const price = parseFloat(pricePerKg) || 0;
+        const count = parseFloat(auctionData.count) || 0;
+        setTotalPrice(price * count);
+    }, [pricePerKg, auctionData.count]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'startPrice') {
-            setStartPrice(value);
+        if (name === 'pricePerKg') {
+            setPricePerKg(value);
         } else {
             setAuctionData(prev => ({
                 ...prev,
@@ -23,66 +51,32 @@ const AuctionRegisterPage = ({ stockSeq, onRegisterSuccess }) => {
         }
     };
 
-    const [startPrice, setStartPrice] = useState('');
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('token');
-            const userSeq = localStorage.getItem('userSeq');
-
-            const response = await axios.post(
-                `http://localhost:9001/auction?price=${startPrice}`, 
-                { ...auctionData, 
-                },
-                {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                }
-            );
-
-            onRegisterSuccess(response.data);
-
-            const successAfter = 
-            await axios.post(
-                `http://localhost:9001/sendBidAll`, 
-                { 
-                     "message": " 등록한 방송이 곧 시작합니다."
-                },
-                {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                }
-            );
-
+            await onRegisterSuccess({
+                count: auctionData.count,
+                closeTime: auctionData.closeTime,
+                stockSeq: auctionData.stockSeq,
+                totalPrice: totalPrice
+            });
+            
         } catch (error) {
             console.error('경매 등록 실패:', error);
             alert('경매 등록에 실패했습니다.');
         }
 
-        
+        const token = localStorage.getItem('token');
+            const response = await axios.post(
+                `http://localhost:9001/sendBidAll`,
+                {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }
+            );
+
+       
     };
-
-
-    // WebSocket 연결 및 상태 갱신
-    useEffect(() => {
-        const client = new Client({
-            brokerURL: "ws://localhost:9001/ws", 
-            onConnect: () => {
-                client.subscribe("/all/notifications", async (message) => {
-                    console.log(message.body);
-                });
-            },
-            onDisconnect: () => console.log('WebSocket 연결 종료')
-        });
-
-        client.activate();
-
-        // 클린업: 컴포넌트가 언마운트되면 WebSocket 연결 종료
-        return () => {
-            client.deactivate();
-        };
-    }, []);
-
-
+    
     const getTodayStart = () => {
         const now = new Date();
         const year = now.getFullYear();
@@ -99,44 +93,148 @@ const AuctionRegisterPage = ({ stockSeq, onRegisterSuccess }) => {
         return `${year}-${month}-${day}T23:00`;
     };
 
+    const checkPrice = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(
+                `http://localhost:9001/price/${streamingRoom.productName}`,
+                {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }
+            );
+            setPriceInfo(response.data);
+            console.log(response.data);
+            setShowPriceModal(true);
+        } catch (error) {
+            console.error('가격 정보 조회 실패:', error);
+            alert('가격 정보를 가져오는데 실패했습니다.');
+        }
+    };
+
+    const checkSalesHistory = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(
+                `http://localhost:9001/buy/${streamingRoom.stockSeq}`,
+                {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }
+            );
+            setSalesHistory(response.data);
+            setShowSalesModal(true);
+        } catch (error) {
+            console.error('판매 기록 조회 실패:', error);
+            alert('판매 기록을 가져오는데 실패했습니다.');
+        }
+    };
+
+
     return (
         <div className="auction-register-container">
-            <h2>경매 등록</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>시작가</label>
-                    <input
-                        type="number"
-                        name="startPrice"
-                        value={startPrice}
-                        onChange={handleChange}
-                        required
-                    />
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
+                <div>
+                    <h2>경매 등록</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>kg당 가격</label>
+                            <input
+                                type="number"
+                                name="pricePerKg"
+                                value={pricePerKg}
+                                onChange={handleChange}
+                                required
+                                min="0"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>수량 (kg)</label>
+                            <input
+                                type="number"
+                                name="count"
+                                value={auctionData.count}
+                                onChange={handleChange}
+                                required
+                                min="0"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>총 가격</label>
+                            <input
+                                type="text"
+                                value={`${totalPrice.toLocaleString()}원`}
+                                readOnly
+                                style={{ backgroundColor: '#f5f5f5' }}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>종료 시간 (최전 9시 ~ 오후 1시 사이 선택)</label>
+                            <input
+                                type="datetime-local"
+                                name="closeTime"
+                                value={auctionData.closeTime}
+                                onChange={handleChange}
+                                min={getTodayStart()}
+                                max={getTodayEnd()}
+                                required
+                            />
+                        </div>
+                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                            <button 
+                                type="submit" 
+                                style={{
+                                    flex: '1',
+                                    padding: '10px',
+                                    backgroundColor: '#007bff',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                경매 등록
+                            </button>
+                            <button 
+                                type="button"
+                                onClick={checkPrice}
+                                style={{
+                                    padding: '10px',
+                                    backgroundColor: '#f0f0f0',
+                                    border: '1px solid #ddd',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                가격 확인
+                            </button>
+                            <button 
+                                type="button"
+                                onClick={checkSalesHistory}
+                                style={{
+                                    padding: '10px',
+                                    backgroundColor: '#f0f0f0',
+                                    border: '1px solid #ddd',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                판매 기록
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div className="form-group">
-                    <label>수량</label>
-                    <input
-                        type="number"
-                        name="count"
-                        value={auctionData.count}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>종료 시간 (최전 9시 ~ 오후 1시 사이 선택)</label>
-                    <input
-                        type="datetime-local"
-                        name="closeTime"
-                        value={auctionData.closeTime}
-                        onChange={handleChange}
-                        min={getTodayStart()}
-                        max={getTodayEnd()}
-                        required
-                    />
-                </div>
-                <button type="submit">경매 등록</button>
-            </form>
+            </div>
+
+            <PriceCheckModal 
+                isOpen={showPriceModal}
+                onClose={() => setShowPriceModal(false)}
+                priceInfo={priceInfo}
+            />
+            
+            <SalesHistoryModal 
+                isOpen={showSalesModal}
+                onClose={() => setShowSalesModal(false)}
+                salesHistory={salesHistory}
+            />
         </div>
     );
 };

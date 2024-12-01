@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './RegisterStock.css';
 import axios from 'axios';
 
@@ -10,11 +10,14 @@ const RegisterStock = () => {
     const [newProduct, setNewProduct] = useState({
         color: '',
         count: '',
-        status: 2,
+        status: 0,
         content: '',
         productSeq: '',
         stockGradeSeq: '',
-        stockOrganicSeq: ''
+        stockOrganicSeq: '',
+        file : {fileSeq: '', name: ''},
+        regDate: new Date().toISOString(),
+        'Content-Type': 'multipart/form-data'
     });
 
     const [productCategory, setProductCategory] = useState([]);
@@ -23,19 +26,25 @@ const RegisterStock = () => {
     const [organic, setOrganic] = useState([]);
 
     const [selectedCategory, setSelectedCategory] = useState('');
-    const [selectedProduct, setSelectedProduct] = useState('');
-    const [selectedGrade, setSelectedGrade] = useState('');
-    const [selectedOrganic, setSelectedOrganic] = useState('');
     const [selectedColor, setSelectedColor] = useState('#8f8f8f'); // 초기 색상
 
-    const [uploadImg, setUploadImg] = useState("");
+    const [image, setImage] = useState(null);
+
+    const textarea = useRef();
+
+    const handleResizeHeight = () => {
+        textarea.current.style.height = 'auto'; //height 초기화
+        textarea.current.style.height = textarea.current.scrollHeight + 'px';
+    };
 
     useEffect(() => {
         if (token) {
             try {
                 const payload = JSON.parse(atob(token.split('.')[1]));
-                setUserId(payload.user_seq);
-                console.log(userId);
+                //setUserId(payload.user_seq);
+                setUserId(localStorage.getItem('userSeq'));
+                console.log("사용자 시퀀스 : ", userId);
+                console.log("userSeq : ", localStorage.getItem('userSeq'));
             } catch (error) {
                 console.error('토큰 파싱 실패:', error);
             }
@@ -47,10 +56,6 @@ const RegisterStock = () => {
         fetchProductCategory();
         console.log("카테고리 정보")
         console.log(productCategory)
-        
-        // fetchProductInfo();
-        // console.log('상품 정보');
-        // console.log(product);
         
         fetchStockGrade();
         console.log('등급 분류 정보');
@@ -64,7 +69,7 @@ const RegisterStock = () => {
 
     const fetchProductCategory = async () => {
         try {
-            const response = await axios.get(`http://localhost:9001/productCategory`, {
+            const response = await axios.get(`http://localhost:9001/category`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
                         
@@ -126,24 +131,15 @@ const RegisterStock = () => {
         console.log(products);
     }
 
-    // const changeProduct = (e) => {
-    //     let value = e.target.value;
-    //     console.log('선택된 상품:' + value);
-
-    //     setSelectedProduct(value);
-    // }
-
-    // const changeGrade = (e) => {
-    //     const value = e.target.value;
-    //     console.log('선택된 등급:', value);
-    //     setSelectedGrade(value);
-    // };
-
-    // const changeOrganic = (e) => {
-    //     const value = e.target.value;
-    //     console.log('선택된 유기농 분류:', value);
-    //     setSelectedOrganic(value);
-    // };
+    const changeFileName = (e) => {
+        const { name, value } = e.target;
+        setNewProduct(prev => ({
+            ...prev, 
+            file : {
+                [name] : value,
+            }
+        }));
+    }
 
     const handleProductSubmit = async (e) => {
         e.preventDefault();
@@ -152,21 +148,40 @@ const RegisterStock = () => {
         if(!newProduct.count) return alert('수량을 입력해주세요.');
         if(!newProduct.content) return alert('내용을 입력해주세요.');
         
-        try {
-            const url = `http://localhost:9001/stock?productSeq=${newProduct.productSeq}&stockGradeSeq=${newProduct.stockGradeSeq}&stockOrganicSeq=${newProduct.stockOrganicSeq}&farmerSeq=${userId}`;
+
+        try{
+            e.preventDefault();
+
+            const url = `http://localhost:9001/stock?farmerSeq=${userId}`;
             
             const stockData = {
+                productSeq:parseInt(newProduct.productSeq),
+                stockGradeSeq: parseInt(newProduct.stockGradeSeq),
+                stockOrganicSeq: parseInt(newProduct.stockOrganicSeq),
                 color: parseInt(newProduct.color),
                 count: parseInt(newProduct.count),
                 content: newProduct.content,
                 status: 0,
-                regDate: new Date().toISOString()
+                file : {fileSeq: '', name: newProduct.file.name},
+                regDate: new Date().toISOString(),
             };
 
-            const response = await axios.post(url, stockData, {
+            console.log(newProduct);
+            console.log(stockData);
+
+            const formData = new FormData();
+            formData.append("stockDTO", new Blob([JSON.stringify(stockData)], {
+                type: "application/json"
+            }));
+
+            if(image) {
+                formData.append("image", image);
+            }
+
+            const response = await axios.post(url, formData, {
                 headers: { 
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 }
             });
 
@@ -181,8 +196,11 @@ const RegisterStock = () => {
                     productSeq: '',
                     stockGradeSeq: '',
                     stockOrganicSeq: '',
+                    file : {fileSeq: '', name: ''},
                     regDate: new Date().toISOString()
                 });
+                
+                handleImageReset();
             }
         } catch (error) {
             if (error.response?.status === 400) {
@@ -196,6 +214,7 @@ const RegisterStock = () => {
 
     const handleProductChange = (e) => {
         const { name, value } = e.target;
+        
         setNewProduct(prev => ({
             ...prev,
             [name]: value
@@ -209,15 +228,19 @@ const RegisterStock = () => {
     };
 
     const handleImageChange = (e)=> {
-        setUploadImg(e.target.files[0]);
+        setImage(e.target.files[0]);
    }
+
+   const handleImageReset = () => {
+    setImage(null);
+  };
 
    // 이미지 업로드 메소드
    const handleUpload = async () => {
-    if (!uploadImg) return alert("파일을 선택해주세요.");
+    if (!image) return alert("사진을 선택해주세요.");
 
     const formData = new FormData();
-    formData.append("image", uploadImg);
+    formData.append("image", image);
 
     try {
         const response = await axios.post("http://localhost:9001/s3/upload", formData, {
@@ -241,12 +264,20 @@ const RegisterStock = () => {
                         <div className='form-group'>
                             <label>상품 카테고리</label>
                             <select name="product-category" id="product-category" value = {selectedCategory} onChange={changeCategory}>
+                                {/* 한번 설정되면 바뀌지 않는 값이므로 직접 넣기 */}
                                 <option value="default">---</option>
-                                {
+                                <option value="1">식량작물</option>
+                                <option value="2">엽채류</option>
+                                <option value="3">과채류</option>
+                                <option value="4">근채류</option>
+                                <option value="5">양채류</option>
+                                <option value="6">과수</option>
+                                <option value="7">기타작물</option>
+                                {/* {
                                     productCategory.map((item) => {
                                         return <option key = {item.productCategorySeq} id = {item.productCategorySeq} value = {item.productCategorySeq}>{item.content}</option>
                                     })
-                                }
+                                } */}
                             </select>
                         </div>
                         <div className='form-group'>
@@ -325,12 +356,81 @@ const RegisterStock = () => {
                                 name="content"
                                 value={newProduct.content}
                                 onChange={handleProductChange}
-                                placeholder="상품 설명 입력"
+                                placeholder="상품에 대한 설명을 입력해주세요"
                             />
                         </div>
                         <div className="form-group">
                         <label>상품 사진 등록</label>
-                            <input type = "file" accept = "image/*" onChange = {(e)=>{setUploadImg(e.target.files[0]);}}/>
+                            <div className="stock-image-upload-container">
+                                <input
+                                    id="image-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="stock-image-upload-input"
+                                />
+                                {/* <div className="stock-image-preview-container">
+                                    {image && (
+                                    <img
+                                        src={URL.createObjectURL(image)}
+                                        alt="Preview"
+                                        className="stock-image-preview"
+                                    />
+                                    )}
+                                </div>
+                                <button
+                                    type="button"
+                                    className="stock-image-upload-btn"
+                                    onClick={() => document.getElementById("image-upload").click()}
+                                >
+                                    사진 업로드
+                                </button>
+
+                                {image && (
+                                    <button
+                                    type="button"
+                                    className="stock-image-reset-btn"
+                                    onClick={handleImageReset}
+                                    >
+                                    삭제
+                                    </button>
+                                )}
+                            </div> */}
+                                <div className='stock-image-component'>
+                                    <div className="stock-image-preview-container">
+                                        {image && (
+                                        <img
+                                            src={URL.createObjectURL(image)}
+                                            alt="Preview"
+                                            className="stock-image-preview"
+                                        />
+                                        )}
+                                    </div>
+                                    <div className='stock-image-btn'>
+                                        <button
+                                            type="button"
+                                            className="stock-image-upload-btn"
+                                            onClick={() => document.getElementById("image-upload").click()}
+                                        >
+                                            업로드
+                                        </button>
+
+                                        {image && (
+                                            <button
+                                            type="button"
+                                            className="stock-image-reset-btn"
+                                            onClick={handleImageReset}
+                                            >
+                                            삭제
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className='stock-image-textarea-container'>
+                                    <textarea placeholder='이미지에 대한 설명을 입력해주세요.' id='name' name = 'filename' maxLength={26} value = {newProduct.file.name} onChange={changeFileName}/>
+                                </div>
+                            </div>
+                            
                         </div>
                     
                     </div>

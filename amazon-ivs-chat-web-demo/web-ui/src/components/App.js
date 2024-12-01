@@ -21,10 +21,15 @@ import QABoardEdit from './QABoard/QABoardEdit';
 import QABoardDetail from './QABoard/QABoardDetail';
 import Purchase from './Purchase/Purchase';
 import Payment from './Purchase/Payment';
+import NTBoardList from './NoticeBoard/NTBoardList';
+import NotifyBoardWrite from './NoticeBoard/NTBoardWrite';
+import NTBoardEdit from './NoticeBoard/NTBoardEdit';
+import NotifyBoardDetail from './NoticeBoard/NTBoardDetail';
 import NotiSet from './Notification/NotiSet';
 import BidPage from './auction/BidPage';
 import AuctionRegisterPage from './auction/AuctionRegisterPage';
 import AuctionChatPage from './auction/AuctionChatPage';
+
 function App() {
     const [userName, setUserName] = useState('');
     const [userRole, setUserRole] = useState('');
@@ -150,8 +155,6 @@ function App() {
                             setStreamingRoom={setStreamingRoom}
                         />
                     } /> */}
-                    <Route path="/register-stock" element = {<FarmerRegisterStock/> }/>
-                    
                     <Route path="/admin-mypage" element={userRole === 'ROLE_ADMIN' && <AdminMyPage navigateTo={navigate} />} />
                     <Route path="/user-mypage" element={userRole === 'ROLE_USER' && <UserMyPage navigateTo={navigate} />} />
                     <Route path="/company-mypage" element={userRole === 'ROLE_COMPANY' && <CompanyMyPage navigateTo={navigate} />} />
@@ -160,6 +163,10 @@ function App() {
                     <Route path="/customer-service/write" element={<QABoardWrite />} />
                     <Route path="/customer-service/edit/:boardNoSeq" element={<QABoardEdit />} />
                     <Route path="/customer-service/:boardNoSeq" element={<QABoardDetail />} />
+                    <Route path="/notify-service" element={<NTBoardList />} />
+                    <Route path="/notify-service/write" element={<NotifyBoardWrite />} />
+                    <Route path="/notify-service/edit/:boardNoSeq" element={<NTBoardEdit />} />
+                    <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
                     <Route path="/payment" element={<Payment />} />
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />
