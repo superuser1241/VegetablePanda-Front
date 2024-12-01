@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Client } from "@stomp/stompjs";
 
 const AuctionRegisterPage = ({ stockSeq, onRegisterSuccess }) => {
     const navigate = useNavigate();
@@ -38,12 +39,49 @@ const AuctionRegisterPage = ({ stockSeq, onRegisterSuccess }) => {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }
             );
+
             onRegisterSuccess(response.data);
+
+            const successAfter = 
+            await axios.post(
+                `http://localhost:9001/sendBidAll`, 
+                { 
+                     "message": " 등록한 방송이 곧 시작합니다."
+                },
+                {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }
+            );
+
         } catch (error) {
             console.error('경매 등록 실패:', error);
             alert('경매 등록에 실패했습니다.');
         }
+
+        
     };
+
+
+    // WebSocket 연결 및 상태 갱신
+    useEffect(() => {
+        const client = new Client({
+            brokerURL: "ws://localhost:9001/ws", 
+            onConnect: () => {
+                client.subscribe("/all/notifications", async (message) => {
+                    console.log(message.body);
+                });
+            },
+            onDisconnect: () => console.log('WebSocket 연결 종료')
+        });
+
+        client.activate();
+
+        // 클린업: 컴포넌트가 언마운트되면 WebSocket 연결 종료
+        return () => {
+            client.deactivate();
+        };
+    }, []);
+
 
     const getTodayStart = () => {
         const now = new Date();
@@ -58,7 +96,7 @@ const AuctionRegisterPage = ({ stockSeq, onRegisterSuccess }) => {
         const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}T13:00`;
+        return `${year}-${month}-${day}T23:00`;
     };
 
     return (

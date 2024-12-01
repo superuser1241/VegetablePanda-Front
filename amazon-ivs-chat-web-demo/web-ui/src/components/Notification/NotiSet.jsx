@@ -9,32 +9,31 @@ const NotiSet = () => {
     const [stompClient, setStompClient] = useState(null);
     
 
-
     useEffect(() => {
+      const token = localStorage.getItem('userSeq');
       const client = new Client({
         brokerURL: "ws://localhost:9001/ws", // Spring WebSocket 엔드포인트
         headers: {
           "Content-Type": "application/json",
+          userId: token,
         },
         debug: (str) => console.log(str), // 디버깅 로그
         reconnectDelay: 5000, // 재연결 딜레이
         onConnect: () => {
           console.log("Connected to WebSocket");
 
-          client.subscribe("/bid/notifications", (message) => {
+          client.subscribe(`/user/${token}/notifications`, (message) => {
+            console.log(message.body)
             setShowMessage(!showMessage);
             setMessages((prevMessages) => message.body);
           });
 
-          client.subscribe("/topic/notifications", (message) => {
+
+          client.subscribe("/all/notifications", async (message) => {
             setShowMessage(!showMessage);
             setMessages((prevMessages) => message.body);
           });
 
-          // client.subscribe("/top/notifications", (message) => {
-          //   setShowMessage(!showMessage);
-          //   setMessages((prevMessages) => message.body);
-          // });
         },
         onDisconnect: () => console.log("Disconnected from WebSocket"),
       });//useEffect종료

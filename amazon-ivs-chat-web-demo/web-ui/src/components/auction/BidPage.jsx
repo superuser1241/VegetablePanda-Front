@@ -7,6 +7,7 @@ import './BidPage.css';
 const BidPage = ({ streamingRoom, auctionData, onAuctionEnd, onOpenModal }) => {
     const [isAuctionEnded, setIsAuctionEnded] = useState(false);
     const [remainingTime, setRemainingTime] = useState('');
+    
 
     const calculateRemainingTime = (closeTime) => {
         const now = new Date();
