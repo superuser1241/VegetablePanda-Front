@@ -33,6 +33,7 @@ const StockList = () => {
                 setUserId(localStorage.getItem('userSeq'));
                 console.log("사용자 시퀀스 : ", userId);
                 console.log("userSeq : ", localStorage.getItem('userSeq'));
+                
             } catch (error) {
                 console.error('토큰 파싱 실패:', error);
             }
@@ -41,7 +42,7 @@ const StockList = () => {
 
     useEffect(() => {
         fetchProductList();
-    },[])
+    },[token])
 
     const fetchProductList = async () => {
         try {
@@ -60,26 +61,33 @@ const StockList = () => {
     };
 
     return (
-        <div>
+        <div className='stock-list-container'>
             <h3>재고 목록</h3>
-            <table>
-                <tr>
-                    <th>상품명</th>
-                    <th>수량</th>
-                    <th>등급</th>
-                    <th>인증</th>
-                </tr>
-                {
-                    productList.map((item) => {
-                        return <tr>
-                            <td>{item.content}</td>
-                            <td>{item.count}</td>
-                            <td>{item.stockGrade}</td>
+            <div className='stock-table-container'>
+                <table className='stock-table'>
+                <thead>
+                    <tr>
+                        <th>상품명</th>
+                        <th>수량</th>
+                        <th>등급</th>
+                        <th>인증</th>
+                        <th>색상</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {productList.map((item, index) => (
+                        <tr key={item.stockSeq}>
+                            <td >{item.productName}</td>
+                            <td >{item.count}</td>
+                            <td >{item.stockGrade}</td>
+                            <td >{item.stockOrganic}</td>
+                            <td >{item.color}</td>
                         </tr>
-                    })
-                }
+                    ))}
+                </tbody>
 
-            </table>
+                </table>
+            </div>
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UpdateStock = () => {
+const UpdateForm = () => {
     return (
         <div>
             
@@ -8,4 +8,4 @@ const UpdateStock = () => {
     );
 };
 
-export default UpdateStock;
+export default UpdateForm;

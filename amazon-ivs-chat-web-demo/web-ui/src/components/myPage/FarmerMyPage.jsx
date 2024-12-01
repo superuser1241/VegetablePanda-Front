@@ -146,7 +146,7 @@ const FarmerMyPage = () => {
                 }
             });
             setProducts(response.data);
-            console.log("상품 목록:", response.data);
+            // console.log("상품 목록:", response.data);
         } catch (error) {
             console.error('상품 목록 조회 실패:', error);
         }
@@ -368,104 +368,6 @@ const FarmerMyPage = () => {
 
                     {activeTab === 'product' && (
                         <div >
-                            {/* <h3>상품 등록</h3>
-                            <div className="product-form">
-                                <div className="form-group">
-                                    <label>상품 카테고리</label>
-                                    <select 
-                                        name="category"
-                                        value={selectedCategory}
-                                        onChange={(e) => setSelectedCategory(e.target.value)}
-                                    >
-                                        <option value="">카테고리 선택</option>
-                                        <option value="1">식량작물</option>
-                                        <option value="2">엽채류</option>
-                                        <option value="3">과채류</option>
-                                        <option value="4">근채류</option>
-                                        <option value="5">양채류</option>
-                                        <option value="6">과수</option>
-                                        <option value="7">기타작물</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>상품 종류</label>
-                                    <select 
-                                        name="productSeq" 
-                                        value={newProduct.productSeq}
-                                        onChange={handleProductChange}
-                                        disabled={!selectedCategory}
-                                    >
-                                        <option value="">선택하세요</option>
-                                        {filteredProducts.map(product => (
-                                            <option key={product.productSeq} value={product.productSeq}>
-                                                {product.productName}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>등급</label>
-                                    <select 
-                                        name="stockGradeSeq" 
-                                        value={newProduct.stockGradeSeq}
-                                        onChange={handleProductChange}
-                                    >
-                                        <option value="">선택하세요</option>
-                                        <option value="1">특(1등)</option>
-                                        <option value="2">상(2등)</option>
-                                        <option value="3">중(3등)</option>
-                                        <option value="4">4등</option>
-                                        <option value="5">5등</option>
-                                        <option value="6">9등(등외)</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>재배 방식</label>
-                                    <select 
-                                        name="stockOrganicSeq" 
-                                        value={newProduct.stockOrganicSeq}
-                                        onChange={handleProductChange}
-                                    >
-                                        <option value="">선택하세요</option>
-                                        <option value="1">유기농(우수농산물)</option>
-                                        <option value="2">일반(일반농산물)</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>색상 코드</label>
-                                    <input
-                                        type="number"
-                                        name="color"
-                                        value={newProduct.color}
-                                        onChange={handleProductChange}
-                                        placeholder="색상 코드 입력"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>수량</label>
-                                    <input
-                                        type="number"
-                                        name="count"
-                                        value={newProduct.count}
-                                        onChange={handleProductChange}
-                                        placeholder="수량 입력"
-                                    />
-                                </div>
-                                <div className="product-description">
-                                    <label>상품 설명</label>
-                                    <textarea
-                                        name="content"
-                                        value={newProduct.content}
-                                        onChange={handleProductChange}
-                                        placeholder="상품 설명 입력"
-                                    />
-                                </div>
-                                <div className="button-group">
-                                    <button onClick={handleProductSubmit} className="save-button">
-                                        상품 등록
-                                    </button>
-                                </div>
-                            </div> */}
                             <RegisterStock/>
                         </div>
                     )}

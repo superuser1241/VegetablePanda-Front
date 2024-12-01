@@ -29,6 +29,8 @@ import NotiSet from './Notification/NotiSet';
 import BidPage from './auction/BidPage';
 import AuctionRegisterPage from './auction/AuctionRegisterPage';
 import AuctionChatPage from './auction/AuctionChatPage';
+import Product from './product/Product';
+import Shop from './product/Shop';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -171,6 +173,8 @@ function App() {
                     <Route path="/payment" element={<Payment />} />
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />
+                    <Route path="/product/:stockSeq" element={<Product/>}/>
+                    <Route path="/shop" element={<Shop/>}/>
                 </Routes>
             </main>
             <Footer />

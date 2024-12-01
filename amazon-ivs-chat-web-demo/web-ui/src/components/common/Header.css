@@ -36,9 +36,10 @@
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* 네비게이션 아이템 호버 스타일 배경색 대식 글자색만 바꾸는 걸로 수정해보았습니다. */
 .nav-item:hover {
-    background-color: #82c91e; /* 초록색으로 자연 느낌 */
-    color: #ffffff; /* 텍스트 흰색 */
+    /* background-color: #4CAF50; 초록색으로 자연 느낌 */
+    color: #4CAF50; /* 텍스트 흰색 */
 }
 
 /* 환영 메시지 스타일 */
