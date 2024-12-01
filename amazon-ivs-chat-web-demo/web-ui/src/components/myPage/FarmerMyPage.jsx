@@ -73,7 +73,6 @@ const FarmerMyPage = () => {
         grade: farmerInfo.grade || "",
         regDate: farmerInfo.regDate || "",
         pw: farmerInfo.pw || "",
-        
       });
     }
   }, [farmerInfo]);
@@ -126,60 +125,58 @@ const FarmerMyPage = () => {
     }
   };
 
-  // 체크박스를 클릭할 때마다 선택된 항목을 업데이트하는 함수
-  const handleCheckboxChange = (buySeq) => {
-    if (selectedItems.includes(buySeq)) {
+  const handleCheckboxChange = (userBuySeq) => {
+    if (selectedItems.includes(userBuySeq)) {
       // 이미 선택된 항목은 제거
-      setSelectedItems(selectedItems.filter((item) => item !== buySeq));
+      setSelectedItems(selectedItems.filter((item) => item !== userBuySeq));
     } else {
       // 선택되지 않은 항목은 추가
-      setSelectedItems([...selectedItems, buySeq]);
+      setSelectedItems([...selectedItems, userBuySeq]);
     }
   };
-
+  
   const handleSettlementRequest = async () => {
-    // 선택된 항목에 대한 데이터 처리
-    const settlementData = sales
-      .filter((sale) => selectedItems.includes(sale.buySeq)) // selectedItems에 포함된 항목만 필터링
-      .map((sale) => ({
-        totalPoint: sale.price,
-      }));
-
-    if (settlementData.length > 0) {
-      try {
-        // CalculateDTO 형태로 감싸서 전송
-        const CalculateDTO = { settlements: settlementData };
-
-        console.log("전송할 데이터:", CalculateDTO);
-
-        // 선택된 데이터를 백엔드로 전송
-        const response = await axios.post(
-          `http://localhost:9001/myPage/farmer/calculate/${userId}`,
-          CalculateDTO,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // 인증 토큰 추가
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        console.log("서버 응답:", response); // 서버 응답 로그
-        alert("정산 신청이 완료되었습니다.");
-
-        // 성공한 항목을 비활성화
-        const updatedSales = sales.map((sale) =>
-          selectedItems.includes(sale.buySeq)
-            ? { ...sale, isDisabled: true } // 성공한 항목에 `isDisabled` 추가
-            : sale
-        );
-
-        setSales(updatedSales);
-      } catch (err) {
-        alert("다시 체크해주세요.");
+    const isConfirmed = window.confirm("정산 신청을 하시겠습니까?");
+    
+    if (isConfirmed) {
+      if (selectedItems.length > 0) {
+        try {
+          // 선택된 항목의 buySeq 값을 settlements 배열로 보낼 준비
+          const settlementsData = selectedItems.map((userBuySeq) => {
+            const sale = sales.find(s => s.userBuySeq === userBuySeq); // 해당 buySeq를 가진 sale 객체 찾기
+            if (sale) {
+              return {
+                userBuySeq: sale.userBuySeq, 
+                totalPoint: sale.price, // 가격이 없으면 0으로 설정
+              };
+            }
+          }).filter(item => item !== undefined); // 잘못된 항목 필터링
+  
+          console.log("보낼 데이터:", settlementsData);
+  
+          // 선택된 항목만 보내기
+          const response = await axios.post(
+            `http://localhost:9001/myPage/farmer/calculate/${userId}`,
+            { settlements: settlementsData }, // selectedItems 데이터를 settlements 배열로 보냄
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // 인증 토큰 추가
+                "Content-Type": "application/json",
+              },
+            }
+          );
+  
+          alert("정산 신청이 완료되었습니다.");
+          fetchSalesHistory(userId);
+          fetchSettlementHistory(userId);
+          setActiveTab("calculate")
+        } catch (err) {
+          console.error("서버 오류:", err);
+          alert("서버와의 연결에 문제가 발생했습니다.");
+        }
+      } else {
+        alert("정산 신청할 항목을 체크하세요.");
       }
-    } else {
-      alert("정산 신청할 항목을 체크하세요.");
     }
   };
 
@@ -219,12 +216,12 @@ const FarmerMyPage = () => {
       setImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);  
+        setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
-  
+
   const handleImageReset = () => {
     setFarmerInfo((prevState) => ({
       ...prevState,
@@ -278,7 +275,7 @@ const FarmerMyPage = () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
-    
+
     const farmerId = farmerInfo.farmerId;
 
     const formData = new FormData();
@@ -287,7 +284,7 @@ const FarmerMyPage = () => {
       new Blob(
         [
           JSON.stringify({
-            id : farmerId,
+            id: farmerId,
             name: editedFarmer.name,
             email: editedFarmer.email,
             code: code,
@@ -517,9 +514,11 @@ const FarmerMyPage = () => {
             <div className="user-info-section">
               <h3>회원 정보</h3>
               <div className="user-info-details">
-              <strong>프로필 사진</strong> 
+                <strong>프로필 사진</strong>
                 <div className="image-preview-container">
-                  <img src={imagePreview || farmerInfo.path} alt={farmerInfo.path}
+                  <img
+                    src={imagePreview || farmerInfo.path}
+                    alt={farmerInfo.path}
                   />
                 </div>
                 <p>
@@ -590,14 +589,14 @@ const FarmerMyPage = () => {
                   </button>
 
                   {(imagePreview || farmerInfo.path) && (
-        <button
-          type="button"
-          className="image-reset-btn"
-          onClick={handleImageReset}
-        >
-          삭제
-        </button>
-      )}
+                    <button
+                      type="button"
+                      className="image-reset-btn"
+                      onClick={handleImageReset}
+                    >
+                      삭제
+                    </button>
+                  )}
                 </div>
                 <label htmlFor="owner">판매자명</label>
                 <input
@@ -759,68 +758,69 @@ const FarmerMyPage = () => {
             </div>
           )}
 
-          {activeTab === "sale" && (
-            <div className="sales-history-display">
-              <h3>내가 판매한 내역</h3>
-              {loading ? (
-                <div>로딩 중...</div>
-              ) : error ? (
-                <div className="error-message">{error}</div>
-              ) : sales.length > 0 ? (
-                <>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>판매 번호</th>
-                        <th>상품명</th>
-                        <th>수량</th>
-                        <th>금액</th>
-                        <th>판매일자</th>
-                        <th>판매 상태</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sales.map((sale, index) => (
-                        <tr key={sale.buySeq}>
-                          <td>
-                            <input
-                              type="checkbox"
-                              checked={sale.buySeq}
-                              onChange={() => handleCheckboxChange(sale.buySeq)}
-                              disabled={sale.isDisabled}
-                            />
-                          </td>
-                          <td>{sale.userBuySeq}</td>
-                          <td>{sale.content}</td>
-                          <td>{sale.count}</td>
-                          <td>{sale.price}원</td>
-                          <td>{new Date(sale.buyDate).toLocaleDateString()}</td>
 
-                          <td>
-                            {sale.state === 0
-                              ? "값 뭐넣어야해여?"
-                              : sale.state === 1
-                              ? "값 뭐넣어야해여?"
-                              : sale.state === 2
-                              ? "값 뭐넣어야해여?"
-                              : sale.state === 3
-                              ? "값 뭐넣어야해여?"
-                              : "값 뭐넣어야해여?"}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <button onClick={handleSettlementRequest}>정산 신청</button>{" "}
-                </>
-              ) : (
-                <div className="no-data-notification">
-                  판매 내역이 없습니다.
-                </div>
-              )}
-            </div>
-          )}
+{activeTab === "sale" && (
+  <div className="sales-history-display">
+    <h3>내가 판매한 내역</h3>
+    {loading ? (
+      <div>로딩 중...</div>
+    ) : error ? (
+      <div className="error-message">{error}</div>
+    ) : sales.length > 0 ? (
+      <>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>판매 번호</th>
+              <th>상품명</th>
+              <th>수량</th>
+              <th>금액</th>
+              <th>판매일자</th>
+              <th>판매 상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sales.map((sale) => (
+              <tr key={sale.userBuySeq}>
+                <td>
+                  {sale.state === 1 && (
+                    <input
+                      type="checkbox"
+                      checked={selectedItems.includes(sale.userBuySeq)} // selectedItems에 포함되면 체크
+                      onChange={() => handleCheckboxChange(sale.userBuySeq)} // 클릭 시 선택된 항목 처리
+                      disabled={sale.isDisabled} // 비활성화 상태일 경우 체크박스 비활성화
+                    />
+                  )}
+                </td>
+                <td>{sale.userBuySeq}</td>
+                <td>{sale.content}</td>
+                <td>{sale.count}</td>
+                <td>{sale.price}원</td>
+                <td>{new Date(sale.buyDate).toLocaleDateString()}</td>
+
+                <td>
+                  {sale.state === 0
+                    ? "판매중"
+                    : sale.state === 1
+                    ? "판매완료"
+                    : sale.state === 2
+                    ? "정산 신청 완료"
+                    : sale.state === 3
+                    ? "정산 완료"
+                    : "상태값 4이상은 뭐넣습니까?"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <button onClick={handleSettlementRequest}>정산 신청</button>
+      </>
+    ) : (
+      <div className="no-data-notification">판매 내역이 없습니다.</div>
+    )}
+  </div>
+)}
 
           {activeTab === "calculate" && (
             <div className="settlement-history-display">
