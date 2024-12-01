@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './FarmerMyPage.css';
 import RegisterStock from './RegisterStock';
+import StreamingStatus from './StreamingStatus';
 import StockList from './StockList';
 
-const FarmerMyPage = () => {
+const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const [userId, setUserId] = useState('');
@@ -30,7 +31,9 @@ const FarmerMyPage = () => {
     });
     const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
-
+    const [streamingStatus, setStreamingStatus] = useState(null);
+    const [availableRoom, setAvailableRoom] = useState(null);
+    const [streamingRoom, setStreamingRoom] = useState(null);
 
     useEffect(() => {
         if (token) {
@@ -128,7 +131,7 @@ const FarmerMyPage = () => {
             fetchUserInfo(userId);
         } catch (error) {
             console.error('회원정보 수정 실패:', error);
-            alert('회원��� 수정에 실패했습니다.');
+            alert('회원 수정에 실패했습니다.');
         }
     };
     */
@@ -206,6 +209,86 @@ const FarmerMyPage = () => {
             [name]: value
         }));
     };
+
+    const fetchAvailableRoom = async () => {
+        try {
+            const response = await axios.get('http://localhost:9001/api/streaming/available', {
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            setAvailableRoom(response.data);
+        } catch (error) {
+            console.error('사용 가능한 방 조회 실패:', error);
+        }
+    };
+
+    const checkStreamingStatus = async () => {
+        try {
+            const response = await axios.get('http://localhost:9001/api/streaming/pending', {
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.data && response.data.length > 0) {
+                setStreamingStatus('pending');
+            } else {
+                // 승인된 방송 확인
+                const activeResponse = await axios.get('http://localhost:9001/api/streaming/active-rooms', {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (activeResponse.data && activeResponse.data.length > 0) {
+                    setStreamingStatus('approved');
+                    setAvailableRoom(activeResponse.data[0]);
+                }
+            }
+        } catch (error) {
+            console.error('방송 상태 조회 실패:', error);
+        }
+    };
+
+    const handleStreamingRequest = async () => {
+        try {
+            if (!availableRoom) {
+                alert('사용 가능한 방이 없습니다.');
+                return;
+            }
+
+            const response = await axios.post(
+                `http://localhost:9001/api/streaming/request/${availableRoom.streamingSeq}`, 
+                null,
+                {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    params: {
+                        farmerSeq: userId
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                alert('방송 신청이 완료되었습니다. 관리자 승인을 기다려주세요.');
+                setStreamingStatus('pending');
+            }
+        } catch (error) {
+            console.error('방송 신청 실패:', error);
+            alert('방송 신청 중 오류가 발생했습니다.');
+        }
+    };
+
+    useEffect(() => {
+        if (userId) {
+            fetchAvailableRoom();
+            checkStreamingStatus();
+        }
+    }, [userId]);
 
     return (
         <div className="farmer-mypage">
@@ -353,17 +436,11 @@ const FarmerMyPage = () => {
                     )} */}
 
                     {activeTab === 'streaming' && (
-                        <div className="streaming-section">
-                            <h3>스트리밍 관리</h3>
-                            <div className="streaming-buttons">
-                                <button 
-                                    className="streaming-btn"
-                                    onClick={() => navigate('/streaming')}
-                                >
-                                    채팅방 선택하기
-                                </button>
-                            </div>
-                        </div>
+                        <StreamingStatus 
+                            userId={userId} 
+                            token={token}
+                            onStartStreaming={onStartStreaming}
+                        />
                     )}
 
                     {activeTab === 'product' && (

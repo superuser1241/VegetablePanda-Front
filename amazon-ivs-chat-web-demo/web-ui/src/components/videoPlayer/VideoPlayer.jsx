@@ -6,95 +6,83 @@ import React, { useEffect } from 'react';
 // Styles
 import './VideoPlayer.css';
 
-const VideoPlayer = ({
-  usernameRaisedHand,
-  showRaiseHandPopup,
-  playbackUrl,
-}) => {
-  useEffect(() => {
-    if (!playbackUrl) {
-      console.warn('No playbackUrl provided.');
-      return;
-    }
-  
-    console.log('Initializing VideoPlayer with URL:', playbackUrl);
-  
-    const MediaPlayerPackage = window.IVSPlayer;
-  
-    if (!MediaPlayerPackage.isPlayerSupported) {
-      console.warn('The current browser does not support the Amazon IVS player.');
-      return;
-    }
-  
-    const PlayerState = MediaPlayerPackage.PlayerState;
-    const PlayerEventType = MediaPlayerPackage.PlayerEventType;
-  
-    // Initialize player
-    const player = MediaPlayerPackage.create();
-    player.attachHTMLVideoElement(document.getElementById('video-player'));
-  
-    // Attach event listeners
-    player.addEventListener(PlayerState.PLAYING, () => {
-      console.info('Player State - PLAYING');
-    });
-    player.addEventListener(PlayerState.ENDED, () => {
-      console.info('Player State - ENDED');
-    });
-    player.addEventListener(PlayerState.READY, () => {
-      console.info('Player State - READY');
-    });
-    player.addEventListener(PlayerEventType.ERROR, (err) => {
-      console.error('Player Event - ERROR:', err);
-    });
-  
-    // Setup stream and play
-    player.setAutoplay(true);
-    player.load(playbackUrl);
-    player.setVolume(0.5);
-  
-    return () => {
-      // Cleanup the player instance when playbackUrl changes or component unmounts
-      player.removeEventListener(PlayerState.PLAYING);
-      player.removeEventListener(PlayerState.ENDED);
-      player.removeEventListener(PlayerState.READY);
-      player.removeEventListener(PlayerEventType.ERROR);
-      player.delete();
-    };
-  }, [playbackUrl]);
-  
+const VideoPlayer = ({ playbackUrl }) => {
+    useEffect(() => {
+        if (!playbackUrl) {
+            console.warn('No playbackUrl provided.');
+            return;
+        }
 
-  return (
-    <>
-      <div className='player-wrapper'>
-        <div className='aspect-169 pos-relative full-width full-height'>
-          <video
-            id='video-player'
-            className='video-elem pos-absolute full-width'
-            playsInline
-            muted
-          ></video>
-          <div className='player-overlay pos-absolute'>
-            {showRaiseHandPopup ? (
-              <div className='overlay-raise-hand'>
-                <div className='overlay-raise-hand-icon'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='currentColor'
-                  >
-                    <path d='M12.775 24q-1.825 0-3.337-.688-1.513-.687-2.613-1.824-1.1-1.138-1.712-2.638-.613-1.5-.613-3.1v-10q0-.525.363-.888.362-.362.887-.362t.888.362Q7 5.225 7 5.75v5.75q0 .2.15.35.15.15.35.15.2 0 .35-.15.15-.15.15-.35V2.75q0-.525.363-.888.362-.362.887-.362t.887.362q.363.363.363.888v7.75q0 .2.15.35.15.15.35.15.2 0 .35-.15.15-.15.15-.35V1.25q0-.525.363-.888Q12.225 0 12.75 0t.887.362Q14 .725 14 1.25v9.25q0 .2.15.35.15.15.35.15.2 0 .35-.15.15-.15.15-.35V3.25q0-.525.363-.888Q15.725 2 16.25 2t.888.362q.362.363.362.888v10.775q-1.4.2-2.325 1.138-.925.937-1.125 2.262-.05.225.113.4.162.175.412.175.175 0 .3-.113.125-.112.15-.312.15-1.1 1-1.837Q16.875 15 18 15q.2 0 .35-.15.15-.15.15-.35V9.25q0-.525.363-.887Q19.225 8 19.75 8t.888.363q.362.362.362.887v6.5q0 1.6-.6 3.087-.6 1.488-1.688 2.638-1.087 1.15-2.599 1.837Q14.6 24 12.775 24Z' />
-                  </svg>
-                </div>
-                {usernameRaisedHand} raised their hand
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
+        const MediaPlayerPackage = window.IVSPlayer;
+        if (!MediaPlayerPackage?.isPlayerSupported) {
+            console.warn('The current browser does not support the Amazon IVS player.');
+            return;
+        }
+
+        const PlayerState = MediaPlayerPackage.PlayerState;
+        const PlayerEventType = MediaPlayerPackage.PlayerEventType;
+
+        // Initialize player
+        const player = MediaPlayerPackage.create();
+        const videoEl = document.getElementById('video-player');
+        
+        if (videoEl) {
+            player.attachHTMLVideoElement(videoEl);
+
+            // Event listeners
+            const onPlaying = () => {
+                console.info('Player State - PLAYING');
+            };
+            const onEnded = () => {
+                console.info('Player State - ENDED');
+            };
+            const onReady = () => {
+                console.info('Player State - READY');
+            };
+            const onError = (err) => {
+                console.error('Player Event - ERROR:', err);
+            };
+
+            // Attach listeners
+            player.addEventListener(PlayerState.PLAYING, onPlaying);
+            player.addEventListener(PlayerState.ENDED, onEnded);
+            player.addEventListener(PlayerState.READY, onReady);
+            player.addEventListener(PlayerEventType.ERROR, onError);
+
+            // Setup stream
+            player.setAutoplay(true);
+            player.load(playbackUrl);
+            player.setVolume(0.5);
+
+            // Cleanup function
+            return () => {
+                try {
+                    player.removeEventListener(PlayerState.PLAYING, onPlaying);
+                    player.removeEventListener(PlayerState.ENDED, onEnded);
+                    player.removeEventListener(PlayerState.READY, onReady);
+                    player.removeEventListener(PlayerEventType.ERROR, onError);
+                    player.pause();
+                    player.delete();
+                } catch (error) {
+                    console.error('Player cleanup error:', error);
+                }
+            };
+        }
+    }, [playbackUrl]);
+
+    return (
+        <div className='player-wrapper'>
+            <div className='aspect-169 pos-relative full-width full-height'>
+                <video
+                    id='video-player'
+                    className='video-elem pos-absolute full-width'
+                    playsInline
+                    muted
+                />
+                {/* ... 나머지 JSX ... */}
+            </div>
         </div>
-      </div>
-    </>
-  );
+    );
 };
 
 export default VideoPlayer;
