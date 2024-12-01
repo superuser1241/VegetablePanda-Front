@@ -48,10 +48,30 @@
     background-color: #f8f9fa;
 }
 
+.sidebar li ul li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar li ul li:hover {
+    background-color: #f8f9fae7;
+}
+
 .sidebar ul li.active {
     /* background-color: #4a90e2; */
     background-color: #4CAF50;
     color: white;
+}
+
+.dropdown-content li:not(.active):hover {
+    background-color: #f5f5f5;
+}
+
+/* active 스타일의 우선순위를 높임 */
+.dropdown-content li.active {
+    background-color: #4CAF50 !important;  /* 다른 스타일을 무시하고 강제 적용 */
+    color: #000;
 }
 
 .main-content {
