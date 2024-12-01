@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT-0
 
 import React, { useEffect, useState, useRef, createRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Linkify from 'linkify-react';
 import axios from 'axios';
 import {
@@ -22,7 +23,9 @@ import RaiseHand from './RaiseHand';
 // Styles
 import './Chat.css';
 
-const Chat = ({streamingRoom,handleExitChat }) => {
+const Chat = ({streamingRoom, handleExitChat }) => {
+  const navigate = useNavigate();
+  const [showExitModal, setShowExitModal] = useState(false);
   const [showSignIn, setShowSignIn] = useState(true);
   const [username, setUsername] = useState('');
   const [moderator, setModerator] = useState(false);
@@ -76,12 +79,6 @@ const Chat = ({streamingRoom,handleExitChat }) => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  useEffect(() => {
-    // 컴포넌트 언마운트 시 실행
-    return () => {
-        if (handleExitChat) handleExitChat();
-    };
-  }, [handleExitChat]);
 
   // Fetches a chat token
   const tokenProvider = async (selectedUsername, isModerator, avatarUrl) => {
@@ -606,15 +603,45 @@ const Chat = ({streamingRoom,handleExitChat }) => {
     return chatState === 'connected';
   };
 
+  // 파머유저 확인
+  const currentUserSeq = localStorage.getItem('userSeq');
+  const isFarmer = currentUserSeq === String(streamingRoom?.farmerSeq);
+
+  // 방송 종료 버튼 클릭 핸들러
+  const handleExitClick = () => {
+    setShowExitModal(true);
+  };
+
+  // 방송 종료 확인 핸들러
+  const handleExitConfirm = async () => {
+    try {
+        // API 호출
+        if (streamingRoom?.streamingSeq) {
+            await axios.post(
+                `http://localhost:9001/api/streaming/exit/${streamingRoom.streamingSeq}`
+            );
+        }
+
+        // 성공하면 메인으로 이동
+        navigate('/');
+    } catch (error) {
+        console.error('방송 종료 실패:', error);
+        // API 호출이 실패해도 메인으로 이동
+        navigate('/');
+    }
+  };
+
   return (
     <>
       <div className='main full-width full-height chat-container'>
         <div className='content-wrapper mg-2'>
-          <VideoPlayer
-            usernameRaisedHand={usernameRaisedHand}
-            showRaiseHandPopup={showRaiseHandPopup}
-            playbackUrl={streamingRoom.playbackUrl}
-          />
+          {streamingRoom?.playbackUrl && (
+            <VideoPlayer
+              playbackUrl={streamingRoom.playbackUrl}
+              usernameRaisedHand={usernameRaisedHand}
+              showRaiseHandPopup={showRaiseHandPopup}
+            />
+          )}
           <div className='col-wrapper'>
             <div className='chat-wrapper'>
               <div className='messages'>
@@ -638,29 +665,37 @@ const Chat = ({streamingRoom,handleExitChat }) => {
                   onKeyDown={handleKeyDown}
                 />
                 {isChatConnected() && (
-                  <StickerPicker handleStickerSend={handleStickerSend} />
-                )}
-                {isChatConnected() && (
-                  <RaiseHand
-                    isRaised={handRaised}
-                    handleRaiseHandSend={handleRaiseHandSend}
-                  />
-                )}
-                {!username && (
-                  <fieldset>
-                    <button
-                      onClick={handleOnClick}
-                      className='btn btn--primary full-width rounded'
-                    >
-                      Join the chat room
-                    </button>
-                  </fieldset>
+                  <>
+                    <StickerPicker handleStickerSend={handleStickerSend} />
+                    {isFarmer && (
+                      <button 
+                        className="exit-streaming-button"
+                        onClick={handleExitClick}
+                      >
+                        방송 종료
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </div>
           </div>
         </div>
         {showSignIn && <SignIn handleSignIn={handleSignIn} />}
+        
+        {/* 종료 확인 모달 추가 */}
+        {showExitModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h3>방송 종료</h3>
+              <p>방송을 종료하시겠습니까?</p>
+              <div className="modal-buttons">
+                <button onClick={handleExitConfirm}>네</button>
+                <button onClick={() => setShowExitModal(false)}>아니오</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
