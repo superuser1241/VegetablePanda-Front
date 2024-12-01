@@ -94,7 +94,7 @@ const QABoardDetail = () => {
     e.preventDefault();
     try {
       await axios.post(
-        'http://localhost:9001/QaReplyBoard/${boardNoSeq}',
+        `http://localhost:9001/QaReplyBoard/${boardNoSeq}`,
         { 
           comment: replyContent,
           qaBoard: { boardNoSeq: boardNoSeq }
@@ -114,6 +114,8 @@ const QABoardDetail = () => {
           headers: { 'Authorization': `Bearer ${token}` }
         }
       );
+      alert('댓글 등록에 성공했습니다.');
+
       setReplies(repliesResponse.data);
     } catch (error) {
       console.error('댓글 등록 실패:', error);
