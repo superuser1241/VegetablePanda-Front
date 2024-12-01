@@ -87,9 +87,8 @@
   margin: 0;
   width: var(--input-height);
   height: var(--input-height);
-  border-radius: var(--input-height);
+  border-radius: 8px;
   overflow: hidden;
-  margin: 0 5px 5px 0;
   flex-shrink: 0;
   border: 2px solid transparent;
   display: inline-flex;
@@ -324,10 +323,18 @@
   right: 0;
   padding: 1rem 1.5rem;
   background: var(--color-bg-chat);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start;
 }
 
 .composer input {
-  width: 100%;
+  flex: 1;
+  height: var(--input-height);
+  min-width: 200px;
+  padding: 0 16px;
+  border-radius: 8px;
 }
 
 .chat-sticker {
@@ -755,11 +762,44 @@ button.item-container {
 }
 
 .exit-streaming-button {
-    margin-left: 10px;
-    padding: 8px 16px;
-    background-color: #dc3545;
+    margin-left: 4px;
+    padding: 0 16px;
+    background: linear-gradient(135deg, #ff4b4b, #dc3545);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.25);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: var(--input-height);
+    white-space: nowrap;
+    min-width: 80px;
+}
+
+.exit-streaming-button:hover {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.35);
+}
+
+.exit-streaming-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.25);
+}
+
+.rounded {
+    flex: 1;  /* 남은 공간을 모두 차지 */
+    min-width: 200px;
+    max-width: calc(100% - 5px);  /* 오른쪽 버튼들을 위한 공간 확보 */
+    height: var(--input-height);
+    line-height: var(--input-height);
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    margin-right: 5px;
 }
