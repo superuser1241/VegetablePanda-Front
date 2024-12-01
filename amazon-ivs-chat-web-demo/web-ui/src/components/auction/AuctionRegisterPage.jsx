@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PriceCheckModal from './PriceCheckModal';
 import SalesHistoryModal from './SalesHistoryModal';
-import { Client } from "@stomp/stompjs";
 
 const AuctionRegisterPage = ({ 
     streamingRoom, 
@@ -65,16 +64,6 @@ const AuctionRegisterPage = ({
             console.error('경매 등록 실패:', error);
             alert('경매 등록에 실패했습니다.');
         }
-
-        const token = localStorage.getItem('token');
-            const response = await axios.post(
-                `http://localhost:9001/sendBidAll`,
-                {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                }
-            );
-
-       
     };
     
     const getTodayStart = () => {
