@@ -14,6 +14,7 @@ const BidPage = ({
     userWallet 
 }) => {
     const [remainingTime, setRemainingTime] = useState('');
+    
     const [pricePerKg, setPricePerKg] = useState(0);
 
     const calculateRemainingTime = (closeTime) => {
