@@ -29,6 +29,7 @@ import NotiSet from './Notification/NotiSet';
 import BidPage from './auction/BidPage';
 import AuctionRegisterPage from './auction/AuctionRegisterPage';
 import AuctionChatPage from './auction/AuctionChatPage';
+import Personal from './Personal/Personal'; // 이거 에러나긴하는데 돌아긴해요
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -44,9 +45,10 @@ function App() {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
         setUserName('');
         setUserRole('');
+        localStorage.removeItem("token");
+        localStorage.setItem("token", null);
         navigate('/');
         alert('로그아웃 되었습니다.');
     };
@@ -117,7 +119,6 @@ function App() {
                     <Route path="/UserRegister" element={<UserRegister />} />
                     <Route path="/CompanyRegister" element={<CompanyRegister />} />
                     <Route path="/FarmerRegister" element={<FarmerRegister />} />
-
                     <Route path="/streaming" element={
                         <StreamingParticular
                             streamingRoom={streamingRoom}
@@ -169,6 +170,7 @@ function App() {
                     <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
                     <Route path="/payment" element={<Payment />} />
+                    <Route path="/personal" element={userRole === 'ROLE_FARMER' && <Personal navigateTo={navigate} />} />
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />
                 </Routes>

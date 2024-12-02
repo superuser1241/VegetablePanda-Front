@@ -61,6 +61,18 @@ const FarmerMyPage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditedFarmer((prev) => ({ ...prev, [name]: value }));
+    
+    // 비밀번호와 비밀번호 확인이 일치하는지 확인
+    if (editedFarmer.pw === "" || pwConfirm === "") {
+    setPwMessage("");
+    return;
+}
+
+if (editedFarmer.pw === pwConfirm) {
+  setPwMessage("비밀번호가 일치합니다.");
+} else {
+  setPwMessage("비밀번호가 일치하지 않습니다.");
+}
   };
 
   useEffect(() => {
