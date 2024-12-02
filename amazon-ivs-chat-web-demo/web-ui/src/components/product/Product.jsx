@@ -90,7 +90,7 @@ const Product = () => {
                 <li>상품번호 : {product.stockSeq}</li>
                 <li>카테고리 : {product.productCategoryContent}</li>
                 <li>배송가능지역 : 전국</li>
-                <li>배송비 : 3000원</li>
+                <li>배송비 : 3,000원</li>
                 <li>판매가격 : {product.price}</li>
                 </ul>
                 <div className="purchase-section">
@@ -98,9 +98,11 @@ const Product = () => {
                 <input type="number" id="quantity" min={1} max={product.count} value={quantity} onChange={handleQuantityChange}/>
                 <p>총 상품 금액: <strong>{product.price * quantity}</strong></p> 
                 <div className='button-container'>
+                    <button className="like-button">찜하기</button>
                     <button className="cart-button">장바구니</button>
-                    <button className="product-buy-button" onClick={() => navigate('/purchaseD', { state: { item:product, quantity } })}>구매</button>
                 </div>
+                    <button className="product-buy-button" onClick={() => navigate('/payment', { state: { item:product, quantity } })}>구매</button>
+                
                 </div>
             </div>
 
