@@ -29,9 +29,6 @@ const Header = ({ userName, userRole, handleLogout }) => {
                 </Link>
             </div>
             <nav className="nav">
-                <Link to="/" className="nav-item">
-                    Home
-                </Link>
 
                 {userName ? (
                     <>
