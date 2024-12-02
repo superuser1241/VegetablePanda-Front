@@ -29,7 +29,7 @@ import NotiSet from './Notification/NotiSet';
 import BidPage from './auction/BidPage';
 import AuctionRegisterPage from './auction/AuctionRegisterPage';
 import AuctionChatPage from './auction/AuctionChatPage';
-import Personal from './Personal/Personal'; // 이거 에러나긴하는데 돌아긴해요
+import Personal from './personal/personal'; // 이거 에러나긴하는데 돌아긴해요
 
 function App() {
     const [userName, setUserName] = useState('');
