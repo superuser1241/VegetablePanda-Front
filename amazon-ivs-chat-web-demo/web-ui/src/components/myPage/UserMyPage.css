@@ -3,6 +3,25 @@
     margin: 0 auto;
     padding: 20px;
 }
+.mypage-pw-match-message {
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    width: 100%;            
+  }
+
+.button-container {
+    gap: 20px; 
+  }
+  
+  .update-button {
+    background-color: greenyellow;
+  }
+  
+  .delete-button {
+    background-color: gray;
+    margin-left: 20px;
+  }
 
 .user-mypage h2 {
     color: #333;
@@ -259,7 +278,7 @@
     border-radius: 4px;
 }
 
-.delete-button {
+.review-delete-button {
     margin-top: 10px;
     padding: 5px 10px;
     background-color: #ff6b6b;
@@ -268,6 +287,7 @@
     border-radius: 4px;
     cursor: pointer;
 }
+
 
 .delete-button:hover {
     background-color: #ff5252;
