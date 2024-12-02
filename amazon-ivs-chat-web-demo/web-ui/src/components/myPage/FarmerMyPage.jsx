@@ -34,6 +34,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     const [streamingStatus, setStreamingStatus] = useState(null);
     const [availableRoom, setAvailableRoom] = useState(null);
     const [streamingRoom, setStreamingRoom] = useState(null);
+    const [isProductMenuOpen, setIsProductMenuOpen] = useState(false);
 
     useEffect(() => {
         if (token) {
@@ -320,17 +321,30 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
                         >
                             스트리밍 관리
                         </li>
-                        <li 
-                            onClick={() => setActiveTab('product')}
-                            className={activeTab === 'product' ? 'active' : ''}
-                        >
-                            상품 등록
-                        </li>
-                        <li 
-                            onClick={() => setActiveTab('productList')}
-                            className={activeTab === 'productList' ? 'active' : ''}
-                        >
-                            상품 목록
+                        {/* 상품 관리 */}
+                        <li className="dropdown">
+                            <div 
+                                onClick={() => setIsProductMenuOpen(!isProductMenuOpen)}
+                                className={`dropdown-header ${(activeTab === 'product' || activeTab === 'productList') ? 'active' : ''}`}
+                            >
+                                상품 관리
+                            </div>
+                            {isProductMenuOpen && (
+                                <ul className="dropdown-content">
+                                    <li 
+                                        onClick={() => setActiveTab('product')}
+                                        className={activeTab === 'product' ? 'active' : ''}
+                                    >
+                                        └ 상품 등록
+                                    </li>
+                                    <li 
+                                        onClick={() => setActiveTab('productList')}
+                                        className={activeTab === 'productList' ? 'active' : ''}
+                                    >
+                                        └ 상품 목록
+                                    </li>
+                                </ul>
+                            )}
                         </li>
                     </ul>
                 </div>

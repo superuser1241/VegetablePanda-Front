@@ -73,9 +73,10 @@
   
   .button-container {
     display: flex;
+    gap: 10px;
   }
 
-  .cart-button,
+  .cart-button, .like-button,
   .product-buy-button {
     padding: 10px 20px;
     margin-top: 10px;
@@ -85,14 +86,14 @@
     transition: all 0.3s ease;
   }
   
-  .cart-button {
+  .cart-button, .like-button {
     width: 50%;
     background-color: #f0f0f0;
-    margin-right: 10px;
+    /* margin-right: 10px; */
   }
   
   .product-buy-button {
-    width: 50%;
+    width: 100%;
     background-color: black;
     color: white;
   }
@@ -101,7 +102,7 @@
     background-color: #219a52;
   }
 
-  .cart-button:hover {
+  .cart-button:hover, .like-button:hover {
     color: white;
     background-color: #219a52;
   }
@@ -124,7 +125,7 @@
 
   .tab-section-content {
     padding: 20px;
-    min-height: 1000px;  /* 각 섹션의 최소 높이 */
+    min-height: 300px;  /* 각 섹션의 최소 높이 */
     scroll-margin-top: 50px;  /* 스크롤 시 상단 여백 확보 */
   }
   

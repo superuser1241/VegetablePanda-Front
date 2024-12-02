@@ -4,8 +4,6 @@ import Header from './common/Header';
 import Footer from './common/Footer';
 import MainPage from './MainPage/MainPage';
 import LoginForm from './Login/LoginForm';
-import StreamingParticular from './StreamingSetting/StreamingParticular';
-import ConfirmationPage from './StreamingSetting/ConfirmationPage';
 import Chat from './chat/Chat';
 import AdminMyPage from './myPage/AdminMyPage';
 import UserMyPage from './myPage/UserMyPage';
@@ -31,6 +29,7 @@ import AuctionRegisterPage from './auction/AuctionRegisterPage';
 import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
+import PurchaseD from './Purchase/PurchaseD';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -60,21 +59,8 @@ function App() {
     const handleJoinRoom = (room) => {
         setStreamingRoom(room);
         setCurrentRoomId(room.chatRoomId);
-        navigate(userRole !== 'ROLE_FARMER' ? '/chat' : '/confirmation');
-        // navigate('/chat');
-
+        navigate('/chat');
     };
-
-    // const handleConfirm = (confirmedRoom) => {
-    //     console.log('입장 확인 - streamingRoom:', confirmedRoom);
-    //     setStreamingRoom(confirmedRoom);
-    //     navigate('/chat');
-    // };
-
-    // const handleCancel = () => {
-    //     alert('입장이 취소되었습니다.');
-    //     navigate('/');
-    // };
 
     const handleStartStreaming = (room) => {
         console.log('App.js - Setting streamingRoom:', room);
@@ -134,45 +120,13 @@ function App() {
                     <Route path="/UserRegister" element={<UserRegister />} />
                     <Route path="/CompanyRegister" element={<CompanyRegister />} />
                     <Route path="/FarmerRegister" element={<FarmerRegister />} />
-{/* 
-                    <Route path="/streaming" element={
-                        <StreamingParticular
-                            streamingRoom={streamingRoom}
-                            setStreamingRoom={setStreamingRoom}
-                            setCurrentRoomId={setCurrentRoomId}
-                            onEnterChat={() => navigate('/confirmation')}
-                        />
-                    } />
-                    <Route path="/confirmation" element={
-                        <ConfirmationPage
-                            streamingRoom={streamingRoom}
-                            onConfirm={handleConfirm}
-                            onCancel={handleCancel}
-                        />
-                    } /> */}
-
-                    {/* <Route path="/chat" element={
-                        <Chat
-                            streamingRoom={streamingRoom}
-                            userName={userName}
-                            chatRoomId={currentRoomId}
-                            handleExitChat={handleExitChat}
-                        />
-                    } /> */}
-                       {/* Chat 라우트를 AuctionChatPage로 변경 */}
-                       <Route path="/chat" element={
+                    <Route path="/chat" element={
                         <AuctionChatPage
                             streamingRoom={streamingRoom}
                             handleExitChat={handleExitChat}
                             confirmed={true}
                         />
                     } />
-                    {/* <Route path="/admin" element={
-                        <AdminApprovalPage
-                            streamingRoom={streamingRoom}
-                            setStreamingRoom={setStreamingRoom}
-                        />
-                    } /> */}
                     <Route path="/admin-mypage" element={userRole === 'ROLE_ADMIN' && <AdminMyPage navigateTo={navigate} />} />
                     <Route path="/user-mypage" element={userRole === 'ROLE_USER' && <UserMyPage navigateTo={navigate} />} />
                     <Route path="/company-mypage" element={userRole === 'ROLE_COMPANY' && <CompanyMyPage navigateTo={navigate} />} />
@@ -192,6 +146,7 @@ function App() {
                     <Route path="/notify-service/edit/:boardNoSeq" element={<NTBoardEdit />} />
                     <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
+                    <Route path="/purchaseD" element={<PurchaseD userName={userName}/>} />
                     <Route path="/payment" element={<Payment />} />
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />

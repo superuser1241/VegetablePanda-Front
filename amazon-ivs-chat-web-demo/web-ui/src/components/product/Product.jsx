@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Product.css';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import Statistics from './Statistics';
 
 const Product = () => {
 
@@ -11,42 +12,37 @@ const Product = () => {
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState(1);
 
-    // const renderTabContent = () => {
-    //   switch (activeTab) {
-    //     case "details":
-    //       return <p>상품의 상세 정보가 여기에 표시됩니다.</p>;
-    //     case "reviews":
-    //       return <p>리뷰 정보가 여기에 표시됩니다.</p>;
-    //     case "stats":
-    //       return <p>통계 정보 및 기타 정보가 여기에 표시됩니다.</p>;
-    //     default:
-    //       return null;
-    //   }
-    // };
+    const navigate = useNavigate();
 
     const renderTabContent = () => {
-        return (
-            <>
-           {/* <div className="scrollable-content"> */}
-            <div className="tab-section-content" id="details">
-              <h2>상세정보</h2>
-              <p>상품의 상세 정보가 여기에 표시됩니다.</p>
-              {product.content}
-            </div>
-            <div className="tab-section-content" id="reviews">
-              <h2>후기</h2>
-              <p>리뷰 정보가 여기에 표시됩니다.</p>
-            </div>
-            <div className="tab-section-content" id="stats">
-              <h2>통계</h2>
-              <p>통계 정보 및 기타 정보가 여기에 표시됩니다.</p>
-            </div>
-           {/* </div> */}
-        </>
-        );
-      };
+        switch (activeTab) {
+            case "details":
+                return (
+                    <div className="tab-section-content" id="details">
+                        <h2>상세정보</h2>
+                        <p>{product.content}</p>
+                    </div>
+                );
+            case "reviews":
+                return (
+                    <div className="tab-section-content" id="reviews">
+                        <h2>후기</h2>
+                        <p>리뷰 정보가 여기에 표시됩니다.</p>
+                    </div>
+                );
+            case "stats":
+                return (
+                    <div className="tab-section-content" id="stats">
+                        <h2>통계</h2>
+                        <Statistics stockSeq={stockSeq} />
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
 
-      const scrollToSection = (sectionId) => {
+    const scrollToSection = (sectionId) => {
         setActiveTab(sectionId);
         const element = document.getElementById(sectionId);
         if (element) {
@@ -88,7 +84,7 @@ const Product = () => {
                 <li>상품번호 : {product.stockSeq}</li>
                 <li>카테고리 : {product.productCategoryContent}</li>
                 <li>배송가능지역 : 전국</li>
-                <li>배송비 : 3000원</li>
+                <li>배송비 : 3,000원</li>
                 <li>판매가격 : {product.price}</li>
                 </ul>
                 <div className="purchase-section">
@@ -96,9 +92,11 @@ const Product = () => {
                 <input type="number" id="quantity" min={1} max={product.count} value={quantity} onChange={handleQuantityChange}/>
                 <p>총 상품 금액: <strong>{product.price * quantity}</strong></p> 
                 <div className='button-container'>
+                    <button className="like-button">찜하기</button>
                     <button className="cart-button">장바구니</button>
-                    <button className="product-buy-button">구매</button>
                 </div>
+                    <button className="product-buy-button" onClick={() => navigate('/payment', { state: { item:product, quantity } })}>구매</button>
+                
                 </div>
             </div>
 
