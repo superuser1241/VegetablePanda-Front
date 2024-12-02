@@ -3,6 +3,12 @@
     margin: 0 auto;
     padding: 20px;
 }
+.mypage-pw-match-message {
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    width: 100%;            
+  }
 
 .button-container {
     gap: 20px; 

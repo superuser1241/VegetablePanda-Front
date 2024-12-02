@@ -126,6 +126,7 @@ function CompanyRegister() {
 
     if (pw !== confirmPassword) {
       setMessage("비밀번호가 일치하지 않습니다.");
+      alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 

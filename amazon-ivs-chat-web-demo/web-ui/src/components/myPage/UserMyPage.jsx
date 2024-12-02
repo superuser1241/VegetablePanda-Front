@@ -23,6 +23,10 @@ const UserMyPage = () => {
   const [review, setreview] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pw, setPassword] = useState("");
+  const [pwConfirm, setConfirmPassword] = useState("");
+  const [pwMessage, setPwMessage] = useState("");
+
   const [editedUser, setEditedUser] = useState({
     pw: "",
     name: "",
@@ -48,6 +52,23 @@ const UserMyPage = () => {
       }
     }
   }, [token]);
+
+  const handleConfirmPasswordChange = (e) => {
+    const pwConfirm = e.target.value;
+    setConfirmPassword(pwConfirm);
+
+    // 비밀번호와 비밀번호 확인이 일치하는지 확인
+    if (editedUser.pw === "" || pwConfirm === "") {
+      setPwMessage("");
+      return;
+    }
+
+    if (editedUser.pw === pwConfirm) {
+      setPwMessage("비밀번호가 일치합니다.");
+    } else {
+      setPwMessage("비밀번호가 일치하지 않습니다.");
+    }
+  };
 
   useEffect(() => {
     if (userInfo) {
@@ -260,7 +281,7 @@ const UserMyPage = () => {
     e.preventDefault();
 
     // 비밀번호 일치 여부 확인
-    if (editedUser.pw !== editedUser.pwConfirm) {
+    if (editedUser.pw !== pwConfirm) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
@@ -411,7 +432,18 @@ const UserMyPage = () => {
             >
               회원 정보 수정
             </li>
-
+            <li
+              onClick={() => setActiveTab("saleLike")}
+              className={activeTab === "saleLike" ? "active" : ""}
+            >
+              좋아요 누른 상품
+            </li>
+            <li
+              onClick={() => setActiveTab("userLike")}
+              className={activeTab === "userLike" ? "active" : ""}
+            >
+              구독 목록
+            </li>
             <li
               onClick={() => setActiveTab("buyList")}
               className={activeTab === "buyList" ? "active" : ""}
@@ -660,10 +692,19 @@ const UserMyPage = () => {
                 <input
                   type="password"
                   name="pwConfirm"
-                  value={editedUser.pwConfirm}
-                  onChange={handleChange}
+                  value={pwConfirm}
+                  onChange={handleConfirmPasswordChange}
                   required
                 />
+                <div
+                  className="mypage-pw-match-message"
+                  style={{
+                    color:
+                      pwMessage === "비밀번호가 일치합니다." ? "green" : "red",
+                  }}
+                >
+                  {pwMessage}
+                </div>
                 <label>주소</label>
                 <input
                   type="text"

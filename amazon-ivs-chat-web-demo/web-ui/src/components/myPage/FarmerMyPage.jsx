@@ -30,6 +30,9 @@ const FarmerMyPage = () => {
     pw: "",
   });
 
+  const [pw, setPassword] = useState("");
+  const [pwConfirm, setConfirmPassword] = useState("");
+  const [pwMessage, setPwMessage] = useState("");
   const [activeTab, setActiveTab] = useState("info");
   const [newProduct, setNewProduct] = useState({
     color: "",
@@ -92,6 +95,23 @@ const FarmerMyPage = () => {
     }
   }, [token]);
 
+  const handleConfirmPasswordChange = (e) => {
+    const pwConfirm = e.target.value;
+    setConfirmPassword(pwConfirm);
+
+    // 비밀번호와 비밀번호 확인이 일치하는지 확인
+    if (editedFarmer.pw === "" || pwConfirm === "") {
+      setPwMessage("");
+      return;
+    }
+
+    if (editedFarmer.pw === pwConfirm) {
+      setPwMessage("비밀번호가 일치합니다.");
+    } else {
+      setPwMessage("비밀번호가 일치하지 않습니다.");
+    }
+  };
+
   const fetchSettlementHistory = async (userId) => {
     try {
       setLoading(true);
@@ -134,26 +154,28 @@ const FarmerMyPage = () => {
       setSelectedItems([...selectedItems, userBuySeq]);
     }
   };
-  
+
   const handleSettlementRequest = async () => {
     const isConfirmed = window.confirm("정산 신청을 하시겠습니까?");
-    
+
     if (isConfirmed) {
       if (selectedItems.length > 0) {
         try {
           // 선택된 항목의 buySeq 값을 settlements 배열로 보낼 준비
-          const settlementsData = selectedItems.map((userBuySeq) => {
-            const sale = sales.find(s => s.userBuySeq === userBuySeq); // 해당 buySeq를 가진 sale 객체 찾기
-            if (sale) {
-              return {
-                userBuySeq: sale.userBuySeq, 
-                totalPoint: sale.price, // 가격이 없으면 0으로 설정
-              };
-            }
-          }).filter(item => item !== undefined); // 잘못된 항목 필터링
-  
+          const settlementsData = selectedItems
+            .map((userBuySeq) => {
+              const sale = sales.find((s) => s.userBuySeq === userBuySeq); // 해당 buySeq를 가진 sale 객체 찾기
+              if (sale) {
+                return {
+                  userBuySeq: sale.userBuySeq,
+                  totalPoint: sale.price, // 가격이 없으면 0으로 설정
+                };
+              }
+            })
+            .filter((item) => item !== undefined); // 잘못된 항목 필터링
+
           console.log("보낼 데이터:", settlementsData);
-  
+
           // 선택된 항목만 보내기
           const response = await axios.post(
             `http://localhost:9001/myPage/farmer/calculate/${userId}`,
@@ -165,11 +187,11 @@ const FarmerMyPage = () => {
               },
             }
           );
-  
+
           alert("정산 신청이 완료되었습니다.");
           fetchSalesHistory(userId);
           fetchSettlementHistory(userId);
-          setActiveTab("calculate")
+          setActiveTab("calculate");
         } catch (err) {
           console.error("서버 오류:", err);
           alert("서버와의 연결에 문제가 발생했습니다.");
@@ -258,7 +280,7 @@ const FarmerMyPage = () => {
       return;
     }
 
-    if (editedFarmer.pw !== editedFarmer.pwConfirm) {
+    if (editedFarmer.pw !== pwConfirm) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
@@ -671,6 +693,7 @@ const FarmerMyPage = () => {
                 <input
                   type="password"
                   name="pw"
+                  value={editedFarmer.pw}
                   onChange={handleChange}
                   required
                 />
@@ -678,9 +701,19 @@ const FarmerMyPage = () => {
                 <input
                   type="password"
                   name="pwConfirm"
-                  onChange={handleChange}
+                  value={pwConfirm}
+                  onChange={handleConfirmPasswordChange}
                   required
                 />
+                <div
+                  className="mypage-pw-match-message"
+                  style={{
+                    color:
+                      pwMessage === "비밀번호가 일치합니다." ? "green" : "red",
+                  }}
+                >
+                  {pwMessage}
+                </div>
                 <div className="button-container">
                   <button type="submit" className="update-button">
                     수정하기
@@ -758,69 +791,74 @@ const FarmerMyPage = () => {
             </div>
           )}
 
+          {activeTab === "sale" && (
+            <div className="sales-history-display">
+              <h3>내가 판매한 내역</h3>
+              {loading ? (
+                <div>로딩 중...</div>
+              ) : error ? (
+                <div className="error-message">{error}</div>
+              ) : sales.length > 0 ? (
+                <>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>판매 번호</th>
+                        <th>상품명</th>
+                        <th>수량</th>
+                        <th>금액</th>
+                        <th>판매일자</th>
+                        <th>판매 상태</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sales.map((sale) => (
+                        <tr key={sale.userBuySeq}>
+                          <td>
+                            {sale.state === 1 && (
+                              <input
+                                type="checkbox"
+                                checked={selectedItems.includes(
+                                  sale.userBuySeq
+                                )} // selectedItems에 포함되면 체크
+                                onChange={() =>
+                                  handleCheckboxChange(sale.userBuySeq)
+                                } // 클릭 시 선택된 항목 처리
+                                disabled={sale.isDisabled} // 비활성화 상태일 경우 체크박스 비활성화
+                              />
+                            )}
+                          </td>
+                          <td>{sale.userBuySeq}</td>
+                          <td>{sale.content}</td>
+                          <td>{sale.count}</td>
+                          <td>{sale.price}원</td>
+                          <td>{new Date(sale.buyDate).toLocaleDateString()}</td>
 
-{activeTab === "sale" && (
-  <div className="sales-history-display">
-    <h3>내가 판매한 내역</h3>
-    {loading ? (
-      <div>로딩 중...</div>
-    ) : error ? (
-      <div className="error-message">{error}</div>
-    ) : sales.length > 0 ? (
-      <>
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              <th>판매 번호</th>
-              <th>상품명</th>
-              <th>수량</th>
-              <th>금액</th>
-              <th>판매일자</th>
-              <th>판매 상태</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sales.map((sale) => (
-              <tr key={sale.userBuySeq}>
-                <td>
-                  {sale.state === 1 && (
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.includes(sale.userBuySeq)} // selectedItems에 포함되면 체크
-                      onChange={() => handleCheckboxChange(sale.userBuySeq)} // 클릭 시 선택된 항목 처리
-                      disabled={sale.isDisabled} // 비활성화 상태일 경우 체크박스 비활성화
-                    />
-                  )}
-                </td>
-                <td>{sale.userBuySeq}</td>
-                <td>{sale.content}</td>
-                <td>{sale.count}</td>
-                <td>{sale.price}원</td>
-                <td>{new Date(sale.buyDate).toLocaleDateString()}</td>
-
-                <td>
-                  {sale.state === 0
-                    ? "판매중"
-                    : sale.state === 1
-                    ? "판매완료"
-                    : sale.state === 2
-                    ? "정산 신청 완료"
-                    : sale.state === 3
-                    ? "정산 완료"
-                    : "상태값 4이상은 뭐넣습니까?"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <button onClick={handleSettlementRequest}>정산 신청</button>
-      </>
-    ) : (
-      <div className="no-data-notification">판매 내역이 없습니다.</div>
-    )}
-  </div>
-)}
+                          <td>
+                            {sale.state === 0
+                              ? "판매중"
+                              : sale.state === 1
+                              ? "판매완료"
+                              : sale.state === 2
+                              ? "정산 신청 완료"
+                              : sale.state === 3
+                              ? "정산 완료"
+                              : "상태값 4이상은 뭐넣습니까?"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <button onClick={handleSettlementRequest}>정산 신청</button>
+                </>
+              ) : (
+                <div className="no-data-notification">
+                  판매 내역이 없습니다.
+                </div>
+              )}
+            </div>
+          )}
 
           {activeTab === "calculate" && (
             <div className="settlement-history-display">

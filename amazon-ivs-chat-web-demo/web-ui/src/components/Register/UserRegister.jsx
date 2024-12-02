@@ -96,11 +96,13 @@ function UserRegister() {
 
     if (!email.includes("@")) {
       setMessage("올바른 이메일 형식을 입력하세요.");
+      
       return;
     }
 
     if (pw !== confirmPassword) {
       setMessage("비밀번호가 일치하지 않습니다.");
+      alert("비밀번호가 일치하지 않습니다.");
       return;
     }
     if (isCheckResult) {

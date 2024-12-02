@@ -7,6 +7,7 @@ function FarmerRegister() {
   const [id, setFarmerId] = useState("");
   const [pw, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwMessage, setPwMessage] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -18,9 +19,9 @@ function FarmerRegister() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
-  const [pwMessage, setPwMessage] = useState("");
+  
   const [idCheckResult, setIdCheckResult] = useState("");
-  const [isCheckResult, setIsCheckResult] = useState(false); //true이면 중복, false이면 사용가능
+  const [isCheckResult, setIsCheckResult] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -124,6 +125,7 @@ function FarmerRegister() {
 
     if (pw !== confirmPassword) {
       setPwMessage("비밀번호가 일치하지 않습니다.");
+      alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 

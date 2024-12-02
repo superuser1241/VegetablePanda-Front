@@ -35,7 +35,9 @@ const CompanyMyPage = () => {
   const [review, setReview] = useState([]);
   const [activeTab, setActiveTab] = useState("info"); // 'info', 'edit', 'review' 탭 관리
   const navigate = useNavigate();
-
+  const [pw, setPassword] = useState("");
+  const [pwConfirm, setConfirmPassword] = useState("");
+  const [pwMessage, setPwMessage] = useState("");
   useEffect(() => {
     if (token) {
       try {
@@ -47,6 +49,23 @@ const CompanyMyPage = () => {
       }
     }
   }, [token]);
+
+  const handleConfirmPasswordChange = (e) => {
+    const pwConfirm = e.target.value;
+    setConfirmPassword(pwConfirm);
+
+    // 비밀번호와 비밀번호 확인이 일치하는지 확인
+    if (editedCompany.pw === "" || pwConfirm === "") {
+      setPwMessage("");
+      return;
+    }
+
+    if (editedCompany.pw === pwConfirm) {
+      setPwMessage("비밀번호가 일치합니다.");
+    } else {
+      setPwMessage("비밀번호가 일치하지 않습니다.");
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -234,7 +253,7 @@ const CompanyMyPage = () => {
       return;
     }
 
-    if (editedCompany.pw !== editedCompany.pwConfirm) {
+    if (editedCompany.pw !== pwConfirm) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
@@ -252,7 +271,7 @@ const CompanyMyPage = () => {
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
 
-    const id = companyInfo.companyId
+    const id = companyInfo.companyId;
 
     const formData = new FormData();
     formData.append(
@@ -397,6 +416,18 @@ const CompanyMyPage = () => {
               className={activeTab === "review" ? "active" : ""}
             >
               나의 리뷰
+            </li>
+            <li
+              onClick={() => setActiveTab("saleLike")}
+              className={activeTab === "saleLike" ? "active" : ""}
+            >
+              좋아요 누른 상품
+            </li>
+            <li
+              onClick={() => setActiveTab("userLike")}
+              className={activeTab === "userLike" ? "active" : ""}
+            >
+              구독 목록
             </li>
             <li
               onClick={() => setActiveTab("point")}
@@ -590,6 +621,7 @@ const CompanyMyPage = () => {
                 <input
                   type="password"
                   name="pw"
+                  value={editedCompany.pw}
                   onChange={handleChange}
                   required
                 />
@@ -597,9 +629,19 @@ const CompanyMyPage = () => {
                 <input
                   type="password"
                   name="pwConfirm"
-                  onChange={handleChange}
+                  value={pwConfirm}
+                  onChange={handleConfirmPasswordChange}
                   required
                 />
+                <div
+                  className="mypage-pw-match-message"
+                  style={{
+                    color:
+                      pwMessage === "비밀번호가 일치합니다." ? "green" : "red",
+                  }}
+                >
+                  {pwMessage}
+                </div>
                 <div className="button-container">
                   <button type="submit" className="update-button">
                     수정하기
