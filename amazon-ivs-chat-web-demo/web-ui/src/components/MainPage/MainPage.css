@@ -46,7 +46,7 @@
 }
 
 .shop-image img {
-    width: 227px;
+    width: 100%;
     height: 227px;
     object-fit: cover;
 }

@@ -21,6 +21,11 @@
     font-size: 1.2em;
     margin: 10px 0;
   }
+
+  .product-card h3 {
+    font-size: 1.2em;
+    margin: 0 0;
+  }
   
   .product-card p {
     margin: 5px 0;
@@ -58,9 +63,22 @@
   font-weight: bold;
   }
 
-  .product-price,
+  .product-price {
+    font-size: 1em;
+  }
+
   .product-count,
   .product-grade {
-    font-size: 0.9em;
+    font-size: 0.8em;
     margin: 5px 0;
+  }
+
+  p {
+    font-size: 1.5rem;
+  }
+
+  hr {
+    border-color:#fff;
+    border-width: 1px 0 0 0;
+    font-size: 0.8rem;
   }

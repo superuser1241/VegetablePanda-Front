@@ -29,6 +29,7 @@ import AuctionRegisterPage from './auction/AuctionRegisterPage';
 import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
+import PurchaseD from './Purchase/PurchaseD';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -152,6 +153,7 @@ function App() {
                     <Route path="/notify-service/edit/:boardNoSeq" element={<NTBoardEdit />} />
                     <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
+                    <Route path="/purchaseD" element={<PurchaseD userName={userName}/>} />
                     <Route path="/payment" element={<Payment />} />
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />

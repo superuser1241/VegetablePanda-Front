@@ -12,11 +12,13 @@ const productImage = product.file && product.file.trim() !== "" ? product.file :
             <div className="product-card">
                 <Link to = {`/product/{${product.stockSeq}}`} state={{ product }} className='default-link product-name'>
                 <img src= {product.file ? product.file : 'https://placehold.co/200x200?text=vegetable'} alt={product.productName} />
-                <h2>{product.content}</h2>
-                <p className='product-price'>가격: {product.price}</p>
-                <p className='product-count'>수량: {product.count}</p>
-                <p className='product-grade'>등급: {product.stockGrade}</p>
-                <button>구매하기</button>
+                <p>{product.farmerName}</p>
+                <h3>{product.content}</h3>
+                <p className='product-price'>{product.price.toLocaleString()}원</p>
+                <hr />
+                <p className='product-count'>수량 {product.count}</p>
+                <p className='product-grade'>등급 {product.stockGrade}</p>
+                
                 </Link>
             </div>
         </div>

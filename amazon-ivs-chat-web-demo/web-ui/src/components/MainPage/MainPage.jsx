@@ -366,6 +366,7 @@ const MainPage = ({ onJoinRoom }) => {
                     <div className="shop-list">
                         {shopItems.slice(0, visibleShops).map((item) => (
                             <div key={item.shopSeq} className="shop-card">
+                            <Link to = {`/product/{${item.stockSeq}}`} state={{ product:item }} className='default-link product-name'>
                                 <div className="shop-image">
                                     <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
                                 </div>
@@ -383,6 +384,7 @@ const MainPage = ({ onJoinRoom }) => {
                                 >
                                     구매하기
                                 </button>
+                                </Link>
                             </div>
                         ))}
                     </div>

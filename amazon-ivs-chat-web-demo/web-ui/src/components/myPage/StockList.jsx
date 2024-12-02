@@ -7,7 +7,7 @@ const StockList = () => {
 
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
-    const [userId, setUserId] = useState('');
+    const [userId, setUserId] = useState(localStorage.getItem('userSeq'));
 
     const [stock, setStock] = useState({
         content:'',

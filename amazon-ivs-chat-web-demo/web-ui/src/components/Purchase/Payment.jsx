@@ -217,21 +217,21 @@ const Payment = () => {
 
     return (
         <div className="payment-container">
-            <h2>결제하기</h2>
+            <h2>주문서</h2>
             
             <div className="payment-content">
                 <div className="order-summary">
                     <h3>주문 상품 정보</h3>
                     <div className="product-summary">
-                        <div className="product-image">
+                        <div className="payment-product-image">
                             <img src={item.file} alt={item.productName} />
                         </div>
-                        <div className="product-details">
+                        <div className="payment-product-details">
                             <h4>{item.productName}</h4>
                             <p>{item.content}</p>
-                            <p>수량: {quantity}개</p>
+                            <p>수량 : {quantity}개</p>
                             <p className="price">
-                                상품금액: {(item.price * quantity).toLocaleString()}원
+                                상품금액 : {(item.price * quantity).toLocaleString()}원
                             </p>
                         </div>
                     </div>
