@@ -223,9 +223,9 @@
 }
 
 .quantity-selector {
-  text-align: left;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
   gap: 8px;
 }
 

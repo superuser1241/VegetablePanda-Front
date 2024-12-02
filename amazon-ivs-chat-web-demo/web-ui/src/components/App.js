@@ -30,6 +30,7 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
+import StockInfo from './myPage/StockInfo';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -152,6 +153,7 @@ function App() {
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />
                     <Route path="/product/:stockSeq" element={<Product/>}/>
                     <Route path="/shop" element={<Shop/>}/>
+                    <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
                 </Routes>
             </main>
             <Footer />

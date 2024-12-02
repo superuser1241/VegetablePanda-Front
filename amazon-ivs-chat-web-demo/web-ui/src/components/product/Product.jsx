@@ -128,7 +128,7 @@ const Product = () => {
                         <div className="quantity-input-group">
                                 <button onClick={() => quantity > 1 && setQuantity(quantity - 1)}>-</button>
                                 <input 
-                                    type="number" 
+                                    type="text" 
                                     min="1" 
                                     max={product.count}
                                     value={quantity}

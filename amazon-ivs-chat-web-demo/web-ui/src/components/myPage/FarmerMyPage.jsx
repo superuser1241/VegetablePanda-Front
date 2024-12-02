@@ -5,6 +5,7 @@ import './FarmerMyPage.css';
 import RegisterStock from './RegisterStock';
 import StreamingStatus from './StreamingStatus';
 import StockList from './StockList';
+import StockInfo from './StockInfo';
 
 const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     const navigate = useNavigate();
@@ -35,6 +36,8 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     const [availableRoom, setAvailableRoom] = useState(null);
     const [streamingRoom, setStreamingRoom] = useState(null);
     const [isProductMenuOpen, setIsProductMenuOpen] = useState(false);
+    const [selectedStock, setSelectedStock] = useState(null);
+
 
     useEffect(() => {
         if (token) {
@@ -209,6 +212,11 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
             ...prev,
             [name]: value
         }));
+    };
+
+    const handleStockSelect = (stock) => {
+      setSelectedStock(stock);
+      setActiveTab('stockInfo');
     };
 
     const fetchAvailableRoom = async () => {
@@ -464,7 +472,19 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
                     )}
                     {activeTab === 'productList' && (
                         <div className="productList-section">
-                            <StockList/>
+                            <StockList onStockSelect={handleStockSelect}/>
+                        </div>
+                    )}
+
+                    {activeTab === 'stockInfo' && selectedStock && (
+                        <div className="stock-info-section">
+                            <StockInfo 
+                                stock={selectedStock} 
+                                onBack={() => {
+                                    setActiveTab('productList');
+                                    setSelectedStock(null);
+                                }}
+                            />
                         </div>
                     )}
                 </div>
