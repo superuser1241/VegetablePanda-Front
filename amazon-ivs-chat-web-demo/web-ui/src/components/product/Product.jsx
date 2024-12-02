@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './Product.css';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import Statistics from './Statistics';
+import axios from 'axios';
 
 const Product = () => {
 
@@ -10,51 +12,70 @@ const Product = () => {
     const product = state?.product;  // 전달받은 상품 정보
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState(1);
+    
+    const [shopLike, setShopLike] = useState(false);
 
     const navigate = useNavigate();
 
-    // const renderTabContent = () => {
-    //   switch (activeTab) {
-    //     case "details":
-    //       return <p>상품의 상세 정보가 여기에 표시됩니다.</p>;
-    //     case "reviews":
-    //       return <p>리뷰 정보가 여기에 표시됩니다.</p>;
-    //     case "stats":
-    //       return <p>통계 정보 및 기타 정보가 여기에 표시됩니다.</p>;
-    //     default:
-    //       return null;
-    //   }
-    // };
-
     const renderTabContent = () => {
-        return (
-            <>
-           {/* <div className="scrollable-content"> */}
-            <div className="tab-section-content" id="details">
-              <h2>상세정보</h2>
-              <p>상품의 상세 정보가 여기에 표시됩니다.</p>
-              {product.content}
-            </div>
-            <div className="tab-section-content" id="reviews">
-              <h2>후기</h2>
-              <p>리뷰 정보가 여기에 표시됩니다.</p>
-            </div>
-            <div className="tab-section-content" id="stats">
-              <h2>통계</h2>
-              <p>통계 정보 및 기타 정보가 여기에 표시됩니다.</p>
-            </div>
-           {/* </div> */}
-        </>
-        );
-      };
+        switch (activeTab) {
+            case "details":
+                return (
+                    <div className="tab-section-content" id="details">
+                        <h2>상세정보</h2>
+                        <p>{product.content}</p>
+                    </div>
+                );
+            case "reviews":
+                return (
+                    <div className="tab-section-content" id="reviews">
+                        <h2>후기</h2>
+                        <p>리뷰 정보가 여기에 표시됩니다.</p>
+                    </div>
+                );
+            case "stats":
+                return (
+                    <div className="tab-section-content" id="stats">
+                        <h2>통계</h2>
+                        <Statistics stockSeq={stockSeq} />
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
 
-      const scrollToSection = (sectionId) => {
+    const scrollToSection = (sectionId) => {
         setActiveTab(sectionId);
         const element = document.getElementById(sectionId);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
         }
     };
+
+    const handleLike = async (shopSeq) => {
+        const userSeq = localStorage.getItem('userSeq');
+        const token = localStorage.getItem('token');
+        try {
+            await axios.post(
+                'http://localhost:9001/api/InsertShopLike', 
+                {
+                    userSeq: userSeq,
+                    shopSeq: shopSeq
+                },
+                {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            setShopLike(prev => !prev);
+        } catch (err) {
+            console.error('찜하기 처리에 실패했습니다:', err);
+        }
+    }
+
 
     const handleQuantityChange = (e) => {
         const value = parseInt(e.target.value);
@@ -63,9 +84,9 @@ const Product = () => {
         }
     };
 
-    const handlePrice = (e) => {
+    // const handlePrice = (e) => {
 
-    }
+    // }
 
     return (
         <div className='product-container'>
@@ -98,7 +119,7 @@ const Product = () => {
                 <input type="number" id="quantity" min={1} max={product.count} value={quantity} onChange={handleQuantityChange}/>
                 <p>총 상품 금액: <strong>{product.price * quantity}</strong></p> 
                 <div className='button-container'>
-                    <button className="like-button">찜하기</button>
+                    <button className="like-button" onClick={() => handleLike(product.shopSeq)}>찜하기</button>
                     <button className="cart-button">장바구니</button>
                 </div>
                     <button className="product-buy-button" onClick={() => navigate('/payment', { state: { item:product, quantity } })}>구매</button>
