@@ -1,76 +1,105 @@
-import React,{useState,useEffect, useRef} from 'react';
+import React, { useState, useEffect } from "react";
 import { Client } from "@stomp/stompjs";
-import './NotiSet.css';
+import { useNavigate } from "react-router-dom";
+import "./NotiSet.css";
+import axios from "axios";
 
-const NotiSet = () => {
-    const [showMessage, setShowMessage] = useState(false);
-    const [inputMessage, setInputMessage] = useState([]);
-    const [messages, setMessages] = useState("");
-    const [stompClient, setStompClient] = useState(null);
-    
+const NotiSet = ({ onSetStreamingRoom }) => {
+    const [showMessage, setShowMessage] = useState(false); // 메시지 표시 상태
+    const [messages, setMessages] = useState(""); // 메시지 내용
+    const [roomData, setRoomData] = useState(null); // 채팅방 데이터 저장
+    const navigate = useNavigate();
 
     useEffect(() => {
-      const token = localStorage.getItem('userSeq');
-      const client = new Client({
-        brokerURL: "ws://localhost:9001/ws", // Spring WebSocket 엔드포인트
-        headers: {
-          "Content-Type": "application/json",
-          userId: token,
-        },
-        debug: (str) => console.log(str), // 디버깅 로그
-        reconnectDelay: 5000, // 재연결 딜레이
-        onConnect: () => {
-          console.log("Connected to WebSocket");
+        const token = localStorage.getItem("userSeq");
+        const client = new Client({
+            brokerURL: "ws://localhost:9001/ws", // Spring WebSocket 엔드포인트
+            headers: {
+                "Content-Type": "application/json",
+                userId: token,
+            },
+            debug: (str) => console.log(str),
+            reconnectDelay: 5000,
+            onConnect: () => {
+                console.log("Connected to WebSocket");
 
-          client.subscribe(`/user/${token}/notifications`, (message) => {
-            console.log(message.body)
-            setShowMessage(!showMessage);
-            setMessages((prevMessages) => message.body);
-          });
+                client.subscribe(`/user/${token}/notifications`, (message) => {
+                    const body = message.body;
 
+                    const [text, id] = body.split("///");
+                    
+                    if(id){
+                      setRoomData({
+                        chatRoomId: id,
+                        otherData: `Data related to room ${id}`, // 추가 데이터
+                    });
+                    }else{
+                      setRoomData(null);
+                    }
+                    setMessages(text);
+                    setShowMessage(true); 
+                });
+            },
+            onDisconnect: () => console.log("Disconnected from WebSocket"),
+        });
 
-          client.subscribe("/all/notifications", async (message) => {
-            setShowMessage(!showMessage);
-            setMessages((prevMessages) => message.body);
-          });
+        client.activate(); 
 
-        },
-        onDisconnect: () => console.log("Disconnected from WebSocket"),
-      });//useEffect종료
-  
-  
-      client.activate(); // WebSocket 연결 활성화
-      setStompClient(client);
-  
-      return () => {
-        client.deactivate(); // 컴포넌트 언마운트 시 연결 종료
-      };
+        return () => {
+            client.deactivate(); 
+        };
     }, []);
 
+    // 이동 버튼 클릭 시 실행
+    const handleNavigateToChat = async () => {
+        const token = localStorage.getItem("token");
 
+        try {
+            const response = await axios.post(
+                `http://localhost:9001/api/streaming/streamingData/${roomData.chatRoomId}`, // roomData에서 chatRoomId 사용
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+
+            if (response.data) {
+                // 부모 컴포넌트(App.js)의 상태 업데이트
+                onSetStreamingRoom(response.data);
+
+                // /chat 경로로 이동
+                navigate("/chat");
+                setShowMessage(false);
+            }
+        } catch (error) {
+            console.error("채팅방 데이터를 가져오는 중 오류 발생:", error);
+        }
+    };
+
+    // 메시지 닫기 버튼
     const handleHideMessages = () => {
-        setShowMessage(false); // 메시지 영역 숨기기
-      };
-
+        setShowMessage(false);
+    };
 
     return (
         <>
-        
-      {/* 메시지 영역 */}
-      {showMessage && (
-        <div className="MessageContainer">
-        <div className="MessageContent">
-          <button onClick={handleHideMessages} className="CloseButton">
-            닫기
-          </button>
-            <div className="MessageItem">
-              {messages}
-            </div>
-        </div>
-        </div>
-      )}
-    
-    </>
+            {showMessage && (
+                <div className="MessageContainer">
+                    <div className="MessageContent">
+                        <button onClick={handleHideMessages} className="CloseButton">
+                            X
+                        </button>
+                        <div className="MessageItem">{messages}</div>
+                        {roomData && (
+                            <button onClick={handleNavigateToChat} className="NavigateButton">
+                                방송 보기
+                            </button>
+                        )}
+                    </div>
+                </div>
+            )}
+
+
+        </>
     );
 };
 

@@ -104,9 +104,13 @@ function App() {
         }
     }, [navigate]);
 
+    const handleSetStreamingRoom = (room) => {
+        handleJoinRoom(room);
+    };
+
     return (
         <div className="App">
-            {userName&&<NotiSet/>}
+            {userName&&<NotiSet onSetStreamingRoom={handleSetStreamingRoom}/>}
             <Header
                 userName={userName}
                 userRole={userRole}
@@ -119,13 +123,16 @@ function App() {
                     <Route path="/UserRegister" element={<UserRegister />} />
                     <Route path="/CompanyRegister" element={<CompanyRegister />} />
                     <Route path="/FarmerRegister" element={<FarmerRegister />} />
-                    <Route path="/chat" element={
-                        <AuctionChatPage
-                            streamingRoom={streamingRoom}
-                            handleExitChat={handleExitChat}
-                            confirmed={true}
-                        />
-                    } />
+                    <Route
+                        path="/chat"
+                        element={
+                            <AuctionChatPage
+                                streamingRoom={streamingRoom}
+                                handleExitChat={handleExitChat}
+                                confirmed={true}
+                            />
+                        }
+                    />
                     <Route path="/admin-mypage" element={userRole === 'ROLE_ADMIN' && <AdminMyPage navigateTo={navigate} />} />
                     <Route path="/user-mypage" element={userRole === 'ROLE_USER' && <UserMyPage navigateTo={navigate} />} />
                     <Route path="/company-mypage" element={userRole === 'ROLE_COMPANY' && <CompanyMyPage navigateTo={navigate} />} />
