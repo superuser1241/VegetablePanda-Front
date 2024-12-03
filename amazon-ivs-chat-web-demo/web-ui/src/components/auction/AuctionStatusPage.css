@@ -120,13 +120,26 @@
     min-width: max-content;
 }
 
-.current-price, .quantity, .time-left {
+.current-price, .quantity{
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 12px;
     padding: 0 15px;
     position: relative;
+}
+
+.time-left{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+    min-width: max-content;
 }
 
 .current-price h3, .quantity h3, .time-left h3 {

@@ -119,9 +119,9 @@ const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
 
 
     return (
-        <div className="auction-register-container">
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
-                <div>
+        <>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px', width: '300px'}}>
+                <div> {/* 내부 컨테이너 너비 100%로 설정 */}
                     <h2>경매 등록</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
@@ -224,7 +224,7 @@ const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
                 onClose={() => setShowSalesModal(false)}
                 salesHistory={salesHistory}
             />
-        </div>
+</>
     );
 };
 

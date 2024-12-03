@@ -12,12 +12,28 @@ const BiddingSection = ({
     onCheckPrice, 
     onCheckSalesHistory, 
     onRegisterSuccess,
-    userWallet 
+    userWallet,
+    userRole 
 }) => {
+    const getClassName = () => {
+        if (isFarmer) {
+            // 농부일 때
+            return auctionData && auctionData.auctionSeq ? 
+                'sidebar-status-content' :    // 경매 있으면 상태 페이지 스타일
+                'sidebar-register-content';   // 경매 없으면 등록 페이지 스타일
+        } else {
+            // 구매자일 때
+            return auctionData && auctionData.auctionSeq ? 
+                'sidbar-bid-content' :          // 경매 있으면 입찰 페이지 스타일
+                'waiting-message';           // 경매 없으면 대기 메시지 스타일
+        }
+    };
+
     return (
-        <div className="bidding-section">
-            {auctionData && auctionData.auctionSeq ? (
-                isFarmer ? (
+        <div className={getClassName()}>
+            {isFarmer ? (
+                // 농부일 때
+                auctionData && auctionData.auctionSeq ? (
                     <AuctionStatusPage 
                         streamingRoom={streamingRoom}
                         auctionData={auctionData}
@@ -27,6 +43,16 @@ const BiddingSection = ({
                         onCheckSalesHistory={onCheckSalesHistory}
                     />
                 ) : (
+                    <AuctionRegisterPage 
+                        streamingRoom={streamingRoom}
+                        onRegisterSuccess={onRegisterSuccess}
+                        onCheckPrice={onCheckPrice}
+                        onCheckSalesHistory={onCheckSalesHistory}
+                    />
+                )
+            ) : (
+                // 구매자일 때
+                auctionData && auctionData.auctionSeq ? (
                     <BidPage 
                         streamingRoom={streamingRoom}
                         auctionData={auctionData}
@@ -35,15 +61,7 @@ const BiddingSection = ({
                         onCheckPrice={onCheckPrice}
                         onCheckSalesHistory={onCheckSalesHistory}
                         userWallet={userWallet}
-                    />
-                )
-            ) : (
-                isFarmer ? (
-                    <AuctionRegisterPage 
-                        streamingRoom={streamingRoom}
-                        onRegisterSuccess={onRegisterSuccess}
-                        onCheckPrice={onCheckPrice}
-                        onCheckSalesHistory={onCheckSalesHistory}
+                        userRole={userRole}
                     />
                 ) : (
                     <div className="waiting-message">

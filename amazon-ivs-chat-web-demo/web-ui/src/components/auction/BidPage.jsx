@@ -11,11 +11,11 @@ const BidPage = ({
     onOpenModal, 
     onCheckPrice, 
     onCheckSalesHistory,
-    userWallet 
+    userWallet,
+    userRole 
 }) => {
     const [isAuctionEnded, setIsAuctionEnded] = useState(false);
     const [remainingTime, setRemainingTime] = useState('');
-    
     const [pricePerKg, setPricePerKg] = useState(0);
 
     const calculateRemainingTime = (closeTime) => {
@@ -183,9 +183,12 @@ const BidPage = ({
                                     <span className="price-per-kg">
                                         (kg당 {pricePerKg.toLocaleString()}원)
                                     </span>
-                                    <span className="price-deposit">
-                                        (선금 포인트 {Math.floor(bidAmount * 0.1).toLocaleString()}원)
-                                    </span>
+                                    
+                                    {userRole === 'ROLE_USER' && (
+                                        <span className="price-deposit">
+                                            선금 포인트 {Math.floor(bidAmount * 0.1).toLocaleString()}원
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                             <button 

@@ -65,12 +65,11 @@ const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAucti
                     <h3>수량</h3>
                     <p>{auctionData.count}개</p>
                 </div>
-                <div className="time-left">
+            </div>
+            <div className="time-left">
                     <h3>종료 일자</h3>
                     <p>{formatDate(auctionData.closeTime)}</p>
                 </div>
-            </div>
-
             <div className="remaining-time">
                 <h3>남은 시간</h3>
                 <p>{remainingTime}</p>

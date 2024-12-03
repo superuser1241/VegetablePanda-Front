@@ -11,17 +11,17 @@
     flex: 1;
 }
 
+
 .sidebar {
     position: fixed;
     right: -50%;
-    top: 0;
+    top: 20px;
+    width: 40%;
     height: calc(100vh - 20px);
     background-color: #f4f4f4;
     transition: right 0.3s ease-in-out;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    width: 50%;
-    min-width: 400px;
 }
 
 .sidebar.open {
@@ -45,12 +45,27 @@
     background-color: #0056b3;
 }
 
-.sidebar-content {
+.sidebar-register-content {
+    width: 500px;
     padding: 20px;
     margin-top: 60px;
-    width: 100%;
     height: calc(100vh - 60px);
     overflow-y: auto;
+}
+
+.sidebar-status-content {
+    padding: 20px;
+    margin-top: 60px;
+    width: 500px;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+}
+.sidbar-bid-content{
+    padding: 20px;
+    margin-top: 60px;
+    width: 500px;
+    height: calc(100vh - 60px);
+    overflow-y: auto; 
 }
 
 /* 채팅 섹션 스타일 */
