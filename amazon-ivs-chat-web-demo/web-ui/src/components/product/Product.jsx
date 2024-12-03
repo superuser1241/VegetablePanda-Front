@@ -12,6 +12,7 @@ const Product = () => {
     const product = state?.product;  // 전달받은 상품 정보
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState(1);
+    const userRole = localStorage.getItem('userRole');
 
     const navigate = useNavigate();
 
@@ -172,7 +173,7 @@ const Product = () => {
                     <button className="like-btn">찜하기</button>
                     <button className="cart-button" onClick={handleAddToCart}>장바구니</button>
                 </div>
-                    <button className="product-buy-button" onClick={() => navigate('/payment', { state: { item:product, quantity } })}>구매</button>
+                    <button className="product-buy-button" onClick={() => userRole === 'ROLE_USER' ? navigate('/payment', { state: { item:product, quantity } }) : alert('일반 사용자만 구매 가능합니다.')}>구매</button>
                 
                 </div>
             </div>
