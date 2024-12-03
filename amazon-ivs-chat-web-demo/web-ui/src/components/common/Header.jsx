@@ -1,10 +1,26 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import logo from '../../image/농산물 판다.png';
 
-const Header = ({ userName, userRole, handleLogout }) => {
+const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitConfirm }) => {
+    const [showExitModal, setShowExitModal] = useState(false);
+    const [redirectPath, setRedirectPath] = useState('/');
+
+    const handleLinkClick = (path) => (e) => {
+        if (streamingRoom) { // 방송 중인지 확인
+            e.preventDefault();
+            setRedirectPath(path);
+            setShowExitModal(true);
+        }
+    };
+
+    const confirmExitAndRedirect = async () => {
+        await handleExitConfirm();
+        window.location.href = redirectPath;
+    };
+
     // 역할에 따른 마이페이지 경로 결정
     const getMyPagePath = (role) => {
         switch(role) {
@@ -24,7 +40,7 @@ const Header = ({ userName, userRole, handleLogout }) => {
     return (
         <header className="header">
             <div className="logo-container">
-                <Link to="/">
+                <Link to="/" onClick={handleLinkClick('/')}>
                     <img src={logo} alt="로고" />
                 </Link>
             </div>
@@ -32,17 +48,17 @@ const Header = ({ userName, userRole, handleLogout }) => {
 
                 {userName ? (
                     <>
-                        <Link to={getMyPagePath(userRole)} className="nav-item">
+                        <Link to={getMyPagePath(userRole)} className="nav-item" onClick={handleLinkClick(getMyPagePath(userRole))}>
                             마이페이지
                         </Link>
-                        <Link to="/customer-service" className="nav-item">
+                        <Link to="/customer-service" className="nav-item" onClick={handleLinkClick('/customer-service')}>
                             고객센터
                         </Link>
-                        <Link to="/notify-service" className="nav-item">
+                        <Link to="/notify-service" className="nav-item" onClick={handleLinkClick('/notify-service')}>
                             공지사항
                         </Link>
                         { userRole === 'ROLE_FARMER' ?
-                        <Link to="/personal" className="nav-item">
+                        <Link to="/personal" className="nav-item" onClick={handleLinkClick('/personal')}>
                             개인 페이지
                         </Link>
                         : null
@@ -63,6 +79,20 @@ const Header = ({ userName, userRole, handleLogout }) => {
                     </Link>
                 )}
             </nav>
+
+            {/* 종료 확인 모달 추가 */}
+            {showExitModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>방송 종료</h3>
+                        <p>방송을 종료하시겠습니까?</p>
+                        <div className="modal-buttons">
+                            <button onClick={confirmExitAndRedirect}>네</button>
+                            <button onClick={() => setShowExitModal(false)}>아니오</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </header>
     );
 };

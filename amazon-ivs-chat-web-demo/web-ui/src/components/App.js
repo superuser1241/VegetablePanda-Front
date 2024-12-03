@@ -33,6 +33,7 @@ import PurchaseD from './Purchase/PurchaseD';
 
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
+import axios from 'axios';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -40,6 +41,14 @@ function App() {
     const [streamingRoom, setStreamingRoom] = useState(null);
     const [currentRoomId, setCurrentRoomId] = useState(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // 페이지 로드 시 로컬 스토리지에서 streamingRoom 복원
+        const savedRoom = localStorage.getItem('streamingRoom');
+        if (savedRoom) {
+            setStreamingRoom(JSON.parse(savedRoom));
+        }
+    }, []);
 
     useEffect(() => {
         console.log('App.js - streamingRoom updated:', streamingRoom);
@@ -63,12 +72,14 @@ function App() {
     const handleJoinRoom = (room) => {
         setStreamingRoom(room);
         setCurrentRoomId(room.chatRoomId);
+        localStorage.setItem('streamingRoom', JSON.stringify(room)); // 로컬 스토리지에 저장
         navigate('/chat');
     };
 
     const handleStartStreaming = (room) => {
         console.log('App.js - Setting streamingRoom:', room);
         setStreamingRoom(room);
+        localStorage.setItem('streamingRoom', JSON.stringify(room)); // 로컬 스토리지에 저장
         navigate('/chat');
     };
 
@@ -97,10 +108,32 @@ function App() {
         checkAuthStatus();
     }, [navigate]);
 
+    const handleExitConfirm = async () => {
+        try {
+            // API 호출
+            if (streamingRoom?.streamingSeq) {
+                await axios.post(
+                    `http://localhost:9001/api/streaming/exit/${streamingRoom.streamingSeq}`
+                );
+            }
+
+            // 로컬 스토리지에서 방송 정보 제거
+            localStorage.removeItem('streamingRoom');
+
+            // 성공하면 메인으로 이동
+            navigate('/');
+        } catch (error) {
+            console.error('방송 종료 실패:', error);
+            // API 호출이 실패해도 메인으로 이동
+            navigate('/');
+        }
+    };
+
     const handleExitChat = useCallback(async () => {
         try {
             setStreamingRoom(null);
             setCurrentRoomId(null);
+            localStorage.removeItem('streamingRoom'); // 로컬 스토리지에서 제거
             navigate('/');
             return Promise.resolve();
         } catch (error) {
@@ -119,7 +152,9 @@ function App() {
             <Header
                 userName={userName}
                 userRole={userRole}
+                streamingRoom={streamingRoom}
                 handleLogout={handleLogout}
+                handleExitConfirm={handleExitConfirm}
             />
             <main style={{ minHeight: '80vh'}}>
                 <Routes>
