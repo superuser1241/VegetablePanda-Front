@@ -35,7 +35,7 @@ const Product = () => {
                 return (
                     <div className="tab-section-content" id="stats">
                         <h2>통계</h2>
-                        <Statistics stockSeq={stockSeq} />
+                        <Statistics stockSeq={product.stockSeq} />
                     </div>
                 );
             default:
