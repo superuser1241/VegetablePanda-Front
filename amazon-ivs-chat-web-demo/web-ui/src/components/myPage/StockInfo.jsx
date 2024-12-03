@@ -29,7 +29,7 @@ const StockInfo = ({onUpdateStock, setActiveTab, stock, onBack}) => {
             
             <div className="stock-info-content">
                 <div className='info-row'>
-                    <img src ={stock.fileDTO.path ? stock.fileDTO.path : 'https://placehold.co/200x200?text=vegetable'} alt='{item.fileName}'/>
+                    <img src ={stock.filePath ? stock.filePath : 'https://placehold.co/200x200?text=vegetable'} alt='{item.fileName}'/>
                 </div>
                 <div className="info-grid">
                         <div className="info-item">

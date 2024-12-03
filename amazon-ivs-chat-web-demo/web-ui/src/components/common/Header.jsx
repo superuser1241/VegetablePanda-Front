@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import logo from '../../image/농산물 판다.png';
+import cart from '../../image/cart.png';
 
 const Header = ({ userName, userRole, handleLogout }) => {
     // 역할에 따른 마이페이지 경로 결정
@@ -46,6 +47,14 @@ const Header = ({ userName, userRole, handleLogout }) => {
                             개인 페이지
                         </Link>
                         : null
+                        }
+                        { userRole === 'ROLE_USER' ? 
+                            <div className='cart-container'> 
+                                <Link to = "/cart" className="nav-item">
+                                    <img src = {cart}/>
+                                </Link>
+                            </div>
+                            : null
                         }
                         <div className="user-actions">
                             <span className="welcome-message">{userName}님 환영합니다</span>

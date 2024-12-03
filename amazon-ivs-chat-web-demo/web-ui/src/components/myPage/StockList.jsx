@@ -44,7 +44,7 @@ const StockList = ({onStockSelect, setActiveTab}) => {
 
     const fetchProductList = async () => {
         try {
-            const response = await axios.get('http://localhost:9001/stock/'+userId, {
+            const response = await axios.get('http://localhost:9001/stock/farmer/'+userId, {
                 headers: { 
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'

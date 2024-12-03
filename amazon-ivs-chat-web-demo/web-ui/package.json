@@ -2,7 +2,6 @@
   "name": "simple-chat-demo",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:9001",
   "dependencies": {
     "@csstools/normalize.css": "^12.1.1",
     "@stomp/stompjs": "^7.0.0",

@@ -108,7 +108,7 @@ const Payment = () => {
             console.log(response.data);
 
             // 주문번호 받아오기
-            const response2 = await axios.get('http://localhost:9001/payment/' + response.data + '?status=2', {
+            const response2 = await axios.get('http://localhost:9001/api/payment/' + response.data + '?status=2', {
                 headers: { 
                     Authorization: `Bearer ${token}`,
                 }
@@ -158,7 +158,7 @@ const Payment = () => {
                       
                       const sendValidateData = async () => {
                         try {
-                            const response3 = await axios.post('http://localhost:9001/payment/validate?status=2', {
+                            const response3 = await axios.post('http://localhost:9001/api/payment/validate?status=2', {
                                     orderUid: rsp.merchant_uid, 
                                     paymentUid: rsp.imp_uid
                             },
