@@ -63,7 +63,6 @@ const QABoardList = () => {
         </Link>
       </div>
       <div className="qa-list">
-        {posts.length > 0 ? (
           <table>
             <thead>
               <tr>
@@ -90,9 +89,6 @@ const QABoardList = () => {
               ))}
             </tbody>
           </table>
-        ) : (
-          <div className="no-posts-message">등록된 게시글이 없습니다.</div>
-        )}
       </div>
     </div>
   );

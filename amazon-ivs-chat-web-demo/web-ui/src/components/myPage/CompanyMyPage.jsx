@@ -380,6 +380,20 @@ const CompanyMyPage = () => {
     }
   };
 
+  // 리뷰 작성 페이지로 이동하는 함수 추가
+  const handleReviewWrite = (order) => {
+    navigate('/review/write', { 
+      state: { 
+        orderInfo: {
+          userBuySeq: order.userBuySeq,
+          productName: order.content,
+          price: order.price,
+          buyDate: order.buyDate
+        }
+      }
+    });
+  };
+
   return (
     <div className="user-mypage">
       <div className="mypage-container">
@@ -716,20 +730,18 @@ const CompanyMyPage = () => {
                       <th>금액</th>
                       <th>주문일자</th>
                       <th>주문 상태</th>
+                      <th>리뷰 작성</th>
                     </tr>
                   </thead>
                   <tbody>
                     {orders.map((order, index) => (
                       <tr key={order.orderId}>
-                        <td>{index + 1}</td> {/* 번호 */}
-                        <td>{order.userBuySeq}</td> {/* 주문 번호 */}
-                        <td>{order.content}</td> {/* 상품명 */}
-                        <td>{order.count}</td> {/* 수량 */}
-                        <td>{order.price}원</td> {/* 금액 */}
-                        <td>
-                          {new Date(order.buyDate).toLocaleDateString()}
-                        </td>{" "}
-                        {/* 주문일자 */}
+                        <td>{index + 1}</td>
+                        <td>{order.userBuySeq}</td>
+                        <td>{order.content}</td>
+                        <td>{order.count}</td>
+                        <td>{order.price}원</td>
+                        <td>{new Date(order.buyDate).toLocaleDateString()}</td>
                         <td>
                           {order.state === 0
                             ? "값 뭐넣어야해여?"
@@ -741,15 +753,20 @@ const CompanyMyPage = () => {
                             ? "값 뭐넣어야해여?"
                             : "값 뭐넣어야해여?"}
                         </td>
-                        {/* 주문 상태 */}
+                        <td>
+                          <button 
+                            onClick={() => handleReviewWrite(order)}
+                            className="review-write-btn"
+                          >
+                            리뷰 작성
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               ) : (
-                <div className="no-data-notification">
-                  주문 내역이 없습니다.
-                </div>
+                <div className="no-data-notification">주문 내역이 없습니다.</div>
               )}
             </div>
           )}
@@ -794,7 +811,7 @@ const CompanyMyPage = () => {
                             ? "값 뭐넣어야해여?"
                             : "값 뭐넣어야해여?"}
                         </td>
-                        {/* 현재 상태 */}
+                        {/* ��재 상태 */}
                       </tr>
                     ))}
                   </tbody>

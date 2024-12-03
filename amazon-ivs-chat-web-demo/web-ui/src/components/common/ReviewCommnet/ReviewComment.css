@@ -1,10 +1,10 @@
-.nt-board-container {
+.rc-board-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
   }
   
-  .nt-list table {
+  .rc-list table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
@@ -13,19 +13,19 @@
     border-radius: 8px;
   }
   
-  .nt-list th, .nt-list td {
+  .rc-list th, .rc-list td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #eee;
   }
   
-  .nt-list th {
+  .rc-list th {
     background-color: #f8f9fa;
     font-weight: 600;
     color: #333;
   }
   
-  .nt-list tr:hover {
+  .rc-list tr:hover {
     background-color: #f8f9fa;
   }
   
@@ -45,13 +45,13 @@
     background-color: #74b816;
   }
   
-  .nt-write-container {
+  .rc-write-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
   }
   
-  .nt-form {
+  .rc-form {
     background: white;
     padding: 30px;
     border-radius: 8px;
@@ -113,13 +113,13 @@
     background-color: #dee2e6;
   }
   
-  .nt-detail-container {
+  .rc-detail-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
   }
   
-  .nt-detail-content {
+  .rc-detail-content {
     background: white;
     padding: 30px;
     border-radius: 8px;
@@ -223,4 +223,31 @@
   .reply-item p {
     margin: 0;
     line-height: 1.5;
+  }
+  
+  .star-rating {
+    display: inline-flex;
+  }
+  
+  .star {
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .star.empty {
+    color: #ddd;
+  }
+  
+  .star.filled {
+    color: #ffd700;
+  }
+  
+  .invalid {
+    border-color: #ff0000;
+  }
+  
+  .error-message {
+    color: #ff0000;
+    font-size: 0.8em;
+    margin-top: 4px;
   }

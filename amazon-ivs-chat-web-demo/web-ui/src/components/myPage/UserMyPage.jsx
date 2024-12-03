@@ -414,6 +414,19 @@ const UserMyPage = () => {
     }
   };
 
+  const handleReviewWrite = (order) => {
+    navigate('/review-comment/write', { 
+      state: { 
+        orderInfo: {
+          userBuySeq: order.userBuySeq,
+          content: order.content,
+          price: order.price,
+          buyDate: order.buyDate
+        }
+      }
+    });
+  };
+
   return (
     <div className="user-mypage">
       <div className="mypage-container">
@@ -531,6 +544,7 @@ const UserMyPage = () => {
                       <th>금액</th>
                       <th>주문일자</th>
                       <th>주문 상태</th>
+                      <th>리뷰 작성</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -557,6 +571,14 @@ const UserMyPage = () => {
                             : "값 뭐넣어야해여?"}
                         </td>
                         {/* 주문 상태 */}
+                        <td>
+                          <button
+                            onClick={() => handleReviewWrite(order)}
+                            className="review-write-button"
+                          >
+                            리뷰 작성
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

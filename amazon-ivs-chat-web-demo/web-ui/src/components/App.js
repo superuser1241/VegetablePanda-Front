@@ -31,6 +31,10 @@ import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
 import Personal from './personal/personal';
+import ReviewCommentWrite from './common/ReviewCommnet/ReviewCommentWrite';
+import ReviewCommentEdit from './common/ReviewCommnet/ReviewCommentEdit';
+import ReviewCommentList from './common/ReviewCommnet/ReviewCommentList';
+import ReviewCommentDetail from './common/ReviewCommnet/ReviewCommentDetail';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -162,6 +166,10 @@ function App() {
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />
                     <Route path="/product/:stockSeq" element={<Product/>}/>
                     <Route path="/shop" element={<Shop/>}/>
+                    <Route path="/review-comment" element={<ReviewCommentList />} />
+                    <Route path="/review-comment/write" element={<ReviewCommentWrite />} />
+                    <Route path="/review-comment/edit/:boardNoSeq" element={<ReviewCommentEdit />} />
+                    <Route path="/review-comment/:reviewSeq" element={<ReviewCommentDetail />} />
                 </Routes>
             </main>
             <Footer />
