@@ -32,6 +32,7 @@ import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
 import Personal from './personal/Personal';
 import StockInfo from './myPage/StockInfo';
+import CartPage from './product/CartPage';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -164,6 +165,7 @@ function App() {
                     <Route path="/product/:stockSeq" element={<Product/>}/>
                     <Route path="/shop" element={<Shop/>}/>
                     <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
+                    <Route path="/cart" element={<CartPage />} />
                 </Routes>
             </main>
             <Footer />
