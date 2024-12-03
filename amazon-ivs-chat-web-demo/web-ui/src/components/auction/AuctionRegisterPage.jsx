@@ -59,27 +59,28 @@ const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
                 }
             );
             onRegisterSuccess(response.data);
+
         } catch (error) {
             console.error('경매 등록 실패:', error);
             alert('경매 등록에 실패했습니다.');
         }
     };
+    
+    // const getTodayStart = () => {
+    //     const now = new Date();
+    //     const year = now.getFullYear();
+    //     const month = String(now.getMonth() + 1).padStart(2, '0');
+    //     const day = String(now.getDate()).padStart(2, '0');
+    //     return `${year}-${month}-${day}T09:00`;
+    // };
 
-    const getTodayStart = () => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}T09:00`;
-    };
-
-    const getTodayEnd = () => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}T13:00`;
-    };
+    // const getTodayEnd = () => {
+    //     const now = new Date();
+    //     const year = now.getFullYear();
+    //     const month = String(now.getMonth() + 1).padStart(2, '0');
+    //     const day = String(now.getDate()).padStart(2, '0');
+    //     return `${year}-${month}-${day}T13:00`;
+    // };
 
     const checkPrice = async () => {
         try {
@@ -115,6 +116,7 @@ const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
             alert('판매 기록을 가져오는데 실패했습니다.');
         }
     };
+
 
     return (
         <div className="auction-register-container">

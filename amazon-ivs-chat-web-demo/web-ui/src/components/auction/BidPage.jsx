@@ -15,6 +15,7 @@ const BidPage = ({
 }) => {
     const [isAuctionEnded, setIsAuctionEnded] = useState(false);
     const [remainingTime, setRemainingTime] = useState('');
+    
     const [pricePerKg, setPricePerKg] = useState(0);
 
     const calculateRemainingTime = (closeTime) => {

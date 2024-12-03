@@ -13,7 +13,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr; /* 2열 */
     grid-template-rows: auto auto; /* 2행 */
-    gap: 20px;
+    gap: 70px;
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
@@ -23,8 +23,9 @@
     grid-column: 1; /* 첫 번째 열 */
     grid-row: 1; /* 첫 번째 행 */
     position: relative;  /* 태그와 하트 버튼의 기준점 */
-    width: 90%;        /* 컨테이너 너비에 맞춤 */
-    height: 90%;       /* 컨테이너 높이에 맞춤 */
+    width: 100%;        /* 컨테이너 너비에 맞춤 */
+    height: 81.5%;       /* 컨테이너 높이에 맞춤 */
+    margin-top: 10px;
   }
   
   .product-info {
@@ -76,7 +77,7 @@
     gap: 10px;
   }
 
-  .cart-button, .like-button,
+  .cart-button, .like-btn,
   .product-buy-button {
     padding: 10px 20px;
     margin-top: 10px;
@@ -86,7 +87,7 @@
     transition: all 0.3s ease;
   }
   
-  .cart-button, .like-button {
+  .cart-button, .like-btn {
     width: 50%;
     background-color: #f0f0f0;
     /* margin-right: 10px; */
@@ -102,7 +103,7 @@
     background-color: #219a52;
   }
 
-  .cart-button:hover, .like-button:hover {
+  .cart-button:hover, .like-btn:hover {
     color: white;
     background-color: #219a52;
   }
@@ -175,4 +176,91 @@
   height: 1px;
   background-color: #ddd;
   margin: 5px 0;
+}
+
+/* 상품 스펙 */
+.product-specs {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.spec-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 3px;
+}
+
+.spec-label {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.spec-value {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+/* 총 가격 */
+.total-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.total-amount {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.quantity-selector {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.quantity-selector label {
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.quantity-input-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quantity-input-group button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quantity-input-group button:hover {
+  background: #e5e7eb;
+}
+
+.quantity-input-group input {
+  width: 80px;
+  height: 40px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
 }

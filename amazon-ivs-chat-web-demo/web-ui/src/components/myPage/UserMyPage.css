@@ -3,6 +3,25 @@
     margin: 0 auto;
     padding: 20px;
 }
+.mypage-pw-match-message {
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    width: 100%;            
+  }
+
+.button-container {
+    gap: 20px; 
+  }
+  
+  .update-button {
+    background-color: greenyellow;
+  }
+  
+  .delete-button {
+    background-color: gray;
+    margin-left: 20px;
+  }
 
 .user-mypage h2 {
     color: #333;
@@ -259,7 +278,7 @@
     border-radius: 4px;
 }
 
-.delete-button {
+.review-delete-button {
     margin-top: 10px;
     padding: 5px 10px;
     background-color: #ff6b6b;
@@ -268,6 +287,7 @@
     border-radius: 4px;
     cursor: pointer;
 }
+
 
 .delete-button:hover {
     background-color: #ff5252;
@@ -319,4 +339,39 @@
 
 .charge-button:hover {
     background-color: #357abd;
+}
+
+.cart-banner-section {
+    background: linear-gradient(135deg, #219a52 0%, #1a7b42 100%);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cart-banner-section:hover {
+    transform: translateY(-5px);
+}
+
+.cart-banner-content {
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.cart-banner-content i {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.cart-banner-content h3 {
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+.cart-banner-content p {
+    font-size: 1em;
+    opacity: 0.9;
 } 

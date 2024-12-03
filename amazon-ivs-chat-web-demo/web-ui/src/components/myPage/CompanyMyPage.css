@@ -27,6 +27,29 @@
     margin-bottom: 30px;
 }
 
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 30px;
+  }
+  
+  th, td {
+    text-align: center;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  th {
+    letter-spacing: 1px;
+  }
+  
+  td {
+    font-weight: 500;
+    transition: background-color 0.3s ease-in-out;
+  }
+
 .charge-input-group {
     display: flex;
     gap: 10px;
