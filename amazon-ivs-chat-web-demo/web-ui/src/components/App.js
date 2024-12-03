@@ -30,7 +30,8 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
-import Personal from './Personal/Personal';
+import Personal from './personal/Personal';
+import CartPage from './product/CartPage';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -162,6 +163,7 @@ function App() {
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />
                     <Route path="/product/:stockSeq" element={<Product/>}/>
                     <Route path="/shop" element={<Shop/>}/>
+                    <Route path="/cart" element={<CartPage />} />
                 </Routes>
             </main>
             <Footer />
