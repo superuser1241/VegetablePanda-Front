@@ -88,11 +88,6 @@ const Product = () => {
                 <li>판매가격 : {product.price}</li>
                 </ul>
                 <div className="purchase-section">
-<<<<<<< HEAD
-                <label htmlFor="quantity">수량</label>
-                <input type="number" id="quantity" min={1} max={product.count} value={quantity} onChange={handleQuantityChange}/>
-                <p>총 상품 금액: <strong>{product.price * quantity}</strong></p> 
-=======
                     <div className="quantity-selector">
                         <label>구매 수량</label>
                         <div className="quantity-input-group">
@@ -111,7 +106,6 @@ const Product = () => {
                             <span>총 결제 금액 </span>
                             <span className="total-amount">{(product.price * quantity).toLocaleString()}원</span>
                         </div>
->>>>>>> parent of 44b0274 (2024.12.03 2:00 재고 정보 조회 - 인영)
                 <div className='button-container'>
                     <button className="like-button">찜하기</button>
                     <button className="cart-button">장바구니</button>
