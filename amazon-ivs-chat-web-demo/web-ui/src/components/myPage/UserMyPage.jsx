@@ -545,7 +545,7 @@ const UserMyPage = () => {
                       <th>상품명</th>
                       <th>수량</th>
                       <th>금액</th>
-                      <th>주문일자</th>
+                      <th>주문 일자</th>
                       <th>주문 상태</th>
                       <th>리뷰 작성</th>
                     </tr>

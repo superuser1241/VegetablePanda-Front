@@ -31,12 +31,13 @@ import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
 import Personal from './personal/personal';
-import ReviewCommentWrite from './common/ReviewCommnet/ReviewCommentWrite';
-import ReviewCommentEdit from './common/ReviewCommnet/ReviewCommentEdit';
+import ReviewCommentWrite from './ReviewCommnet/ReviewCommentWrite';
+import ReviewCommentEdit from './ReviewCommnet/ReviewCommentEdit';
 import ReviewCommentList from './common/ReviewCommnet/ReviewCommentList';
 import ReviewCommentDetail from './common/ReviewCommnet/ReviewCommentDetail';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
+import Test from './reviewtest/test';
 
 
 function App() {
@@ -175,6 +176,7 @@ function App() {
                     <Route path="/review-comment/:reviewSeq" element={<ReviewCommentDetail />} />
                     <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
                     <Route path="/cart" element={<CartPage />} />
+                    <Route path="/test" element={<Test />} />
                 </Routes>
             </main>
             <Footer />
