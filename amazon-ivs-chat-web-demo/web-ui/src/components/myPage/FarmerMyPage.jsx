@@ -7,7 +7,6 @@ import StreamingStatus from './StreamingStatus';
 import StockList from './StockList';
 
 const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
-<<<<<<< HEAD
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [userId, setUserId] = useState("");
@@ -51,37 +50,6 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   });
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-=======
-    const navigate = useNavigate();
-    const token = localStorage.getItem('token');
-    const [userId, setUserId] = useState('');
-    const [userInfo, setUserInfo] = useState(null);
-    const [editedUser, setEditedUser] = useState({
-        password: '',
-        name: '',
-        address: '',
-        phone: '',
-        email: ''
-    });
-    const [reviews, setReviews] = useState([]);
-    const [activeTab, setActiveTab] = useState('product'); // 기본 탭을 product로 변경
-    const [newProduct, setNewProduct] = useState({
-        color: '',
-        count: '',
-        status: 2,
-        content: '',
-        productSeq: '',
-        stockGradeSeq: '',
-        stockOrganicSeq: '',
-    });
-    const [products, setProducts] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [streamingStatus, setStreamingStatus] = useState(null);
-    const [availableRoom, setAvailableRoom] = useState(null);
-    const [streamingRoom, setStreamingRoom] = useState(null);
-    const [isProductMenuOpen, setIsProductMenuOpen] = useState(false);
-<<<<<<< HEAD
->>>>>>> parent of 44b0274 (2024.12.03 2:00 재고 정보 조회 - 인영)
 
   useEffect(() => {
     if (token) {
@@ -94,8 +62,6 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
       }
     }
   }, [token]);
-=======
->>>>>>> parent of 44b0274 (2024.12.03 2:00 재고 정보 조회 - 인영)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -529,111 +495,9 @@ const handleStreamingRequest = async () => {
                 headers: { 
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-<<<<<<< HEAD
                 },
                 params: {
                     farmerSeq: userId
-=======
-                }
-            });
-            setProducts(response.data);
-            // console.log("상품 목록:", response.data);
-        } catch (error) {
-            console.error('상품 목록 조회 실패:', error);
-        }
-    };
-
-    const handleProductSubmit = async () => {
-        try {
-            // URL에 쿼리 파라미터 추가
-            const url = `http://localhost:9001/stock?productSeq=${newProduct.productSeq}&stockGradeSeq=${newProduct.stockGradeSeq}&stockOrganicSeq=${newProduct.stockOrganicSeq}&farmerSeq=${userId}`;
-            
-            // body 데이터
-            const stockData = {
-                color: parseInt(newProduct.color),
-                count: parseInt(newProduct.count),
-                content: newProduct.content,
-                status: 2
-            };
-
-            console.log('요청 URL:', url);
-            console.log('요청 데이터:', stockData);
-
-            const response = await axios.post(
-                url,
-                stockData,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
-
-            if (response.status === 201) {
-                alert('상품이 등록되었습니다. 관리자 승인 후 판매가 시작됩니다.');
-                setNewProduct({
-                    color: '',
-                    count: '',
-                    status: 0,
-                    content: '',
-                    productSeq: '',
-                    stockGradeSeq: '',
-                    stockOrganicSeq: ''
-                });
-                setSelectedCategory('');
-            }
-        } catch (error) {
-            console.error('상품 등록 실패:', error);
-            console.error('요청 URL:', error.config?.url);
-            console.error('요청 데이터:', error.config?.data);
-        }
-    };
-
-    const handleProductChange = (e) => {
-        const { name, value } = e.target;
-        setNewProduct(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const fetchAvailableRoom = async () => {
-        try {
-            const response = await axios.get('http://localhost:9001/api/streaming/available', {
-                headers: { 
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            setAvailableRoom(response.data);
-        } catch (error) {
-            console.error('사용 가능한 방 조회 실패:', error);
-        }
-    };
-
-    const checkStreamingStatus = async () => {
-        try {
-            const response = await axios.get('http://localhost:9001/api/streaming/pending', {
-                headers: { 
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (response.data && response.data.length > 0) {
-                setStreamingStatus('pending');
-            } else {
-                // 승인된 방송 확인
-                const activeResponse = await axios.get('http://localhost:9001/api/streaming/active-rooms', {
-                    headers: { 
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (activeResponse.data && activeResponse.data.length > 0) {
-                    setStreamingStatus('approved');
-                    setAvailableRoom(activeResponse.data[0]);
->>>>>>> parent of 44b0274 (2024.12.03 2:00 재고 정보 조회 - 인영)
                 }
             }
         );

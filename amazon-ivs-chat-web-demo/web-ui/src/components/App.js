@@ -30,13 +30,7 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import Personal from './personal/personal';
-=======
->>>>>>> parent of 44b0274 (2024.12.03 2:00 재고 정보 조회 - 인영)
-=======
->>>>>>> parent of 44b0274 (2024.12.03 2:00 재고 정보 조회 - 인영)
 
 function App() {
     const [userName, setUserName] = useState('');
