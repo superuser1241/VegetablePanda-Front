@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Product.css';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Statistics from './Statistics';
+import axios from 'axios';
 
 const Product = () => {
 
@@ -11,6 +12,7 @@ const Product = () => {
     const product = state?.product;  // 전달받은 상품 정보
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState(1);
+    const userRole = localStorage.getItem('userRole');
 
     const navigate = useNavigate();
 
@@ -34,7 +36,7 @@ const Product = () => {
                 return (
                     <div className="tab-section-content" id="stats">
                         <h2>통계</h2>
-                        <Statistics stockSeq={stockSeq} />
+                        <Statistics stockSeq={product.stockSeq} />
                     </div>
                 );
             default:
@@ -61,6 +63,44 @@ const Product = () => {
 
     }
 
+    const handleAddToCart = async () => {
+        try {
+            // 현재 장바구니 상태 확인
+            const cartResponse = await axios.get('http://localhost:9001/api/cart', { withCredentials: true });
+            const cartItems = cartResponse.data;
+            const isInCart = cartItems.some(item => item.stockSeq === product.stockSeq);
+
+            if (isInCart) {
+                // 이미 장바구니에 있으면 삭제
+                await axios.delete(`http://localhost:9001/api/cart/${product.stockSeq}`, { withCredentials: true });
+                alert('장바구니에서 제거되었습니다.');
+                return;
+            }
+
+            // 장바구니에 없으면 추가
+            const response = await axios.post('http://localhost:9001/api/cart/add', 
+                null,  // POST body는 없음
+                {
+                    params: {
+                        stockSeq: product.stockSeq,
+                        quantity: quantity
+                    },
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    withCredentials: true
+                }
+            );
+            
+            if (response.data) {
+                alert('장바구니에 추가되었습니다.');
+            }
+        } catch (error) {
+            console.error('장바구니 추가 실패:', error);
+            alert(error.response?.data?.error || '장바구니 추가에 실패했습니다.');
+        }
+    };
+
     return (
         <div className='product-container'>
             <div className='product-category'>
@@ -75,7 +115,7 @@ const Product = () => {
                 alt = {product.productName}
                 />
             </div>
-
+            
             {/* 상품 정보 */}
             <div className="product-info">
                 <h1>{product.productName}</h1>
@@ -107,10 +147,10 @@ const Product = () => {
                             <span className="total-amount">{(product.price * quantity).toLocaleString()}원</span>
                         </div>
                 <div className='button-container'>
-                    <button className="like-button">찜하기</button>
-                    <button className="cart-button">장바구니</button>
+                    <button className="like-btn">찜하기</button>
+                    <button className="cart-button" onClick={handleAddToCart}>장바구니</button>
                 </div>
-                    <button className="product-buy-button" onClick={() => navigate('/payment', { state: { item:product, quantity } })}>구매</button>
+                    <button className="product-buy-button" onClick={() => userRole === 'ROLE_USER' ? navigate('/payment', { state: { item:product, quantity } }) : alert('일반 사용자만 구매 가능합니다.')}>구매</button>
                 
                 </div>
             </div>
