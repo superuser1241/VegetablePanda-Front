@@ -21,6 +21,10 @@
     background-color: #e0e0e0;
 }
 
+.update-button-container button:hover {
+    background-color: #81c784;
+}
+
 .stock-info-content {
     background-color: white;
     padding: 20px;
