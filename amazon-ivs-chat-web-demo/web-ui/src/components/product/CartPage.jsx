@@ -59,7 +59,7 @@ const CartPage = () => {
                 await axios.delete('/api/cart');
                 fetchCartItems();
             } catch (error) {
-                alert('장바구니 비우기에 실패했습니���.');
+                alert('장바구니 비우기에 실패했습니다.');
             }
         }
     };

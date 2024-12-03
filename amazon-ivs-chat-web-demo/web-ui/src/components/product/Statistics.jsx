@@ -27,14 +27,18 @@ const Statistics = ({ stockSeq }) => {
                 const response = await axios.get(`http://localhost:9001/api/${period}`, {
                     params: {
                         startDate: startDate,
-                        endDate: endDate
+                        endDate: endDate,
+                        stockSeq: stockSeq
                     }
                 });
                 
                 setStats(response.data);
 
-                // 가격 통계 데이터 fetch
-                const priceStatsResponse = await axios.get('http://localhost:9001/api/price/statistics');
+                const priceStatsResponse = await axios.get('http://localhost:9001/api/price/statistics', {
+                    params: {
+                        stockSeq: stockSeq
+                    }
+                });
                 setPriceStats(priceStatsResponse.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -42,8 +46,10 @@ const Statistics = ({ stockSeq }) => {
             }
         };
         
-        fetchData();
-    }, [period]);
+        if (stockSeq) {
+            fetchData();
+        }
+    }, [period, stockSeq]);
 
     return (
         <div className="statistics-container">
