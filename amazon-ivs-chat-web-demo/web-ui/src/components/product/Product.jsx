@@ -12,6 +12,7 @@ const Product = () => {
     const product = state?.product;  // 전달받은 상품 정보
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState(1);
+    const userRole = localStorage.getItem('userRole');
 
     const navigate = useNavigate();
 
@@ -35,7 +36,7 @@ const Product = () => {
                 return (
                     <div className="tab-section-content" id="stats">
                         <h2>통계</h2>
-                        <Statistics stockSeq={stockSeq} />
+                        <Statistics stockSeq={product.stockSeq} />
                     </div>
                 );
             default:
@@ -119,22 +120,60 @@ const Product = () => {
             <div className="product-info">
                 <h1>{product.productName}</h1>
                 <hr/>
-                <ul>
-                <li>상품번호 : {product.stockSeq}</li>
-                <li>카테고리 : {product.productCategoryContent}</li>
-                <li>배송가능지역 : 전국</li>
-                <li>배송비 : 3,000원</li>
-                <li>판매가격 : {product.price}</li>
-                </ul>
+                <div className='product-specs'>
+                    <div className='spec-item'>
+                        <span className='spec-label'>상품번호 </span>
+                        <span className='spec-value'>{product.stockSeq}</span>
+                    </div>
+                    <div className='spec-item'>
+                        <span className='spec-label'>카테고리 </span>
+                        <span className='spec-value'>{product.productCategoryContent}</span>
+                    </div>
+                    <div className="spec-item">
+                        <span className="spec-label">등급</span>
+                        <span className="spec-value">{product.stockGrade}</span>
+                    </div>
+                    <div className="spec-item">
+                        <span className="spec-label">인증</span>
+                        <span className="spec-value">{product.stockOrganic}</span>
+                    </div>
+                    <div className="spec-item">
+                        <span className="spec-label">재고</span>
+                        <span className="spec-value">{product.count}개</span>
+                    </div>
+                    <div className="spec-item">
+                        <span className="spec-label">판매가격</span>
+                        <span className="spec-value">{product.price.toLocaleString()}원</span>
+                    </div>    
+                    <div className="spec-item">
+                        <span className="spec-label">배송비</span>
+                        <span className="spec-value">3,000원</span>
+                    </div>    
+                </div>
                 <div className="purchase-section">
-                <label htmlFor="quantity">수량</label>
-                <input type="number" id="quantity" min={1} max={product.count} value={quantity} onChange={handleQuantityChange}/>
-                <p>총 상품 금액: <strong>{product.price * quantity}</strong></p> 
+                    <div className="quantity-selector">
+                        <label>구매 수량</label>
+                        <div className="quantity-input-group">
+                                <button onClick={() => quantity > 1 && setQuantity(quantity - 1)}>-</button>
+                                <input 
+                                    type="text" 
+                                    min="1" 
+                                    max={product.count}
+                                    value={quantity}
+                                    onChange={handleQuantityChange}
+                                />
+                                <button onClick={() => quantity < product.count && setQuantity(quantity + 1)}>+</button>
+                        </div>
+                    </div>
+                <div className="total-price">
+                            <span>총 결제 금액 </span>
+                            <span className="total-amount">{(product.price * quantity).toLocaleString()}원</span>
+                        </div>
                 <div className='button-container'>
                     <button className="like-btn">찜하기</button>
                     <button className="cart-button" onClick={handleAddToCart}>장바구니</button>
                 </div>
-                    <button className="product-buy-button" onClick={() => navigate('/payment', { state: { item:product, quantity } })}>구매</button>
+                    <button className="product-buy-button" onClick={() => userRole === 'ROLE_USER' ? navigate('/payment', { state: { item:product, quantity } }) : alert('일반 사용자만 구매 가능합니다.')}>구매</button>
                 
                 </div>
             </div>
