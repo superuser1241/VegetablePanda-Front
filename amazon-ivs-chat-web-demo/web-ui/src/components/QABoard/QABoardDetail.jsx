@@ -9,12 +9,15 @@ const QABoardDetail = () => {
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [currentUser, setCurrentUser] = useState('');
   const [replies, setReplies] = useState([]);
   const [replyContent, setReplyContent] = useState('');
-  
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const token = localStorage.getItem('token');
+  const { name: currentUser, role } = token
+    ? JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))))
+    : {};
+  const isAdmin = role === 'ROLE_ADMIN';
 
   useEffect(() => {
     if (!token) {
@@ -23,15 +26,7 @@ const QABoardDetail = () => {
       return;
     }
 
-    try {
-      const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
-      setCurrentUser(payload.name);
-      setIsAdmin(payload.role === 'ROLE_ADMIN');
-    } catch (error) {
-      console.error('토큰 파싱 실패:', error);
-      navigate('/login');
-      return;
-    }
+    let isMounted = true;
 
     const fetchPost = async () => {
       try {
@@ -42,16 +37,24 @@ const QABoardDetail = () => {
         const response = await axios.get(`http://localhost:9001/QABoard/${boardNoSeq}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        setPost(response.data);
-        setIsLoading(false);
+        if (isMounted) {
+          setPost(response.data);
+          setIsLoading(false);
+        }
       } catch (error) {
         console.error('게시글 로딩 실패:', error);
-        setError('게시글을 불러오는데 실패했습니다.');
-        setIsLoading(false);
+        if (isMounted) {
+          setError('게시글을 불러오는데 실패했습니다.');
+          setIsLoading(false);
+        }
       }
     };
 
     fetchPost();
+
+    return () => {
+      isMounted = false;
+    };
   }, [boardNoSeq, navigate, token]);
 
   useEffect(() => {
@@ -65,7 +68,7 @@ const QABoardDetail = () => {
         console.error('댓글 조회 실패:', error);
       }
     };
-    
+
     if (boardNoSeq) {
       fetchReplies();
     }
@@ -92,28 +95,37 @@ const QABoardDetail = () => {
 
   const handleReplySubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('comment', replyContent);
+    formData.append('qaBoard', JSON.stringify({ boardNoSeq }));
+    if (selectedFile) {
+      formData.append('file', selectedFile);
+    }
+
     try {
       await axios.post(
-        'http://localhost:9001/QaReplyBoard/${boardNoSeq}',
-        { 
-          comment: replyContent,
-          qaBoard: { boardNoSeq: boardNoSeq }
-        },
-        { 
-          headers: { 
+        `http://localhost:9001/QaReplyBoard/${boardNoSeq}`,
+        formData,
+        {
+          headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'multipart/form-data'
           }
         }
       );
 
       setReplyContent('');
+      setSelectedFile(null);
+
       const repliesResponse = await axios.get(
         `http://localhost:9001/QaReplyBoard/${boardNoSeq}`,
         {
           headers: { 'Authorization': `Bearer ${token}` }
         }
       );
+      alert('댓글 등록에 성공했습니다.');
+
       setReplies(repliesResponse.data);
     } catch (error) {
       console.error('댓글 등록 실패:', error);
@@ -175,12 +187,16 @@ const QABoardDetail = () => {
       <div className="qa-reply-section">
         <h3>답변</h3>
         {isAdmin && (
-          <form onSubmit={handleReplySubmit}>
+          <form onSubmit={handleReplySubmit} encType="multipart/form-data">
             <textarea
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
               placeholder="답변을 입력하세요"
               required
+            />
+            <input
+              type="file"
+              onChange={(e) => setSelectedFile(e.target.files[0])}
             />
             <button type="submit">답변 등록</button>
           </form>
@@ -197,9 +213,9 @@ const QABoardDetail = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> 
     </div>
   );
 };
 
-export default QABoardDetail; 
+export default QABoardDetail;

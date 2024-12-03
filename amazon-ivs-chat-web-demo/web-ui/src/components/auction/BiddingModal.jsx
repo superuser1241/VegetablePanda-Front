@@ -26,6 +26,7 @@ const BiddingModal = ({
 }) => {
     const [currentView, setCurrentView] = useState('bidding');
     const [auctionData, setAuctionData] = useState(null);
+    
 
     useEffect(() => {
         if (auctionData && isFarmer) {

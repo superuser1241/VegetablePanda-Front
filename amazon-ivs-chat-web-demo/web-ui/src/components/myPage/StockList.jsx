@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './StockList.css';
 
-const StockList = ({onStockSelect}) => {
+const StockList = () => {
 
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
@@ -21,7 +21,9 @@ const StockList = ({onStockSelect}) => {
             path: ''
         }
     });
-    const [productList, setProductList] = useState([]);
+    const [productList, setProductList] = useState([{
+        
+    }]);
 
     useEffect(() => {
         if (token) {
@@ -70,26 +72,16 @@ const StockList = ({onStockSelect}) => {
                         <th>등급</th>
                         <th>인증</th>
                         <th>색상</th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {productList.map((item, index) => (
-                        <tr key={item.stockSeq}
-                            onClick={() => onStockSelect(item)}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            {/* <Link to = {`/stock-info/{${item.stockSeq}}`} state={{ item }}> */}
+                        <tr key={item.stockSeq}>
                             <td >{item.productName}</td>
                             <td >{item.count}</td>
                             <td >{item.stockGrade}</td>
                             <td >{item.stockOrganic}</td>
                             <td >{item.color}</td>
-                            <td><button onClick={(e) => {
-                                    e.stopPropagation();  // 행 클릭 이벤트 전파 방지
-                                    onStockSelect(item);
-                                }}>수정</button></td>
-                        {/* </Link> */}
                         </tr>
                     ))}
                 </tbody>

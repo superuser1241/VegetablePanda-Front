@@ -30,7 +30,13 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
-import StockInfo from './myPage/StockInfo';
+<<<<<<< HEAD
+<<<<<<< HEAD
+import Personal from './personal/personal';
+=======
+>>>>>>> parent of 44b0274 (2024.12.03 2:00 재고 정보 조회 - 인영)
+=======
+>>>>>>> parent of 44b0274 (2024.12.03 2:00 재고 정보 조회 - 인영)
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -50,10 +56,11 @@ function App() {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
         setUserName('');
         setUserRole('');
         navigate('/');
+        localStorage.removeItem("token");
+        localStorage.setItem("token", null);
         alert('로그아웃 되었습니다.');
     };
 
@@ -106,9 +113,13 @@ function App() {
         }
     }, [navigate]);
 
+    const handleSetStreamingRoom = (room) => {
+        handleJoinRoom(room);
+    };
+
     return (
         <div className="App">
-            {userName&&<NotiSet/>}
+            {userName&&<NotiSet onSetStreamingRoom={handleSetStreamingRoom}/>}
             <Header
                 userName={userName}
                 userRole={userRole}
@@ -121,13 +132,16 @@ function App() {
                     <Route path="/UserRegister" element={<UserRegister />} />
                     <Route path="/CompanyRegister" element={<CompanyRegister />} />
                     <Route path="/FarmerRegister" element={<FarmerRegister />} />
-                    <Route path="/chat" element={
-                        <AuctionChatPage
-                            streamingRoom={streamingRoom}
-                            handleExitChat={handleExitChat}
-                            confirmed={true}
-                        />
-                    } />
+                    <Route
+                        path="/chat"
+                        element={
+                            <AuctionChatPage
+                                streamingRoom={streamingRoom}
+                                handleExitChat={handleExitChat}
+                                confirmed={true}
+                            />
+                        }
+                    />
                     <Route path="/admin-mypage" element={userRole === 'ROLE_ADMIN' && <AdminMyPage navigateTo={navigate} />} />
                     <Route path="/user-mypage" element={userRole === 'ROLE_USER' && <UserMyPage navigateTo={navigate} />} />
                     <Route path="/company-mypage" element={userRole === 'ROLE_COMPANY' && <CompanyMyPage navigateTo={navigate} />} />
@@ -148,12 +162,12 @@ function App() {
                     <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
                     <Route path="/purchaseD" element={<PurchaseD userName={userName}/>} />
+                    <Route path="/personal" element={userRole === 'ROLE_FARMER' && <Personal navigateTo={navigate} />} />
                     <Route path="/payment" element={<Payment />} />
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />
                     <Route path="/product/:stockSeq" element={<Product/>}/>
                     <Route path="/shop" element={<Shop/>}/>
-                    <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
                 </Routes>
             </main>
             <Footer />

@@ -1,46 +1,55 @@
 .MessageContainer {
-    position: fixed;
-    top: 50%; /* 화면의 50% 위치 */
-    left: 50%; /* 화면의 50% 위치 */
-    transform: translate(-50%, -50%); /* 중앙 정렬 */
-    width: 400px; /* 박스의 너비 */
-    height: 18%;
-    background-color: #ffffff; /* 배경색 */
-    border: 1px solid #ccc; /* 테두리 */
-    border-radius: 12px; /* 둥근 모서리 */
-    padding: 20px; /* 내부 여백 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
-    z-index: 1000; /* 다른 요소 위에 표시되도록 */
-  }
-  
-  .MessageContent {
-    max-height: 300px; /* 메시지 영역 최대 높이 */
-    overflow-y: auto; /* 메시지가 많아지면 스크롤 표시 */
-  }
-  
-  .MessageItem {
-    margin: 10px 0; /* 각 메시지 간 간격 */
-    padding: 10px;
-    background-color: #f1f1f1; /* 메시지 배경색 */
-    border-radius: 8px; /* 메시지 둥근 모서리 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 메시지 그림자 */
-  }
-  
-  .CloseButton {
-    position: absolute; /* 박스 내부 오른쪽 상단 고정 */
-    top: 60%;
-    right: 45%;
-    background-color: #ff5c5c; /* 버튼 배경색 */
-    color: #ffffff; /* 버튼 텍스트 색 */
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-  }
-  
-  .CloseButton:hover {
-    background-color: #ff4040; /* 버튼 호버 효과 */
-  }
-  
+  position: fixed;
+  bottom: 50%;
+  right: 40%;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  border-radius: 8px;
+  z-index: 1000;
+  width: 300px;
+}
+
+.MessageContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.CloseButton {
+  align-self: flex-end;
+  background-color: #9b9898;
+  color: white;
+  border: none;
+  height: auto;
+  width: auto;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.CloseButton:hover {
+  background-color: #ff0606;
+}
+
+.MessageItem {
+  margin: 10px 0;
+  text-align: center;
+  font-size: 18px;
+}
+
+.NavigateButton {
+  background-color: #ff7300;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.NavigateButton:hover {
+  background-color: #ff0606;
+}

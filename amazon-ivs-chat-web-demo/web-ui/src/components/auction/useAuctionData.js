@@ -58,7 +58,8 @@ export const useAuctionData = (userSeq,auctionSeq) => {
     // WebSocket 연결 및 상태 갱신
     useEffect(() => {
         const client = new Client({
-            brokerURL: "ws://localhost:9001/ws", 
+            brokerURL: "ws://localhost:9001/ws",
+            
             onConnect: () => {
                 client.subscribe("/top/notifications", async (message) => {
                     fetchHighestBid();

@@ -182,11 +182,6 @@
     align-items: center;
 }
 
-.stock-image-textarea-container textarea {
-    height: 66%;
-    resize: none;
-}
-
 #fileContent {
     height: 150px;
     resize: none;
