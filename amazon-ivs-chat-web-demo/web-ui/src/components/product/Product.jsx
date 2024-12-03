@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Product.css';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import Statistics from './Statistics';
+// import Statistics from './Statistics';
 import axios from 'axios';
 
 const Product = () => {
@@ -37,7 +37,7 @@ const Product = () => {
                 return (
                     <div className="tab-section-content" id="stats">
                         <h2>통계</h2>
-                        <Statistics stockSeq={stockSeq} />
+                        {/* <Statistics stockSeq={stockSeq} /> */}
                     </div>
                 );
             default:

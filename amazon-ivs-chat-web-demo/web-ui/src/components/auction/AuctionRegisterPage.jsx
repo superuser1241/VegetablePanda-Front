@@ -4,12 +4,7 @@ import axios from 'axios';
 import PriceCheckModal from './PriceCheckModal';
 import SalesHistoryModal from './SalesHistoryModal';
 
-const AuctionRegisterPage = ({ 
-    streamingRoom, 
-    onRegisterSuccess, 
-    onCheckPrice, 
-    onCheckSalesHistory 
-}) => {
+const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
     const navigate = useNavigate();
     const [auctionData, setAuctionData] = useState({
         count: '',
@@ -53,12 +48,17 @@ const AuctionRegisterPage = ({
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await onRegisterSuccess({
-                count: auctionData.count,
-                closeTime: auctionData.closeTime,
-                stockSeq: auctionData.stockSeq,
-                totalPrice: totalPrice
-            });
+            const token = localStorage.getItem('token');
+            const response = await axios.post(
+                `http://localhost:9001/auction?price=${totalPrice}`,
+                { 
+                    ...auctionData,
+                },
+                {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }
+            );
+            onRegisterSuccess(response.data);
         } catch (error) {
             console.error('경매 등록 실패:', error);
             alert('경매 등록에 실패했습니다.');
@@ -78,7 +78,7 @@ const AuctionRegisterPage = ({
         const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}T24:00`;
+        return `${year}-${month}-${day}T13:00`;
     };
 
     const checkPrice = async () => {
@@ -160,8 +160,8 @@ const AuctionRegisterPage = ({
                                 name="closeTime"
                                 value={auctionData.closeTime}
                                 onChange={handleChange}
-                                min={getTodayStart()}
-                                max={getTodayEnd()}
+                                // min={getTodayStart()}
+                                // max={getTodayEnd()}
                                 required
                             />
                         </div>
