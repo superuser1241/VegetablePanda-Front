@@ -58,8 +58,8 @@ const AuctionStock = ({ streamingRoom }) => {
                                 <div className="info-value">{stockInfo.color}</div>
                             </div>
                         </div>
-                    </div>
-                    <div className="seller-section">
+
+                        <div className="seller-section">
                             <div className="seller-title">판매자 정보</div>
                             <div className="seller-info">
                                 <div className="seller-info-item">
@@ -78,6 +78,7 @@ const AuctionStock = ({ streamingRoom }) => {
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
             )}
         </>
