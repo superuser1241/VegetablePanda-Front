@@ -76,7 +76,7 @@
     gap: 10px;
   }
 
-  .cart-button, .like-button,
+  .cart-button, .like-btn,
   .product-buy-button {
     padding: 10px 20px;
     margin-top: 10px;
@@ -86,7 +86,7 @@
     transition: all 0.3s ease;
   }
   
-  .cart-button, .like-button {
+  .cart-button, .like-btn {
     width: 50%;
     background-color: #f0f0f0;
     /* margin-right: 10px; */
@@ -102,7 +102,7 @@
     background-color: #219a52;
   }
 
-  .cart-button:hover, .like-button:hover {
+  .cart-button:hover, .like-btn:hover {
     color: white;
     background-color: #219a52;
   }
