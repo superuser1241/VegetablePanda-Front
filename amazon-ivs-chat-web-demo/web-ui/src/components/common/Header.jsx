@@ -41,6 +41,12 @@ const Header = ({ userName, userRole, handleLogout }) => {
                         <Link to="/notify-service" className="nav-item">
                             공지사항
                         </Link>
+                        { userRole === 'ROLE_FARMER' ?
+                        <Link to="/personal" className="nav-item">
+                            개인 페이지
+                        </Link>
+                        : null
+                        }
                         <div className="user-actions">
                             <span className="welcome-message">{userName}님 환영합니다</span>
                             <button

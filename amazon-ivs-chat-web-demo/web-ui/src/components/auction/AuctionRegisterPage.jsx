@@ -59,12 +59,13 @@ const AuctionRegisterPage = ({
                 stockSeq: auctionData.stockSeq,
                 totalPrice: totalPrice
             });
+            
         } catch (error) {
             console.error('경매 등록 실패:', error);
             alert('경매 등록에 실패했습니다.');
         }
     };
-
+    
     const getTodayStart = () => {
         const now = new Date();
         const year = now.getFullYear();
@@ -115,6 +116,7 @@ const AuctionRegisterPage = ({
             alert('판매 기록을 가져오는데 실패했습니다.');
         }
     };
+
 
     return (
         <div className="auction-register-container">

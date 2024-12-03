@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Product.css';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import Statistics from './Statistics';
 
 const Product = () => {
 
@@ -14,47 +15,34 @@ const Product = () => {
     const navigate = useNavigate();
 
     const renderTabContent = () => {
-      switch (activeTab) {
-        case "details":
-          return (
-            <div>
-                <h2>상세정보</h2>
-                <p>상품의 상세 정보가 여기에 표시됩니다.</p>
-                {product.content}
-            </div>
-            );
-        case "reviews":
-          return <p>리뷰 정보가 여기에 표시됩니다.</p>;
-        case "stats":
-          return <p>통계 정보 및 기타 정보가 여기에 표시됩니다.</p>;
-        default:
-          return null;
-      }
+        switch (activeTab) {
+            case "details":
+                return (
+                    <div className="tab-section-content" id="details">
+                        <h2>상세정보</h2>
+                        <p>{product.content}</p>
+                    </div>
+                );
+            case "reviews":
+                return (
+                    <div className="tab-section-content" id="reviews">
+                        <h2>후기</h2>
+                        <p>리뷰 정보가 여기에 표시됩니다.</p>
+                    </div>
+                );
+            case "stats":
+                return (
+                    <div className="tab-section-content" id="stats">
+                        <h2>통계</h2>
+                        <Statistics stockSeq={stockSeq} />
+                    </div>
+                );
+            default:
+                return null;
+        }
     };
 
-    // const renderTabContent = () => {
-    //     return (
-    //         <>
-    //        {/* <div className="scrollable-content"> */}
-    //         <div className="tab-section-content" id="details">
-    //           <h2>상세정보</h2>
-    //           <p>상품의 상세 정보가 여기에 표시됩니다.</p>
-    //           {product.content}
-    //         </div>
-    //         <div className="tab-section-content" id="reviews">
-    //           <h2>후기</h2>
-    //           <p>리뷰 정보가 여기에 표시됩니다.</p>
-    //         </div>
-    //         <div className="tab-section-content" id="stats">
-    //           <h2>통계</h2>
-    //           <p>통계 정보 및 기타 정보가 여기에 표시됩니다.</p>
-    //         </div>
-    //        {/* </div> */}
-    //     </>
-    //     );
-    //   };
-
-      const scrollToSection = (sectionId) => {
+    const scrollToSection = (sectionId) => {
         setActiveTab(sectionId);
         const element = document.getElementById(sectionId);
         if (element) {
