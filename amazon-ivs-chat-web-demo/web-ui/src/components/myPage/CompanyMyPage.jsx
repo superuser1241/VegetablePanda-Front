@@ -708,7 +708,7 @@ const CompanyMyPage = () => {
               ) : orders.length > 0 ? (
                 <table>
                   <thead>
-                    <tr>
+                    <tr className="company-mypage-tr">
                       <th>번호</th>
                       <th>주문 번호</th>
                       <th>상품명</th>
@@ -720,7 +720,7 @@ const CompanyMyPage = () => {
                   </thead>
                   <tbody>
                     {orders.map((order, index) => (
-                      <tr key={order.orderId}>
+                      <tr key={order.orderId} className="company-mypage-tr">
                         <td>{index + 1}</td> {/* 번호 */}
                         <td>{order.userBuySeq}</td> {/* 주문 번호 */}
                         <td>{order.content}</td> {/* 상품명 */}
@@ -764,7 +764,7 @@ const CompanyMyPage = () => {
               ) : auctions.length > 0 ? (
                 <table>
                   <thead>
-                    <tr>
+                    <tr className="company-mypage-tr">
                       <th>번호</th>
                       <th>상품명</th>
                       <th>수량</th>
@@ -776,7 +776,7 @@ const CompanyMyPage = () => {
                   </thead>
                   <tbody>
                     {auctions.map((auction, index) => (
-                      <tr key={auction.bidSeq}>
+                      <tr key={auction.bidSeq} className="company-mypage-tr">
                         <td>{index + 1}</td> {/* 번호 */}
                         <td>{auction.content}</td> {/* 상품명 */}
                         <td>{auction.count}</td> {/* 수량*/}
