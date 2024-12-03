@@ -30,7 +30,7 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
-import Personal from './personal/personal';
+
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 
@@ -158,7 +158,7 @@ function App() {
                     <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
                     <Route path="/purchaseD" element={<PurchaseD userName={userName}/>} />
-                    <Route path="/personal" element={userRole === 'ROLE_FARMER' && <Personal navigateTo={navigate} />} />
+                    {/* <Route path="/personal" element={userRole === 'ROLE_FARMER' && <Personal navigateTo={navigate} />} /> */}
                     <Route path="/payment" element={<Payment />} />
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />

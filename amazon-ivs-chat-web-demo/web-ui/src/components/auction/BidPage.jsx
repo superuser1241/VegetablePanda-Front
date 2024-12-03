@@ -14,7 +14,6 @@ const BidPage = ({
     userWallet,
     userRole 
 }) => {
-    const [isAuctionEnded, setIsAuctionEnded] = useState(false);
     const [remainingTime, setRemainingTime] = useState('');
     const [pricePerKg, setPricePerKg] = useState(0);
 
@@ -23,35 +22,19 @@ const BidPage = ({
         const endTime = new Date(closeTime);
         const diff = endTime - now;
 
-        if (diff <= 0) {
-            return '경매 종료';
-        }
-
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (diff <= 0) {
+            return '마감시간 경과';
+        }
 
         if (hours > 0) {
             return `${hours}시간 ${minutes}분 ${seconds}초`;
         }
         return `${minutes}분 ${seconds}초`;
     };
-
-    useEffect(() => {
-        if (auctionData?.closeTime) {
-            const checkAuctionEnd = () => {
-                const now = new Date();
-                const closeTime = new Date(auctionData.closeTime);
-                if (now >= closeTime && !isAuctionEnded) {
-                    setIsAuctionEnded(true);
-                    onAuctionEnd();
-                }
-            };
-
-            const timer = setInterval(checkAuctionEnd, 1000);
-            return () => clearInterval(timer);
-        }
-    }, [auctionData, isAuctionEnded, onAuctionEnd]);
 
     useEffect(() => {
         if (auctionData?.closeTime) {
@@ -109,6 +92,10 @@ const BidPage = ({
         }).replace(/\./g, '-');
     };
 
+    const handleOpenBidHistory = (bid) => {
+        onOpenModal(bid);  // bid를 인자로 전달
+    };
+
     return (
         
         <>
@@ -147,7 +134,7 @@ const BidPage = ({
                                         <button 
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                onOpenModal(bid);
+                                                handleOpenBidHistory(bid);  // 수정된 부분
                                             }}
                                             className="bid-link"
                                         >

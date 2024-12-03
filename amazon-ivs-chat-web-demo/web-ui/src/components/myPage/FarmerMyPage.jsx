@@ -6,6 +6,7 @@ import RegisterStock from "./RegisterStock";
 import StreamingStatus from './StreamingStatus';
 import StockList from './StockList';
 import StockInfo from './StockInfo';
+import UpdateStock from "./UpdateStock";
 
 const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     const navigate = useNavigate();
@@ -564,6 +565,11 @@ const handleStreamingRequest = async () => {
       setActiveTab('stockInfo');
     };
 
+    const handleUpdateStock = (stock) => {
+      setSelectedStock(stock);
+      setActiveTab('updateStock');
+    };
+
     const fetchAvailableRoom = async () => {
         try {
             const response = await axios.get('http://localhost:9001/api/streaming/available', {
@@ -655,6 +661,7 @@ useEffect(() => {
                         </li>
                     </ul>
         </div>
+        <div className="main-content">
         {activeTab === 'streaming' && (
                         <StreamingStatus 
                             userId={userId} 
@@ -670,13 +677,15 @@ useEffect(() => {
                     )}
                     {activeTab === 'productList' && (
                         <div className="productList-section">
-                            <StockList onStockSelect={handleStockSelect}/>
+                            <StockList onStockSelect={handleStockSelect} setActiveTab={setActiveTab}/>
                         </div>
                     )}
 
                     {activeTab === 'stockInfo' && selectedStock && (
                         <div className="stock-info-section">
                             <StockInfo 
+                                onUpdateStock={handleUpdateStock}
+                                setActiveTab={setActiveTab}  // 추가
                                 stock={selectedStock} 
                                 onBack={() => {
                                     setActiveTab('productList');
@@ -685,7 +694,18 @@ useEffect(() => {
                             />
                         </div>
                     )}
-        <div className="main-content">
+
+                    {activeTab === 'updateStock' && (
+                        <div className="stock-info-section">
+                            <UpdateStock 
+                                stock={selectedStock} 
+                                onBack={() => {
+                                    setActiveTab('stockInfo');
+                                    setSelectedStock(selectedStock);
+                                }}
+                            />
+                        </div>
+                    )}
           {activeTab === "info" && farmerInfo && (
             <div className="user-info-section">
               <h3>회원 정보</h3>

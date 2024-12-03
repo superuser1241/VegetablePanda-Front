@@ -1,0 +1,222 @@
+.bidding-modal-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 900px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bidding-modal {
+    height: 100%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    position: relative;
+}
+
+/* 헤더 영역 */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #f3f4f6;
+    color: #4b5563;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.close-button:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+    transform: rotate(90deg);
+}
+
+/* 경매 정보 테이블 */
+.auction-info-table {
+    width: 100%;
+    border-spacing: 0;
+    margin: 20px 0;
+}
+
+.auction-info-table th,
+.auction-info-table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.auction-info-table th {
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 14px;
+    width: 40%;
+}
+
+.auction-info-table td {
+    color: #111827;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+/* 남은 시간 표시 */
+.remaining-time {
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.remaining-time h3 {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.remaining-time p {
+    color: #dc2626;
+    font-size: 28px;
+    font-weight: 700;
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* 입찰 컨트롤 */
+.bid-controls-wrapper {
+    background: #f9fafb;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 20px 0;
+}
+
+.available-points-container {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.point-amount {
+    color: #2563eb;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.bid-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.bid-control-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    background: white;
+    color: #4b5563;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.bid-control-btn:hover:not(:disabled) {
+    background: #f3f4f6;
+    transform: translateY(-2px);
+}
+
+.bid-amount-display input {
+    width: 180px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    background: white;
+}
+
+/* 버튼 스타일 */
+.bid-button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 20px;
+}
+
+.bid-button:hover:not(:disabled) {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.bid-button:disabled {
+    background: #e5e7eb;
+    cursor: not-allowed;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .bidding-modal-overlay {
+        width: 100%;
+    }
+    
+    .bidding-modal {
+        padding: 20px;
+    }
+    
+    .bid-controls-wrapper {
+        padding: 16px;
+    }
+}

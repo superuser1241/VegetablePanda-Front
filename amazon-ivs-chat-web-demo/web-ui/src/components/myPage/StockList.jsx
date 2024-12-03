@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './StockList.css';
 
-const StockList = ({onStockSelect}) => {
+const StockList = ({onStockSelect, setActiveTab}) => {
 
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
@@ -62,8 +62,8 @@ const StockList = ({onStockSelect}) => {
         <div className='stock-list-container'>
             <h3>재고 목록</h3>
             <div className='stock-table-container'>
-                <table className='stock-table'>
-                <thead>
+                <table className='stocklist-table'>
+                <thead className='stocklist-thead'>
                     <tr>
                         <th>상품명</th>
                         <th>수량</th>
@@ -73,7 +73,7 @@ const StockList = ({onStockSelect}) => {
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className='stocklist-tbody'>
                     {productList.map((item, index) => (
                         <tr key={item.stockSeq}
                             onClick={() => onStockSelect(item)}
@@ -81,7 +81,7 @@ const StockList = ({onStockSelect}) => {
                         >
                             {/* <Link to = {`/stock-info/{${item.stockSeq}}`} state={{ item }}> */}
                             <td >{item.productName}</td>
-                            <td >{item.count}</td>
+                            <td >{item.count.toLocaleString()}</td>
                             <td >{item.stockGrade}</td>
                             <td >{item.stockOrganic}</td>
                             <td >{item.color}</td>
