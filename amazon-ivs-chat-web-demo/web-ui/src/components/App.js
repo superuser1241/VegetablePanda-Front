@@ -30,7 +30,7 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
-import Personal from './personal/Personal';
+import Personal from './personal/personal';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 

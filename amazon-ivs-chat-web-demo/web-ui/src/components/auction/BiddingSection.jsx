@@ -1,44 +1,49 @@
 import React from 'react';
-import BidPage from './BidPage.jsx';
-import AuctionRegisterPage from './AuctionRegisterPage.jsx';
-import './BiddingSection.css';
+import AuctionStatusPage from './AuctionStatusPage';
+import BidPage from './BidPage';
+import AuctionRegisterPage from './AuctionRegisterPage';
 
 const BiddingSection = ({ 
-    streamingRoom, 
     auctionData, 
-    isFarmer,
-    userWallet,
-    handleAuctionRegister,
-    handleAuctionEnd,
-    handleCheckPrice,
-    handleCheckSalesHistory,
-    handleOpenModal 
+    isFarmer, 
+    streamingRoom, 
+    onOpenModal, 
+    onEndAuction, 
+    onCheckPrice, 
+    onCheckSalesHistory, 
+    onRegisterSuccess,
+    userWallet 
 }) => {
     return (
         <div className="bidding-section">
             {auctionData && auctionData.auctionSeq ? (
-                !isFarmer ? (
+                isFarmer ? (
+                    <AuctionStatusPage 
+                        streamingRoom={streamingRoom}
+                        auctionData={auctionData}
+                        onOpenModal={onOpenModal}
+                        onEndAuction={onEndAuction}
+                        onCheckPrice={onCheckPrice}
+                        onCheckSalesHistory={onCheckSalesHistory}
+                    />
+                ) : (
                     <BidPage 
                         streamingRoom={streamingRoom}
                         auctionData={auctionData}
-                        onAuctionEnd={handleAuctionEnd}
-                        onOpenModal={handleOpenModal}
-                        onCheckPrice={handleCheckPrice}
-                        onCheckSalesHistory={handleCheckSalesHistory}
+                        onAuctionEnd={onEndAuction}
+                        onOpenModal={onOpenModal}
+                        onCheckPrice={onCheckPrice}
+                        onCheckSalesHistory={onCheckSalesHistory}
                         userWallet={userWallet}
                     />
-                ) : (
-                    <div className="waiting-message">
-                        <p>현재 진행 중인 경매입니다.</p>
-                    </div>
                 )
             ) : (
                 isFarmer ? (
                     <AuctionRegisterPage 
                         streamingRoom={streamingRoom}
-                        onRegisterSuccess={handleAuctionRegister}
-                        onCheckPrice={handleCheckPrice}
-                        onCheckSalesHistory={handleCheckSalesHistory}
+                        onRegisterSuccess={onRegisterSuccess}
+                        onCheckPrice={onCheckPrice}
+                        onCheckSalesHistory={onCheckSalesHistory}
                     />
                 ) : (
                     <div className="waiting-message">
@@ -48,6 +53,6 @@ const BiddingSection = ({
             )}
         </div>
     );
-};  
+};
 
 export default BiddingSection; 
