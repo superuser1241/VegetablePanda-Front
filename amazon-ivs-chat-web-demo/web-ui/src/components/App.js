@@ -30,7 +30,7 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
-import Personal from './personal/personal';
+import Personal from './Personal/Personal';
 
 function App() {
     const [userName, setUserName] = useState('');
