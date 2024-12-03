@@ -12,7 +12,7 @@
 }
 
 
-.sidebar {
+.auction-sidebar {
     position: fixed;
     right: -50%;
     top: 20px;
@@ -24,11 +24,11 @@
     z-index: 1000;
 }
 
-.sidebar.open {
+.auction-sidebar.open {
     right: 0;
 }
 
-.sidebar-toggle {
+.auction-sidebar-toggle {
     position: fixed;
     right: 20px;
     top: 40px;
@@ -41,7 +41,7 @@
     z-index: 1001;
 }
 
-.sidebar-toggle:hover {
+.auction-sidebar-toggle:hover {
     background-color: #0056b3;
 }
 
