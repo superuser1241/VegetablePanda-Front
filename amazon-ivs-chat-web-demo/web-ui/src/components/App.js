@@ -35,6 +35,9 @@ import ReviewCommentWrite from './common/ReviewCommnet/ReviewCommentWrite';
 import ReviewCommentEdit from './common/ReviewCommnet/ReviewCommentEdit';
 import ReviewCommentList from './common/ReviewCommnet/ReviewCommentList';
 import ReviewCommentDetail from './common/ReviewCommnet/ReviewCommentDetail';
+import StockInfo from './myPage/StockInfo';
+import CartPage from './product/CartPage';
+
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -170,6 +173,8 @@ function App() {
                     <Route path="/review-comment/write" element={<ReviewCommentWrite />} />
                     <Route path="/review-comment/edit/:boardNoSeq" element={<ReviewCommentEdit />} />
                     <Route path="/review-comment/:reviewSeq" element={<ReviewCommentDetail />} />
+                    <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
+                    <Route path="/cart" element={<CartPage />} />
                 </Routes>
             </main>
             <Footer />

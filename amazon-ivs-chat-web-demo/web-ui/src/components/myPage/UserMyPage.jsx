@@ -482,6 +482,9 @@ const UserMyPage = () => {
             >
               포인트 충전
             </li>
+            <li onClick={() => navigate('/cart')} className={activeTab === 'cart' ? 'active' : ''}>
+              장바구니
+            </li>
           </ul>
         </div>
 
@@ -866,6 +869,15 @@ const UserMyPage = () => {
               </div>
             </div>
           )}
+
+          {/* 장바구니 배너 추가 */}
+          <div className="cart-banner-section" onClick={() => navigate('/cart')}>
+            <div className="cart-banner-content">
+              <i className="fas fa-shopping-cart"></i>
+              <h3>장바구니</h3>
+              <p>장바구니에서 선택하신 상품을 확인하세요</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
