@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PriceCheckModal from './PriceCheckModal';
 import SalesHistoryModal from './SalesHistoryModal';
+import { Client } from "@stomp/stompjs";
 
 const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
     const navigate = useNavigate();
@@ -32,6 +33,8 @@ const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
         const count = parseFloat(auctionData.count) || 0;
         setTotalPrice(price * count);
     }, [pricePerKg, auctionData.count]);
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
