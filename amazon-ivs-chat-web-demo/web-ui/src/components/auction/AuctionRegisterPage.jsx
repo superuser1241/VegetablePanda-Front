@@ -5,6 +5,8 @@ import PriceCheckModal from './PriceCheckModal';
 import SalesHistoryModal from './SalesHistoryModal';
 import { Client } from "@stomp/stompjs";
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
     const navigate = useNavigate();
     const [auctionData, setAuctionData] = useState({
@@ -53,7 +55,7 @@ const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.post(
-                `http://localhost:9001/auction?price=${totalPrice}`,
+                `${serverIp}/api/auction/register?price=${totalPrice}`,
                 { 
                     ...auctionData,
                 },
@@ -89,7 +91,7 @@ const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(
-                `http://localhost:9001/price/${streamingRoom.productName}`,
+                `${serverIp}/price/${streamingRoom.productName}`,
                 {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }
@@ -107,7 +109,7 @@ const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(
-                `http://localhost:9001/buy/${streamingRoom.stockSeq}`,
+                `${serverIp}/buy/${streamingRoom.stockSeq}`,
                 {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }

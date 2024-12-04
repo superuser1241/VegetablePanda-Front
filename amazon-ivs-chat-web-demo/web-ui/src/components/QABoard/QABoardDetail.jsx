@@ -3,6 +3,8 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import './QABoard.css';
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const QABoardDetail = () => {
   const navigate = useNavigate();
   const { boardNoSeq } = useParams();
@@ -35,11 +37,11 @@ const QABoardDetail = () => {
 
     const fetchPost = async () => {
       try {
-        await axios.put(`http://localhost:9001/QABoard/increaseReadnum/${boardNoSeq}`, {}, {
+        await axios.put(`${serverIp}/QABoard/increaseReadnum/${boardNoSeq}`, {}, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
-        const response = await axios.get(`http://localhost:9001/QABoard/${boardNoSeq}`, {
+        const response = await axios.get(`${serverIp}/QABoard/${boardNoSeq}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setPost(response.data);
@@ -57,7 +59,7 @@ const QABoardDetail = () => {
   useEffect(() => {
     const fetchReplies = async () => {
       try {
-        const response = await axios.get(`http://localhost:9001/QaReplyBoard/${boardNoSeq}`, {
+        const response = await axios.get(`${serverIp}/QaReplyBoard/${boardNoSeq}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setReplies(response.data);
@@ -77,7 +79,7 @@ const QABoardDetail = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:9001/QABoard/${boardNoSeq}`, {
+      await axios.delete(`${serverIp}/QABoard/${boardNoSeq}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -94,7 +96,7 @@ const QABoardDetail = () => {
     e.preventDefault();
     try {
       await axios.post(
-        'http://localhost:9001/QaReplyBoard/${boardNoSeq}',
+        `${serverIp}/QaReplyBoard/${boardNoSeq}`,
         { 
           comment: replyContent,
           qaBoard: { boardNoSeq: boardNoSeq }
@@ -109,7 +111,7 @@ const QABoardDetail = () => {
 
       setReplyContent('');
       const repliesResponse = await axios.get(
-        `http://localhost:9001/QaReplyBoard/${boardNoSeq}`,
+        `${serverIp}/QaReplyBoard/${boardNoSeq}`,
         {
           headers: { 'Authorization': `Bearer ${token}` }
         }
