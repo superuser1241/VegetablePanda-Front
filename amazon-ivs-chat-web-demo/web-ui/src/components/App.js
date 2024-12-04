@@ -32,8 +32,7 @@ import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
 import Personal from './personal/personal';
 import PersonalList from './personal/PersonalList';
-import './personal/PersonalList.css';
-
+import './personal/PersonalList';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 import axios from 'axios';

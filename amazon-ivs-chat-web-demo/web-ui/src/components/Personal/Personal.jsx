@@ -145,8 +145,6 @@ const Personal = ({ onJoinRoom }) => {
     }
   };
 
-
-
   return (
     <div className="yun-personal-page">
   <div className="yun-top-container">
