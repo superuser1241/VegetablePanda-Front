@@ -38,6 +38,7 @@ export const requestPay = async (result, token, IMP) => {
                       }
                 });
                 console.log(response3);
+                alert('포인트 충전 완료');
 
             } catch(err) {
                 console.log(err);
