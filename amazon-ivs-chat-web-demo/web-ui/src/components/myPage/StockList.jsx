@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './StockList.css';
 
-const StockList = () => {
-
+const StockList = ({onStockSelect, setActiveTab}) => {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const [userId, setUserId] = useState(localStorage.getItem('userSeq'));
@@ -64,8 +63,8 @@ const StockList = () => {
         <div className='stock-list-container'>
             <h3>재고 목록</h3>
             <div className='stock-table-container'>
-                <table className='stock-table'>
-                <thead>
+                <table className='stocklist-table'>
+                <thead className='stocklist-thead'>
                     <tr>
                         <th>상품명</th>
                         <th>수량</th>
@@ -74,11 +73,11 @@ const StockList = () => {
                         <th>색상</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className='stocklist-tbody'>
                     {productList.map((item, index) => (
                         <tr key={item.stockSeq}>
                             <td >{item.productName}</td>
-                            <td >{item.count}</td>
+                            <td >{item.count.toLocaleString()}</td>
                             <td >{item.stockGrade}</td>
                             <td >{item.stockOrganic}</td>
                             <td >{item.color}</td>

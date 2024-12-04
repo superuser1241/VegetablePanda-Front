@@ -12,8 +12,8 @@ const Product = () => {
     const product = state?.product;  // 전달받은 상품 정보
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState(1);
+    const [shopLike, setShopLike] = useState(false);
     const userRole = localStorage.getItem('userRole');
-
     const navigate = useNavigate();
 
     const renderTabContent = () => {
@@ -36,6 +36,7 @@ const Product = () => {
                 return (
                     <div className="tab-section-content" id="stats">
                         <h2>통계</h2>
+
                         <Statistics stockSeq={product.stockSeq} />
                     </div>
                 );
@@ -52,6 +53,30 @@ const Product = () => {
         }
     };
 
+    const handleLike = async (shopSeq) => {
+        const userSeq = localStorage.getItem('userSeq');
+        const token = localStorage.getItem('token');
+        try {
+            await axios.post(
+                'http://localhost:9001/api/InsertShopLike', 
+                {
+                    userSeq: userSeq,
+                    shopSeq: shopSeq
+                },
+                {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            setShopLike(prev => !prev);
+        } catch (err) {
+            console.error('찜하기 처리에 실패했습니다:', err);
+        }
+    }
+
+
     const handleQuantityChange = (e) => {
         const value = parseInt(e.target.value);
         if (value > 0 && value <= product.count) {
@@ -59,9 +84,9 @@ const Product = () => {
         }
     };
 
-    const handlePrice = (e) => {
+    // const handlePrice = (e) => {
 
-    }
+    // }
 
     const handleAddToCart = async () => {
         try {

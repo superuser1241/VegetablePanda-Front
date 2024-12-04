@@ -35,17 +35,17 @@ table {
     margin-top: 30px;
   }
   
-  th, td {
+ .company-mypage-tr th, .company-mypage-tr td {
     text-align: center;
     border: 2px solid #ddd;
     border-radius: 8px;
   }
   
-  th {
+  .company-mypage-tr th {
     letter-spacing: 1px;
   }
   
-  td {
+ .company-mypage-tr td {
     font-weight: 500;
     transition: background-color 0.3s ease-in-out;
   }

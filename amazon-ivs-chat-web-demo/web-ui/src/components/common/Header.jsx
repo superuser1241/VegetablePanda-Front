@@ -31,9 +31,7 @@ const Header = ({ userName, userRole, handleLogout }) => {
             <nav className="nav">
 
                 {userName ? (
-                    <>
-                        <Link to="/test" className="nav-item">Test</Link>
-                        
+                    <>                        
                         <Link to={getMyPagePath(userRole)} className="nav-item">
                             마이페이지
                         </Link>

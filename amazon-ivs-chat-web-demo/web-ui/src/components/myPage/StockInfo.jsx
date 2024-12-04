@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import './StockInfo.css';
 
-const StockInfo = ({stock, onBack}) => {
+const StockInfo = ({onUpdateStock, setActiveTab, stock, onBack}) => {
 
     const { state } = useLocation();
     const item = state?.item;
@@ -78,7 +78,10 @@ const StockInfo = ({stock, onBack}) => {
                             </div>
                     
                     </div>
-                    <div className='update-button-container'><button>수정하기</button></div>
+                    <div className='update-button-container' onClick={()=>{
+                        onUpdateStock(stock);
+                        setActiveTab('updateStock');
+                    }}><button>수정하기</button></div>
 
                 {/* 필요한 다른 정보들도 추가 */}
                 </div>
