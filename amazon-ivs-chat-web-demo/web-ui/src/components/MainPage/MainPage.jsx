@@ -396,7 +396,6 @@ const MainPage = ({ onJoinRoom }) => {
                 </section>
             </div>
             <AuctionStatus />
-            <AuctionRegisterPage/>
         </>
     );
 };
