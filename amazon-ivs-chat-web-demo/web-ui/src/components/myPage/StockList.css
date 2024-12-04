@@ -1,18 +1,23 @@
 
-.stock-table th {
+.stocklist-table th {
+    background-color: #81c784; /* 연한 초록색 */
     border-bottom: 1px solid #ddd;
     padding: 8px;
+    /* background-color: #f4f4f4; */
+    font-weight: bold;
+    color: #333;
 }
 
-.stock-table td {
+.stocklist-table td {
     padding: 8px;
     text-align: center;
 }
 
-.stock-table {
+.stocklist-table {
     width: 100%;
     border-collapse: collapse;
-    width: 100%;
+    border: none;
+    margin-top: 20px;
 }
 
 /* th {
@@ -20,9 +25,9 @@
     width:50px;
 } */
 
-
 /* styles.css */
 .stock-list-container {
+    width: 100%;
     padding: 20px;
     background: white;
     border-radius: 8px;
@@ -30,9 +35,9 @@
 }
  
   
-  tbody tr:hover {
+  /* tbody tr:hover {
     background-color: #82c91e83; 
-  }
+  } */
 
 .stock-status-container h2 {
     color: #333;
@@ -40,7 +45,7 @@
     text-align: center;
 }
 
-.stock-table-container {
+.stocklist-table-container {
     overflow-x: auto;
 }
 
@@ -51,8 +56,11 @@
     border: 1px solid #ddd;
 }
 
-.stock-table th {
-    background-color: #f4f4f4;
+.stocklist-table th {
     font-weight: bold;
     color: #333;
+}
+
+.stocklist-table button:hover {
+    background-color: #81c784;
 }

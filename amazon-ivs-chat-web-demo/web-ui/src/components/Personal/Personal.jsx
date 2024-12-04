@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import "./personal.css";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import './personal.css';
 import logo from "../../image/기본이미지.png";
 
+
 const Personal = ({ onJoinRoom }) => {
+
   const token = localStorage.getItem("token");
   const [error, setError] = useState("");
   const [visibleShops, setVisibleShops] = useState(4);
@@ -21,6 +23,7 @@ const Personal = ({ onJoinRoom }) => {
 
   const location = useLocation();
   const { farmerSeq } = location.state || {};
+  const serverIp = process.env.REACT_APP_SERVER_IP;
 
   useEffect(() => {
     if (token) {
@@ -36,7 +39,7 @@ const Personal = ({ onJoinRoom }) => {
   useEffect(() => {
     const fetchActiveRooms = async () => {
         try {
-            const response = await axios.get(`http://localhost:9001/api/streaming/active-rooms/${farmerSeq}` , 
+            const response = await axios.get(`${serverIp}/api/streaming/active-rooms/${farmerSeq}` , 
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -51,7 +54,7 @@ const Personal = ({ onJoinRoom }) => {
 
     const fetchShopItems = async () => {
         try {
-            const response = await axios.post(`http://localhost:9001/api/shop/${farmerSeq}`);
+            const response = await axios.post(`${serverIp}/api/shop/${farmerSeq}`);
             setShopItems(response.data);
         } catch (err) {
             console.error('상품 목록을 불러오는데 실패했습니다:', err);
@@ -73,7 +76,7 @@ const Personal = ({ onJoinRoom }) => {
   useEffect(() => {
     const fetchState = async () => {
       try {
-        const response = await axios.get(`http://localhost:9001/likeState`, {
+        const response = await axios.get(`${serverIp}/likeState`, {
           params: {
             userSeq: seq,
             farmerSeq: farmerSeq,
@@ -94,7 +97,7 @@ const Personal = ({ onJoinRoom }) => {
   const fetchFarmerInfo = async (farmerSeq) => {
     try {
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/list/${farmerSeq}`,
+        `${serverIp}/myPage/farmer/list/${farmerSeq}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -110,7 +113,7 @@ const Personal = ({ onJoinRoom }) => {
   const fetchLike = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:9001/likeAction`,
+        `${serverIp}/likeAction`,
         {
           userSeq: seq,
           farmerSeq,
@@ -131,7 +134,7 @@ const Personal = ({ onJoinRoom }) => {
   const fetchReview = async (farmerSeq) => {
     try {
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/review/List/${farmerSeq}`,
+        `${serverIp}/myPage/farmer/review/List/${farmerSeq}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -169,7 +172,7 @@ const Personal = ({ onJoinRoom }) => {
         )}
       </div>
     </div>
-{ farmerSeq === undefined || null ? "" : 
+{ farmerSeq === undefined || farmerSeq === seq || null ? "" : 
       <button className="yun-like-button1" onClick={() => fetchLike(farmerSeq)}>구독</button>
 
 }

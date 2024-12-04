@@ -7,9 +7,10 @@ const PersonalList = () => {
   const token = localStorage.getItem("token");
   const [farmer, setFarmer] = useState([]);
   const navigate = useNavigate();
+  const serverIp = process.env.REACT_APP_SERVER_IP;
   const fetchFarmers = async () => {
     try {
-      const response = await axios.get("http://localhost:9001/farmer", {
+      const response = await axios.get(`${serverIp}/farmer`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

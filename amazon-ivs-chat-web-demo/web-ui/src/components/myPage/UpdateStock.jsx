@@ -1,25 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './RegisterStock.css';
+import './UpdateStock.css';
 import axios from 'axios';
 
-const serverIp = process.env.REACT_APP_SERVER_IP;
-
-const RegisterStock = () => {
+const UpdateStock = ({stock, onBack}) => {
     const token = localStorage.getItem('token');
 
     const [userId, setUserId] = useState();
 
     const [newProduct, setNewProduct] = useState({
-        color: '',
-        count: '',
+        color: stock.color,
+        count: stock.count,
         status: 0,
-        content: '',
-        productSeq: '',
+        content: stock.content,
+        productSeq: stock.productSeq,
         stockGradeSeq: '',
         stockOrganicSeq: '',
-        file : {fileSeq: '', name: ''},
-        regDate: new Date().toISOString(),
-        'Content-Type': 'multipart/form-data'
+        file : {fileSeq: stock.fileSeq || '', name: stock.fileName || '', path: stock.filePath || ''},
+        // 'Content-Type': 'multipart/form-data'
+    });
+
+    const [updateStock, setUpdateStock] = useState({
+        stockSeq: 0,
+        content: '',
+        count: 0,
+        color: '',
+        productSeq: 0,
+        stockGradeSeq: 0,
+        stockOrganicSeq: 0,
+        userSeq: 0,
+        regDate: '',
+        file: {fileSeq: 0, name: '', path: ''}
     });
 
     const [productCategory, setProductCategory] = useState([]);
@@ -33,11 +43,6 @@ const RegisterStock = () => {
     const [image, setImage] = useState(null);
 
     const textarea = useRef();
-
-    const handleResizeHeight = () => {
-        textarea.current.style.height = 'auto'; //height 초기화
-        textarea.current.style.height = textarea.current.scrollHeight + 'px';
-    };
 
     useEffect(() => {
         if (token) {
@@ -56,8 +61,8 @@ const RegisterStock = () => {
     useEffect(()=>{
         console.log("카테고리 가져오기");
         fetchProductCategory();
-        console.log("카테고리 정보")
-        console.log(productCategory)
+        console.log("카테고리 정보");
+        console.log(productCategory);
         
         fetchStockGrade();
         console.log('등급 분류 정보');
@@ -67,11 +72,49 @@ const RegisterStock = () => {
         console.log('유기농 분류 정보');
         console.log(organic);
         
+        fetchStock();
+        console.log("updateStock 정보");
+        console.log(updateStock);
+
+        const category = stock.productCategoryContent === '식량작물' ? 1
+        : stock.productCategoryContent === '엽채류' ? 2
+        : stock.productCategoryContent === '과채류' ? 3
+        : stock.productCategoryContent === '근채류' ? 4
+        : stock.productCategoryContent === '양채류' ? 5
+        : stock.productCategoryContent === '과수' ? 6
+        : stock.productCategoryContent === '기타작물' ? 7
+        : 0;
+
+        setSelectedCategory(category);
+        fetchProductInfo(selectedCategory);
+        // setUpdateStock(prev => ({
+        //     ...prev,
+        //     productSeq: stock.productSeq
+        // }));
+
     },[]);
+
+   
+    const fetchStock = async () => {
+        try {
+            const response = await axios.get(`http://localhost:9001/stock/`+stock.stockSeq, {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+        );
+
+        console.log("stockSeq로 stock정보 찾아오기");
+        console.log(response.data);
+        setUpdateStock({...response.data});
+
+        } catch (error) {
+            console.error('상품 정보 조회 실패', error);
+        }
+    }
+    
 
     const fetchProductCategory = async () => {
         try {
-            const response = await axios.get(`${serverIp}/category`, {
+            const response = await axios.get(`http://localhost:9001/category`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
                         
@@ -84,7 +127,7 @@ const RegisterStock = () => {
 
     const fetchProductInfo = async (categorySeq) => {
         try{
-            const response = await axios.get(`${serverIp}/product/`+categorySeq, {
+            const response = await axios.get(`http://localhost:9001/product/`+categorySeq, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -97,7 +140,7 @@ const RegisterStock = () => {
 
     const fetchStockGrade = async () => {
         try{
-            const response = await axios.get(`${serverIp}/stockGrade`, {
+            const response = await axios.get(`http://localhost:9001/stockGrade`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -110,7 +153,7 @@ const RegisterStock = () => {
 
     const fetchOrganic = async () => {
         try{
-            const response = await axios.get(`${serverIp}/stockOrganic`, {
+            const response = await axios.get(`http://localhost:9001/stockOrganic`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -135,7 +178,7 @@ const RegisterStock = () => {
 
     const changeFileName = (e) => {
         const { name, value } = e.target;
-        setNewProduct(prev => ({
+        setUpdateStock(prev => ({
             ...prev, 
             file : {
                 [name] : value,
@@ -146,26 +189,28 @@ const RegisterStock = () => {
     const handleProductSubmit = async (e) => {
         e.preventDefault();
         
-        if(!newProduct.color) return alert('색상을 선택해주세요.');
-        if(!newProduct.count) return alert('수량을 입력해주세요.');
-        if(!newProduct.content) return alert('내용을 입력해주세요.');
+        if(!updateStock.color) return alert('색상을 선택해주세요.');
+        if(!updateStock.count) return alert('수량을 입력해주세요.');
+        if(!updateStock.content) return alert('내용을 입력해주세요.');
         
 
         try{
             e.preventDefault();
 
-            const url = `${serverIp}/stock?farmerSeq=${userId}`;
+            const url = `http://localhost:9001/stock`;
             
             const stockData = {
-                productSeq:parseInt(newProduct.productSeq),
-                stockGradeSeq: parseInt(newProduct.stockGradeSeq),
-                stockOrganicSeq: parseInt(newProduct.stockOrganicSeq),
-                color: parseInt(newProduct.color),
-                count: parseInt(newProduct.count),
-                content: newProduct.content,
+                stockSeq: stock.stockSeq,
+                productSeq:updateStock.productSeq,
+                stockGradeSeq: parseFloat(updateStock.stockGradeSeq),
+                stockOrganicSeq: parseFloat(updateStock.stockOrganicSeq),
+                color: updateStock.color,
+                count: updateStock.count,
+                content: updateStock.content,
                 status: 0,
-                file : {fileSeq: '', name: newProduct.file.name},
-                regDate: new Date().toISOString(),
+                file : {fileSeq: updateStock.file.fileSeq, name: updateStock.file.name, path: updateStock.file.path},
+                regDate: updateStock.regDate,
+                userSeq: updateStock.userSeq
             };
 
             console.log(newProduct);
@@ -180,27 +225,19 @@ const RegisterStock = () => {
                 formData.append("image", image);
             }
 
-            const response = await axios.post(url, formData, {
+            // for(let [key, value] of formData.entries()) {
+            //     console.log(key, value);
+            // }
+
+            const response = await axios.put(url, formData, {
                 headers: { 
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data'
+                    // 'Content-Type': 'multipart/form-data'
                 }
             });
 
-            if (response.status === 201) {
-                alert('상품이 등록되었습니다.');
-                // 폼 초기화
-                setNewProduct({
-                    color: '',
-                    count: '',
-                    status: 0,
-                    content: '',
-                    productSeq: '',
-                    stockGradeSeq: '',
-                    stockOrganicSeq: '',
-                    file : {fileSeq: '', name: ''},
-                    regDate: new Date().toISOString()
-                });
+            if (response.status === 200) {
+                alert('상품이 수정되었습니다.');
 
                 handleImageReset();
             }
@@ -208,16 +245,18 @@ const RegisterStock = () => {
             if (error.response?.status === 400) {
                 alert('하루에 한 상품만 등록할 수 있습니다.');
             } else {
-                alert('상품 등록에 실패했습니다.');
+                alert('상품 수정에 실패했습니다.');
             }
-            console.error('상품 등록 실패:', error);
+            console.error('상품 수정 실패:', error);
         }
     };
 
     const handleProductChange = (e) => {
         const { name, value } = e.target;
         
-        setNewProduct(prev => ({
+        console.log("handleProductChange");
+        console.log(name, value);
+        setUpdateStock(prev => ({
             ...prev,
             [name]: value
         }));
@@ -245,7 +284,7 @@ const RegisterStock = () => {
     formData.append("image", image);
 
     try {
-        const response = await axios.post(`${serverIp}/s3/upload`, formData, {
+        const response = await axios.post("http://localhost:9001/s3/upload", formData, {
             headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
         });
         alert("업로드 성공: " + response.data);
@@ -254,6 +293,8 @@ const RegisterStock = () => {
         alert("업로드 실패");
     }
   };
+
+
 
     return (
         <div className='RegisterStock'>
@@ -273,16 +314,11 @@ const RegisterStock = () => {
                                 <option value="5">양채류</option>
                                 <option value="6">과수</option>
                                 <option value="7">기타작물</option>
-                                {/* {
-                                    productCategory.map((item) => {
-                                        return <option key = {item.productCategorySeq} id = {item.productCategorySeq} value = {item.productCategorySeq}>{item.content}</option>
-                                    })
-                                } */}
                             </select>
                         </div>
                         <div className='form-group'>
                             <label>상품 종류</label>
-                            <select name="productSeq" id="productSeq" value={newProduct.productSeq} onChange={handleProductChange}>
+                            <select name="productSeq" id="productSeq" value={updateStock.productSeq} onChange={handleProductChange}>
                                 <option value="default">---</option>
                                 {
                                     products.map((item) => {
@@ -293,7 +329,7 @@ const RegisterStock = () => {
                         </div>
                         <div className='form-group'>
                             <label>등급</label>
-                            <select name="stockGradeSeq" id="stockGradeSeq" value = {newProduct.stockGradeSeq} onChange={handleProductChange}>
+                            <select name="stockGradeSeq" id="stockGradeSeq" value = {updateStock.stockGradeSeq} onChange={handleProductChange}>
                                 <option value="default">---</option>
                                 {
                                     grade.map((item) => {
@@ -304,7 +340,7 @@ const RegisterStock = () => {
                         </div>
                         <div className='form-group'>
                             <label>재배 방식</label>
-                            <select name="stockOrganicSeq" id="stockOrganicSeq" value = {newProduct.stockOrganicSeq} onChange={handleProductChange}>
+                            <select name="stockOrganicSeq" id="stockOrganicSeq" value = {updateStock.stockOrganicSeq} onChange={handleProductChange}>
                                 <option value="default">---</option>
                                 {
                                     organic.map((item) => {
@@ -329,7 +365,7 @@ const RegisterStock = () => {
                                 }}
                             ></span></label>
                             
-                            <select name="color" id={selectedColor} value = {newProduct.color} onChange={changeColor}>
+                            <select name="color" id={selectedColor} value = {updateStock.color} onChange={changeColor}>
                                 <option value="default">---</option>
                                 <option value="1" data-color = "#be2e22">빨간색</option>
                                 <option value="2" data-color = "#ffa500">주황색</option>
@@ -345,7 +381,7 @@ const RegisterStock = () => {
                             <input
                                 type="number"
                                 name="count"
-                                value={newProduct.count}
+                                value={updateStock.count}
                                 onChange={handleProductChange}
                                 placeholder="수량 입력"
                             />
@@ -354,7 +390,7 @@ const RegisterStock = () => {
                             <label>상품 설명</label>
                             <textarea
                                 name="content"
-                                value={newProduct.content}
+                                value={updateStock.content}
                                 onChange={handleProductChange}
                                 placeholder="상품에 대한 설명을 입력해주세요"
                             />
@@ -401,7 +437,7 @@ const RegisterStock = () => {
                                     </div>
                                 </div>
                                 <div className='stock-image-textarea-container'>
-                                    <textarea placeholder='이미지에 대한 설명을 입력해주세요.' id='name' name = 'name' maxLength={26} value = {newProduct.file.name} onChange={changeFileName}/>
+                                    <textarea placeholder='이미지에 대한 설명을 입력해주세요.' id='name' name = 'filename' maxLength={26} value = {updateStock.file.name} onChange={changeFileName}/>
                                 </div>
                             </div>
                             
@@ -409,7 +445,7 @@ const RegisterStock = () => {
                     
                     </div>
                     <div className='btn'>
-                            <button type='submit' className='stock-submit-btn'>등록</button> 
+                            <button type='submit' className='stock-submit-btn'>수정</button> 
                             <button type='reset' className='stock-reset-btn'>취소</button>
                     </div>
                 </form>
@@ -418,4 +454,4 @@ const RegisterStock = () => {
     );
 };
 
-export default RegisterStock;
+export default UpdateStock;

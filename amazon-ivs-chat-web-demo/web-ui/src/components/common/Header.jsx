@@ -4,9 +4,41 @@ import { Link } from 'react-router-dom';
 import './Header.css';
 import '../personal/PersonalList.css';
 import logo from '../../image/농산물 판다.png';
+import cart from '../../image/cart.png';
 
-const Header = ({ userName, userRole, handleLogout }) => {
-    // 역할에 따른 마이페이지 경로 결정
+import axios from 'axios';
+
+const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitConfirm }) => {
+    const [showExitModal, setShowExitModal] = useState(false);
+    const [redirectPath, setRedirectPath] = useState('/');
+
+    const handleLinkClick = (path) => (e) => {
+        if (userRole === 'ROLE_FARMER' && streamingRoom) { // 방송 중인 파머 유저인지 확인
+            e.preventDefault();
+            setRedirectPath(path);
+            setShowExitModal(true);
+        } else {
+            // 방송 중이 아닌 경우 세션 스토리지의 정보를 삭제하고 바로 이동
+            sessionStorage.removeItem('streamingRoom');
+            window.location.href = path;
+        }
+    };
+
+    const confirmExitAndRedirect = async () => {
+        await handleExitConfirm();
+        setShowExitModal(false);
+        window.location.href = redirectPath;
+    };
+
+    const handleLogoutClick = () => {
+        if (userRole === 'ROLE_FARMER' && streamingRoom) {
+            setRedirectPath('/');
+            setShowExitModal(true);
+        } else {
+            handleLogout();
+        }
+    };
+
     const getMyPagePath = (role) => {
         switch(role) {
             case 'ROLE_ADMIN':
@@ -27,37 +59,42 @@ const Header = ({ userName, userRole, handleLogout }) => {
     return (
         <header className="header">
             <div className="logo-container">
-                <Link to="/">
+                <Link to="/" onClick={handleLinkClick('/')}>
                     <img src={logo} alt="로고" />
                 </Link>
             </div>
             <nav className="nav">
-
                 {userName ? (
                     <>
-                        <Link to={getMyPagePath(userRole)} className="nav-item">
+                        <Link to={getMyPagePath(userRole)} className="nav-item" onClick={handleLinkClick(getMyPagePath(userRole))}>
                             마이페이지
                         </Link>
-                        <Link to="/customer-service" className="nav-item">
+                        <Link to="/customer-service" className="nav-item" onClick={handleLinkClick('/customer-service')}>
                             고객센터
                         </Link>
-                        <Link to="/notify-service" className="nav-item">
+                        <Link to="/notify-service" className="nav-item" onClick={handleLinkClick('/notify-service')}>
                             공지사항
                         </Link>
                         { userRole === 'ROLE_FARMER' ?
-                        <Link to="/personal" className="nav-item">
-                            개인 페이지
-                        </Link>
+                       <Link to="/personal" className="nav-item" onClick={handleLinkClick('/personal')}>
+                           개인 페이지
+                       </Link>
+               
                         : <Link to="/PersonalList" className='nav-item'>
                             판매자 목록
                         </Link>
                         }
+
+                        { userRole === 'ROLE_USER' ? (
+                            <div className='cart-container'> 
+                                <Link to = "/cart" className="nav-item">
+                                    <img src = {cart}/>
+                                </Link>
+                            </div>
+                            ) : null }
                         <div className="user-actions">
                             <span className="welcome-message">{userName}님 환영합니다</span>
-                            <button
-                                onClick={handleLogout}
-                                className="logout-button"
-                            >
+                            <button onClick={handleLogoutClick} className="logout-button">
                                 로그아웃
                             </button>
                         </div>
@@ -68,6 +105,20 @@ const Header = ({ userName, userRole, handleLogout }) => {
                     </Link>
                 )}
             </nav>
+
+            {/* 종료 확인 모달 추가 */}
+            {showExitModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>방송 종료</h3>
+                        <p>방송을 종료하시겠습니까?</p>
+                        <div className="modal-buttons">
+                            <button onClick={confirmExitAndRedirect}>네</button>
+                            <button onClick={() => setShowExitModal(false)}>아니오</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </header>
     );
 };

@@ -7,6 +7,7 @@ const Shop = () => {
   const [shopItems, setShopItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [visibleItems, setVisibleItems] = useState(5);
+  const serverIp = process.env.REACT_APP_SERVER_IP;
 
   const showMoreItems = () => {
     setVisibleItems((prev) => prev + 5 * 1);
@@ -17,7 +18,7 @@ const Shop = () => {
   useEffect(() => {
     const fetchShopItems = async () => {
         try {
-            const response = await axios.get('http://localhost:9001/api/shop');
+            const response = await axios.get(`${serverIp}/api/shop`);
             setShopItems(response.data);
         } catch (err) {
             console.error('상품 목록을 불러오는데 실패했습니다:', err);

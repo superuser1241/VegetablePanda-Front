@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './NTBoard.css';
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const NTBoardList = () => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ const NTBoardList = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:9001/notifyBoard/', {
+        const response = await axios.get(`${serverIp}/notifyBoard/`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

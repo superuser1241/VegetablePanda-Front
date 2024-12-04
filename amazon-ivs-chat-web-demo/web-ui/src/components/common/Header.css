@@ -19,10 +19,16 @@
     height: auto;
 }
 
+.cart-container img {
+    width:25px;
+    margin: 0 10px;
+}
+
 /* 네비게이션 바 스타일 */
 .nav {
     display: flex;
     gap: 25px; /* 네비게이션 항목 간격 증가 */
+    align-items: center;
 }
 
 /* 네비게이션 아이템 스타일 */

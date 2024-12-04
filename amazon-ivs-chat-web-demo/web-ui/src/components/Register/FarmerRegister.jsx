@@ -24,6 +24,7 @@ function FarmerRegister() {
   const [idCheckResult, setIdCheckResult] = useState("");
   const [isCheckResult, setIsCheckResult] = useState(false); 
 
+  const serverIp = process.env.REACT_APP_SERVER_IP;
   const navigate = useNavigate();
 
   const handleImageChange = (e) => {
@@ -65,7 +66,7 @@ function FarmerRegister() {
     if (name === "id" && value !== "") {
       axios({
         method: "GET",
-        url: `http://localhost:9001/members/${value}`,
+        url: `${serverIp}/members/${value}`,
       })
         .then((res) => {
           console.log(res);
@@ -164,7 +165,7 @@ function FarmerRegister() {
       }
 
       const response = await axios.post(
-        "http://localhost:9001/members",
+        `${serverIp}/members`,
         formData
       );
 

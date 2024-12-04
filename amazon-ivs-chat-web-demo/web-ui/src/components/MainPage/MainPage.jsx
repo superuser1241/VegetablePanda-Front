@@ -44,10 +44,12 @@ const MainPage = ({ onJoinRoom }) => {
     const [statistics, setStatistics] = useState([]);
     const [weeklyStats, setWeeklyStats] = useState([]);
 
+    const serverIp = process.env.REACT_APP_SERVER_IP;
+
     useEffect(() => {
         const fetchActiveRooms = async () => {
             try {
-                const response = await axios.get('http://localhost:9001/api/streaming/active-rooms');
+                const response = await axios.get(`${serverIp}/api/streaming/active-rooms`);
                 setRooms(response.data);
                 console.log('rooms:', rooms);
             } catch (err) {
@@ -55,13 +57,9 @@ const MainPage = ({ onJoinRoom }) => {
                 console.error(err);
             }
         };
-
-
-
-
         const fetchShopItems = async () => {
             try {
-                const response = await axios.get('http://localhost:9001/api/shop');
+                const response = await axios.get(`${serverIp}/api/shop`);
                 setShopItems(response.data);
             } catch (err) {
                 console.error('상품 목록을 불러오는데 실패했습니다:', err);
@@ -99,7 +97,7 @@ const MainPage = ({ onJoinRoom }) => {
                 const startDate = '2024-01-01T00:00:00';
                 const endDate = '2024-12-31T23:59:59';
                 
-                const response = await axios.get('http://localhost:9001/api/statistics/products', {
+                const response = await axios.get(`${serverIp}/api/statistics/products`, {
                     params: { startDate, endDate }
                 });
                 console.log(response.data);
@@ -125,7 +123,7 @@ const MainPage = ({ onJoinRoom }) => {
                 const startDate = new Date();
                 startDate.setDate(endDate.getDate() - 6); // 7일치 데이터
                 
-                const response = await axios.get('http://localhost:9001/api/statistics/daily', {
+                const response = await axios.get(`${serverIp}/api/statistics/daily`, {
                     params: {
                         startDate: startDate.toISOString().split('T')[0],
                         endDate: endDate.toISOString().split('T')[0]
@@ -385,7 +383,7 @@ const MainPage = ({ onJoinRoom }) => {
                     <div className="shop-list">
                         {shopItems.slice(0, visibleShops).map((item) => (
                             <div key={item.shopSeq} className="shop-card">
-                            <Link to = {`/product/{${item.stockSeq}}`} state={{ product:item }} className='default-link product-name'>
+                            <Link to = {`/product/${item.stockSeq}`} state={{ product:item }} className='default-link product-name'>
                                 <div className="shop-image">
                                     <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
                                 </div>
@@ -415,7 +413,6 @@ const MainPage = ({ onJoinRoom }) => {
                 </section>
             </div>
             <AuctionStatus />
-            <AuctionRegisterPage/>
         </>
     );
 };

@@ -27,21 +27,21 @@
 }
 
 .yun-profile-image {
-    width: 180px;
-    height: 180px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     background-color: #a5d6a7;
-    border: 1px solid rgb(206, 206, 206);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     margin-right: 30px;
 }
 
 .yun-profile-details {
     text-align: center;
-    width: 400px;
+    max-width: 500px;
 }
 
 .yun-seller-name {
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 600;
     color: #388e3c;
     margin: 0 0 10px 0;
@@ -56,7 +56,7 @@
     margin: 0;
     line-height: 1.5;
     padding: 15px;
-    font-size: 24px;
+    font-size: 16px;
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -176,139 +176,4 @@
     color: #888;
     margin-top: 10px;
     text-align: center;
-}
-
-.yun-item-container1 {
-  margin-bottom: 40px;
-}
-
-.yun-item-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.yun-shop-list, .yun-streaming-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.yun-shop-card, .yun-room-card {
-  width: 100%;
-  max-width: 300px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: transform 0.3s ease;
-}
-
-.yun-shop-card:hover, .yun-room-card:hover {
-  transform: translateY(-10px);
-}
-
-.yun-shop-image img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-bottom: 1px solid #ddd;
-}
-
-.yun-shop-info {
-  padding: 10px;
-}
-
-.yun-shop-info p {
-  font-size: 1rem;
-  margin: 5px 0;
-}
-
-.yun-buy-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-  border-radius: 0 0 10px 10px;
-  transition: background-color 0.3s;
-}
-
-.yun-buy-button:hover {
-  background-color: #45a049;
-}
-
-.yun-no-data-notification {
-  font-size: 1rem;
-  color: #888;
-  text-align: center;
-  margin-top: 20px;
-}
-
-.yun-join-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.yun-join-button:hover {
-  background-color: #0056b3;
-}
-
-.yun-room-card h3 {
-  font-size: 1rem;
-  margin: 10px;
-  color: #333;
-}
-
-.yun-streaming-section {
-  display: flex;
-  justify-content: center; 
-  align-items: center; 
-  flex-wrap: wrap; 
-  gap: 20px;
-}
-
-.yun-room-card {
-  width: 100%;
-  max-width: 300px; 
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  padding: 20px;
-  text-align: center; 
-  transition: transform 0.3s ease;
-}
-
-.yun-room-card:hover {
-  transform: translateY(-10px);
-}
-
-
-.yun-streaming-section .yun-room-card:hover {
-  transform: translateY(-10px);
-}
-
-.yun-room-card button {
-  width: 100%;
-  background-color: #007bff;
-  color: white;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.yun-room-card button:hover {
-  background-color: #0056b3;
 }

@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 import { useAuctionData } from './useAuctionData';
 import { useBidding } from './useBidding';
 import './BidPage.css';
+import axios from 'axios';
+
+const serverIp = process.env.REACT_APP_SERVER_IP;
 
 const BidPage = ({ 
     streamingRoom, 
@@ -11,10 +14,11 @@ const BidPage = ({
     onOpenModal, 
     onCheckPrice, 
     onCheckSalesHistory,
-    userWallet 
+    userWallet,
+    userRole 
 }) => {
+    const [isAuctionEnded, setIsAuctionEnded] = useState(false);
     const [remainingTime, setRemainingTime] = useState('');
-    
     const [pricePerKg, setPricePerKg] = useState(0);
 
     const calculateRemainingTime = (closeTime) => {
@@ -22,19 +26,35 @@ const BidPage = ({
         const endTime = new Date(closeTime);
         const diff = endTime - now;
 
+        if (diff <= 0) {
+            return '경매 종료';
+        }
+
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-        if (diff <= 0) {
-            return '마감시간 경과';
-        }
 
         if (hours > 0) {
             return `${hours}시간 ${minutes}분 ${seconds}초`;
         }
         return `${minutes}분 ${seconds}초`;
     };
+
+    useEffect(() => {
+        if (auctionData?.closeTime) {
+            const checkAuctionEnd = () => {
+                const now = new Date();
+                const closeTime = new Date(auctionData.closeTime);
+                if (now >= closeTime && !isAuctionEnded) {
+                    setIsAuctionEnded(true);
+                    onAuctionEnd();
+                }
+            };
+
+            const timer = setInterval(checkAuctionEnd, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [auctionData, isAuctionEnded, onAuctionEnd]);
 
     useEffect(() => {
         if (auctionData?.closeTime) {
@@ -92,10 +112,6 @@ const BidPage = ({
         }).replace(/\./g, '-');
     };
 
-    const handleOpenBidHistory = (bid) => {
-        onOpenModal(bid);  // bid를 인자로 전달
-    };
-
     return (
         
         <>
@@ -134,7 +150,7 @@ const BidPage = ({
                                         <button 
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                handleOpenBidHistory(bid);  // 수정된 부분
+                                                onOpenModal(bid);
                                             }}
                                             className="bid-link"
                                         >
@@ -170,9 +186,12 @@ const BidPage = ({
                                     <span className="price-per-kg">
                                         (kg당 {pricePerKg.toLocaleString()}원)
                                     </span>
-                                    <span className="price-deposit">
-                                        (선금 포인트 {Math.floor(bidAmount * 0.1).toLocaleString()}원)
-                                    </span>
+                                    
+                                    {userRole === 'ROLE_USER' && (
+                                        <span className="price-deposit">
+                                            선금 포인트 {Math.floor(bidAmount * 0.1).toLocaleString()}원
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                             <button 

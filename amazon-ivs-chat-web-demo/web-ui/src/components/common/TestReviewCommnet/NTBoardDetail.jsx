@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './NTBoard.css';
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const NotifyBoardDetail = () => {
   const navigate = useNavigate();
   const { boardNoSeq } = useParams();
@@ -34,11 +36,11 @@ const NotifyBoardDetail = () => {
 
     const fetchPost = async () => {
       try {
-        await axios.put(`http://localhost:9001/notifyBoard/increaseReadnum/${boardNoSeq}`, {}, {
+        await axios.put(`${serverIp}/notifyBoard/increaseReadnum/${boardNoSeq}`, {}, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
-        const response = await axios.get(`http://localhost:9001/notifyBoard/${boardNoSeq}`, {
+        const response = await axios.get(`${serverIp}/notifyBoard/${boardNoSeq}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setPost(response.data);
@@ -60,7 +62,7 @@ const NotifyBoardDetail = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:9001/notifyBoard/${boardNoSeq}`, {
+      await axios.delete(`${serverIp}/notifyBoard/${boardNoSeq}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

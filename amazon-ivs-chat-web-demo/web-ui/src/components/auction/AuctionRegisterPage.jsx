@@ -3,13 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PriceCheckModal from './PriceCheckModal';
 import SalesHistoryModal from './SalesHistoryModal';
+import { Client } from "@stomp/stompjs";
 
-const AuctionRegisterPage = ({ 
-    streamingRoom, 
-    onRegisterSuccess, 
-    onCheckPrice, 
-    onCheckSalesHistory 
-}) => {
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
+const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
     const navigate = useNavigate();
     const [auctionData, setAuctionData] = useState({
         count: '',
@@ -38,6 +36,8 @@ const AuctionRegisterPage = ({
         setTotalPrice(price * count);
     }, [pricePerKg, auctionData.count]);
 
+
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'pricePerKg') {
@@ -53,40 +53,45 @@ const AuctionRegisterPage = ({
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await onRegisterSuccess({
-                count: auctionData.count,
-                closeTime: auctionData.closeTime,
-                stockSeq: auctionData.stockSeq,
-                totalPrice: totalPrice
-            });
-            
+            const token = localStorage.getItem('token');
+            const response = await axios.post(
+                `${serverIp}/api/auction/register?price=${totalPrice}`,
+                { 
+                    ...auctionData,
+                },
+                {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }
+            );
+            onRegisterSuccess(response.data);
+
         } catch (error) {
             console.error('경매 등록 실패:', error);
             alert('경매 등록에 실패했습니다.');
         }
     };
     
-    const getTodayStart = () => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}T09:00`;
-    };
+    // const getTodayStart = () => {
+    //     const now = new Date();
+    //     const year = now.getFullYear();
+    //     const month = String(now.getMonth() + 1).padStart(2, '0');
+    //     const day = String(now.getDate()).padStart(2, '0');
+    //     return `${year}-${month}-${day}T09:00`;
+    // };
 
-    const getTodayEnd = () => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}T24:00`;
-    };
+    // const getTodayEnd = () => {
+    //     const now = new Date();
+    //     const year = now.getFullYear();
+    //     const month = String(now.getMonth() + 1).padStart(2, '0');
+    //     const day = String(now.getDate()).padStart(2, '0');
+    //     return `${year}-${month}-${day}T13:00`;
+    // };
 
     const checkPrice = async () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(
-                `http://localhost:9001/price/${streamingRoom.productName}`,
+                `${serverIp}/price/${streamingRoom.productName}`,
                 {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }
@@ -104,7 +109,7 @@ const AuctionRegisterPage = ({
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(
-                `http://localhost:9001/buy/${streamingRoom.stockSeq}`,
+                `${serverIp}/buy/${streamingRoom.stockSeq}`,
                 {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }
@@ -119,9 +124,9 @@ const AuctionRegisterPage = ({
 
 
     return (
-        <div className="auction-register-container">
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
-                <div>
+        <>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px', width: '300px'}}>
+                <div> {/* 내부 컨테이너 너비 100%로 설정 */}
                     <h2>경매 등록</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
@@ -162,8 +167,8 @@ const AuctionRegisterPage = ({
                                 name="closeTime"
                                 value={auctionData.closeTime}
                                 onChange={handleChange}
-                                min={getTodayStart()}
-                                max={getTodayEnd()}
+                                // min={getTodayStart()}
+                                // max={getTodayEnd()}
                                 required
                             />
                         </div>
@@ -224,7 +229,7 @@ const AuctionRegisterPage = ({
                 onClose={() => setShowSalesModal(false)}
                 salesHistory={salesHistory}
             />
-        </div>
+</>
     );
 };
 

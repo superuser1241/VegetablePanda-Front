@@ -6,11 +6,11 @@ export const useAuctionData = (userSeq,auctionSeq) => {
     const [highestBid, setHighestBid] = useState(null);
     const [auction, setAuction] = useState(null);
     const [bid, setBid] = useState(null);
-
     const fetchHighestBid = useCallback(async () => {
         const token = localStorage.getItem('token');
         try {
-            const result = await axios.get(`http://localhost:9001/highestBid/${userSeq}`, {
+            const serverIp = process.env.REACT_APP_SERVER_IP;
+            const result = await axios.get(`${serverIp}/highestBid/${userSeq}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setHighestBid(result.data);
@@ -22,7 +22,8 @@ export const useAuctionData = (userSeq,auctionSeq) => {
     const fetchAuction = useCallback(async () => {
         const token = localStorage.getItem('token');
         try {
-            const result = await axios.get(`http://localhost:9001/auction/${userSeq}`, {
+            const serverIp = process.env.REACT_APP_SERVER_IP;
+            const result = await axios.get(`${serverIp}/auction/${userSeq}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -40,7 +41,8 @@ export const useAuctionData = (userSeq,auctionSeq) => {
     const findBidByAuctionId = useCallback(async () => {
         const token = localStorage.getItem('token');
         try {
-            const result = await axios.get(`http://localhost:9001/bid/${auctionSeq}`, {
+            const serverIp = process.env.REACT_APP_SERVER_IP;
+            const result = await axios.get(`${serverIp}/bid/${auctionSeq}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -57,8 +59,9 @@ export const useAuctionData = (userSeq,auctionSeq) => {
 
     // WebSocket 연결 및 상태 갱신
     useEffect(() => {
+        const serverIp = process.env.REACT_APP_SERVER_IP;
         const client = new Client({
-            brokerURL: "ws://localhost:9001/ws",
+            brokerURL: `ws://${serverIp}/ws`,
             
             onConnect: () => {
                 client.subscribe("/top/notifications", async (message) => {

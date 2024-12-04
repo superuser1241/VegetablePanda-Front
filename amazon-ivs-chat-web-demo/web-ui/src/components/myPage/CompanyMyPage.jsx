@@ -39,6 +39,7 @@ const CompanyMyPage = () => {
   const [pw, setPassword] = useState("");
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
+  const serverIp = process.env.REACT_APP_SERVER_IP;
   useEffect(() => {
     if (token) {
       try {
@@ -105,9 +106,8 @@ const CompanyMyPage = () => {
   const fetchOrderHistory = async (userId) => {
     try {
       setLoading(true); // 로딩 시작
-      const response = await axios.get(
-        `http://localhost:9001/myPage/buyList/${userId}`
-      );
+      const serverIp = process.env.REACT_APP_SERVER_IP;
+      const response = await axios.get(`${serverIp}/myPage/buyList/${userId}`);
       setOrders(response.data); // 가져온 데이터를 상태에 저장
     } catch (err) {
       setError("주문 내역을 불러오는 중 오류가 발생했습니다.");
@@ -120,9 +120,7 @@ const CompanyMyPage = () => {
   const fetchAuctionHistory = async (userId) => {
     try {
       setLoading1(true); // 로딩 시작
-      const response = await axios.get(
-        `http://localhost:9001/myPage/auction/${userId}`
-      ); // API 엔드포인트
+      const response = await axios.get(`${serverIp}/myPage/auction/${userId}`); // API 엔드포인트
       setAuctions(response.data); // 데이터 저장
     } catch (err) {
       setError("데이터를 불러오는 중 오류가 발생했습니다.");
@@ -134,12 +132,9 @@ const CompanyMyPage = () => {
 
   const fetchCompanyInfo = async (userId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:9001/myPage/company/list/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${serverIp}/myPage/company/list/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setCompanyInfo(response.data);
     } catch (error) {
       console.error("회사 정보 조회 실패:", error);
@@ -148,12 +143,9 @@ const CompanyMyPage = () => {
 
   const fetchPoint = async (userId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:9001/myPage/point/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${serverIp}/myPage/point/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setPoint(response.data);
     } catch (error) {
       console.error("포인트 조회 실패:", error);
@@ -162,12 +154,9 @@ const CompanyMyPage = () => {
 
   const fetchreview = async (userId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:9001/myPage/review/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${serverIp}/myPage/review/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setReview(response.data);
     } catch (error) {
       console.error("리뷰 조회 실패:", error);
@@ -181,19 +170,15 @@ const CompanyMyPage = () => {
         return;
       }
 
-      const response = await axios.post(
-        "http://localhost:9001/charge",
-        {
-          managementUserSeq: parseInt(userId),
-          price: parseInt(chargeAmount),
+      const response = await axios.post(`${serverIp}/charge`, {
+        managementUserSeq: parseInt(userId),
+        price: parseInt(chargeAmount),
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      });
 
       if (response.data) {
         setChargeAmount("");
@@ -302,16 +287,12 @@ const CompanyMyPage = () => {
     }
 
     try {
-      const response = await axios.put(
-        `http://localhost:9001/myPage/company/update/${userId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.put(`${serverIp}/myPage/company/update/${userId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
         setCompanyInfo({
@@ -342,16 +323,12 @@ const CompanyMyPage = () => {
 
     if (confirmDelete) {
       try {
-        const response = await axios.put(
-          `http://localhost:9001/myPage/company/delete/${userId}`,
-          { userId },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await axios.put(`${serverIp}/myPage/company/delete/${userId}`, { userId }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (response.data === 1) {
           alert("회원 탈퇴가 완료되었습니다.");
           localStorage.removeItem("token");
@@ -367,12 +344,9 @@ const CompanyMyPage = () => {
 
   const handleDeleteReview = async (reviewSeq) => {
     try {
-      await axios.delete(
-        `http://localhost:9001/myPage/review/${userId}/${reviewSeq}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.delete(`${serverIp}/myPage/review/${userId}/${reviewSeq}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       alert("리뷰가 삭제되었습니다.");
       fetchreview(userId);
     } catch (error) {
@@ -709,7 +683,7 @@ const CompanyMyPage = () => {
               ) : orders.length > 0 ? (
                 <table>
                   <thead>
-                    <tr>
+                    <tr className="company-mypage-tr">
                       <th>번호</th>
                       <th>주문 번호</th>
                       <th>상품명</th>
@@ -721,7 +695,7 @@ const CompanyMyPage = () => {
                   </thead>
                   <tbody>
                     {orders.map((order, index) => (
-                      <tr key={order.orderId}>
+                      <tr key={order.orderId} className="company-mypage-tr">
                         <td>{index + 1}</td> {/* 번호 */}
                         <td>{order.userBuySeq}</td> {/* 주문 번호 */}
                         <td>{order.content}</td> {/* 상품명 */}
@@ -765,7 +739,7 @@ const CompanyMyPage = () => {
               ) : auctions.length > 0 ? (
                 <table>
                   <thead>
-                    <tr>
+                    <tr className="company-mypage-tr">
                       <th>번호</th>
                       <th>상품명</th>
                       <th>수량</th>
@@ -777,7 +751,7 @@ const CompanyMyPage = () => {
                   </thead>
                   <tbody>
                     {auctions.map((auction, index) => (
-                      <tr key={auction.bidSeq}>
+                      <tr key={auction.bidSeq} className="company-mypage-tr">
                         <td>{index + 1}</td> {/* 번호 */}
                         <td>{auction.content}</td> {/* 상품명 */}
                         <td>{auction.count}</td> {/* 수량*/}

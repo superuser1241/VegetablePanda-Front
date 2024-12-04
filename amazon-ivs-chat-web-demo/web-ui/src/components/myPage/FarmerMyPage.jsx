@@ -6,11 +6,36 @@ import RegisterStock from "./RegisterStock";
 import StreamingStatus from "./StreamingStatus";
 import StockList from "./StockList";
 import logo from "../../image/기본이미지.png";
+import StockInfo from './StockInfo';
+import UpdateStock from "./UpdateStock";
 
 const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const [userId, setUserId] = useState("");
+    const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    const [userId, setUserId] = useState('');
+    const [userInfo, setUserInfo] = useState(null);
+    const [editedUser, setEditedUser] = useState({
+        password: '',
+        name: '',
+        address: '',
+        phone: '',
+        email: ''
+    });
+    const [reviews, setReviews] = useState([]);
+    const [activeTab, setActiveTab] = useState('product'); // 기본 탭을 product로 변경
+    const [newProduct, setNewProduct] = useState({
+        color: '',
+        count: '',
+        status: 2,
+        content: '',
+        productSeq: '',
+        stockGradeSeq: '',
+        stockOrganicSeq: '',
+    });
+    const [products, setProducts] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedStock, setSelectedStock] = useState(null);
+
   const [image, setImage] = useState(null);
   const [sales, setSales] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -39,18 +64,8 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
 
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
-  const [activeTab, setActiveTab] = useState("info");
-  const [newProduct, setNewProduct] = useState({
-    color: "",
-    count: "",
-    status: 2,
-    content: "",
-    productSeq: "",
-    stockGradeSeq: "",
-    stockOrganicSeq: "",
-  });
-  const [products, setProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const serverIp = process.env.REACT_APP_SERVER_IP;
 
   useEffect(() => {
     if (token) {
@@ -133,7 +148,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
       setLoading(true);
 
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/point/calc/${userId}`,
+        `${serverIp}/myPage/farmer/point/calc/${userId}`,
         {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -151,7 +166,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/saleList/${userId}`
+        `${serverIp}/myPage/farmer/saleList/${userId}`
       ); // 판매 내역 가져오는 API
       setSales(response.data);
     } catch (err) {
@@ -194,7 +209,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
 
           // 선택된 항목만 보내기
           const response = await axios.post(
-            `http://localhost:9001/myPage/farmer/calculate/${userId}`,
+            `${serverIp}/myPage/farmer/calculate/${userId}`,
             { settlements: settlementsData }, // selectedItems 데이터를 settlements 배열로 보냄
             {
               headers: {
@@ -221,7 +236,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const fetchFarmerInfo = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/list/${userId}`,
+        `${serverIp}/myPage/farmer/list/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -237,9 +252,9 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const fetchReview = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/review/List/${userId}`,
+        `${serverIp}/myPage/farmer/review/List/${userId}`,
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       setReview(response.data);
@@ -343,7 +358,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
 
     try {
       const response = await axios.put(
-        `http://localhost:9001/myPage/farmer/update/${userId}`,
+        `${serverIp}/myPage/farmer/update/${userId}`,
         formData,
         {
           headers: {
@@ -381,7 +396,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     if (confirmDelete) {
       try {
         const response = await axios.post(
-          `http://localhost:9001/myPage/farmer/delete/${userId}`,
+          `${serverIp}/myPage/farmer/delete/${userId}`,
           { userId },
           {
             headers: {
@@ -405,7 +420,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const handleDeleteReview = async (revieweq) => {
     try {
       await axios.delete(
-        `http://localhost:9001/myPage/review/${userId}/${revieweq}`,
+        `${serverIp}/myPage/review/${userId}/${revieweq}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -420,69 +435,125 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:9001/product", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      setProducts(response.data);
-      console.log("상품 목록:", response.data);
+        const response = await axios.get(`${serverIp}/product`, {  // 수정
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        setProducts(response.data);
+        console.log("상품 목록:", response.data);
     } catch (error) {
       console.error("상품 목록 조회 실패:", error);
     }
   };
 
-  const fetchAvailableRoom = async () => {
+const checkStreamingStatus = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:9001/api/streaming/available",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+        const response = await axios.get(`${serverIp}/api/streaming/pending`, {  // 수정
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.data && response.data.length > 0) {
+            setStreamingStatus('pending');
+        } else {
+            const activeResponse = await axios.get(`${serverIp}/api/streaming/active-rooms`, {  // 수정
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (activeResponse.data && activeResponse.data.length > 0) {
+                setStreamingStatus('approved');
+                setAvailableRoom(activeResponse.data[0]);
+            }
         }
-      );
       setAvailableRoom(response.data);
     } catch (error) {
       console.error("사용 가능한 방 조회 실패:", error);
     }
   };
 
-  const checkStreamingStatus = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:9001/api/streaming/pending",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+    const handleProductSubmit = async () => {
+        try {
+            // URL에 쿼리 파라미터 추가
+            const url = `${serverIp}/stock?productSeq=${newProduct.productSeq}&stockGradeSeq=${newProduct.stockGradeSeq}&stockOrganicSeq=${newProduct.stockOrganicSeq}&farmerSeq=${userId}`;  // 수정
+            
+            // body 데이터
+            const stockData = {
+                color: parseInt(newProduct.color),
+                count: parseInt(newProduct.count),
+                content: newProduct.content,
+                status: 2
+            };
+
+            console.log('요청 URL:', url);
+            console.log('요청 데이터:', stockData);
+
+            const response = await axios.post(
+                url,
+                stockData,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.status === 201) {
+                alert('상품이 등록되었습니다. 관리자 승인 후 판매가 시작됩니다.');
+                setNewProduct({
+                    color: '',
+                    count: '',
+                    status: 0,
+                    content: '',
+                    productSeq: '',
+                    stockGradeSeq: '',
+                    stockOrganicSeq: ''
+                });
+                setSelectedCategory('');
+            }
+        } catch (error) {
+            console.error('상품 등록 실패:', error);
+            console.error('요청 URL:', error.config?.url);
+            console.error('요청 데이터:', error.config?.data);
         }
-      );
-      if (response.data && response.data.length > 0) {
-        setStreamingStatus("pending");
-      } else {
-        // 승인된 방송 확인
-        const activeResponse = await axios.get(
-          "http://localhost:9001/api/streaming/active-rooms",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (activeResponse.data && activeResponse.data.length > 0) {
-          setStreamingStatus("approved");
-          setAvailableRoom(activeResponse.data[0]);
+    };
+
+    const handleProductChange = (e) => {
+        const { name, value } = e.target;
+        setNewProduct(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleStockSelect = (stock) => {
+      setSelectedStock(stock);
+      setActiveTab('stockInfo');
+    };
+
+    const handleUpdateStock = (stock) => {
+      setSelectedStock(stock);
+      setActiveTab('updateStock');
+    };
+
+    const fetchAvailableRoom = async () => {
+        try {
+            const response = await axios.get(`${serverIp}/api/streaming/available`, {
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            setAvailableRoom(response.data);
+        } catch (error) {
+            console.error('사용 가능한 방 조회 실패:', error);
         }
-      }
-    } catch (error) {
-      console.error("방송 상태 조회 실패:", error);
-    }
-  };
+    };
 
   const handleStreamingRequest = async () => {
     try {
@@ -492,7 +563,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
       }
 
       const response = await axios.post(
-        `http://localhost:9001/api/streaming/request/${availableRoom.streamingSeq}`,
+       `${serverIp}/api/streaming/request/${availableRoom.streamingSeq}`,
         null,
         {
           headers: {
@@ -520,7 +591,8 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
       fetchAvailableRoom();
       checkStreamingStatus();
     }
-  }, [userId]);
+
+}, [userId]);
 
   return (
     <div className="farmer-mypage">
@@ -598,26 +670,50 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
         </div>
 
         <div className="main-content">
-        {activeTab === "streaming" && (
-          <StreamingStatus
-            userId={userId}
-            token={token}
-            onStartStreaming={onStartStreaming}
-          />
-        )}
+        {activeTab === 'streaming' && (
+                        <StreamingStatus 
+                            userId={userId} 
+                            token={token}
+                            onStartStreaming={onStartStreaming}
+                        />
+                    )}
 
-        {activeTab === "product" && (
-          <div>
-            <RegisterStock />
-          </div>
-        )}
-        
-        {activeTab === "productList" && (
-          <div className="productList-section">
-            <StockList />
-          </div>
-        )}
-        
+                    {activeTab === 'product' && (
+                        <div >
+                            <RegisterStock/>
+                        </div>
+                    )}
+                    {activeTab === 'productList' && (
+                        <div className="productList-section">
+                            <StockList onStockSelect={handleStockSelect} setActiveTab={setActiveTab}/>
+                        </div>
+                    )}
+
+                    {activeTab === 'stockInfo' && selectedStock && (
+                        <div className="stock-info-section">
+                            <StockInfo 
+                                onUpdateStock={handleUpdateStock}
+                                setActiveTab={setActiveTab}  // 추가
+                                stock={selectedStock} 
+                                onBack={() => {
+                                    setActiveTab('productList');
+                                    setSelectedStock(null);
+                                }}
+                            />
+                        </div>
+                    )}
+
+                    {activeTab === 'updateStock' && (
+                        <div className="stock-info-section">
+                            <UpdateStock 
+                                stock={selectedStock} 
+                                onBack={() => {
+                                    setActiveTab('stockInfo');
+                                    setSelectedStock(selectedStock);
+                                }}
+                            />
+                        </div>
+                    )}
           {activeTab === "info" && farmerInfo && (
             <div className="user-info-section">
               <h3>회원 정보</h3>
@@ -904,7 +1000,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
                                 onChange={() =>
                                   handleCheckboxChange(sale.userBuySeq)
                                 } // 클릭 시 선택된 항목 처리
-                                disabled={sale.isDisabled} // 비활성화 상태일 경우 체크박스 비활성화
+                                disabled={sale.isDisabled} // 비활성화 ���태일 경우 체크박스 비활성화
                               />
                             )}
                           </td>

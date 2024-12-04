@@ -1,13 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './StockList.css';
 
-const StockList = () => {
+const StockList = ({onStockSelect, setActiveTab}) => {
 
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const [userId, setUserId] = useState(localStorage.getItem('userSeq'));
+    const serverIp = process.env.REACT_APP_SERVER_IP;
 
     const [stock, setStock] = useState({
         content:'',
@@ -21,9 +22,7 @@ const StockList = () => {
             path: ''
         }
     });
-    const [productList, setProductList] = useState([{
-        
-    }]);
+    const [productList, setProductList] = useState([]);
 
     useEffect(() => {
         if (token) {
@@ -46,7 +45,8 @@ const StockList = () => {
 
     const fetchProductList = async () => {
         try {
-            const response = await axios.get('http://localhost:9001/stock/'+userId, {
+
+            const response = await axios.get(`${serverIp}/stock/${userId}`, {
                 headers: { 
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -64,24 +64,35 @@ const StockList = () => {
         <div className='stock-list-container'>
             <div className='stock-list-middle'>
             <h3>재고 목록</h3>
-                <table className='stock-table'>
-                <thead>
+            <div className='stock-table-container'>
+                <table className='stocklist-table'>
+                <thead className='stocklist-thead'>
                     <tr>
                         <th>상품명</th>
                         <th>수량</th>
                         <th>등급</th>
                         <th>인증</th>
                         <th>색상</th>
+                        <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className='stocklist-tbody'>
                     {productList.map((item, index) => (
-                        <tr key={item.stockSeq}>
+                        <tr key={item.stockSeq}
+                            onClick={() => onStockSelect(item)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            {/* <Link to = {`/stock-info/{${item.stockSeq}}`} state={{ item }}> */}
                             <td >{item.productName}</td>
-                            <td >{item.count}</td>
+                            <td >{item.count.toLocaleString()}</td>
                             <td >{item.stockGrade}</td>
                             <td >{item.stockOrganic}</td>
                             <td >{item.color}</td>
+                            <td><button onClick={(e) => {
+                                    e.stopPropagation();  // 행 클릭 이벤트 전파 방지
+                                    onStockSelect(item);
+                                }}>수정</button></td>
+                        {/* </Link> */}
                         </tr>
                     ))}
                 </tbody>
@@ -89,6 +100,7 @@ const StockList = () => {
                 </table>
                 </div>
             </div>
+        </div>
     );
 };
 
