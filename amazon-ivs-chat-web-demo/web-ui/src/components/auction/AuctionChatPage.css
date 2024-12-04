@@ -51,9 +51,6 @@
     margin-top: 60px;
     height: calc(100vh - 60px);
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
 }
 
 .sidebar-status-content {

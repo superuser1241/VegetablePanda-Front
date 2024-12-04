@@ -186,14 +186,14 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                     </div>
                     
                     <button 
-                        className="sidebar-toggle" 
+                        className="auction-sidebar-toggle" 
                         onClick={toggleSidebar}
                     >
                         {isSidebarOpen ? '닫기' : '메뉴'}
                     </button>
 
-                    <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-                        <div className="sidebar-content">
+                    <div className={`auction-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+                        <div className="auction-sidebar-content">
                             <BiddingSection 
                                 auctionData={auctionData}
                                 isFarmer={isFarmer}
