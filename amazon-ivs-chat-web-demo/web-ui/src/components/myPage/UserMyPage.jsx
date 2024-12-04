@@ -756,7 +756,7 @@ const UserMyPage = () => {
           )}
 
           {activeTab === "point" && (
-            <Point userId = {userId} point = {point} />
+            <Point userId = {userId} point = {point} fetchPoint = {fetchPoint} />
           )}
 
           {activeTab === "cart" && (

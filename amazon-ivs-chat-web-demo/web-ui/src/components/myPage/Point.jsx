@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import * as ChargePoint from "./ChargePoint.jsx";
 
-const Point = ({userId, point}) => {
+const Point = ({userId, point, fetchPoint}) => {
   const [chargeAmount, setChargeAmount] = useState("");
   const token = localStorage.getItem("token");
 
@@ -43,7 +43,7 @@ const Point = ({userId, point}) => {
       // 결제창 호출
       let IMP = window.IMP;
       IMP.init("imp68111618");
-      const response4 = ChargePoint.requestPay(response2, token, IMP);
+      const response4 = ChargePoint.requestPay(response2, token, IMP, fetchPoint, userId);
 
       // .then((result)=>{
       //     console.log(result.data);
