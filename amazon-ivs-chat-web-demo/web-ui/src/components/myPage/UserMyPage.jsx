@@ -42,6 +42,7 @@ const UserMyPage = () => {
 
   const [activeTab, setActiveTab] = useState("info"); // 'info', 'edit', 'review' 탭 관리
   const navigate = useNavigate();
+  const serverIp = process.env.REACT_APP_SERVER_IP;
   useEffect(() => {
     if (token) {
       try {
@@ -98,9 +99,7 @@ const UserMyPage = () => {
   const fetchOrderHistory = async (userId) => {
     try {
       setLoading(true); // 로딩 시작
-      const response = await axios.get(
-        `http://localhost:9001/myPage/buyList/${userId}`
-      );
+      const response = await axios.get(`${serverIp}/myPage/buyList/${userId}`);
       setOrders(response.data); // 가져온 데이터를 상태에 저장
     } catch (err) {
       setError("주문 내역을 불러오는 중 오류가 발생했습니다.");
@@ -113,9 +112,7 @@ const UserMyPage = () => {
   const fetchAuctionHistory = async (userId) => {
     try {
       setLoading1(true); // 로딩 시작
-      const response = await axios.get(
-        `http://localhost:9001/myPage/auction/${userId}`
-      ); // API 엔드포인트
+      const response = await axios.get(`${serverIp}/myPage/auction/${userId}`); // API 엔드포인트
       setAuctions(response.data); // 데이터 저장
     } catch (err) {
       setError("데이터를 불러오는 중 오류가 발생했습니다.");
@@ -127,12 +124,9 @@ const UserMyPage = () => {
 
   const fetchUserInfo = async (userId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:9001/myPage/list/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${serverIp}/myPage/list/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setUserInfo(response.data);
     } catch (error) {
       console.error("회원 정보 조회 실패:", error);
@@ -141,15 +135,12 @@ const UserMyPage = () => {
 
   const fetchPoint = async (userId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:9001/myPage/point/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.get(`${serverIp}/myPage/point/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       setPoint(response.data);
     } catch (error) {
       console.error("포인트 조회 실패:", error);
@@ -158,12 +149,9 @@ const UserMyPage = () => {
 
   const fetchreview = async (userId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:9001/myPage/review/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${serverIp}/myPage/review/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setreview(response.data);
     } catch (error) {
       console.error("리뷰 조회 실패:", error);
@@ -179,7 +167,7 @@ const UserMyPage = () => {
 
       // 충전금액 및 주문정보 등록
       const response = await axios.post(
-        "http://localhost:9001/charge",
+        `${serverIp}/charge`,
         {
           managementUserSeq: parseInt(userId),
           price: parseInt(chargeAmount),
@@ -194,7 +182,7 @@ const UserMyPage = () => {
 
       // 주문번호 받아오기
       const response2 = await axios.get(
-        "http://localhost:9001/buyList/" + response.data,
+        `${serverIp}/buyList/` + response.data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -333,7 +321,7 @@ const UserMyPage = () => {
     try {
       // 서버로 PUT 요청
       const response = await axios.put(
-        `http://localhost:9001/myPage/user/update/${userId}`,
+        `${serverIp}/myPage/user/update/${userId}`,
         formData,
         {
           headers: {
@@ -372,7 +360,7 @@ const UserMyPage = () => {
     if (confirmDelete) {
       try {
         const response = await axios.put(
-          `http://localhost:9001/myPage/delete/${userId}`,
+          `${serverIp}/myPage/delete/${userId}`,
           { userId },
           {
             headers: {
@@ -401,12 +389,9 @@ const UserMyPage = () => {
 
   const handleDeletereview = async (revieweq) => {
     try {
-      await axios.delete(
-        `http://localhost:9001/myPage/review/${userId}/${revieweq}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.delete(`${serverIp}/myPage/review/${userId}/${revieweq}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       alert("리뷰가 삭제되었습니다.");
       fetchreview(userId);
     } catch (error) {
@@ -470,23 +455,59 @@ const UserMyPage = () => {
             >
               포인트 충전
             </li>
-            <li onClick={() => setActiveTab('cart')} className={activeTab === 'cart' ? 'active' : ''}>
+            <li
+              onClick={() => setActiveTab("cart")}
+              className={activeTab === "cart" ? "active" : ""}
+            >
               장바구니
             </li>
           </ul>
         </div>
 
+        {/* 이건 디자인을 좀 생각해보자, 일단 세로로 보여줄거고, 사진, 이름만 보여줄거니까 카드 형식이 좋겠군*/}
         <div className="main-content">
+          {activeTab === "userLike" && (
+            <div className="auction-history-display">
+              <h3>구독한 판매자 목록</h3>
+              {loading1 ? (
+                <div>로딩 중...</div>
+              ) : error ? (
+                <div className="error-message">{error}</div>
+              ) : auctions.length > 0 ? (
+                <div>이건 ㄱㄷ</div>
+              ) : (
+                <div className="no-data-notification">
+                  구독한 내역이 없습니다.
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 이것도 카드 형식으로 보여줄건데 이제 끌고와서 쓰자, 어디냐면 메인페이지에서 쓰는거 그냥 그대로 가져와서 붙이자 */}
+          {activeTab === "saleLike" && (
+            <div className="auction-history-display">
+              <h3>좋아요 누른 상품 목록</h3>
+              {loading1 ? (
+                <div>로딩 중...</div>
+              ) : error ? (
+                <div className="error-message">{error}</div>
+              ) : auctions.length > 0 ? (
+                <div>이건 ㄱㄷ</div>
+              ) : (
+                <div className="no-data-notification">
+                  좋아요를 누른 상품이 없습니다.
+                </div>
+              )}
+            </div>
+          )}
+
           {activeTab === "info" && userInfo && (
             <div className="user-info-section">
               <h3>회원 정보</h3>
               <div className="user-info-details">
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
-                  <img
-                    src={userInfo.path || logo }
-                    alt={userInfo.path}
-                  />
+                  <img src={userInfo.path || logo} alt={userInfo.path} />
                 </div>
                 <p>
                   <strong>아이디:</strong> {userInfo.id}
@@ -640,19 +661,19 @@ const UserMyPage = () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {userInfo.path ?
+                    {userInfo.path ? (
                       <img
-                      src={userInfo.path}
-                      alt="userInfo.path"
-                      className="image-preview"
-                    />
-                     : 
+                        src={userInfo.path}
+                        alt="userInfo.path"
+                        className="image-preview"
+                      />
+                    ) : (
                       <img
-                      src={imagePreview}
-                      alt="imagePreview"
-                      className="image-preview"
-                    />
-                    }
+                        src={imagePreview}
+                        alt="imagePreview"
+                        className="image-preview"
+                      />
+                    )}
                   </div>
                   <button
                     type="button"
@@ -850,7 +871,10 @@ const UserMyPage = () => {
           )}
 
           {activeTab === "cart" && (
-            <div className="cart-banner-section" onClick={() => navigate('/cart')}>
+            <div
+              className="cart-banner-section"
+              onClick={() => navigate("/cart")}
+            >
               <div className="cart-banner-content">
                 <i className="fas fa-shopping-cart"></i>
                 <h3>장바구니</h3>

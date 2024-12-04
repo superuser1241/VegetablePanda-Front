@@ -674,7 +674,7 @@ const CompanyMyPage = () => {
           )}
 
           {activeTab === "buyList" && (
-            <div className="order-history-display">
+            <div className="yun-order-history-display">
               <h3>주문 내역</h3>
               {loading ? (
                 <div>로딩 중...</div>
@@ -683,7 +683,7 @@ const CompanyMyPage = () => {
               ) : orders.length > 0 ? (
                 <table>
                   <thead>
-                    <tr className="company-mypage-tr">
+                    <tr className="yun-company-mypage-tr">
                       <th>번호</th>
                       <th>주문 번호</th>
                       <th>상품명</th>
@@ -695,7 +695,7 @@ const CompanyMyPage = () => {
                   </thead>
                   <tbody>
                     {orders.map((order, index) => (
-                      <tr key={order.orderId} className="company-mypage-tr">
+                      <tr key={order.orderId} className="yun-company-mypage-tr">
                         <td>{index + 1}</td> {/* 번호 */}
                         <td>{order.userBuySeq}</td> {/* 주문 번호 */}
                         <td>{order.content}</td> {/* 상품명 */}
@@ -722,7 +722,7 @@ const CompanyMyPage = () => {
                   </tbody>
                 </table>
               ) : (
-                <div className="no-data-notification">
+                <div className="yun-no-data-notification">
                   주문 내역이 없습니다.
                 </div>
               )}
