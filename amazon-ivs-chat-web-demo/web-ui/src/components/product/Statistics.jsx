@@ -8,6 +8,8 @@ const Statistics = ({ stockSeq }) => {
     const [stats, setStats] = useState(null);
     const [priceStats, setPriceStats] = useState(null);
 
+    const serverIp = process.env.REACT_APP_SERVER_IP;
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -24,7 +26,7 @@ const Statistics = ({ stockSeq }) => {
                 const startDate = formatDate(oneMonthAgo);
                 const endDate = formatDate(new Date());
                 
-                const response = await axios.get(`http://localhost:9001/api/${period}`, {
+                const response = await axios.get(`${serverIp}/api/${period}`, {
                     params: {
                         startDate: startDate,
                         endDate: endDate,
@@ -34,7 +36,7 @@ const Statistics = ({ stockSeq }) => {
                 
                 setStats(response.data);
 
-                const priceStatsResponse = await axios.get('http://localhost:9001/api/price/statistics', {
+                const priceStatsResponse = await axios.get(`${serverIp}/api/price/statistics`, {
                     params: {
                         stockSeq: stockSeq
                     }

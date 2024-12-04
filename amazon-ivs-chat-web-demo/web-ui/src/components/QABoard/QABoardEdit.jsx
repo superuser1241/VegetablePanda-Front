@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './QABoard.css';
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const QABoardEdit = () => {
   const navigate = useNavigate();
   const { boardNoSeq } = useParams();
@@ -22,7 +24,7 @@ const QABoardEdit = () => {
     // 기존 게시글 데이터 불러오기
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`http://localhost:9001/QABoard/${boardNoSeq}`, {
+        const response = await axios.get(`${serverIp}/QABoard/${boardNoSeq}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -54,7 +56,7 @@ const QABoardEdit = () => {
     const token = localStorage.getItem('token');
     
     try {
-      await axios.put(`http://localhost:9001/QABoard/${boardNoSeq}`, 
+      await axios.put(`${serverIp}/QABoard/${boardNoSeq}`, 
         {
           subject: formData.subject,
           content: formData.content,

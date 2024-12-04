@@ -10,7 +10,8 @@ const Payment = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { item, quantity } = location.state || {};
-    
+    const serverIp = process.env.REACT_APP_SERVER_IP;
+
     const [shippingInfo, setShippingInfo] = useState({
         name: '',
         phone: '',
@@ -28,7 +29,7 @@ const Payment = () => {
             }
 
             try {
-                const response = await axios.get('http://localhost:9001/api/user', {
+                const response = await axios.get(`${serverIp}/api/user`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -98,7 +99,7 @@ const Payment = () => {
         
             // 주문 API 호출
             // 주문정보 등록
-            const response = await axios.post('http://localhost:9001/shop/purchase', orderData2, {
+            const response = await axios.post(`${serverIp}/shop/purchase`, orderData2, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -108,7 +109,9 @@ const Payment = () => {
             console.log(response.data);
 
             // 주문번호 받아오기
-            const response2 = await axios.get('http://localhost:9001/payment/' + response.data + '?status=2', {
+
+            const response2 = await axios.get(`${serverIp}/payment/` + response.data + '?status=2', {
+
                 headers: { 
                     Authorization: `Bearer ${token}`,
                 }
@@ -119,7 +122,7 @@ const Payment = () => {
 
             if(response2.success === false) {
                 console("주문실패 : 주문을 삭제합니다.");
-                const deleteResult = await axios.get('http://localhost:9001/shop/cancel?id' + response.data, {
+                const deleteResult = await axios.get(`${serverIp}/shop/cancel?id` + response.data, {
                     headers: { 
                         Authorization: `Bearer ${token}`,
                     }
@@ -158,7 +161,7 @@ const Payment = () => {
                       
                       const sendValidateData = async () => {
                         try {
-                            const response3 = await axios.post('http://localhost:9001/payment/validate?status=2', {
+                            const response3 = await axios.post(`${serverIp}/payment/validate?status=2`, {
                                     orderUid: rsp.merchant_uid, 
                                     paymentUid: rsp.imp_uid
                             },
@@ -177,7 +180,7 @@ const Payment = () => {
                             
 
                             if(response3.status === 200){
-                                const response4 = await axios.put('http://localhost:9001/stock/quantity', { stockSeq, quantity }, 
+                                const response4 = await axios.put(`${serverIp}/stock/quantity`, { stockSeq, quantity }, 
                                 {
                                     headers: { 
                                         Authorization: `Bearer ${token}`,

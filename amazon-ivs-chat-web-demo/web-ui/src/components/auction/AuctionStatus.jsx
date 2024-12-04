@@ -6,9 +6,11 @@ const AuctionStatus = () => {
     const [auctions, setAuctions] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const serverIp = process.env.REACT_APP_SERVER_IP;
+
     const fetchAuctions = async () => {
         try {
-            const response = await axios.get('http://localhost:9001/current');
+            const response = await axios.get(`${serverIp}/api/auction/status`);
             setAuctions(response.data);
             setLoading(false);
         } catch (error) {

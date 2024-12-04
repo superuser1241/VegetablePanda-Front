@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import './RegisterStock.css';
 import axios from 'axios';
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const RegisterStock = () => {
     const token = localStorage.getItem('token');
 
@@ -69,7 +71,7 @@ const RegisterStock = () => {
 
     const fetchProductCategory = async () => {
         try {
-            const response = await axios.get(`http://localhost:9001/category`, {
+            const response = await axios.get(`${serverIp}/category`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
                         
@@ -82,7 +84,7 @@ const RegisterStock = () => {
 
     const fetchProductInfo = async (categorySeq) => {
         try{
-            const response = await axios.get(`http://localhost:9001/product/`+categorySeq, {
+            const response = await axios.get(`${serverIp}/product/`+categorySeq, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -95,7 +97,7 @@ const RegisterStock = () => {
 
     const fetchStockGrade = async () => {
         try{
-            const response = await axios.get(`http://localhost:9001/stockGrade`, {
+            const response = await axios.get(`${serverIp}/stockGrade`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -108,7 +110,7 @@ const RegisterStock = () => {
 
     const fetchOrganic = async () => {
         try{
-            const response = await axios.get(`http://localhost:9001/stockOrganic`, {
+            const response = await axios.get(`${serverIp}/stockOrganic`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -152,7 +154,7 @@ const RegisterStock = () => {
         try{
             e.preventDefault();
 
-            const url = `http://localhost:9001/stock?farmerSeq=${userId}`;
+            const url = `${serverIp}/stock?farmerSeq=${userId}`;
             
             const stockData = {
                 productSeq:parseInt(newProduct.productSeq),
@@ -243,7 +245,7 @@ const RegisterStock = () => {
     formData.append("image", image);
 
     try {
-        const response = await axios.post("http://localhost:9001/s3/upload", formData, {
+        const response = await axios.post(`${serverIp}/s3/upload`, formData, {
             headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
         });
         alert("업로드 성공: " + response.data);
@@ -401,7 +403,7 @@ const RegisterStock = () => {
                                     </div>
                                 </div>
                                 <div className='stock-image-textarea-container'>
-                                    <textarea placeholder='이미지에 대한 설명을 입력해주세요.' id='name' name = 'filename' maxLength={26} value = {newProduct.file.name} onChange={changeFileName}/>
+                                    <textarea placeholder='이미지에 대한 설명을 입력해주세요.' id='name' name = 'name' maxLength={26} value = {newProduct.file.name} onChange={changeFileName}/>
                                 </div>
                             </div>
                             

@@ -14,6 +14,7 @@ export const useBidding = (highestBid, auctionSeq) => {
     const handleDecrease = () => setBidAmount(prev => prev - 10);
     
     const handleBid = async () => {
+        const serverIp = process.env.REACT_APP_SERVER_IP;
         try {
             console.log('입찰 시작:', { bidAmount, auctionSeq });
             
@@ -34,7 +35,7 @@ export const useBidding = (highestBid, auctionSeq) => {
                 auctionSeq
             });
 
-            const response = await axios.post("http://localhost:9001/bid", {
+            const response = await axios.post(`${serverIp}/bid`, {
                 userSeq: userSeq,
                 price: bidAmount,
                 auctionSeq: auctionSeq

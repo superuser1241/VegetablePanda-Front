@@ -38,6 +38,8 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
 
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
+  const serverIp = process.env.REACT_APP_SERVER_IP;
+
   const [activeTab, setActiveTab] = useState("info");
   const [newProduct, setNewProduct] = useState({
     color: "",
@@ -130,6 +132,10 @@ if (editedFarmer.pw === pwConfirm) {
 
   const fetchSettlementHistory = async (userId) => {
     try {
+      setLoading(true); // 로딩 시작
+      const serverIp = process.env.REACT_APP_SERVER_IP;
+      const response = await axios.get(`${serverIp}/myPage/buyList/${userId}`);
+      setOrders(response.data); // 가져온 데이터를 상태에 저장
       setLoading(true);
 
       const response = await axios.get(
@@ -150,9 +156,7 @@ if (editedFarmer.pw === pwConfirm) {
   const fetchSalesHistory = async (userId) => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/saleList/${userId}`
-      ); // 판매 내역 가져오는 API
+      const response = await axios.get(`${serverIp}/myPage/farmer/saleList/${userId}`); // 판매 내역 가져오는 API
       setSales(response.data);
     } catch (err) {
       setError("판매 내역을 불러오는 중 오류가 발생했습니다.");
@@ -220,14 +224,11 @@ if (editedFarmer.pw === pwConfirm) {
 
   const fetchFarmerInfo = async (userId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/list/${userId}`,
-        {
-          headers: {
+      const response = await axios.get(`${serverIp}/myPage/farmer/list/${userId}`, {
+        headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
+      });
       setFarmerInfo(response.data);
     } catch (error) {
       console.error("회원 정보 조회 실패:", error);
@@ -236,18 +237,43 @@ if (editedFarmer.pw === pwConfirm) {
 
   const fetchReview = async (userId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/review/List/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const response = await axios.get(`${serverIp}/myPage/farmer/review/List/${userId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       setReview(response.data);
     } catch (error) {
       console.error("리뷰 조회 실패:", error);
     }
   };
 
+  const handleCharge = async () => {
+    try {
+      if (!userId || !chargeAmount) {
+        alert("충전할 금액을 입력해주세요.");
+        return;
+      }
+
+      const response = await axios.post(`${serverIp}/charge`, {
+        managementUserSeq: parseInt(userId),
+        price: parseInt(chargeAmount),
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.data) {
+        setChargeAmount("");
+        window.location.href = response.data;
+      }
+    } catch (error) {
+      console.error("포인트 충전 실패:", error);
+      alert("포인트 충전에 실패했습니다.");
+    }
+  };
+
+  // 이미지
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -342,16 +368,12 @@ if (editedFarmer.pw === pwConfirm) {
     }
 
     try {
-      const response = await axios.put(
-        `http://localhost:9001/myPage/farmer/update/${userId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.put(`${serverIp}/myPage/company/update/${userId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
         setFarmerInfo({
@@ -380,16 +402,12 @@ if (editedFarmer.pw === pwConfirm) {
 
     if (confirmDelete) {
       try {
-        const response = await axios.post(
-          `http://localhost:9001/myPage/farmer/delete/${userId}`,
-          { userId },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await axios.put(`${serverIp}/myPage/company/delete/${userId}`, { userId }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (response.data === 1) {
           alert("회원 탈퇴가 완료되었습니다.");
           localStorage.removeItem("token");
@@ -404,12 +422,9 @@ if (editedFarmer.pw === pwConfirm) {
   };
   const handleDeleteReview = async (revieweq) => {
     try {
-      await axios.delete(
-        `http://localhost:9001/myPage/review/${userId}/${revieweq}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.delete(`${serverIp}/myPage/review/${userId}/${reviewSeq}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       alert("리뷰가 삭제되었습니다.");
       fetchReview(userId);
     } catch (error) {

@@ -39,6 +39,7 @@ import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 import axios from 'axios';
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -114,10 +115,9 @@ function App() {
 
     const handleExitConfirm = async () => {
         try {
-            // API 호출
             if (streamingRoom?.streamingSeq) {
                 await axios.post(
-                    `http://localhost:9001/api/streaming/exit/${streamingRoom.streamingSeq}`
+                    `${serverIp}/api/streaming/exit/${streamingRoom.streamingSeq}`
                 );
             }
 

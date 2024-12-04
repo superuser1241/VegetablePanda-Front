@@ -17,12 +17,13 @@ const PurchaseD = ({userName}) => {
     const item = location.state?.item;
     const quantity = location.state?.quantity;
     // const [quantity, setQuantity] = useState(1);
-
+    const serverIp = process.env.REACT_APP_SERVER_IP;
+    
     useEffect( () => {
         async function fetchUserInfo() {
             if(token) {
                 try {
-                    const response = await axios.get('http://localhost:9001/api/user', {
+                    const response = await axios.get(`${serverIp}/api/user`, {
                         headers: { 
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'

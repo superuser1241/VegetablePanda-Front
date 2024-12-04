@@ -7,6 +7,8 @@ import './QABoard.css';
 import 'react-quill/dist/quill.snow.css';
 
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const QABoardWrite = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -51,6 +53,25 @@ const QABoardWrite = () => {
     }
 
     const token = localStorage.getItem('token');
+    
+    try {
+      const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
+      
+      await axios.post(`${serverIp}/QABoard/`, 
+        {
+          subject: formData.subject,
+          content: formData.content,
+          managementUser: payload.user_seq
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      alert('문의가 등록되었습니다.');
+      navigate('/customer-service');
     if (!token) {
       alert('로그인이 필요합니다.');
       navigate('/login');

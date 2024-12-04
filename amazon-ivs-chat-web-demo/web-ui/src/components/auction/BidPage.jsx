@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 import { useAuctionData } from './useAuctionData';
 import { useBidding } from './useBidding';
 import './BidPage.css';
+import axios from 'axios';
+
+const serverIp = process.env.REACT_APP_SERVER_IP;
 
 const BidPage = ({ 
     streamingRoom, 

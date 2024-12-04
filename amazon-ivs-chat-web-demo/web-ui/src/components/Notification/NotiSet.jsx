@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import "./NotiSet.css";
 import axios from "axios";
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const NotiSet = ({ onSetStreamingRoom }) => {
     const [showMessage, setShowMessage] = useState(false); // 메시지 표시 상태
     const [messages, setMessages] = useState(""); // 메시지 내용
@@ -13,7 +15,7 @@ const NotiSet = ({ onSetStreamingRoom }) => {
     useEffect(() => {
         const token = localStorage.getItem("userSeq");
         const client = new Client({
-            brokerURL: "ws://localhost:9001/ws", // Spring WebSocket 엔드포인트
+            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
             headers: {
                 "Content-Type": "application/json",
                 userId: token,
@@ -56,7 +58,7 @@ const NotiSet = ({ onSetStreamingRoom }) => {
 
         try {
             const response = await axios.post(
-                `http://localhost:9001/api/streaming/streamingData/${roomData.chatRoomId}`, // roomData에서 chatRoomId 사용
+                `${serverIp}/api/streaming/streamingData/${roomData.chatRoomId}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }

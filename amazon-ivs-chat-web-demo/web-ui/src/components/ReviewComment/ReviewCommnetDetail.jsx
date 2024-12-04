@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './ReviewComment.css';
+import './NTBoard.css';
+
+const serverIp = process.env.REACT_APP_SERVER_IP;
 
 const ReviewCommentDetail = () => {
   const navigate = useNavigate();
@@ -31,10 +34,14 @@ const ReviewCommentDetail = () => {
 
     const fetchComment = async () => {
       try {
-        const response = await axios.get(`http://localhost:9001/reviewComment/${reviewCommentSeq}`, {
+        await axios.put(`${serverIp}/notifyBoard/increaseReadnum/${boardNoSeq}`, {}, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        setComment(response.data);
+
+        const response = await axios.get(`${serverIp}/notifyBoard/${boardNoSeq}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        setPost(response.data);
         setIsLoading(false);
       } catch (error) {
         console.error('댓글 로딩 실패:', error);
@@ -52,8 +59,10 @@ const ReviewCommentDetail = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:9001/reviewComment/${reviewCommentSeq}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+      await axios.delete(`${serverIp}/notifyBoard/${boardNoSeq}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
       alert('댓글이 삭제되었습니다.');
       navigate('/review');

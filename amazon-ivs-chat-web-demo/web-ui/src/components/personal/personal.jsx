@@ -3,6 +3,8 @@ import "./personal.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const Personal = () => {
   const token = localStorage.getItem("token");
   const [userId, setUserId] = useState("");
@@ -33,7 +35,7 @@ const Personal = () => {
   const fetchFarmerInfo = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/list/${userId}`,
+        `${serverIp}/myPage/farmer/list/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -49,7 +51,7 @@ const Personal = () => {
   const fetchReview = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/review/List/${userId}`,
+        `${serverIp}/myPage/farmer/review/List/${userId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }

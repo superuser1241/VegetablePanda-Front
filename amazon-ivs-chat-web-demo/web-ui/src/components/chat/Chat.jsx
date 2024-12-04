@@ -23,6 +23,9 @@ import RaiseHand from './RaiseHand';
 // Styles
 import './Chat.css';
 
+// 상단에 환경변수 추가
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const Chat = ({streamingRoom, handleExitChat }) => {
   const navigate = useNavigate();
   const [showExitModal, setShowExitModal] = useState(false);
@@ -618,7 +621,7 @@ const Chat = ({streamingRoom, handleExitChat }) => {
         // API 호출
         if (streamingRoom?.streamingSeq) {
             await axios.post(
-                `http://localhost:9001/api/streaming/exit/${streamingRoom.streamingSeq}`
+                `${serverIp}/api/streaming/exit/${streamingRoom.streamingSeq}`
             );
         }
 
