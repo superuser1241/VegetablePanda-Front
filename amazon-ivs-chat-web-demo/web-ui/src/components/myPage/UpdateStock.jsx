@@ -7,8 +7,6 @@ const UpdateStock = ({stock, onBack}) => {
 
     const [userId, setUserId] = useState();
 
-    // stockGrade :
-
     const [newProduct, setNewProduct] = useState({
         color: stock.color,
         count: stock.count,
