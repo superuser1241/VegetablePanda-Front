@@ -46,7 +46,6 @@ export const useAuctionData = (userSeq,auctionSeq) => {
             brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
             
             onConnect: () => {
-                alert("useAuc");
                 client.subscribe("/top/notifications", async (message) => {
                     fetchHighestBid();
                     fetchAuction();
