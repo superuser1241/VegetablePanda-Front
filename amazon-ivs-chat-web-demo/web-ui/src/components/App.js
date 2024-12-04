@@ -37,6 +37,7 @@ import ReviewCommentList from './ReviewComment/ReviewCommnetList';
 import ReviewCommentDetail from './ReviewComment/ReviewCommnetDetail';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
+import axios from 'axios';
 
 
 function App() {
@@ -47,8 +48,12 @@ function App() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('App.js - streamingRoom updated:', streamingRoom);
-    }, [streamingRoom]);
+        // 페이지 로드 시 세션 스토리지에서 streamingRoom 복원
+        const savedRoom = sessionStorage.getItem('streamingRoom');
+        if (savedRoom) {
+            setStreamingRoom(JSON.parse(savedRoom));
+        }
+    }, []);
 
     const handleLoginSuccess = (name, role) => {
         setUserName(name);
@@ -56,7 +61,10 @@ function App() {
         navigate('/');
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        if (streamingRoom) {
+            await handleExitConfirm();
+        }
         setUserName('');
         setUserRole('');
         navigate('/');
@@ -68,12 +76,14 @@ function App() {
     const handleJoinRoom = (room) => {
         setStreamingRoom(room);
         setCurrentRoomId(room.chatRoomId);
+        sessionStorage.setItem('streamingRoom', JSON.stringify(room)); // 세션 스토리지에 저장
         navigate('/chat');
     };
 
     const handleStartStreaming = (room) => {
         console.log('App.js - Setting streamingRoom:', room);
         setStreamingRoom(room);
+        sessionStorage.setItem('streamingRoom', JSON.stringify(room)); // 세션 스토리지에 저장
         navigate('/chat');
     };
 
@@ -102,10 +112,33 @@ function App() {
         checkAuthStatus();
     }, [navigate]);
 
+    const handleExitConfirm = async () => {
+        try {
+            // API 호출
+            if (streamingRoom?.streamingSeq) {
+                await axios.post(
+                    `http://localhost:9001/api/streaming/exit/${streamingRoom.streamingSeq}`
+                );
+            }
+
+            // 세션 스토리지에서 방송 정보 제거
+            sessionStorage.removeItem('streamingRoom');
+            setStreamingRoom(null);
+
+            // 성공하면 메인으로 이동
+            navigate('/');
+        } catch (error) {
+            console.error('방송 종료 실패:', error);
+            // API 호출이 실패해도 메인으로 이동
+            navigate('/');
+        }
+    };
+
     const handleExitChat = useCallback(async () => {
         try {
             setStreamingRoom(null);
             setCurrentRoomId(null);
+            sessionStorage.removeItem('streamingRoom'); // 세션 스토리지에서 제거
             navigate('/');
             return Promise.resolve();
         } catch (error) {
@@ -120,11 +153,13 @@ function App() {
 
     return (
         <div className="App">
-            {userName&&<NotiSet onSetStreamingRoom={handleSetStreamingRoom}/>}
+            {userName && <NotiSet onSetStreamingRoom={handleSetStreamingRoom} />}
             <Header
                 userName={userName}
                 userRole={userRole}
+                streamingRoom={streamingRoom}
                 handleLogout={handleLogout}
+                handleExitConfirm={handleExitConfirm}
             />
             <main style={{ minHeight: '80vh'}}>
                 <Routes>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Product.css';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Statistics from './Statistics';
@@ -56,9 +56,10 @@ const Product = () => {
     const handleLike = async (shopSeq) => {
         const userSeq = localStorage.getItem('userSeq');
         const token = localStorage.getItem('token');
+        
         try {
-            await axios.post(
-                'http://localhost:9001/api/InsertShopLike', 
+            const response = await axios.post(
+                `http://localhost:9001/api/insertShopLike`,
                 {
                     userSeq: userSeq,
                     shopSeq: shopSeq
@@ -66,16 +67,45 @@ const Product = () => {
                 {
                     headers: { 
                         'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
                     }
                 }
             );
-            setShopLike(prev => !prev);
+            
+            // state가 1이면 true(빨간색), 0이면 false(회색)
+            setShopLike(response.data);
         } catch (err) {
             console.error('찜하기 처리에 실패했습니다:', err);
         }
     }
 
+    const getShopLike = async (shopSeq) => {
+        const userSeq = localStorage.getItem('userSeq');
+        const token = localStorage.getItem('token');
+        
+        try {
+            const response = await axios.get(
+                `http://localhost:9001/api/getShopLike?userSeq=${userSeq}&shopSeq=${shopSeq}`,    
+                {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+                
+            );
+            
+            // shopLike가 없거나 state가 0이면 false, state가 1이면 true
+            setShopLike(response.data);
+        } catch (err) {
+            console.error('찜하기 상태 조회에 실패했습니다:', err);
+            setShopLike(false);  // 에러 시 기본값 false (회색 버튼)
+        }
+    }
+
+    useEffect(() => {
+        if (product?.shopSeq) {
+            getShopLike(product.shopSeq);
+        }
+    }, [product?.shopSeq]);
 
     const handleQuantityChange = (e) => {
         const value = parseInt(e.target.value);
@@ -172,7 +202,12 @@ const Product = () => {
                             <span className="total-amount">{(product.price * quantity).toLocaleString()}원</span>
                         </div>
                 <div className='button-container'>
-                    <button className="like-btn">찜하기</button>
+                    <button 
+                        className={`like-btn ${shopLike.status ? 'active' : ''}`} 
+                        onClick={() => handleLike(product.shopSeq)}
+                    >
+                        찜하기
+                    </button>
                     <button className="cart-button" onClick={handleAddToCart}>장바구니</button>
                 </div>
                     <button className="product-buy-button" onClick={() => userRole === 'ROLE_USER' ? navigate('/payment', { state: { item:product, quantity } }) : alert('일반 사용자만 구매 가능합니다.')}>구매</button>

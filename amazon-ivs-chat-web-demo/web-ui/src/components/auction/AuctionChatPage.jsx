@@ -7,6 +7,7 @@ import PriceCheckModal from './PriceCheckModal';
 import SalesHistoryModal from './SalesHistoryModal';
 import axios from 'axios';
 import './AuctionChatPage.css';
+import { Client } from "@stomp/stompjs";
 
 const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
     const [showRegister, setShowRegister] = useState(false);

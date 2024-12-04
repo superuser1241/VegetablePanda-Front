@@ -263,3 +263,37 @@
   text-align: center;
   font-size: 16px;
 }
+
+.like-btn {
+    /* 기본 스타일 (회색) */
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.like-btn.active {
+    /* 활성화 스타일 (빨간색) */
+    background-color: #ff0000;
+    border-color: #ff0000;
+    color: white;
+}
+
+/* 찜하기 버튼 스타일 - 더 높은 우선순위를 위해 구체적인 선택자 사용 */
+.button-container .like-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.button-container .like-btn.active {
+    background-color: #ff0000 !important; /* !important로 우선순위 강제 적용 */
+    border-color: #ff0000 !important;
+    color: white !important;
+}
+
+/* hover 효과도 active 상태일 때는 다르게 처리 */
+.button-container .like-btn.active:hover {
+    background-color: #e60000 !important;
+}

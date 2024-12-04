@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import './QABoard.css';
+import DOMPurify from 'dompurify';
+import 'react-quill/dist/quill.snow.css';
 
 const QABoardDetail = () => {
   const navigate = useNavigate();
@@ -154,7 +156,23 @@ const QABoardDetail = () => {
           </div>
         </div>
         <div className="detail-body">
-          <p>{post.content}</p>
+          <div 
+            dangerouslySetInnerHTML={{ 
+              __html: DOMPurify.sanitize(post.content) 
+            }} 
+          />
+          {post.fileUrl && (
+            <div className="file-download-section">
+              <span className="file-label">첨부파일: </span>
+              <a 
+                href={`http://localhost:9001/QABoard/download/${post.boardNoSeq}`}
+                className="file-download-link"
+                download
+              >
+                {post.originalFileName || '파일 다운로드'}
+              </a>
+            </div>
+          )}
         </div>
         <div className="detail-buttons">
           <button 
@@ -209,7 +227,18 @@ const QABoardDetail = () => {
                 <span>{reply.writerId}</span>
                 <span>{new Date(reply.regDate).toLocaleDateString()}</span>
               </div>
-              <p>{reply.content}</p>
+              <div 
+                dangerouslySetInnerHTML={{ 
+                  __html: DOMPurify.sanitize(reply.comment) 
+                }} 
+              />
+              {reply.fileUrl && (
+                <div className="reply-file">
+                  <a href={reply.fileUrl} target="_blank" rel="noopener noreferrer">
+                    첨부파일
+                  </a>
+                </div>
+              )}
             </div>
           ))}
         </div>
