@@ -8,6 +8,7 @@ const StockList = ({onStockSelect, setActiveTab}) => {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const [userId, setUserId] = useState(localStorage.getItem('userSeq'));
+    const serverIp = process.env.REACT_APP_SERVER_IP;
 
     const [stock, setStock] = useState({
         content:'',
@@ -44,7 +45,8 @@ const StockList = ({onStockSelect, setActiveTab}) => {
 
     const fetchProductList = async () => {
         try {
-            const response = await axios.get('http://localhost:9001/stock/farmer/'+userId, {
+
+            const response = await axios.get(`${serverIp}/stock/${userId}`, {
                 headers: { 
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -60,6 +62,7 @@ const StockList = ({onStockSelect, setActiveTab}) => {
 
     return (
         <div className='stock-list-container'>
+            <div className='stock-list-middle'>
             <h3>재고 목록</h3>
             <div className='stock-table-container'>
                 <table className='stocklist-table'>
@@ -95,6 +98,7 @@ const StockList = ({onStockSelect, setActiveTab}) => {
                 </tbody>
 
                 </table>
+                </div>
             </div>
         </div>
     );

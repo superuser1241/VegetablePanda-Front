@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './NTBoard.css';
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const NTBoardEdit = () => {
   const navigate = useNavigate();
   const { boardNoSeq } = useParams();
@@ -22,7 +24,7 @@ const NTBoardEdit = () => {
     // 기존 게시글 데이터 불러오기
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`http://localhost:9001/notifyBoard/${boardNoSeq}`, {
+        const response = await axios.get(`${serverIp}/notifyBoard/${boardNoSeq}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -54,7 +56,7 @@ const NTBoardEdit = () => {
     const token = localStorage.getItem('token');
     
     try {
-      await axios.put(`http://localhost:9001/notifyBoard/${boardNoSeq}`, 
+      await axios.put(`${serverIp}/notifyBoard/${boardNoSeq}`, 
         {
           subject: formData.subject,
           content: formData.content,

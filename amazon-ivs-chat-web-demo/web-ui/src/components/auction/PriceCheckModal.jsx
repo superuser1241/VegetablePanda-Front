@@ -5,16 +5,14 @@ const PriceCheckModal = ({ isOpen, onClose, priceInfo }) => {
 
     const getCategoryName = (category) => {
         const categories = {
-            1: '채소류',
-            2: '과일류',
-            3: '곡물류',
-            4: '버섯류',
-            5: '뿌리채소',
-            6: '잎채소',
-            7: '쌈채소',
-            8: '산나물',
-            9: '건농산물',
-            10: '견과류'
+            1: '식량작물',
+            2: '엽채류',
+            3: '과채류',
+            4: '근채류',
+            5: '양채류',
+            6: '과수',
+            7: '견과류',
+            8: '기타작물'
         };
         return categories[category] || '알 수 없음';
     };
@@ -33,8 +31,8 @@ const PriceCheckModal = ({ isOpen, onClose, priceInfo }) => {
 
     const getTypeName = (type) => {
         const types = {
-            1: '우수농산물',
-            2: '일반'
+            1: '일반',
+            2: '우수농산물'
         };
         return types[type] || '알 수 없음';
     };

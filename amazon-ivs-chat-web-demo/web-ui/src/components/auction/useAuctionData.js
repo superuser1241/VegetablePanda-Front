@@ -5,12 +5,11 @@ import { Client } from "@stomp/stompjs";
 export const useAuctionData = (userSeq,auctionSeq) => {
     const [highestBid, setHighestBid] = useState(null);
     const [auction, setAuction] = useState(null);
-    const [bid, setBid] = useState(null);
-
     const fetchHighestBid = useCallback(async () => {
         const token = localStorage.getItem('token');
         try {
-            const result = await axios.get(`http://localhost:9001/highestBid/${userSeq}`, {
+            const serverIp = process.env.REACT_APP_SERVER_IP;
+            const result = await axios.get(`${serverIp}/highestBid/${userSeq}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setHighestBid(result.data);
@@ -22,7 +21,8 @@ export const useAuctionData = (userSeq,auctionSeq) => {
     const fetchAuction = useCallback(async () => {
         const token = localStorage.getItem('token');
         try {
-            const result = await axios.get(`http://localhost:9001/auction/${userSeq}`, {
+            const serverIp = process.env.REACT_APP_SERVER_IP;
+            const result = await axios.get(`${serverIp}/auction/${userSeq}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -37,33 +37,18 @@ export const useAuctionData = (userSeq,auctionSeq) => {
         }
     }, [userSeq]);
 
-    const findBidByAuctionId = useCallback(async () => {
-        const token = localStorage.getItem('token');
-        try {
-            const result = await axios.get(`http://localhost:9001/bid/${auctionSeq}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            setBid(result.data);
-            console.log('설정된 데이터:', result.data);
-        } catch (error) {
-            console.error('입찰 정보 조회 실패:', error);
-            if (error.response?.status === 401) {
-                alert('로그인이 필요한 서비스입니다.');
-            }
-        }
-    }, [auctionSeq]);
+    
 
     // WebSocket 연결 및 상태 갱신
     useEffect(() => {
+        const serverIp = process.env.REACT_APP_SERVER_IP;
         const client = new Client({
-            brokerURL: "ws://localhost:9001/ws",
+            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
             
             onConnect: () => {
+                alert("useAuc");
                 client.subscribe("/top/notifications", async (message) => {
                     fetchHighestBid();
-                    findBidByAuctionId();
                     fetchAuction();
                 });
             },
@@ -76,14 +61,13 @@ export const useAuctionData = (userSeq,auctionSeq) => {
         return () => {
             client.deactivate();
         };
-    }, [fetchHighestBid, fetchAuction, findBidByAuctionId]);
+    }, [fetchHighestBid, fetchAuction]);
 
     // 초기 데이터 로드
     useEffect(() => {
         fetchHighestBid();
         fetchAuction();
-        findBidByAuctionId();
-    }, [fetchHighestBid, fetchAuction, findBidByAuctionId]);
+    }, [fetchHighestBid, fetchAuction]);
 
-    return { highestBid, auction, bid };
+    return { highestBid, auction};
 };

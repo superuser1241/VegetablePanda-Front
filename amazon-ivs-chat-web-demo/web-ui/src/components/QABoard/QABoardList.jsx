@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './QABoard.css';
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const QABoardList = () => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ const QABoardList = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:9001/QABoard/', {
+        const response = await axios.get(`${serverIp}/QABoard/`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

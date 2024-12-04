@@ -282,7 +282,7 @@
 
 /* 찜하기 버튼 스타일 - 더 높은 우선순위를 위해 구체적인 선택자 사용 */
 .button-container .like-btn {
-    background-color: #f0f0f0;
+    background-color:   #f0f0f0;
     border: 1px solid #ddd;
     color: #333;
     transition: all 0.3s ease;

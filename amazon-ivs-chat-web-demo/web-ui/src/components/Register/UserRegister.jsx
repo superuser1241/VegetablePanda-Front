@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./UserRegister.css";
 import { useNavigate } from "react-router-dom";
+import logo from "../../image/기본이미지.png";
 
 function UserRegister() {
   const [id, setUsername] = useState("");
@@ -11,6 +12,7 @@ function UserRegister() {
   const [address, setAddress] = useState("");
   const [gender, setGender] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState(logo);
   const [image, setImage] = useState(null);
   const [pw, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,9 +20,11 @@ function UserRegister() {
   const [message, setMessage] = useState("");
   const [idCheckResult, setIdCheckResult] = useState("");
   const [isCheckResult, setIsCheckResult] = useState(false); //true이면 중복, false이면 사용가능
+  const serverIp = process.env.REACT_APP_SERVER_IP;
 
   const navigate = useNavigate();
   const handleImageReset = () => {
+    setImagePreview(logo);
     setImage(null);
   };
 
@@ -56,7 +60,7 @@ function UserRegister() {
     if (name === "id" && value !== "") {
       axios({
         method: "GET",
-        url: `http://localhost:9001/members/${value}`,
+        url: `${serverIp}/members/${value}`,
       })
         .then((res) => {
           console.log(res);
@@ -96,7 +100,7 @@ function UserRegister() {
 
     if (!email.includes("@")) {
       setMessage("올바른 이메일 형식을 입력하세요.");
-      
+
       return;
     }
 
@@ -146,7 +150,7 @@ function UserRegister() {
       }
 
       const response = await axios.post(
-        "http://localhost:9001/members",
+        `${serverIp}/members`,
         formData
       );
 
@@ -187,7 +191,9 @@ function UserRegister() {
             className="image-upload-input"
           />
           <div className="image-preview-container">
-            {image && (
+            {image === null ? (
+              <img src={logo} alt="Preview" className="image-preview" />
+            ) : (
               <img
                 src={URL.createObjectURL(image)}
                 alt="Preview"

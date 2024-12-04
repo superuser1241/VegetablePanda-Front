@@ -15,6 +15,7 @@ const Product = () => {
     const [shopLike, setShopLike] = useState(false);
     const userRole = localStorage.getItem('userRole');
     const navigate = useNavigate();
+    const serverIp = process.env.REACT_APP_SERVER_IP;
 
     const renderTabContent = () => {
         switch (activeTab) {
@@ -59,7 +60,7 @@ const Product = () => {
         
         try {
             const response = await axios.post(
-                `http://localhost:9001/api/insertShopLike`,
+                `${serverIp}/api/insertShopLike`,
                 {
                     userSeq: userSeq,
                     shopSeq: shopSeq
@@ -84,7 +85,7 @@ const Product = () => {
         
         try {
             const response = await axios.get(
-                `http://localhost:9001/api/getShopLike?userSeq=${userSeq}&shopSeq=${shopSeq}`,    
+                `${serverIp}/api/getShopLike?userSeq=${userSeq}&shopSeq=${shopSeq}`,    
                 {
                     headers: { 
                         'Authorization': `Bearer ${token}`
@@ -121,19 +122,19 @@ const Product = () => {
     const handleAddToCart = async () => {
         try {
             // 현재 장바구니 상태 확인
-            const cartResponse = await axios.get('http://localhost:9001/api/cart', { withCredentials: true });
+            const cartResponse = await axios.get(`${serverIp}/api/cart`, { withCredentials: true });
             const cartItems = cartResponse.data;
             const isInCart = cartItems.some(item => item.stockSeq === product.stockSeq);
 
             if (isInCart) {
                 // 이미 장바구니에 있으면 삭제
-                await axios.delete(`http://localhost:9001/api/cart/${product.stockSeq}`, { withCredentials: true });
+                await axios.delete(`${serverIp}/api/cart/${product.stockSeq}`, { withCredentials: true });
                 alert('장바구니에서 제거되었습니다.');
                 return;
             }
 
             // 장바구니에 없으면 추가
-            const response = await axios.post('http://localhost:9001/api/cart/add', 
+            const response = await axios.post(`${serverIp}/api/cart/add`, 
                 null,  // POST body는 없음
                 {
                     params: {

@@ -4,6 +4,7 @@ import BidPage from './BidPage';
 import AuctionRegisterPage from './AuctionRegisterPage';
 import { Client } from "@stomp/stompjs";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const BiddingSection = memo(({ 
 
@@ -19,19 +20,25 @@ const BiddingSection = memo(({
     userRole 
 }) => {
     const [localAuctionData, setLocalAuctionData] = useState(auctionData);
-
+    const navigate = useNavigate();
     useEffect(() => {
+        const serverIp = process.env.REACT_APP_SERVER_IP;
         const client = new Client({
-            brokerURL: "ws://localhost:9001/ws",
+            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
             onConnect: () => {
                 client.subscribe("/top/notifications", async (message) => {
                     refreshAuctionData();
                 });
 
                 client.subscribe("/end/notifications", async (message) => {
-                    refreshAuctionData();
+                    if(message.body==="BroadCastEnd"){
+                        sessionStorage.clear();
+                        navigate('/');
+                    }
+                    else{
+                        refreshAuctionData();
+                    }
                 });
-
             },
             onDisconnect: () => console.log("WebSocket 연결 종료"),
         });
@@ -46,8 +53,9 @@ const BiddingSection = memo(({
     const refreshAuctionData = async () => {
         try {
             const token = localStorage.getItem("token");
+            const serverIp = process.env.REACT_APP_SERVER_IP;
             const response = await axios.get(
-                `http://localhost:9001/auction/${streamingRoom.farmerSeq}`,
+                `${serverIp}/auction/${streamingRoom.farmerSeq}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -55,7 +63,6 @@ const BiddingSection = memo(({
             setLocalAuctionData(response.data);
         } catch (error) {
             setLocalAuctionData(null);
-            console.error("경매 데이터 갱신 실패:", error);
         }
     };
 
