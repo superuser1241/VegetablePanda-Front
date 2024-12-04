@@ -1,27 +1,41 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import logo from '../../image/농산물 판다.png';
+import axios from 'axios';
 
 const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitConfirm }) => {
     const [showExitModal, setShowExitModal] = useState(false);
     const [redirectPath, setRedirectPath] = useState('/');
 
     const handleLinkClick = (path) => (e) => {
-        if (streamingRoom) { // 방송 중인지 확인
+        if (userRole === 'ROLE_FARMER' && streamingRoom) { // 방송 중인 파머 유저인지 확인
             e.preventDefault();
             setRedirectPath(path);
             setShowExitModal(true);
+        } else {
+            // 방송 중이 아닌 경우 세션 스토리지의 정보를 삭제하고 바로 이동
+            sessionStorage.removeItem('streamingRoom');
+            window.location.href = path;
         }
     };
 
     const confirmExitAndRedirect = async () => {
         await handleExitConfirm();
+        setShowExitModal(false);
         window.location.href = redirectPath;
     };
 
-    // 역할에 따른 마이페이지 경로 결정
+    const handleLogoutClick = () => {
+        if (userRole === 'ROLE_FARMER' && streamingRoom) {
+            setRedirectPath('/');
+            setShowExitModal(true);
+        } else {
+            handleLogout();
+        }
+    };
+
     const getMyPagePath = (role) => {
         switch(role) {
             case 'ROLE_ADMIN':
@@ -45,7 +59,6 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
                 </Link>
             </div>
             <nav className="nav">
-
                 {userName ? (
                     <>
                         <Link to={getMyPagePath(userRole)} className="nav-item" onClick={handleLinkClick(getMyPagePath(userRole))}>
@@ -57,18 +70,14 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
                         <Link to="/notify-service" className="nav-item" onClick={handleLinkClick('/notify-service')}>
                             공지사항
                         </Link>
-                        { userRole === 'ROLE_FARMER' ?
-                        <Link to="/personal" className="nav-item" onClick={handleLinkClick('/personal')}>
-                            개인 페이지
-                        </Link>
-                        : null
-                        }
+                        {userRole === 'ROLE_FARMER' ? (
+                            <Link to="/personal" className="nav-item" onClick={handleLinkClick('/personal')}>
+                                개인 페이지
+                            </Link>
+                        ) : null}
                         <div className="user-actions">
                             <span className="welcome-message">{userName}님 환영합니다</span>
-                            <button
-                                onClick={handleLogout}
-                                className="logout-button"
-                            >
+                            <button onClick={handleLogoutClick} className="logout-button">
                                 로그아웃
                             </button>
                         </div>

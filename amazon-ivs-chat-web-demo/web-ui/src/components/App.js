@@ -43,16 +43,12 @@ function App() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // 페이지 로드 시 로컬 스토리지에서 streamingRoom 복원
-        const savedRoom = localStorage.getItem('streamingRoom');
+        // 페이지 로드 시 세션 스토리지에서 streamingRoom 복원
+        const savedRoom = sessionStorage.getItem('streamingRoom');
         if (savedRoom) {
             setStreamingRoom(JSON.parse(savedRoom));
         }
     }, []);
-
-    useEffect(() => {
-        console.log('App.js - streamingRoom updated:', streamingRoom);
-    }, [streamingRoom]);
 
     const handleLoginSuccess = (name, role) => {
         setUserName(name);
@@ -60,7 +56,10 @@ function App() {
         navigate('/');
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        if (streamingRoom) {
+            await handleExitConfirm();
+        }
         setUserName('');
         setUserRole('');
         navigate('/');
@@ -72,14 +71,14 @@ function App() {
     const handleJoinRoom = (room) => {
         setStreamingRoom(room);
         setCurrentRoomId(room.chatRoomId);
-        localStorage.setItem('streamingRoom', JSON.stringify(room)); // 로컬 스토리지에 저장
+        sessionStorage.setItem('streamingRoom', JSON.stringify(room)); // 세션 스토리지에 저장
         navigate('/chat');
     };
 
     const handleStartStreaming = (room) => {
         console.log('App.js - Setting streamingRoom:', room);
         setStreamingRoom(room);
-        localStorage.setItem('streamingRoom', JSON.stringify(room)); // 로컬 스토리지에 저장
+        sessionStorage.setItem('streamingRoom', JSON.stringify(room)); // 세션 스토리지에 저장
         navigate('/chat');
     };
 
@@ -117,8 +116,9 @@ function App() {
                 );
             }
 
-            // 로컬 스토리지에서 방송 정보 제거
-            localStorage.removeItem('streamingRoom');
+            // 세션 스토리지에서 방송 정보 제거
+            sessionStorage.removeItem('streamingRoom');
+            setStreamingRoom(null);
 
             // 성공하면 메인으로 이동
             navigate('/');
@@ -133,7 +133,7 @@ function App() {
         try {
             setStreamingRoom(null);
             setCurrentRoomId(null);
-            localStorage.removeItem('streamingRoom'); // 로컬 스토리지에서 제거
+            sessionStorage.removeItem('streamingRoom'); // 세션 스토리지에서 제거
             navigate('/');
             return Promise.resolve();
         } catch (error) {
@@ -148,7 +148,7 @@ function App() {
 
     return (
         <div className="App">
-            {userName&&<NotiSet onSetStreamingRoom={handleSetStreamingRoom}/>}
+            {userName && <NotiSet onSetStreamingRoom={handleSetStreamingRoom} />}
             <Header
                 userName={userName}
                 userRole={userRole}
