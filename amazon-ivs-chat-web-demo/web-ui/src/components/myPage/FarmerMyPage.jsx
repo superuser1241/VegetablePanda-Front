@@ -64,6 +64,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
 
+  const serverIp = process.env.REACT_APP_SERVER_IP;
 
   useEffect(() => {
     if (token) {
@@ -147,7 +148,7 @@ if (editedFarmer.pw === pwConfirm) {
       setLoading(true);
 
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/point/calc/${userId}`,
+        `${serverIp}/myPage/farmer/point/calc/${userId}`,
         {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -165,7 +166,7 @@ if (editedFarmer.pw === pwConfirm) {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/saleList/${userId}`
+        `${serverIp}/myPage/farmer/saleList/${userId}`
       ); // 판매 내역 가져오는 API
       setSales(response.data);
     } catch (err) {
@@ -208,7 +209,7 @@ if (editedFarmer.pw === pwConfirm) {
 
           // 선택된 항목만 보내기
           const response = await axios.post(
-            `http://localhost:9001/myPage/farmer/calculate/${userId}`,
+            `${serverIp}/myPage/farmer/calculate/${userId}`,
             { settlements: settlementsData }, // selectedItems 데이터를 settlements 배열로 보냄
             {
               headers: {
@@ -235,7 +236,7 @@ if (editedFarmer.pw === pwConfirm) {
   const fetchFarmerInfo = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/list/${userId}`,
+        `${serverIp}/myPage/farmer/list/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -251,9 +252,9 @@ if (editedFarmer.pw === pwConfirm) {
   const fetchReview = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:9001/myPage/farmer/review/List/${userId}`,
+        `${serverIp}/myPage/farmer/review/List/${userId}`,
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       setReview(response.data);
@@ -357,7 +358,7 @@ if (editedFarmer.pw === pwConfirm) {
 
     try {
       const response = await axios.put(
-        `http://localhost:9001/myPage/farmer/update/${userId}`,
+        `${serverIp}/myPage/farmer/update/${userId}`,
         formData,
         {
           headers: {
@@ -395,7 +396,7 @@ if (editedFarmer.pw === pwConfirm) {
     if (confirmDelete) {
       try {
         const response = await axios.post(
-          `http://localhost:9001/myPage/farmer/delete/${userId}`,
+          `${serverIp}/myPage/farmer/delete/${userId}`,
           { userId },
           {
             headers: {
@@ -419,7 +420,7 @@ if (editedFarmer.pw === pwConfirm) {
   const handleDeleteReview = async (revieweq) => {
     try {
       await axios.delete(
-        `http://localhost:9001/myPage/review/${userId}/${revieweq}`,
+        `${serverIp}/myPage/review/${userId}/${revieweq}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -435,28 +436,22 @@ if (editedFarmer.pw === pwConfirm) {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:9001/product", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      setProducts(response.data);
-      console.log("상품 목록:", response.data);
+        const response = await axios.get(`${serverIp}/product`, {  // 수정
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        setProducts(response.data);
+        console.log("상품 목록:", response.data);
     } catch (error) {
       console.error("상품 목록 조회 실패:", error);
     }
   };
 
-
-
-
-
-
-
 const checkStreamingStatus = async () => {
     try {
-        const response = await axios.get('http://localhost:9001/api/streaming/pending', {
+        const response = await axios.get(`${serverIp}/api/streaming/pending`, {  // 수정
             headers: { 
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -465,8 +460,7 @@ const checkStreamingStatus = async () => {
         if (response.data && response.data.length > 0) {
             setStreamingStatus('pending');
         } else {
-            // 승인된 방송 확인
-            const activeResponse = await axios.get('http://localhost:9001/api/streaming/active-rooms', {
+            const activeResponse = await axios.get(`${serverIp}/api/streaming/active-rooms`, {  // 수정
                 headers: { 
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -490,7 +484,7 @@ const handleStreamingRequest = async () => {
         }
 
         const response = await axios.post(
-            `http://localhost:9001/api/streaming/request/${availableRoom.streamingSeq}`, 
+            `${serverIp}/api/streaming/request/${availableRoom.streamingSeq}`,  // 수정
             null,
             {
                 headers: { 
@@ -508,7 +502,7 @@ const handleStreamingRequest = async () => {
     const handleProductSubmit = async () => {
         try {
             // URL에 쿼리 파라미터 추가
-            const url = `http://localhost:9001/stock?productSeq=${newProduct.productSeq}&stockGradeSeq=${newProduct.stockGradeSeq}&stockOrganicSeq=${newProduct.stockOrganicSeq}&farmerSeq=${userId}`;
+            const url = `${serverIp}/stock?productSeq=${newProduct.productSeq}&stockGradeSeq=${newProduct.stockGradeSeq}&stockOrganicSeq=${newProduct.stockOrganicSeq}&farmerSeq=${userId}`;  // 수정
             
             // body 데이터
             const stockData = {
@@ -572,7 +566,7 @@ const handleStreamingRequest = async () => {
 
     const fetchAvailableRoom = async () => {
         try {
-            const response = await axios.get('http://localhost:9001/api/streaming/available', {
+            const response = await axios.get(`${serverIp}/api/streaming/available`, {
                 headers: { 
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -998,7 +992,7 @@ useEffect(() => {
                                 onChange={() =>
                                   handleCheckboxChange(sale.userBuySeq)
                                 } // 클릭 시 선택된 항목 처리
-                                disabled={sale.isDisabled} // 비활성화 상태일 경우 체크박스 비활성화
+                                disabled={sale.isDisabled} // 비활성화 ���태일 경우 체크박스 비활성화
                               />
                             )}
                           </td>

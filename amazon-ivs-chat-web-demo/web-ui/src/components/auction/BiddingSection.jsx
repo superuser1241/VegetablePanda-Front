@@ -21,8 +21,9 @@ const BiddingSection = memo(({
     const [localAuctionData, setLocalAuctionData] = useState(auctionData);
 
     useEffect(() => {
+        const serverIp = process.env.REACT_APP_SERVER_IP;
         const client = new Client({
-            brokerURL: "ws://localhost:9001/ws",
+            brokerURL: `ws://${serverIp}/ws`,
             onConnect: () => {
                 client.subscribe("/top/notifications", async (message) => {
                     refreshAuctionData();
@@ -46,8 +47,9 @@ const BiddingSection = memo(({
     const refreshAuctionData = async () => {
         try {
             const token = localStorage.getItem("token");
+            const serverIp = process.env.REACT_APP_SERVER_IP;
             const response = await axios.get(
-                `http://localhost:9001/auction/${streamingRoom.farmerSeq}`,
+                `${serverIp}/auction/${streamingRoom.farmerSeq}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }

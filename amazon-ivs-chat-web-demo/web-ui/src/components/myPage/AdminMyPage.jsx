@@ -14,6 +14,7 @@ const AdminMyPage = () => {
     });
     const [pendingStreamings, setPendingStreamings] = useState([]);
     const [approvalTriggered, setApprovalTriggered] = useState(false);
+    const serverIp = process.env.REACT_APP_SERVER_IP;
 
     useEffect(() => {
         if (token) {
@@ -46,7 +47,7 @@ const AdminMyPage = () => {
 
     const fetchPendingProducts = async () => {
         try {
-            const response = await axios.get('http://localhost:9001/stock/pending', {
+            const response = await axios.get(`${serverIp}/stock/pending`, {
                 headers: { 
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -60,7 +61,7 @@ const AdminMyPage = () => {
 
     const fetchPendingStreamings = async () => {
         try {
-            const response = await axios.get('http://localhost:9001/api/streaming/pending', {
+            const response = await axios.get(`${serverIp}/api/streaming/pending`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
@@ -74,7 +75,7 @@ const AdminMyPage = () => {
 
     const handleApproveStreaming = async (streamingSeq) => {
         try {
-            await axios.post(`http://localhost:9001/api/streaming/approve/${streamingSeq}`, null, {
+            await axios.post(`${serverIp}/api/streaming/approve/${streamingSeq}`, null, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             alert(`스트리밍 ${streamingSeq}이 승인되었습니다.`);

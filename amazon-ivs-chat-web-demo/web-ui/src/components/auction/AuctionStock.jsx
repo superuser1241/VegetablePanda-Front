@@ -7,10 +7,11 @@ const AuctionStock = ({ streamingRoom }) => {
 
     useEffect(() => {
         const findStockById = async () => {
+            const serverIp = process.env.REACT_APP_SERVER_IP;
             const token = localStorage.getItem('token');
             try {
                 const result = await axios.get(
-                    `http://localhost:9001/auctionStock/${streamingRoom.farmerSeq}`,
+                    `${serverIp}/auctionStock/${streamingRoom.farmerSeq}`,
                     {
                         headers: {
                             'Authorization': `Bearer ${token}`

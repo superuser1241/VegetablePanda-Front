@@ -9,6 +9,7 @@ function LoginForm({ onLoginSuccess }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [activeTab, setActiveTab] = useState("login");
+  const serverIp = process.env.REACT_APP_SERVER_IP;
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -19,7 +20,7 @@ function LoginForm({ onLoginSuccess }) {
       formData.append("username", username);
       formData.append("password", password);
 
-      const loginResponse = await axios.post('http://localhost:9001/login', formData, {
+      const loginResponse = await axios.post(`${serverIp}/login`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -53,7 +54,7 @@ function LoginForm({ onLoginSuccess }) {
 
   // 카카오 로그인 API
   const kakaoApiKey = "eb7cd302e757cf192dc6fb47da020c74";
-  const kakaoRedirectUri = "http://localhost:9001/login/auth";
+  const kakaoRedirectUri = `${serverIp}/login/auth`;
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoApiKey}&redirect_uri=${kakaoRedirectUri}&prompt=select_account`;
 
   return (

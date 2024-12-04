@@ -22,6 +22,7 @@ function CompanyRegister() {
   const [pwMessage, setPwMessage] = useState("");
   const [idCheckResult, setIdCheckResult] = useState("");
   const [isCheckResult, setIsCheckResult] = useState(false); //true이면 중복, false이면 사용가능
+  const serverIp = process.env.REACT_APP_SERVER_IP;
 
   const navigate = useNavigate();
 
@@ -64,7 +65,7 @@ function CompanyRegister() {
     if (name === "id" && value !== "") {
       axios({
         method: "GET",
-        url: `http://localhost:9001/members/${value}`,
+        url: `${serverIp}/members/${value}`,
       })
         .then((res) => {
           console.log(res);
@@ -167,7 +168,7 @@ function CompanyRegister() {
 
       // Axios 요청
       const response = await axios.post(
-        "http://localhost:9001/members",
+        `${serverIp}/members`,
         formData
       );
 

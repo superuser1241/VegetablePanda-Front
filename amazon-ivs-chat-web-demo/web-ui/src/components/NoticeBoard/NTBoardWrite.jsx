@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './NTBoard.css';
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const NotifyBoardWrite = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -34,7 +36,7 @@ const NotifyBoardWrite = () => {
     try {
       const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
       
-      await axios.post('http://localhost:9001/notifyBoard/', 
+      await axios.post(`${serverIp}/notifyBoard/`, 
         {
           subject: formData.subject,
           content: formData.content,

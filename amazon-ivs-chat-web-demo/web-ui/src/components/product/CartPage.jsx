@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import './CartPage.css';
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
@@ -12,7 +14,7 @@ const CartPage = () => {
     // 장바구니 목록 조회
     const fetchCartItems = async () => {
         try {
-            const response = await axios.get('/api/cart');
+            const response = await axios.get(`${serverIp}/api/cart`);
             setCartItems(response.data);
             calculateTotal(response.data);
         } catch (error) {
@@ -29,7 +31,7 @@ const CartPage = () => {
     // 수량 변경
     const handleQuantityChange = async (stockSeq, quantity) => {
         try {
-            await axios.put(`/api/cart/${stockSeq}`, null, {
+            await axios.put(`${serverIp}/api/cart/${stockSeq}`, null, {
                 params: { quantity }
             });
             fetchCartItems();
@@ -45,7 +47,7 @@ const CartPage = () => {
     // 개별 상품 삭제
     const handleRemoveItem = async (stockSeq) => {
         try {
-            await axios.delete(`/api/cart/${stockSeq}`);
+            await axios.delete(`${serverIp}/api/cart/${stockSeq}`);
             fetchCartItems();
         } catch (error) {
             alert('상품 삭제에 실패했습니다.');
@@ -56,7 +58,7 @@ const CartPage = () => {
     const handleClearCart = async () => {
         if (window.confirm('장바구니를 비우시겠습니까?')) {
             try {
-                await axios.delete('/api/cart');
+                await axios.delete(`${serverIp}/api/cart`);
                 fetchCartItems();
             } catch (error) {
                 alert('장바구니 비우기에 실패했습니다.');
