@@ -401,7 +401,7 @@ const RegisterStock = () => {
                                     </div>
                                 </div>
                                 <div className='stock-image-textarea-container'>
-                                    <textarea placeholder='이미지에 대한 설명을 입력해주세요.' id='name' name = 'filename' maxLength={26} value = {newProduct.file.name} onChange={changeFileName}/>
+                                    <textarea placeholder='이미지에 대한 설명을 입력해주세요.' id='name' name = 'name' maxLength={26} value = {newProduct.file.name} onChange={changeFileName}/>
                                 </div>
                             </div>
                             
