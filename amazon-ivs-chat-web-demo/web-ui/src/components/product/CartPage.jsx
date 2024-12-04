@@ -14,7 +14,13 @@ const CartPage = () => {
     // 장바구니 목록 조회
     const fetchCartItems = async () => {
         try {
-            const response = await axios.get(`${serverIp}/api/cart`);
+            const response = await axios.get(`${serverIp}/api/cart`, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
             setCartItems(response.data);
             calculateTotal(response.data);
         } catch (error) {
@@ -32,7 +38,12 @@ const CartPage = () => {
     const handleQuantityChange = async (stockSeq, quantity) => {
         try {
             await axios.put(`${serverIp}/api/cart/${stockSeq}`, null, {
-                params: { quantity }
+                params: { quantity },
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
             });
             fetchCartItems();
         } catch (error) {
@@ -47,7 +58,13 @@ const CartPage = () => {
     // 개별 상품 삭제
     const handleRemoveItem = async (stockSeq) => {
         try {
-            await axios.delete(`${serverIp}/api/cart/${stockSeq}`);
+            await axios.delete(`${serverIp}/api/cart/${stockSeq}`, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
             fetchCartItems();
         } catch (error) {
             alert('상품 삭제에 실패했습니다.');
@@ -58,7 +75,13 @@ const CartPage = () => {
     const handleClearCart = async () => {
         if (window.confirm('장바구니를 비우시겠습니까?')) {
             try {
-                await axios.delete(`${serverIp}/api/cart`);
+                await axios.delete(`${serverIp}/api/cart`, {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
                 fetchCartItems();
             } catch (error) {
                 alert('장바구니 비우기에 실패했습니다.');
