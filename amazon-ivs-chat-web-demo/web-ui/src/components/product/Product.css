@@ -13,7 +13,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr; /* 2열 */
     grid-template-rows: auto auto; /* 2행 */
-    gap: 20px;
+    gap: 70px;
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
@@ -23,8 +23,9 @@
     grid-column: 1; /* 첫 번째 열 */
     grid-row: 1; /* 첫 번째 행 */
     position: relative;  /* 태그와 하트 버튼의 기준점 */
-    width: 90%;        /* 컨테이너 너비에 맞춤 */
-    height: 90%;       /* 컨테이너 높이에 맞춤 */
+    width: 100%;        /* 컨테이너 너비에 맞춤 */
+    height: 81.5%;       /* 컨테이너 높이에 맞춤 */
+    margin-top: 10px;
   }
   
   .product-info {
@@ -222,9 +223,9 @@
 }
 
 .quantity-selector {
-  text-align: left;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
   gap: 8px;
 }
 

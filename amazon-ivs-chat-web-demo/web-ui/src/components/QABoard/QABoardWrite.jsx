@@ -72,53 +72,6 @@ const QABoardWrite = () => {
       );
       alert('문의가 등록되었습니다.');
       navigate('/customer-service');
-    if (!token) {
-      alert('로그인이 필요합니다.');
-      navigate('/login');
-      return;
-    }
-
-    try {
-      // 토큰 파싱 및 사용자 정보 추출
-      let payload;
-      try {
-        payload = JSON.parse(atob(token.split('.')[1]));
-      } catch (err) {
-        console.error('토큰 파싱 실패:', err);
-        alert('로그인 정보가 잘못되었습니다.');
-        navigate('/login');
-        return;
-      }
-
-      // FormData 구성
-      const submissionData = new FormData();
-      const qaBoard = JSON.stringify({
-        subject: formData.subject,
-        content: formData.content,
-        managementUser: { id: payload.user_seq, content: 'user' },
-      });
-      submissionData.append('qaBoard', new Blob([qaBoard], { type: 'application/json' }));
-
-      // 파일 첨부
-      if (selectedFile) {
-        submissionData.append('file', selectedFile);
-      }
-
-      // 서버 요청
-      const response = await axios.post('http://localhost:9001/QABoard/', submissionData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      // 성공 처리
-      if (response.status === 201) {
-        alert('문의가 성공적으로 등록되었습니다.');
-        navigate('/customer-service');
-      } else {
-        throw new Error('Unexpected response status');
-      }
     } catch (error) {
       console.error('등록 실패:', error);
       alert('문의 등록에 실패했습니다. 잠시 후 다시 시도해주세요.');

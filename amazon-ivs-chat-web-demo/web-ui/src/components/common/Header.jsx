@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
+import '../personal/PersonalList.css';
 import logo from '../../image/농산물 판다.png';
 import cart from '../../image/cart.png';
 
@@ -53,6 +54,8 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
         }
     };
 
+
+
     return (
         <header className="header">
             <div className="logo-container">
@@ -72,12 +75,16 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
                         <Link to="/notify-service" className="nav-item" onClick={handleLinkClick('/notify-service')}>
                             공지사항
                         </Link>
-                        {userRole === 'ROLE_FARMER' ? (
-                            <Link to="/personal" className="nav-item" onClick={handleLinkClick('/personal')}>
-                                개인 페이지
-                            </Link>
-                        ) : null}
-                        
+                        { userRole === 'ROLE_FARMER' ?
+                       <Link to="/personal" className="nav-item" onClick={handleLinkClick('/personal')}>
+                           개인 페이지
+                       </Link>
+               
+                        : <Link to="/PersonalList" className='nav-item'>
+                            판매자 목록
+                        </Link>
+                        }
+
                         { userRole === 'ROLE_USER' ? (
                             <div className='cart-container'> 
                                 <Link to = "/cart" className="nav-item">
@@ -85,7 +92,6 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
                                 </Link>
                             </div>
                             ) : null }
-                        
                         <div className="user-actions">
                             <span className="welcome-message">{userName}님 환영합니다</span>
                             <button onClick={handleLogoutClick} className="logout-button">

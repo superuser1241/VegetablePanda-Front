@@ -5,7 +5,7 @@ import * as ChargePoint from "./ChargePoint.jsx";
 import iamport from "https://cdn.iamport.kr/v1/iamport.js";
 import { useNavigate } from "react-router-dom";
 import "../../index.css";
-import logo from "../../image/기본이미지.png"
+import logo from "../../image/기본이미지.png";
 
 const UserMyPage = () => {
   const [chargeAmount, setChargeAmount] = useState("");
@@ -470,20 +470,85 @@ const UserMyPage = () => {
             >
               포인트 충전
             </li>
+            <li
+              onClick={() => setActiveTab("cart")}
+              className={activeTab === "cart" ? "active" : ""}
+            >
+              장바구니
+            </li>
           </ul>
         </div>
 
         <div className="main-content">
+          {activeTab === "userLike" && 
+           <div className="auction-history-display">
+           <h3>구독한 판매자 목록</h3>
+           {loading1 ? (
+             <div>로딩 중...</div>
+           ) : error ? (
+             <div className="error-message">{error}</div>
+           ) : auctions.length > 0 ? (
+             <table>
+               <thead>
+                 <tr>
+                   <th></th>
+                   <th></th>
+                   <th></th>
+                   <th></th>
+                   <th></th>
+                   <th></th>
+                   <th></th>
+                 </tr>
+               </thead>
+               <tbody>
+                 {auctions.map((auction, index) => (
+                   <tr key={auction.bidSeq}>
+                     <td>{index + 1}</td> {/* 구독 번호 */}
+                     <td>{auction.content}</td> {/* 판매자명 */}
+                     <td>{auction.count}</td> {/* */}
+                     <td>{auction.price}원</td> {/* 입찰할 금액 */}
+                     <td>{auction.insertDate}</td> {/* 입찰한 날짜 */}
+                     <td>{auction.name}</td> {/* 판매자명 */}
+                     <td>
+                       {auction.status === 0
+                         ? "값 뭐넣어야해여?"
+                         : auction.status === 1
+                         ? "값 뭐넣어야해여?"
+                         : auction.status === 2
+                         ? "값 뭐넣어야해여?"
+                         : auction.status === 3
+                         ? "값 뭐넣어야해여?"
+                         : "값 뭐넣어야해여?"}
+                     </td>
+                     {/* 현재 상태 */}
+                   </tr>
+                 ))}
+               </tbody>
+             </table>
+           ) : (
+             <div className="no-data-notification">
+               구독한 내역이 없습니다.
+             </div>
+           )}
+         </div>
+          }
+
+
+          {activeTab === "saleLike" && 
+          <div className="">
+
+
+
+          </div>
+          }
+
           {activeTab === "info" && userInfo && (
             <div className="user-info-section">
               <h3>회원 정보</h3>
               <div className="user-info-details">
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
-                  <img
-                    src={userInfo.path || logo }
-                    alt={userInfo.path}
-                  />
+                  <img src={userInfo.path || logo} alt={userInfo.path} />
                 </div>
                 <p>
                   <strong>아이디:</strong> {userInfo.id}
@@ -637,19 +702,19 @@ const UserMyPage = () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {userInfo.path ?
+                    {userInfo.path ? (
                       <img
-                      src={userInfo.path}
-                      alt="userInfo.path"
-                      className="image-preview"
-                    />
-                     : 
+                        src={userInfo.path}
+                        alt="userInfo.path"
+                        className="image-preview"
+                      />
+                    ) : (
                       <img
-                      src={imagePreview}
-                      alt="imagePreview"
-                      className="image-preview"
-                    />
-                    }
+                        src={imagePreview}
+                        alt="imagePreview"
+                        className="image-preview"
+                      />
+                    )}
                   </div>
                   <button
                     type="button"
@@ -842,6 +907,19 @@ const UserMyPage = () => {
                 <button onClick={handleCharge} className="charge-button">
                   충전하기
                 </button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "cart" && (
+            <div
+              className="cart-banner-section"
+              onClick={() => navigate("/cart")}
+            >
+              <div className="cart-banner-content">
+                <i className="fas fa-shopping-cart"></i>
+                <h3>장바구니</h3>
+                <p>장바구니에서 선택하신 상품을 확인하세요</p>
               </div>
             </div>
           )}

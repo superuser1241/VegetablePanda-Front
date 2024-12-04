@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./UserRegister.css";
 import { useNavigate } from "react-router-dom";
+import logo from "../../image/기본이미지.png";
 
 function UserRegister() {
   const [id, setUsername] = useState("");
@@ -11,6 +12,7 @@ function UserRegister() {
   const [address, setAddress] = useState("");
   const [gender, setGender] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState(logo);
   const [image, setImage] = useState(null);
   const [pw, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,6 +24,7 @@ function UserRegister() {
 
   const navigate = useNavigate();
   const handleImageReset = () => {
+    setImagePreview(logo);
     setImage(null);
   };
 
@@ -97,7 +100,7 @@ function UserRegister() {
 
     if (!email.includes("@")) {
       setMessage("올바른 이메일 형식을 입력하세요.");
-      
+
       return;
     }
 
@@ -188,7 +191,9 @@ function UserRegister() {
             className="image-upload-input"
           />
           <div className="image-preview-container">
-            {image && (
+            {image === null ? (
+              <img src={logo} alt="Preview" className="image-preview" />
+            ) : (
               <img
                 src={URL.createObjectURL(image)}
                 alt="Preview"

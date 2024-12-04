@@ -171,25 +171,48 @@ const Product = () => {
                 alt = {product.productName}
                 />
             </div>
-            
+
             {/* 상품 정보 */}
             <div className="product-info">
                 <h1>{product.productName}</h1>
                 <hr/>
-                <ul>
-                <li>상품번호 : {product.stockSeq}</li>
-                <li>카테고리 : {product.productCategoryContent}</li>
-                <li>배송가능지역 : 전국</li>
-                <li>배송비 : 3,000원</li>
-                <li>판매가격 : {product.price}</li>
-                </ul>
+                <div className='product-specs'>
+                    <div className='spec-item'>
+                        <span className='spec-label'>상품번호 </span>
+                        <span className='spec-value'>{product.stockSeq}</span>
+                    </div>
+                    <div className='spec-item'>
+                        <span className='spec-label'>카테고리 </span>
+                        <span className='spec-value'>{product.productCategoryContent}</span>
+                    </div>
+                    <div className="spec-item">
+                        <span className="spec-label">등급</span>
+                        <span className="spec-value">{product.stockGrade}</span>
+                    </div>
+                    <div className="spec-item">
+                        <span className="spec-label">인증</span>
+                        <span className="spec-value">{product.stockOrganic}</span>
+                    </div>
+                    <div className="spec-item">
+                        <span className="spec-label">재고</span>
+                        <span className="spec-value">{product.count}개</span>
+                    </div>
+                    <div className="spec-item">
+                        <span className="spec-label">판매가격</span>
+                        <span className="spec-value">{product.price.toLocaleString()}원</span>
+                    </div>    
+                    <div className="spec-item">
+                        <span className="spec-label">배송비</span>
+                        <span className="spec-value">3,000원</span>
+                    </div>    
+                </div>
                 <div className="purchase-section">
                     <div className="quantity-selector">
                         <label>구매 수량</label>
                         <div className="quantity-input-group">
                                 <button onClick={() => quantity > 1 && setQuantity(quantity - 1)}>-</button>
                                 <input 
-                                    type="number" 
+                                    type="text" 
                                     min="1" 
                                     max={product.count}
                                     value={quantity}

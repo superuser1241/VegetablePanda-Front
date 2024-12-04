@@ -138,4 +138,5 @@ const Statistics = ({ stockSeq }) => {
         </div>
     );
 };
+
 export default Statistics;

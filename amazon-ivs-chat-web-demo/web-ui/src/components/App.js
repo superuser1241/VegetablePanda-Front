@@ -30,11 +30,9 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
-import personal from './personal/personal';
-import ReviewCommentWrite from './ReviewComment/ReviewCommnetWrite';
-import ReviewCommentEdit from './ReviewComment/ReviewCommnetEdit';
-import ReviewCommentList from './ReviewComment/ReviewCommnetList';
-import ReviewCommentDetail from './ReviewComment/ReviewCommnetDetail';
+import Personal from './personal/personal';
+import PersonalList from './personal/PersonalList';
+import './personal/PersonalList';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 import axios from 'axios';
@@ -164,6 +162,7 @@ function App() {
             <main style={{ minHeight: '80vh'}}>
                 <Routes>
                     <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} />} />
+                    <Route path="/personal" element={<Personal onJoinRoom={handleJoinRoom} />} />
                     <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
                     <Route path="/UserRegister" element={<UserRegister />} />
                     <Route path="/CompanyRegister" element={<CompanyRegister />} />
@@ -198,16 +197,14 @@ function App() {
                     <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
                     <Route path="/purchaseD" element={<PurchaseD userName={userName}/>} />
-                    {/* <Route path="/personal" element={userRole === 'ROLE_FARMER' && <Personal navigateTo={navigate} />} /> */}
-                    <Route path="/payment" element={<Payment />} />
+                    <Route path="/personal" element={<Personal navigateTo={navigate} />} />
+                    <Route path="/personalList" element={<PersonalList navigateTo={navigate} />} />
+                    <Route path="/payment" element={<Payment/>} />
+
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />
                     <Route path="/product/:stockSeq" element={<Product/>}/>
                     <Route path="/shop" element={<Shop/>}/>
-                    <Route path="/review-comment" element={<ReviewCommentList />} />
-                    <Route path="/review-comment/write" element={<ReviewCommentWrite />} />
-                    <Route path="/review-comment/edit/:boardNoSeq" element={<ReviewCommentEdit />} />
-                    <Route path="/review-comment/:reviewSeq" element={<ReviewCommentDetail />} />
                     <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
                     <Route path="/cart" element={<CartPage />} />
                 </Routes>
