@@ -63,6 +63,13 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
             <nav className="nav">
                 {userName ? (
                     <>
+                        { userRole === 'ROLE_USER' ? (
+                            <div className='cart-container'> 
+                                <Link to = "/shop" className="nav-item">
+                                    상점
+                                </Link>
+                            </div>
+                            ) : null }
                         <Link to={getMyPagePath(userRole)} className="nav-item" onClick={handleLinkClick(getMyPagePath(userRole))}>
                             마이페이지
                         </Link>
