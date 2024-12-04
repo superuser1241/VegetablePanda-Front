@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const requestPay = async (result, token, IMP) => {
+export const requestPay = async (result, token, IMP, fetchPoint, userId) => {
     const serverIp = process.env.REACT_APP_SERVER_IP;
 
     IMP.request_pay(
@@ -38,6 +38,7 @@ export const requestPay = async (result, token, IMP) => {
                       }
                 });
                 console.log(response3);
+                fetchPoint(userId);
                 alert('포인트 충전 완료');
 
             } catch(err) {
