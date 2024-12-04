@@ -55,7 +55,7 @@ const AuctionRegisterPage = ({ streamingRoom, onRegisterSuccess }) => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.post(
-                `${serverIp}/api/auction/register?price=${totalPrice}`,
+                `${serverIp}/auction?price=${totalPrice}`,
                 { 
                     ...auctionData,
                 },

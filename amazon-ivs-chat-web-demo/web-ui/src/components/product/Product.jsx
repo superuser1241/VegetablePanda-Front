@@ -60,7 +60,7 @@ const Product = () => {
         
         try {
             const response = await axios.post(
-                `${serverIp}/api/InsertShopLike`,
+                `${serverIp}/api/insertShopLike`,
                 {
                     userSeq: userSeq,
                     shopSeq: shopSeq
