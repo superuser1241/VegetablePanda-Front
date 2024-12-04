@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./CompanyMyPage.css";
 import { useNavigate } from "react-router-dom";
+import logo from "../../image/기본이미지.png";
 
 const CompanyMyPage = () => {
   const [chargeAmount, setChargeAmount] = useState("");
@@ -21,7 +22,7 @@ const CompanyMyPage = () => {
     pw: "",
   });
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState(logo);
   const [point, setPoint] = useState(0);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -222,7 +223,7 @@ const CompanyMyPage = () => {
       ...prevState,
       path: null,
     }));
-    setImagePreview(null);
+    setImagePreview(logo);
     setImage(null);
   };
 
@@ -323,7 +324,7 @@ const CompanyMyPage = () => {
           phone: formattedPhone,
           address: editedCompany.address,
           code: code,
-          path: editedCompany.path,
+          path: image,
         });
         setActiveTab("info");
       }
@@ -446,7 +447,7 @@ const CompanyMyPage = () => {
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
                   <img
-                    src={imagePreview || companyInfo.path}
+                    src={companyInfo.path || logo }
                     alt={companyInfo.path}
                   />
                 </div>
@@ -499,19 +500,19 @@ const CompanyMyPage = () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {imagePreview ? (
+                    {companyInfo.path ?
+                      <img
+                        src={companyInfo.path}
+                        alt="companyInfo.path"
+                        className="image-preview"
+                        />
+                        : 
                       <img
                         src={imagePreview}
                         alt="imagePreview"
                         className="image-preview"
                       />
-                    ) : companyInfo.path ? (
-                      <img
-                        src={companyInfo.path}
-                        alt="companyInfo.path"
-                        className="image-preview"
-                      />
-                    ) : null}
+                    }
                   </div>
                   <button
                     type="button"
@@ -523,7 +524,7 @@ const CompanyMyPage = () => {
                     사진 등록
                   </button>
 
-                  {(imagePreview || companyInfo.path) && (
+                  {(image !== null || companyInfo.path !== null) && (
                     <button
                       type="button"
                       className="image-reset-btn"

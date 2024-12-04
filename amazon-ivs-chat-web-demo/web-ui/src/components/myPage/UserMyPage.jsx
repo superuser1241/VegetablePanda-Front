@@ -5,13 +5,14 @@ import * as ChargePoint from "./ChargePoint.jsx";
 import iamport from "https://cdn.iamport.kr/v1/iamport.js";
 import { useNavigate } from "react-router-dom";
 import "../../index.css";
+import logo from "../../image/기본이미지.png";
 
 const UserMyPage = () => {
   const [chargeAmount, setChargeAmount] = useState("");
   const token = localStorage.getItem("token");
   const [userId, setUserId] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState(logo);
   const [image, setImage] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [buyList, setbuyList] = useState([]);
@@ -267,7 +268,7 @@ const UserMyPage = () => {
       ...prevState,
       path: null,
     }));
-    setImagePreview(null);
+    setImagePreview(logo);
     setImage(null);
   };
 
@@ -347,7 +348,7 @@ const UserMyPage = () => {
         // 수정된 유저 정보를 상태에 반영
         setUserInfo({
           ...userInfo,
-          path: editedUser.path,
+          path: image,
           name: editedUser.name,
           email: editedUser.email,
           phone: formattedPhone,
@@ -480,7 +481,7 @@ const UserMyPage = () => {
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
                   <img
-                    src={imagePreview || userInfo.path}
+                    src={userInfo.path || logo }
                     alt={userInfo.path}
                   />
                 </div>
@@ -636,19 +637,19 @@ const UserMyPage = () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {imagePreview ? (
+                    {userInfo.path ?
                       <img
-                        src={imagePreview}
-                        alt="imagePreview"
-                        className="image-preview"
-                      />
-                    ) : userInfo.path ? (
+                      src={userInfo.path}
+                      alt="userInfo.path"
+                      className="image-preview"
+                    />
+                     : 
                       <img
-                        src={userInfo.path}
-                        alt="userInfo.path"
-                        className="image-preview"
-                      />
-                    ) : null}
+                      src={imagePreview}
+                      alt="imagePreview"
+                      className="image-preview"
+                    />
+                    }
                   </div>
                   <button
                     type="button"
@@ -660,7 +661,7 @@ const UserMyPage = () => {
                     사진 등록
                   </button>
 
-                  {(imagePreview || userInfo.path) && (
+                  {(image !== null || userInfo.path !== null) && (
                     <button
                       type="button"
                       className="image-reset-btn"

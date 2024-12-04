@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./FarmerMyPage.css";
 import RegisterStock from "./RegisterStock";
-import StreamingStatus from './StreamingStatus';
-import StockList from './StockList';
+import StreamingStatus from "./StreamingStatus";
+import StockList from "./StockList";
+import logo from "../../image/기본이미지.png";
 
 const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const [review, setReview] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [settlements, setSettlements] = useState([]);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState(logo);
   const [farmerInfo, setFarmerInfo] = useState(null);
   const [streamingStatus, setStreamingStatus] = useState(null);
   const [availableRoom, setAvailableRoom] = useState(null);
@@ -56,7 +57,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         setUserId(payload.user_seq);
-        fetchFarmerInfo(payload.user_seq); 
+        fetchFarmerInfo(payload.user_seq);
       } catch (error) {
         console.error("토큰 파싱 실패:", error);
       }
@@ -66,17 +67,17 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditedFarmer((prev) => ({ ...prev, [name]: value }));
-    
-    if (editedFarmer.pw === "" || pwConfirm === "") {
-    setPwMessage("");
-    return;
-}
 
-if (editedFarmer.pw === pwConfirm) {
-  setPwMessage("비밀번호가 일치합니다.");
-} else {
-  setPwMessage("비밀번호가 일치하지 않습니다.");
-}
+    if (editedFarmer.pw === "" || pwConfirm === "") {
+      setPwMessage("");
+      return;
+    }
+
+    if (editedFarmer.pw === pwConfirm) {
+      setPwMessage("비밀번호가 일치합니다.");
+    } else {
+      setPwMessage("비밀번호가 일치하지 않습니다.");
+    }
   };
 
   useEffect(() => {
@@ -115,7 +116,6 @@ if (editedFarmer.pw === pwConfirm) {
     const pwConfirm = e.target.value;
     setConfirmPassword(pwConfirm);
 
-    // 비밀번호와 비밀번호 확인이 일치하는지 확인
     if (editedFarmer.pw === "" || pwConfirm === "") {
       setPwMessage("");
       return;
@@ -265,7 +265,7 @@ if (editedFarmer.pw === pwConfirm) {
       ...prevState,
       path: null,
     }));
-    setImagePreview(null);
+    setImagePreview(logo);
     setImage(null);
   };
 
@@ -356,7 +356,7 @@ if (editedFarmer.pw === pwConfirm) {
         alert("정보 수정이 완료되었습니다.");
         setFarmerInfo({
           ...farmerInfo,
-          path: editedFarmer.path,
+          path: image,
           name: editedFarmer.name,
           email: editedFarmer.email,
           code: code,
@@ -418,7 +418,6 @@ if (editedFarmer.pw === pwConfirm) {
     }
   };
 
-
   const fetchProducts = async () => {
     try {
       const response = await axios.get("http://localhost:9001/product", {
@@ -434,100 +433,94 @@ if (editedFarmer.pw === pwConfirm) {
     }
   };
 
-
-
-
-
-  
   const fetchAvailableRoom = async () => {
     try {
-        const response = await axios.get('http://localhost:9001/api/streaming/available', {
-            headers: { 
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        setAvailableRoom(response.data);
-    } catch (error) {
-        console.error('사용 가능한 방 조회 실패:', error);
-    }
-};
-
-const checkStreamingStatus = async () => {
-    try {
-        const response = await axios.get('http://localhost:9001/api/streaming/pending', {
-            headers: { 
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        if (response.data && response.data.length > 0) {
-            setStreamingStatus('pending');
-        } else {
-            // 승인된 방송 확인
-            const activeResponse = await axios.get('http://localhost:9001/api/streaming/active-rooms', {
-                headers: { 
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (activeResponse.data && activeResponse.data.length > 0) {
-                setStreamingStatus('approved');
-                setAvailableRoom(activeResponse.data[0]);
-            }
+      const response = await axios.get(
+        "http://localhost:9001/api/streaming/available",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
+      );
+      setAvailableRoom(response.data);
     } catch (error) {
-        console.error('방송 상태 조회 실패:', error);
+      console.error("사용 가능한 방 조회 실패:", error);
     }
-};
+  };
 
-const handleStreamingRequest = async () => {
+  const checkStreamingStatus = async () => {
     try {
-        if (!availableRoom) {
-            alert('사용 가능한 방이 없습니다.');
-            return;
+      const response = await axios.get(
+        "http://localhost:9001/api/streaming/pending",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-
-        const response = await axios.post(
-            `http://localhost:9001/api/streaming/request/${availableRoom.streamingSeq}`, 
-            null,
-            {
-                headers: { 
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                params: {
-                    farmerSeq: userId
-                }
-            }
+      );
+      if (response.data && response.data.length > 0) {
+        setStreamingStatus("pending");
+      } else {
+        // 승인된 방송 확인
+        const activeResponse = await axios.get(
+          "http://localhost:9001/api/streaming/active-rooms",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
         );
-
-        if (response.status === 200) {
-            alert('방송 신청이 완료되었습니다. 관리자 승인을 기다려주세요.');
-            setStreamingStatus('pending');
+        if (activeResponse.data && activeResponse.data.length > 0) {
+          setStreamingStatus("approved");
+          setAvailableRoom(activeResponse.data[0]);
         }
+      }
     } catch (error) {
-        console.error('방송 신청 실패:', error);
-        alert('방송 신청 중 오류가 발생했습니다.');
+      console.error("방송 상태 조회 실패:", error);
     }
-};
+  };
 
-useEffect(() => {
+  const handleStreamingRequest = async () => {
+    try {
+      if (!availableRoom) {
+        alert("사용 가능한 방이 없습니다.");
+        return;
+      }
+
+      const response = await axios.post(
+        `http://localhost:9001/api/streaming/request/${availableRoom.streamingSeq}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          params: {
+            farmerSeq: userId,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        alert("방송 신청이 완료되었습니다. 관리자 승인을 기다려주세요.");
+        setStreamingStatus("pending");
+      }
+    } catch (error) {
+      console.error("방송 신청 실패:", error);
+      alert("방송 신청 중 오류가 발생했습니다.");
+    }
+  };
+
+  useEffect(() => {
     if (userId) {
-        fetchAvailableRoom();
-        checkStreamingStatus();
+      fetchAvailableRoom();
+      checkStreamingStatus();
     }
-}, [userId]);
-
-
-
-
-
-
-
-
-
-
+  }, [userId]);
 
   return (
     <div className="farmer-mypage">
@@ -566,58 +559,65 @@ useEffect(() => {
             >
               나의 리뷰
             </li>
-            <li 
-                            onClick={() => setActiveTab('streaming')}
-                            className={activeTab === 'streaming' ? 'active' : ''}
-                        >
-                            스트리밍 관리
-                        </li>
-                        {/* 상품 관리 */}
-                        <li className="dropdown">
-                            <div 
-                                onClick={() => setIsProductMenuOpen(!isProductMenuOpen)}
-                                className={`dropdown-header ${(activeTab === 'product' || activeTab === 'productList') ? 'active' : ''}`}
-                            >
-                                상품 관리
-                            </div>
-                            {isProductMenuOpen && (
-                                <ul className="dropdown-content">
-                                    <li 
-                                        onClick={() => setActiveTab('product')}
-                                        className={activeTab === 'product' ? 'active' : ''}
-                                    >
-                                        └ 상품 등록
-                                    </li>
-                                    <li 
-                                        onClick={() => setActiveTab('productList')}
-                                        className={activeTab === 'productList' ? 'active' : ''}
-                                    >
-                                        └ 상품 목록
-                                    </li>
-                                </ul>
-                            )}
-                        </li>
-                    </ul>
+            <li
+              onClick={() => setActiveTab("streaming")}
+              className={activeTab === "streaming" ? "active" : ""}
+            >
+              스트리밍 관리
+            </li>
+            {/* 상품 관리 */}
+            <li className="dropdown">
+              <div
+                onClick={() => setIsProductMenuOpen(!isProductMenuOpen)}
+                className={`dropdown-header ${
+                  activeTab === "product" || activeTab === "productList"
+                    ? "active"
+                    : ""
+                }`}
+              >
+                상품 관리
+              </div>
+              {isProductMenuOpen && (
+                <ul className="dropdown-content">
+                  <li
+                    onClick={() => setActiveTab("product")}
+                    className={activeTab === "product" ? "active" : ""}
+                  >
+                    └ 상품 등록
+                  </li>
+                  <li
+                    onClick={() => setActiveTab("productList")}
+                    className={activeTab === "productList" ? "active" : ""}
+                  >
+                    └ 상품 목록
+                  </li>
+                </ul>
+              )}
+            </li>
+          </ul>
         </div>
-        {activeTab === 'streaming' && (
-                        <StreamingStatus 
-                            userId={userId} 
-                            token={token}
-                            onStartStreaming={onStartStreaming}
-                        />
-                    )}
 
-                    {activeTab === 'product' && (
-                        <div >
-                            <RegisterStock/>
-                        </div>
-                    )}
-                    {activeTab === 'productList' && (
-                        <div className="productList-section">
-                            <StockList/>
-                        </div>
-                    )}
         <div className="main-content">
+        {activeTab === "streaming" && (
+          <StreamingStatus
+            userId={userId}
+            token={token}
+            onStartStreaming={onStartStreaming}
+          />
+        )}
+
+        {activeTab === "product" && (
+          <div>
+            <RegisterStock />
+          </div>
+        )}
+        
+        {activeTab === "productList" && (
+          <div className="productList-section">
+            <StockList />
+          </div>
+        )}
+        
           {activeTab === "info" && farmerInfo && (
             <div className="user-info-section">
               <h3>회원 정보</h3>
@@ -625,7 +625,7 @@ useEffect(() => {
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
                   <img
-                    src={imagePreview || farmerInfo.path}
+                    src={farmerInfo.path || logo}
                     alt={farmerInfo.path}
                   />
                 </div>
@@ -672,19 +672,19 @@ useEffect(() => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {imagePreview ? (
+                    {farmerInfo.path ?
+                      <img
+                      src={farmerInfo.path}
+                      alt="farmerInfo.path"
+                      className="image-preview"
+                    />
+                     :
                       <img
                         src={imagePreview}
                         alt="imagePreview"
                         className="image-preview"
                       />
-                    ) : farmerInfo.path ? (
-                      <img
-                        src={farmerInfo.path}
-                        alt="farmerInfo.path"
-                        className="image-preview"
-                      />
-                    ) : null}
+                    }
                   </div>
                   <button
                     type="button"
@@ -695,7 +695,7 @@ useEffect(() => {
                   >
                     사진 등록
                   </button>
-                  {(imagePreview || farmerInfo.path) && (
+                  {(image !== null || farmerInfo.path !== null) && (
                     <button
                       type="button"
                       className="image-reset-btn"
@@ -867,12 +867,6 @@ useEffect(() => {
                   작성된 리뷰가 없습니다.
                 </div>
               )}
-            </div>
-          )}
-
-          {activeTab === "stoke" && (
-            <div className="reviews-section">
-              <h3>내가 등록한 상품 목록</h3>
             </div>
           )}
 

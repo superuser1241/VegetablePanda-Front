@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
+import '../personal/PersonalList.css';
 import logo from '../../image/농산물 판다.png';
 
 const Header = ({ userName, userRole, handleLogout }) => {
@@ -20,6 +21,8 @@ const Header = ({ userName, userRole, handleLogout }) => {
                 return '/';
         }
     };
+
+
 
     return (
         <header className="header">
@@ -45,7 +48,9 @@ const Header = ({ userName, userRole, handleLogout }) => {
                         <Link to="/personal" className="nav-item">
                             개인 페이지
                         </Link>
-                        : null
+                        : <Link to="/PersonalList" className='nav-item'>
+                            판매자 목록
+                        </Link>
                         }
                         <div className="user-actions">
                             <span className="welcome-message">{userName}님 환영합니다</span>

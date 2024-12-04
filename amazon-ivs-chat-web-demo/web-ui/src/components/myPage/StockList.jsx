@@ -62,8 +62,8 @@ const StockList = () => {
 
     return (
         <div className='stock-list-container'>
+            <div className='stock-list-middle'>
             <h3>재고 목록</h3>
-            <div className='stock-table-container'>
                 <table className='stock-table'>
                 <thead>
                     <tr>
@@ -87,8 +87,8 @@ const StockList = () => {
                 </tbody>
 
                 </table>
+                </div>
             </div>
-        </div>
     );
 };
 

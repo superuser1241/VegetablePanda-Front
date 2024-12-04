@@ -29,10 +29,14 @@ const slides = [
     { id: 4, text: 'Get discounts on bulk orders!', backgroundColor: '#fff3cd' },
 ];
 
+
+
 const MainPage = ({ onJoinRoom }) => {
     const [rooms, setRooms] = useState([]);
     const [shopItems, setShopItems] = useState([]);
     const [error, setError] = useState('');
+    const token = localStorage.getItem("token");
+    const [farmerSeq, setUserId] = useState(null);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [visibleRooms, setVisibleRooms] = useState(4);
     const [visibleShops, setVisibleShops] = useState(4);
@@ -52,6 +56,9 @@ const MainPage = ({ onJoinRoom }) => {
             }
         };
 
+
+
+
         const fetchShopItems = async () => {
             try {
                 const response = await axios.get('http://localhost:9001/api/shop');
@@ -60,7 +67,6 @@ const MainPage = ({ onJoinRoom }) => {
                 console.error('상품 목록을 불러오는데 실패했습니다:', err);
             }
         };
-
         fetchActiveRooms();
         fetchShopItems();
         console.log(shopItems);
@@ -73,6 +79,19 @@ const MainPage = ({ onJoinRoom }) => {
 
         return () => clearInterval(slideInterval);
     }, []);
+
+
+    useEffect(() => {
+        if (token) {
+          try {
+            const payload = JSON.parse(atob(token.split(".")[1]));
+            setUserId(payload.user_Seq);
+          } catch (error) {
+            console.error("토큰 파싱 실패:", error);
+          }
+        }
+      }, [token]);
+
 
     useEffect(() => {
         const fetchStatistics = async () => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./CompanyRegister.css";
 import { useNavigate } from "react-router-dom";
+import logo from "../../image/기본이미지.png";
 
 function CompanyRegister() {
   const [id, setCompanyId] = useState("");
@@ -229,7 +230,9 @@ function CompanyRegister() {
             className="image-upload-input"
           />
           <div className="image-preview-container">
-            {image && (
+            {image === null ? (
+              <img src={logo} alt="Preview" className="image-preview" />
+            ) : (
               <img
                 src={URL.createObjectURL(image)}
                 alt="Preview"

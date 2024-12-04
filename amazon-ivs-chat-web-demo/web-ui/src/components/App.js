@@ -31,6 +31,8 @@ import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
 import Personal from './personal/personal';
+import PersonalList from './personal/PersonalList';
+import './personal/PersonalList.css';
 
 function App() {
     const [userName, setUserName] = useState('');
@@ -122,6 +124,7 @@ function App() {
             <main style={{ minHeight: '80vh'}}>
                 <Routes>
                     <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} />} />
+                    <Route path="/personal" element={<Personal onJoinRoom={handleJoinRoom} />} />
                     <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
                     <Route path="/UserRegister" element={<UserRegister />} />
                     <Route path="/CompanyRegister" element={<CompanyRegister />} />
@@ -156,8 +159,9 @@ function App() {
                     <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
                     <Route path="/purchaseD" element={<PurchaseD userName={userName}/>} />
-                    <Route path="/personal" element={userRole === 'ROLE_FARMER' && <Personal navigateTo={navigate} />} />
-                    <Route path="/payment" element={<Payment />} />
+                    <Route path="/personal" element={<Personal navigateTo={navigate} />} />
+                    <Route path="/personalList" element={<PersonalList navigateTo={navigate} />} />
+                    <Route path="/payment" element={<Payment/>} />
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />
                     <Route path="/product/:stockSeq" element={<Product/>}/>
