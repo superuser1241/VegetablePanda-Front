@@ -36,9 +36,9 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                 console.log('Checking auction status for farmer:', streamingRoom.farmerSeq);
                 console.log('Current user is farmer:', isFarmer);
                 console.log('Token:', token);
-
+                const serverIp = process.env.REACT_APP_SERVER_IP;
                 const response = await axios.get(
-                    `http://localhost:9001/auction/${streamingRoom.farmerSeq}`,
+                    `${serverIp}/auction/${streamingRoom.farmerSeq}`,
                     {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }
