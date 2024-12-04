@@ -4,6 +4,7 @@ import BidPage from './BidPage';
 import AuctionRegisterPage from './AuctionRegisterPage';
 import { Client } from "@stomp/stompjs";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const BiddingSection = memo(({ 
 
@@ -19,7 +20,7 @@ const BiddingSection = memo(({
     userRole 
 }) => {
     const [localAuctionData, setLocalAuctionData] = useState(auctionData);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const client = new Client({
             brokerURL: "ws://localhost:9001/ws",
@@ -29,9 +30,15 @@ const BiddingSection = memo(({
                 });
 
                 client.subscribe("/end/notifications", async (message) => {
-                    refreshAuctionData();
+                    if(message.body==="BroadCastEnd"){
+                        sessionStorage.clear();
+                        alert("방송이 종료되었습니다.");
+                        navigate('/');
+                    }
+                    else{
+                        refreshAuctionData();
+                    }
                 });
-
             },
             onDisconnect: () => console.log("WebSocket 연결 종료"),
         });
@@ -55,7 +62,6 @@ const BiddingSection = memo(({
             setLocalAuctionData(response.data);
         } catch (error) {
             setLocalAuctionData(null);
-            console.error("경매 데이터 갱신 실패:", error);
         }
     };
 
