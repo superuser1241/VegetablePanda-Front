@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export const requestPay = async (result, token, IMP) => {
+    const serverIp = process.env.REACT_APP_SERVER_IP;
 
     IMP.request_pay(
       {
@@ -26,7 +27,7 @@ export const requestPay = async (result, token, IMP) => {
           
           const sendValidateData = async () => {
             try {
-                const response3 = await axios.post('http://localhost:9001/api/payment/validate?status=1', {
+                const response3 = await axios.post(`${serverIp}/api/payment/validate?status=1`, {
                         orderUid: rsp.merchant_uid, 
                         paymentUid: rsp.imp_uid
                 },

@@ -112,7 +112,7 @@ const Payment = () => {
 
             // 주문번호 받아오기
 
-            const response2 = await axios.get(`${serverIp}/payment/` + response.data + '?status=2', {
+            const response2 = await axios.get(`${serverIp}/api/payment/` + response.data + '?status=2', {
 
                 headers: { 
                     Authorization: `Bearer ${token}`,
