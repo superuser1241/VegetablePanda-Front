@@ -57,7 +57,7 @@ const Personal = ({ onJoinRoom }) => {
 
     const fetchShopItems = async (farmerSeq) => {
       try {
-        const response = await axios.post(`${serverIp}/api/shop/${farmerSeq===undefined || null ? seq : farmerSeq}`);
+        const response = await axios.post(`${serverIp}/api/shop/${farmerSeq === undefined || null ? seq : farmerSeq}`);
         setShopItems(response.data);
       } catch (err) {
         console.error("상품 목록을 불러오는데 실패했습니다:", err);

@@ -294,7 +294,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     const confirmUpdate = window.confirm("수정 하시겠습니까?");
 
     if (!confirmUpdate) {
-      return false;
+      return;
     }
 
     e.preventDefault();
@@ -341,18 +341,20 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
             address: editedFarmer.address,
             phone: editedFarmer.phone,
             pw: editedFarmer.pw,
-            image: imagePreview
+            path: farmerInfo.path
           }),
         ],
         { type: "application/json" }
       )
     );
 
-    // if (image !== null) {
-    //   formData.append("image", image); // 새 이미지 추가
-    // } else if (image === null) {
-    //   formData.append("image", null); // 이미지에 null값
-    // }
+    if (image) {
+      formData.append("image", image); // 새로운 이미지
+    } else if (image === null || imagePreview === null) {
+      // 이미지가 null일 경우 기존 경로를 보내기 (userInfo.path)
+      formData.append("image", farmerInfo.path); // 기존 이미지 경로
+    }
+
 
     try {
       const response = await axios.put(
@@ -367,17 +369,9 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
       );
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
-        setFarmerInfo({
-          ...farmerInfo,
-          path: imagePreview,
-          name: editedFarmer.name,
-          email: editedFarmer.email,
-          code: code,
-          address: editedFarmer.address,
-          phone: formattedPhone,
-          pw: editedFarmer.pw,
-        });
-        setActiveTab("info");
+          await fetchFarmerInfo(farmerInfo.id);
+          setImage(farmerInfo.path); // 기존 이미지 경로로 설정
+          setActiveTab("info");
       }
     } catch (error) {
       console.error("회원정보 수정 실패:", error);

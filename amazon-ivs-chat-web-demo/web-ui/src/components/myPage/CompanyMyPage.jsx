@@ -255,9 +255,8 @@ const CompanyMyPage = () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
-
     const id = companyInfo.companyId;
-
+    setImage(companyInfo.path);
     const formData = new FormData();
     formData.append(
       "companyData",
@@ -271,42 +270,39 @@ const CompanyMyPage = () => {
             email: editedCompany.email,
             code: code,
             address: editedCompany.address,
-            phone: editedCompany.phone,
+            phone: formattedPhone,
             pw: editedCompany.pw,
+            path: companyInfo.path,
           }),
         ],
         { type: "application/json" }
       )
     );
 
-    if (image !== null) {
-      formData.append("image", image); // 새 이미지 추가
-    } else if (image === null) {
-      formData.append("image", null); // 이미지에 null값
+    // 이미지 처리: 새로운 이미지가 없으면 기존 이미지 경로를 보내기
+    if (image) {
+      formData.append("image", image); // 새로운 이미지
+    } else if (image === null || imagePreview === null) {
+      // 이미지가 null일 경우 기존 경로를 보내기 (userInfo.path)
+      formData.append("image", companyInfo.path); // 기존 이미지 경로
     }
 
     try {
-      const response = await axios.put(`${serverIp}/myPage/company/update/${userId}`, formData, {
+      const response = await axios.put(
+        `${serverIp}/myPage/company/update/${userId}`, 
+        formData, 
+        {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
-      });
+      }
+    );
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
-        setCompanyInfo({
-          ...companyInfo,
-          comName: editedCompany.comName,
-          ownerName: editedCompany.ownerName,
-          regName: editedCompany.regName,
-          pw: editedCompany.pw,
-          email: editedCompany.email,
-          phone: formattedPhone,
-          address: editedCompany.address,
-          code: code,
-          path: image,
-        });
-        setActiveTab("info");
+          await fetchCompanyInfo(companyInfo.id);
+          setImage(companyInfo.path); // 기존 이미지 경로로 설정
+          setActiveTab("info");
       }
     } catch (error) {
       console.error("회원정보 수정 실패:", error);

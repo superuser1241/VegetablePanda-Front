@@ -74,6 +74,7 @@ const UserMyPage = () => {
   };
 
   useEffect(() => {
+    
     if (userInfo) {
       setEditedUser({
         pw: "",
@@ -85,6 +86,8 @@ const UserMyPage = () => {
       });
     }
   }, [userInfo]);
+
+
 
   useEffect(() => {
     if (userId) {
@@ -113,17 +116,16 @@ const UserMyPage = () => {
 
   const fetchUserLikeHistory = async (userId) => {
     try {
-      setLoading(true); 
+      setLoading(true);
       const response = await axios.get(`${serverIp}/myPage/userLike/${userId}`);
-      setUserLike(response.data); 
+      setUserLike(response.data);
     } catch (err) {
       setError("구독 내역을 불러오는 중 오류가 발생했습니다.");
       console.error(err);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
-
 
   const fetchAuctionHistory = async (userId) => {
     try {
@@ -144,6 +146,7 @@ const UserMyPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUserInfo(response.data);
+      setImage(response.data.path);
     } catch (error) {
       console.error("회원 정보 조회 실패:", error);
     }
@@ -203,81 +206,81 @@ const UserMyPage = () => {
 
   const handleUpdateUserInfo = async (e) => {
     const confirmUpdate = window.confirm("수정 하시겠습니까?");
-
     if (!confirmUpdate) {
       return; // 취소하면 아무 작업도 하지 않음
     }
-
+  
     e.preventDefault();
-
-    // 비밀번호 일치 여부 확인
+  
     if (editedUser.pw !== pwConfirm) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-
+  
     if (!editedUser.gender) {
       alert("성별을 선택해 주세요.");
       return;
     }
-    const id = userInfo.id;
-    // 전화번호 포맷팅
+  
+    setImage(userInfo.path);
     const phoneWithoutHyphen = editedUser.phone.replace(/-/g, "");
     const formattedPhone =
       phoneWithoutHyphen.length === 10
-        ? `${phoneWithoutHyphen.slice(0, 3)}-${phoneWithoutHyphen.slice(
-            3,
-            6
-          )}-${phoneWithoutHyphen.slice(6)}`
-        : `${phoneWithoutHyphen.slice(0, 3)}-${phoneWithoutHyphen.slice(
-            3,
-            7
-          )}-${phoneWithoutHyphen.slice(7)}`;
-
-          const formData = new FormData();
-          formData.append(
-            "userData",
-            new Blob(
-              [
-                JSON.stringify({
-                  id,
-                  name: editedUser.name,
-                  pw: editedUser.pw,
-                  address: editedUser.address,
-                  phone: formattedPhone,
-                  email: editedUser.email,
-                  gender: editedUser.gender,
-                }),
-              ],
-              { type: "application/json" }
-            )
-          );
-
-          if (image) {
-     formData.append("image", image);
-  } 
-
-  try {
-    const response = await axios.put(
-      `${serverIp}/myPage/user/update/${userId}`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
+        ? `${phoneWithoutHyphen.slice(0, 3)}-${phoneWithoutHyphen.slice(3, 6)}-${phoneWithoutHyphen.slice(6)}`
+        : `${phoneWithoutHyphen.slice(0, 3)}-${phoneWithoutHyphen.slice(3, 7)}-${phoneWithoutHyphen.slice(7)}`;
+  
+    const formData = new FormData();
+    formData.append(
+      "userData",
+      new Blob(
+        [
+          JSON.stringify({
+            id: userInfo.id,
+            name: editedUser.name,
+            pw: editedUser.pw,
+            address: editedUser.address,
+            phone: formattedPhone,
+            email: editedUser.email,
+            gender: editedUser.gender,
+            path: userInfo.path,
+          }),
+        ],
+        { type: "application/json" }
+      )
     );
   
-    if (response.data) {
-      alert("정보 수정이 완료되었습니다.");
-      setActiveTab("info");
+    // 이미지 처리: 새로운 이미지가 없으면 기존 이미지 경로를 보내기
+    if (image) {
+      formData.append("image", image); // 새로운 이미지
+    } else if (image === null || imagePreview === null) {
+      // 이미지가 null일 경우 기존 경로를 보내기 (userInfo.path)
+      formData.append("image", userInfo.path); // 기존 이미지 경로
     }
-  } catch (error) {
-    console.error("회원정보 수정 실패:", error);
-    alert("정보 수정에 실패했습니다.");
-  }
-}
+  
+    try {
+      const response = await axios.put(
+        `${serverIp}/myPage/user/update/${userId}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+  
+      if (response.data) {
+        alert("정보 수정이 완료되었습니다.");
+        await fetchUserInfo(userInfo.id);
+        setImage(userInfo.path); // 기존 이미지 경로로 설정
+        setActiveTab("info");
+      }
+    } catch (error) {
+      console.error("회원정보 수정 실패:", error);
+      alert("정보 수정에 실패했습니다.");
+    }
+  };
+  
 
   const handleDeleteAccount = async () => {
     const confirmDelete = window.confirm(
@@ -394,32 +397,34 @@ const UserMyPage = () => {
         <div className="main-content">
           {activeTab === "userLike" && (
             <div className="main-content">
-            <h3 className="userMyPage-title">구독한 판매자 목록</h3>
-            {loading1 ? (
-              <div className="userMyPage-loading">로딩 중...</div>
-            ) : error ? (
-              <div className="userMyPage-error-message">{error}</div>
-            ) : userLike.length > 0 ? (
-              <div className="userMyPage-card-container">
-                {userLike.map((userLike, index) => (
-                  <div className="userMyPage-card" key={index}>
-                    <img
-                      src={userLike.imageUrl}
-                      alt={userLike.name}
-                      className="userMyPage-card-image"
-                    />
-                    <div className="userMyPage-card-name">{userLike.name}</div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="no-data-notification">
-                구독한 내역이 없습니다.
-              </div>
-            )}
+              <h3 className="userMyPage-title">구독한 판매자 목록</h3>
+              {loading1 ? (
+                <div className="userMyPage-loading">로딩 중...</div>
+              ) : error ? (
+                <div className="userMyPage-error-message">{error}</div>
+              ) : userLike.length > 0 ? (
+                <div className="userMyPage-card-container">
+                  {userLike.map((userLike, index) => (
+                    <div className="userMyPage-card" key={index}>
+                      <img
+                        src={userLike.imageUrl}
+                        alt={userLike.name}
+                        className="userMyPage-card-image"
+                      />
+                      <div className="userMyPage-card-name">
+                        {userLike.name}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="no-data-notification">
+                  구독한 내역이 없습니다.
+                </div>
+              )}
             </div>
           )}
-          
+
           {/* 이것도 카드 형식으로 보여줄건데 이제 끌고와서 쓰자, 어디냐면 메인페이지에서 쓰는거 그냥 그대로 가져와서 붙이자 */}
           {activeTab === "saleLike" && (
             <div className="auction-history-display">
@@ -429,7 +434,6 @@ const UserMyPage = () => {
               ) : error ? (
                 <div className="error-message">{error}</div>
               ) : auctions.length > 0 ? (
-                
                 <div>이건 ㄱㄷ</div>
               ) : (
                 <div className="no-data-notification">
@@ -470,13 +474,13 @@ const UserMyPage = () => {
                   {new Date(userInfo.regDate).toLocaleDateString()}
                 </p>
                 <p>
-                  <strong>보유 포인트:</strong> {point.toLocaleString()+"P"}
+                  <strong>보유 포인트:</strong> {point.toLocaleString() + "P"}
                 </p>
               </div>
             </div>
           )}
 
-            {activeTab === "update" && (
+          {activeTab === "update" && (
             <div className="user-info-edit-section">
               <h3>회원 정보 수정</h3>
               <form onSubmit={handleUpdateUserInfo}>
@@ -490,20 +494,19 @@ const UserMyPage = () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {userInfo.path !== null
-                    ? 
+                    {userInfo.path !== null ? (
                       <img
                         src={userInfo.path}
                         alt="userInfo.path"
                         className="image-preview"
                       />
-                     : 
+                    ) : (
                       <img
-                        src={imagePreview}
+                        src={imagePreview || logo}
                         alt="imagePreview"
                         className="image-preview"
-                      /> 
-                    }
+                      />
+                    )}
                   </div>
                   <button
                     type="button"
@@ -743,7 +746,6 @@ const UserMyPage = () => {
             </div>
           )}
 
-
           {activeTab === "review" && (
             <div className="review-section">
               <h3>나의 리뷰 목록</h3>
@@ -789,7 +791,7 @@ const UserMyPage = () => {
           )}
 
           {activeTab === "point" && (
-            <Point userId = {userId} point = {point} fetchPoint = {fetchPoint} />
+            <Point userId={userId} point={point} fetchPoint={fetchPoint} />
           )}
 
           {activeTab === "cart" && (
