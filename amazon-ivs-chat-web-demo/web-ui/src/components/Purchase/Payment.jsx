@@ -10,8 +10,7 @@ const Payment = () => {
     const navigate = useNavigate();
     const { item, quantity } = location.state || {};
     const serverIp = process.env.REACT_APP_SERVER_IP;
-
-    const orderUid = '';
+    const [orderUid, setOrderUid] = useState('');
     
     const [shippingInfo, setShippingInfo] = useState({
         name: '',
@@ -120,6 +119,9 @@ const Payment = () => {
 
             console.log("response2");
             console.log(response2);
+            console.log(response2.data.orderUid);
+            setOrderUid(response2.data.orderUid);
+            console.log('orderUid : ', orderUid);
 
             if(response2.success === false) {
                 console("주문실패 : 주문을 삭제합니다.");
@@ -180,7 +182,9 @@ const Payment = () => {
                             const stockSeq = item.stockSeq
                             
                             alert('결제가 완료되었습니다.');
-                            navigate('/payment-success', {state : { orderUid:response2.data.orderUid }});
+                            console.log(response3.data.response.merchantUid);
+                            // navigate('/payment-success', { state : { orderUid: response3.data.response.merchantUid }});
+                            navigate('/payment-success/'+response3.data.response.merchantUid);
             
                         } catch(err) {
                             console.log(err);
