@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AdminMyPage.css';
 import AuctionStatus from '../auction/AuctionStatus';
+import AdjustmentPage from './AdjustmentPage';
 
 const AdminMyPage = () => {
     const token = localStorage.getItem('token');
@@ -97,6 +98,9 @@ const AdminMyPage = () => {
                     <li onClick={() => setActiveTab('streaming')} className={activeTab === 'streaming' ? 'active' : ''}>
                         스트리밍 승인
                     </li>
+                    <li onClick={() => setActiveTab('settlements')} className={activeTab === 'settlements' ? 'active' : ''}>
+                        정산 승인
+                    </li>
                     <li onClick={() => setActiveTab('auctions')} className={activeTab === 'auctions' ? 'active' : ''}>
                         실시간 경매 현황
                     </li>
@@ -152,6 +156,12 @@ const AdminMyPage = () => {
                                 </tbody>
                             </table>
                         )}
+                    </div>
+                )}
+
+                {activeTab === 'settlements' && (
+                    <div className="settlements-section">
+                        <AdjustmentPage />
                     </div>
                 )}
 
