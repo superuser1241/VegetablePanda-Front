@@ -67,6 +67,7 @@ function App() {
         }
         setUserName('');
         setUserRole('');
+        setStreamingRoom(null);
         navigate('/');
         localStorage.removeItem("token");
         localStorage.setItem("token", null);
