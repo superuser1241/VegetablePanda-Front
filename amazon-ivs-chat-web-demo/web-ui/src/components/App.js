@@ -30,14 +30,14 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
-import Personal from './personal/personal';
-import PersonalList from './personal/PersonalList';
-import './personal/PersonalList';
+import Personal from './Personal/Personal';
+import PersonalList from './Personal/PersonalList';
+import './Personal/PersonalList';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 import axios from 'axios';
 import PaymentSuccess from './Purchase/PaymentSuccess';
-import './personal/PersonalList.css';
+import './Personal/PersonalList.css';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 

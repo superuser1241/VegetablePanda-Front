@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
-import '../personal/PersonalList.css';
+import '../Personal/PersonalList.css';
 import logo from '../../image/농산물 판다.png';
 import cart from '../../image/cart.png';
 

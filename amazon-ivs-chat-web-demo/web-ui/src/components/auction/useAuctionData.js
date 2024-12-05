@@ -43,9 +43,10 @@ export const useAuctionData = (userSeq,auctionSeq) => {
     useEffect(() => {
         const serverIp = process.env.REACT_APP_SERVER_IP;
         const client = new Client({
-            brokerURL: `ws://${serverIp}/ws`,
+            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
             
             onConnect: () => {
+                alert("useAuc");
                 client.subscribe("/top/notifications", async (message) => {
                     fetchHighestBid();
                     fetchAuction();

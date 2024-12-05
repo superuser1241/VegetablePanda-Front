@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "./personal.css";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import './Personal.css';
 import logo from "../../image/기본이미지.png";
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
