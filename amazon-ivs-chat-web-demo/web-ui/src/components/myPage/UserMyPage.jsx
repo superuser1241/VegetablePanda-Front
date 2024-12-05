@@ -5,13 +5,14 @@ import * as ChargePoint from "./ChargePoint.jsx";
 import iamport from "https://cdn.iamport.kr/v1/iamport.js";
 import { useNavigate } from "react-router-dom";
 import "../../index.css";
+import logo from "../../image/기본이미지.png";
+import Point from "./Point.jsx";
 
 const UserMyPage = () => {
-  const [chargeAmount, setChargeAmount] = useState("");
   const token = localStorage.getItem("token");
   const [userId, setUserId] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState(logo);
   const [image, setImage] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [buyList, setbuyList] = useState([]);
@@ -170,80 +171,7 @@ const UserMyPage = () => {
   };
 
   const handleCharge = async () => {
-    try {
-      if (!userId || !chargeAmount) {
-        alert("충전할 금액을 입력해주세요.");
-        return;
-      }
-
-      // 충전금액 및 주문정보 등록
-      const response = await axios.post(
-        "http://localhost:9001/charge",
-        {
-          managementUserSeq: parseInt(userId),
-          price: parseInt(chargeAmount),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      // 주문번호 받아오기
-      const response2 = await axios.get(
-        "http://localhost:9001/buyList/" + response.data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      // 결제창 호출
-      let IMP = window.IMP;
-      IMP.init("imp68111618");
-      const response4 = ChargePoint.requestPay(response2, token, IMP);
-
-      // .then((result)=>{
-      //     console.log(result.data);
-
-      //     axios({
-      //         // 주문번호 받아오기
-      //         url: "http://localhost:9001/payment/" + result.data + "?status=1",
-      //         method: "GET",
-      //         headers: {
-      //             Authorization: `Bearer ${token}`,
-      //             "Content-Type": "application/json",
-      //         },
-      //     })
-      //     .then((result)=>{
-      //         // 결제에 필요한 정보
-      //         console.log(result.data);
-      //         // 결제창 호출
-      //         let IMP = window.IMP;
-      //         IMP.init("imp68111618");
-      //         ChargePoint.requestPay(result, token, IMP);
-      //     })
-      //     .catch((err)=>{
-      //         console.log(err);
-      //     })
-      // });
-
-      if (response) {
-        console.log("if response 받는 구문");
-        console.log(response4);
-        setChargeAmount("");
-        //window.location.href = response.data;
-      }
-    } catch (error) {
-      console.error("포인트 충전 실패:", error);
-      alert("포인트 충전에 실패했습니다.");
-    }
-  };
-
+  }
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 11);
 
@@ -267,7 +195,7 @@ const UserMyPage = () => {
       ...prevState,
       path: null,
     }));
-    setImagePreview(null);
+    setImagePreview(logo);
     setImage(null);
   };
 
@@ -347,7 +275,7 @@ const UserMyPage = () => {
         // 수정된 유저 정보를 상태에 반영
         setUserInfo({
           ...userInfo,
-          path: editedUser.path,
+          path: image,
           name: editedUser.name,
           email: editedUser.email,
           phone: formattedPhone,
@@ -483,7 +411,7 @@ const UserMyPage = () => {
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
                   <img
-                    src={imagePreview || userInfo.path}
+                    src={userInfo.path || logo }
                     alt={userInfo.path}
                   />
                 </div>
@@ -639,19 +567,19 @@ const UserMyPage = () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {imagePreview ? (
+                    {userInfo.path ?
                       <img
-                        src={imagePreview}
-                        alt="imagePreview"
-                        className="image-preview"
-                      />
-                    ) : userInfo.path ? (
+                      src={userInfo.path}
+                      alt="userInfo.path"
+                      className="image-preview"
+                    />
+                     : 
                       <img
-                        src={userInfo.path}
-                        alt="userInfo.path"
-                        className="image-preview"
-                      />
-                    ) : null}
+                      src={imagePreview}
+                      alt="imagePreview"
+                      className="image-preview"
+                    />
+                    }
                   </div>
                   <button
                     type="button"
@@ -663,7 +591,7 @@ const UserMyPage = () => {
                     사진 등록
                   </button>
 
-                  {(imagePreview || userInfo.path) && (
+                  {(image !== null || userInfo.path !== null) && (
                     <button
                       type="button"
                       className="image-reset-btn"
@@ -828,24 +756,7 @@ const UserMyPage = () => {
           )}
 
           {activeTab === "point" && (
-            <div className="point-section">
-              <h3>포인트 충전</h3>
-              <div className="point-info">
-                <p>현재 보유 포인트: {point.toLocaleString()}P</p>
-              </div>
-              <div className="charge-input-group">
-                <input
-                  type="number"
-                  value={chargeAmount}
-                  onChange={(e) => setChargeAmount(e.target.value)}
-                  placeholder="충전할 금액을 입력하세요"
-                  className="charge-input"
-                />
-                <button onClick={handleCharge} className="charge-button">
-                  충전하기
-                </button>
-              </div>
-            </div>
+            <Point userId = {userId} point = {point} fetchPoint = {fetchPoint} />
           )}
 
           {activeTab === "cart" && (

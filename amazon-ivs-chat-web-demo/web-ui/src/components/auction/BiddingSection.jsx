@@ -24,7 +24,7 @@ const BiddingSection = memo(({
     useEffect(() => {
         const serverIp = process.env.REACT_APP_SERVER_IP;
         const client = new Client({
-            brokerURL: `ws://${serverIp}/ws`,
+            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
             onConnect: () => {
                 client.subscribe("/top/notifications", async (message) => {
                     refreshAuctionData();
@@ -33,7 +33,6 @@ const BiddingSection = memo(({
                 client.subscribe("/end/notifications", async (message) => {
                     if(message.body==="BroadCastEnd"){
                         sessionStorage.clear();
-                        alert("방송이 종료되었습니다.");
                         navigate('/');
                     }
                     else{

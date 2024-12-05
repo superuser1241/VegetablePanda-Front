@@ -30,10 +30,13 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
-
+import Personal from './Personal/Personal';
+import PersonalList from './Personal/PersonalList';
+import './Personal/PersonalList';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 import axios from 'axios';
+import PaymentSuccess from './Purchase/PaymentSuccess';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -160,6 +163,7 @@ function App() {
             <main style={{ minHeight: '80vh'}}>
                 <Routes>
                     <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} />} />
+                    <Route path="/personal" element={<Personal onJoinRoom={handleJoinRoom} />} />
                     <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
                     <Route path="/UserRegister" element={<UserRegister />} />
                     <Route path="/CompanyRegister" element={<CompanyRegister />} />
@@ -194,14 +198,17 @@ function App() {
                     <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
                     <Route path="/purchaseD" element={<PurchaseD userName={userName}/>} />
-                    {/* <Route path="/personal" element={userRole === 'ROLE_FARMER' && <Personal navigateTo={navigate} />} /> */}
-                    <Route path="/payment" element={<Payment />} />
+                    <Route path="/personal" element={<Personal navigateTo={navigate} />} />
+                    <Route path="/personalList" element={<PersonalList navigateTo={navigate} />} />
+                    <Route path="/payment" element={<Payment/>} />
+
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />
                     <Route path="/product/:stockSeq" element={<Product/>}/>
                     <Route path="/shop" element={<Shop/>}/>
                     <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
                     <Route path="/cart" element={<CartPage />} />
+                    <Route path="/payment-success" element={<PaymentSuccess />} />
                 </Routes>
             </main>
             <Footer />
