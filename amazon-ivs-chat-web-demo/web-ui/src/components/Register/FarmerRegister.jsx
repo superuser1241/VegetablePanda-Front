@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./FarmerRegister.css";
 import { useNavigate } from "react-router-dom";
+import logo from "../../image/기본이미지.png";
 
 function FarmerRegister() {
   const [id, setFarmerId] = useState("");
@@ -206,8 +207,10 @@ function FarmerRegister() {
             onChange={handleImageChange}
             className="image-upload-input"
           />
-          <div className="image-preview-container">
-            {image && (
+ <div className="image-preview-container">
+            {image === null ? (
+              <img src={logo} alt="Preview" className="image-preview" />
+            ) : (
               <img
                 src={URL.createObjectURL(image)}
                 alt="Preview"
@@ -220,8 +223,9 @@ function FarmerRegister() {
             className="image-upload-btn"
             onClick={() => document.getElementById("image-upload").click()}
           >
-            사진 업로드
+            사진 등록
           </button>
+
 
           {image && (
             <button

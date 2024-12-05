@@ -255,8 +255,6 @@ const RegisterStock = () => {
     }
   };
 
-
-
     return (
         <div className='RegisterStock'>
             <div className='product-section'>

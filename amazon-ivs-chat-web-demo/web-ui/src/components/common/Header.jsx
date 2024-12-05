@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
+import '../personal/PersonalList.css';
 import logo from '../../image/농산물 판다.png';
 import cart from '../../image/cart.png';
 
@@ -53,6 +54,8 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
         }
     };
 
+
+
     return (
         <header className="header">
             <div className="logo-container">
@@ -93,6 +96,7 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
                             </div>
                             ) : null }
                         
+
                         <div className="user-actions">
                             <span className="welcome-message">{userName}님 환영합니다</span>
                             <button onClick={handleLogoutClick} className="logout-button">

@@ -62,10 +62,12 @@ const StockList = ({onStockSelect, setActiveTab}) => {
 
     return (
         <div className='stock-list-container'>
+            <div className='stock-list-middle'>
             <h3>재고 목록</h3>
             <div className='stock-table-container'>
                 <table className='stocklist-table'>
                 <thead className='stocklist-thead'>
+
                     <tr>
                         <th>상품명</th>
                         <th>수량</th>
@@ -97,6 +99,7 @@ const StockList = ({onStockSelect, setActiveTab}) => {
                 </tbody>
 
                 </table>
+                </div>
             </div>
         </div>
     );
