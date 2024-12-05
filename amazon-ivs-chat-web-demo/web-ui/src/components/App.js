@@ -34,6 +34,7 @@ import PurchaseD from './Purchase/PurchaseD';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 import axios from 'axios';
+import PaymentSuccess from './Purchase/PaymentSuccess';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -202,6 +203,7 @@ function App() {
                     <Route path="/shop" element={<Shop/>}/>
                     <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
                     <Route path="/cart" element={<CartPage />} />
+                    <Route path="/payment-success" element={<PaymentSuccess />} />
                 </Routes>
             </main>
             <Footer />

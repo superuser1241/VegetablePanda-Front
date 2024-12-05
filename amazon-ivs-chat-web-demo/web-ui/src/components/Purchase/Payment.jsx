@@ -12,6 +12,7 @@ const Payment = () => {
     const { item, quantity } = location.state || {};
     const serverIp = process.env.REACT_APP_SERVER_IP;
 
+    const orderUid = '';
     const [shippingInfo, setShippingInfo] = useState({
         name: '',
         phone: '',
@@ -178,7 +179,6 @@ const Payment = () => {
                             console.log(item.stockSeq);
                             const stockSeq = item.stockSeq
                             
-
                             if(response3.status === 200){
                                 const response4 = await axios.put(`${serverIp}/stock/quantity`, { stockSeq, quantity }, 
                                 {
@@ -188,9 +188,19 @@ const Payment = () => {
                                     }
                                 });
                             }
+                            // 재고 개수 차감 메소드 -> 결제 검증에서 차감까지 수행
+                            // if(response3.status === 200){
+                            //     const response4 = await axios.put('http://localhost:9001/stock/quantity', { stockSeq, quantity }, 
+                            //     {
+                            //         headers: { 
+                            //             Authorization: `Bearer ${token}`,
+                            //             'Content-Type': 'application/json'
+                            //         }
+                            //     });
+                            // }
             
                             alert('결제가 완료되었습니다.');
-                            navigate('/');
+                            navigate('/payment-success', {state : { orderUid:response2.data.orderUid }});
             
                         } catch(err) {
                             console.log(err);
