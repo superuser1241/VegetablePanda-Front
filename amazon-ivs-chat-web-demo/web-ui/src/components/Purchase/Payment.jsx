@@ -163,7 +163,7 @@ const Payment = () => {
                       
                       const sendValidateData = async () => {
                         try {
-                            const response3 = await axios.post(`${serverIp}/api/payment/validate?status=2`, {
+                            const response3 = await axios.post(`${serverIp}/payment/validate?status=2`, {
                                     orderUid: rsp.merchant_uid, 
                                     paymentUid: rsp.imp_uid
                             },
