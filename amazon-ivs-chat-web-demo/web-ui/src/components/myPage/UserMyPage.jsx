@@ -247,23 +247,15 @@ const UserMyPage = () => {
                   phone: formattedPhone,
                   email: editedUser.email,
                   gender: editedUser.gender,
-                  path: userInfo.path  // 기존 이미지 경로를 항상 포함
                 }),
               ],
               { type: "application/json" }
             )
           );
 
-  // 이미지 처리 로직 수정
-  if (image) {
-    // 새로운 이미지가 선택된 경우
-    formData.append("image", image);
-  } else if (userInfo.path) {
-    // 기존 이미지 경로를 File 객체로 변환
-    const blob = new Blob([userInfo.path], { type: 'application/octet-stream' });
-    const file = new File([blob], userInfo.path.split('/').pop(), { type: 'application/octet-stream' });
-    formData.append("image", file);
-  }
+          if (image) {
+     formData.append("image", image);
+  } 
 
   try {
     const response = await axios.put(
@@ -279,9 +271,6 @@ const UserMyPage = () => {
   
     if (response.data) {
       alert("정보 수정이 완료되었습니다.");
-      await fetchUserInfo(userId);  // 전체 사용자 정보를 새로 불러오기
-      setImage(null);  // 이미지 상태 초기화
-      setImagePreview(null);  // 미리보기 상태 초기화
       setActiveTab("info");
     }
   } catch (error) {
@@ -510,7 +499,7 @@ const UserMyPage = () => {
                       />
                      : 
                       <img
-                        src={imagePreview || logo}
+                        src={imagePreview}
                         alt="imagePreview"
                         className="image-preview"
                       /> 

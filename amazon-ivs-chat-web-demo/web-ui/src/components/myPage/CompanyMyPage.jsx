@@ -190,7 +190,6 @@ const CompanyMyPage = () => {
     }
   };
 
-  // 이미지
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -208,7 +207,7 @@ const CompanyMyPage = () => {
       ...prevState,
       path: null,
     }));
-    setImagePreview(logo);
+    setImagePreview(null);
     setImage(null);
   };
 
