@@ -10,6 +10,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearSca
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import AuctionStatus from '../auction/AuctionStatus';
 import AuctionRegisterPage from '../auction/AuctionRegisterPage';
+import liveImg from '../../image/라이브.png';
 
 ChartJS.register(
     ArcElement, 
@@ -355,19 +356,28 @@ const MainPage = ({ onJoinRoom }) => {
                     </div>
                 </section>
 
-                <section className="streaming-section">
+                <section className="streaming-section-MainPage">
                     <h2 className="section-title">실시간 스트리밍</h2>
                     <div className="room-list">
-                         console.log('rooms:', rooms);
                         {rooms.slice(0, visibleRooms).map((room) => (
                             <div key={room.streamingSeq} className="room-card">
-                                <h3>Room ID: {room.chatRoomId}</h3>
-                                <button
-                                    className="join-button"
-                                    onClick={() => onJoinRoom(room)}
-                                >
-                                    Join Room
-                                </button>
+                                <div className="room-image">
+                                    <img 
+                                        src={room.filePath || 'https://placehold.co/200x200?text=NoImage'} 
+                                        alt={room.productName}
+                                    />
+                                    <img src={liveImg} alt="LIVE" className="live-badge" />
+                                </div>
+                                <div className="room-info">
+                                    <h3 className='product-name-mainPage'>{room.productName || '상품명 없음'}</h3>
+                                    <p className="farmer-name">판매자: {room.farmerName || '판매자 정보 없음'}</p>
+                                    <button
+                                        className="join-button"
+                                        onClick={() => onJoinRoom(room)}
+                                    >
+                                        방송 입장하기
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -412,7 +422,6 @@ const MainPage = ({ onJoinRoom }) => {
                     )}
                 </section>
             </div>
-            <AuctionStatus />
         </>
     );
 };
