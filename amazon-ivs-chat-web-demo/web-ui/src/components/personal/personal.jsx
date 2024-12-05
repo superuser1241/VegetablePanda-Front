@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./Personal.css";
+import "./personal.css";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../image/기본이미지.png";
