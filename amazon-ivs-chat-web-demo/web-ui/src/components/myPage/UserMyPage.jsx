@@ -12,10 +12,11 @@ const UserMyPage = () => {
   const token = localStorage.getItem("token");
   const [userId, setUserId] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [imagePreview, setImagePreview] = useState(logo);
+  const [imagePreview, setImagePreview] = useState(null);
   const [image, setImage] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [buyList, setbuyList] = useState([]);
+  const [userLike, setUserLike] = useState([]);
   const [gender, setGender] = useState("");
   const [orders, setOrders] = useState([]);
   const [loading1, setLoading1] = useState(false);
@@ -92,6 +93,7 @@ const UserMyPage = () => {
       fetchreview(userId);
       fetchOrderHistory(userId);
       fetchAuctionHistory(userId);
+      fetchUserLikeHistory(userId);
     }
   }, [userId]);
 
@@ -108,6 +110,20 @@ const UserMyPage = () => {
       setLoading(false); // 로딩 종료
     }
   };
+
+  const fetchUserLikeHistory = async (userId) => {
+    try {
+      setLoading(true); 
+      const response = await axios.get(`${serverIp}/myPage/userLike/${userId}`);
+      setUserLike(response.data); 
+    } catch (err) {
+      setError("구독 내역을 불러오는 중 오류가 발생했습니다.");
+      console.error(err);
+    } finally {
+      setLoading(false); 
+    }
+  };
+
 
   const fetchAuctionHistory = async (userId) => {
     try {
@@ -181,7 +197,7 @@ const UserMyPage = () => {
       ...prevState,
       path: null,
     }));
-    setImagePreview(logo);
+    setImagePreview(null);
     setImage(null);
   };
 
@@ -218,64 +234,61 @@ const UserMyPage = () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
 
-    const formData = new FormData();
-    formData.append(
-      "userData",
-      new Blob(
-        [
-          JSON.stringify({
-            id,
-            name: editedUser.name,
-            pw: editedUser.pw,
-            address: editedUser.address,
-            phone: formattedPhone,
-            email: editedUser.email,
-            gender: editedUser.gender,
-          }),
-        ],
-        { type: "application/json" }
-      )
-    );
+          const formData = new FormData();
+          formData.append(
+            "userData",
+            new Blob(
+              [
+                JSON.stringify({
+                  id,
+                  name: editedUser.name,
+                  pw: editedUser.pw,
+                  address: editedUser.address,
+                  phone: formattedPhone,
+                  email: editedUser.email,
+                  gender: editedUser.gender,
+                  path: userInfo.path  // 기존 이미지 경로를 항상 포함
+                }),
+              ],
+              { type: "application/json" }
+            )
+          );
 
-    if (image !== null) {
-      formData.append("image", image); // 새 이미지 추가
-    } else if (image === null) {
-      formData.append("image", null); // 이미지에 null값
-    }
+  // 이미지 처리 로직 수정
+  if (image) {
+    // 새로운 이미지가 선택된 경우
+    formData.append("image", image);
+  } else if (userInfo.path) {
+    // 기존 이미지 경로를 File 객체로 변환
+    const blob = new Blob([userInfo.path], { type: 'application/octet-stream' });
+    const file = new File([blob], userInfo.path.split('/').pop(), { type: 'application/octet-stream' });
+    formData.append("image", file);
+  }
 
-    try {
-      // 서버로 PUT 요청
-      const response = await axios.put(
-        `${serverIp}/myPage/user/update/${userId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      if (response.data) {
-        alert("정보 수정이 완료되었습니다.");
-        // 수정된 유저 정보를 상태에 반영
-        setUserInfo({
-          ...userInfo,
-          path: image,
-          name: editedUser.name,
-          email: editedUser.email,
-          phone: formattedPhone,
-          pw: editedUser.pw,
-          address: editedUser.address,
-          gender: editedUser.gender,
-        });
-        setActiveTab("info");
+  try {
+    const response = await axios.put(
+      `${serverIp}/myPage/user/update/${userId}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       }
-    } catch (error) {
-      console.error("회원정보 수정 실패:", error);
-      alert("정보 수정에 실패했습니다.");
+    );
+  
+    if (response.data) {
+      alert("정보 수정이 완료되었습니다.");
+      await fetchUserInfo(userId);  // 전체 사용자 정보를 새로 불러오기
+      setImage(null);  // 이미지 상태 초기화
+      setImagePreview(null);  // 미리보기 상태 초기화
+      setActiveTab("info");
     }
-  };
+  } catch (error) {
+    console.error("회원정보 수정 실패:", error);
+    alert("정보 수정에 실패했습니다.");
+  }
+}
 
   const handleDeleteAccount = async () => {
     const confirmDelete = window.confirm(
@@ -389,25 +402,35 @@ const UserMyPage = () => {
           </ul>
         </div>
 
-        {/* 이건 디자인을 좀 생각해보자, 일단 세로로 보여줄거고, 사진, 이름만 보여줄거니까 카드 형식이 좋겠군*/}
         <div className="main-content">
           {activeTab === "userLike" && (
-            <div className="auction-history-display">
-              <h3>구독한 판매자 목록</h3>
-              {loading1 ? (
-                <div>로딩 중...</div>
-              ) : error ? (
-                <div className="error-message">{error}</div>
-              ) : auctions.length > 0 ? (
-                <div>이건 ㄱㄷ</div>
-              ) : (
-                <div className="no-data-notification">
-                  구독한 내역이 없습니다.
-                </div>
-              )}
+            <div className="main-content">
+            <h3 className="userMyPage-title">구독한 판매자 목록</h3>
+            {loading1 ? (
+              <div className="userMyPage-loading">로딩 중...</div>
+            ) : error ? (
+              <div className="userMyPage-error-message">{error}</div>
+            ) : userLike.length > 0 ? (
+              <div className="userMyPage-card-container">
+                {userLike.map((userLike, index) => (
+                  <div className="userMyPage-card" key={index}>
+                    <img
+                      src={userLike.imageUrl}
+                      alt={userLike.name}
+                      className="userMyPage-card-image"
+                    />
+                    <div className="userMyPage-card-name">{userLike.name}</div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="no-data-notification">
+                구독한 내역이 없습니다.
+              </div>
+            )}
             </div>
           )}
-
+          
           {/* 이것도 카드 형식으로 보여줄건데 이제 끌고와서 쓰자, 어디냐면 메인페이지에서 쓰는거 그냥 그대로 가져와서 붙이자 */}
           {activeTab === "saleLike" && (
             <div className="auction-history-display">
@@ -417,6 +440,7 @@ const UserMyPage = () => {
               ) : error ? (
                 <div className="error-message">{error}</div>
               ) : auctions.length > 0 ? (
+                
                 <div>이건 ㄱㄷ</div>
               ) : (
                 <div className="no-data-notification">
@@ -432,7 +456,7 @@ const UserMyPage = () => {
               <div className="user-info-details">
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
-                  <img src={userInfo.path || logo} alt={userInfo.path} />
+                  <img src={userInfo.path || logo} />
                 </div>
                 <p>
                   <strong>아이디:</strong> {userInfo.id}
@@ -457,122 +481,13 @@ const UserMyPage = () => {
                   {new Date(userInfo.regDate).toLocaleDateString()}
                 </p>
                 <p>
-                  <strong>보유 포인트:</strong> {point.toLocaleString()}
+                  <strong>보유 포인트:</strong> {point.toLocaleString()+"P"}
                 </p>
               </div>
             </div>
           )}
 
-          {activeTab === "buyList" && (
-            <div className="order-history-display">
-              <h3>주문 내역</h3>
-              {loading ? (
-                <div>로딩 중...</div>
-              ) : error ? (
-                <div className="error-message">{error}</div>
-              ) : orders.length > 0 ? (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>번호</th>
-                      <th>주문 번호</th>
-                      <th>상품명</th>
-                      <th>수량</th>
-                      <th>금액</th>
-                      <th>주문일자</th>
-                      <th>주문 상태</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orders.map((order, index) => (
-                      <tr key={order.orderId}>
-                        <td>{index + 1}</td> {/* 번호 */}
-                        <td>{order.userBuySeq}</td> {/* 주문 번호 */}
-                        <td>{order.content}</td> {/* 상품명 */}
-                        <td>{order.count}</td> {/* 수량 */}
-                        <td>{order.price}원</td> {/* 금액 */}
-                        <td>
-                          {new Date(order.buyDate).toLocaleDateString()}
-                        </td>{" "}
-                        {/* 주문일자 */}
-                        <td>
-                          {order.state === 0
-                            ? "값 뭐넣어야해여?"
-                            : order.state === 1
-                            ? "값 뭐넣어야해여?"
-                            : order.state === 2
-                            ? "값 뭐넣어야해여?"
-                            : order.state === 3
-                            ? "값 뭐넣어야해여?"
-                            : "값 뭐넣어야해여?"}
-                        </td>
-                        {/* 주문 상태 */}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="no-data-notification">
-                  주문 내역이 없습니다.
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === "auction" && (
-            <div className="auction-history-display">
-              <h3>경매 참여 내역</h3>
-              {loading1 ? (
-                <div>로딩 중...</div>
-              ) : error ? (
-                <div className="error-message">{error}</div>
-              ) : auctions.length > 0 ? (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>번호</th>
-                      <th>상품명</th>
-                      <th>수량</th>
-                      <th>입찰 금액</th>
-                      <th>참여 날짜</th>
-                      <th>판매자명</th>
-                      <th>현재 상태</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {auctions.map((auction, index) => (
-                      <tr key={auction.bidSeq}>
-                        <td>{index + 1}</td> {/* 번호 */}
-                        <td>{auction.content}</td> {/* 상품명 */}
-                        <td>{auction.count}</td> {/* 수량*/}
-                        <td>{auction.price}원</td> {/* 입찰할 금액 */}
-                        <td>{auction.insertDate}</td> {/* 입찰한 날짜 */}
-                        <td>{auction.name}</td> {/* 판매자명 */}
-                        <td>
-                          {auction.status === 0
-                            ? "값 뭐넣어야해여?"
-                            : auction.status === 1
-                            ? "값 뭐넣어야해여?"
-                            : auction.status === 2
-                            ? "값 뭐넣어야해여?"
-                            : auction.status === 3
-                            ? "값 뭐넣어야해여?"
-                            : "값 뭐넣어야해여?"}
-                        </td>
-                        {/* 현재 상태 */}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="no-data-notification">
-                  경매 참여 내역이 없습니다.
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === "update" && (
+            {activeTab === "update" && (
             <div className="user-info-edit-section">
               <h3>회원 정보 수정</h3>
               <form onSubmit={handleUpdateUserInfo}>
@@ -586,19 +501,20 @@ const UserMyPage = () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {userInfo.path ? (
+                    {userInfo.path !== null
+                    ? 
                       <img
                         src={userInfo.path}
                         alt="userInfo.path"
                         className="image-preview"
                       />
-                    ) : (
+                     : 
                       <img
-                        src={imagePreview}
+                        src={imagePreview || logo}
                         alt="imagePreview"
                         className="image-preview"
-                      />
-                    )}
+                      /> 
+                    }
                   </div>
                   <button
                     type="button"
@@ -729,6 +645,115 @@ const UserMyPage = () => {
               </form>
             </div>
           )}
+          {activeTab === "buyList" && (
+            <div className="order-history-display">
+              <h3>주문 내역</h3>
+              {loading ? (
+                <div>로딩 중...</div>
+              ) : error ? (
+                <div className="error-message">{error}</div>
+              ) : orders.length > 0 ? (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>번호</th>
+                      <th>주문 번호</th>
+                      <th>상품명</th>
+                      <th>수량</th>
+                      <th>금액</th>
+                      <th>주문일자</th>
+                      <th>주문 상태</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((order, index) => (
+                      <tr key={order.orderId}>
+                        <td>{index + 1}</td> {/* 번호 */}
+                        <td>{order.userBuySeq}</td> {/* 주문 번호 */}
+                        <td>{order.content}</td> {/* 상품명 */}
+                        <td>{order.count}</td> {/* 수량 */}
+                        <td>{order.price}원</td> {/* 금액 */}
+                        <td>
+                          {new Date(order.buyDate).toLocaleDateString()}
+                        </td>{" "}
+                        {/* 주문일자 */}
+                        <td>
+                          {order.state === 0
+                            ? "값 뭐넣어야해여?"
+                            : order.state === 1
+                            ? "값 뭐넣어야해여?"
+                            : order.state === 2
+                            ? "값 뭐넣어야해여?"
+                            : order.state === 3
+                            ? "값 뭐넣어야해여?"
+                            : "값 뭐넣어야해여?"}
+                        </td>
+                        {/* 주문 상태 */}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="no-data-notification">
+                  주문 내역이 없습니다.
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "auction" && (
+            <div className="auction-history-display">
+              <h3>경매 참여 내역</h3>
+              {loading1 ? (
+                <div>로딩 중...</div>
+              ) : error ? (
+                <div className="error-message">{error}</div>
+              ) : auctions.length > 0 ? (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>번호</th>
+                      <th>상품명</th>
+                      <th>수량</th>
+                      <th>입찰 금액</th>
+                      <th>참여 날짜</th>
+                      <th>판매자명</th>
+                      <th>현재 상태</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {auctions.map((auction, index) => (
+                      <tr key={auction.bidSeq}>
+                        <td>{index + 1}</td> {/* 번호 */}
+                        <td>{auction.content}</td> {/* 상품명 */}
+                        <td>{auction.count}</td> {/* 수량*/}
+                        <td>{auction.price}원</td> {/* 입찰할 금액 */}
+                        <td>{auction.insertDate}</td> {/* 입찰한 날짜 */}
+                        <td>{auction.name}</td> {/* 판매자명 */}
+                        <td>
+                          {auction.status === 0
+                            ? "값 뭐넣어야해여?"
+                            : auction.status === 1
+                            ? "값 뭐넣어야해여?"
+                            : auction.status === 2
+                            ? "값 뭐넣어야해여?"
+                            : auction.status === 3
+                            ? "값 뭐넣어야해여?"
+                            : "값 뭐넣어야해여?"}
+                        </td>
+                        {/* 현재 상태 */}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="no-data-notification">
+                  경매 참여 내역이 없습니다.
+                </div>
+              )}
+            </div>
+          )}
+
 
           {activeTab === "review" && (
             <div className="review-section">

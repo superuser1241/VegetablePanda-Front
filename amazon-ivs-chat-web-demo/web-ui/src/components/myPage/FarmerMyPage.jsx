@@ -178,10 +178,8 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
 
   const handleCheckboxChange = (userBuySeq) => {
     if (selectedItems.includes(userBuySeq)) {
-      // 이미 선택된 항목은 제거
       setSelectedItems(selectedItems.filter((item) => item !== userBuySeq));
     } else {
-      // 선택되지 않은 항목은 추가
       setSelectedItems([...selectedItems, userBuySeq]);
     }
   };
@@ -192,18 +190,17 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     if (isConfirmed) {
       if (selectedItems.length > 0) {
         try {
-          // 선택된 항목의 buySeq 값을 settlements 배열로 보낼 준비
           const settlementsData = selectedItems
             .map((userBuySeq) => {
               const sale = sales.find((s) => s.userBuySeq === userBuySeq); // 해당 buySeq를 가진 sale 객체 찾기
               if (sale) {
                 return {
                   userBuySeq: sale.userBuySeq,
-                  totalPoint: sale.price, // 가격이 없으면 0으로 설정
+                  totalPoint: sale.price,
                 };
               }
             })
-            .filter((item) => item !== undefined); // 잘못된 항목 필터링
+            .filter((item) => item !== undefined);
 
           console.log("보낼 데이터:", settlementsData);
 
@@ -297,7 +294,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     const confirmUpdate = window.confirm("수정 하시겠습니까?");
 
     if (!confirmUpdate) {
-      return;
+      return false;
     }
 
     e.preventDefault();
@@ -344,17 +341,18 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
             address: editedFarmer.address,
             phone: editedFarmer.phone,
             pw: editedFarmer.pw,
+            image: imagePreview
           }),
         ],
         { type: "application/json" }
       )
     );
 
-    if (image !== null) {
-      formData.append("image", image); // 새 이미지 추가
-    } else if (image === null) {
-      formData.append("image", null); // 이미지에 null값
-    }
+    // if (image !== null) {
+    //   formData.append("image", image); // 새 이미지 추가
+    // } else if (image === null) {
+    //   formData.append("image", null); // 이미지에 null값
+    // }
 
     try {
       const response = await axios.put(
@@ -371,7 +369,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
         alert("정보 수정이 완료되었습니다.");
         setFarmerInfo({
           ...farmerInfo,
-          path: image,
+          path: imagePreview,
           name: editedFarmer.name,
           email: editedFarmer.email,
           code: code,
@@ -791,7 +789,7 @@ const checkStreamingStatus = async () => {
                   >
                     사진 등록
                   </button>
-                  {(image !== null || farmerInfo.path !== null) && (
+                  {(image !== null ) && (
                     <button
                       type="button"
                       className="image-reset-btn"
@@ -991,7 +989,7 @@ const checkStreamingStatus = async () => {
                       {sales.map((sale) => (
                         <tr key={sale.userBuySeq}>
                           <td>
-                            {sale.state === 1 && (
+                            {sale.state === 2 && (
                               <input
                                 type="checkbox"
                                 checked={selectedItems.includes(
@@ -1000,7 +998,7 @@ const checkStreamingStatus = async () => {
                                 onChange={() =>
                                   handleCheckboxChange(sale.userBuySeq)
                                 } // 클릭 시 선택된 항목 처리
-                                disabled={sale.isDisabled} // 비활성화 ���태일 경우 체크박스 비활성화
+                                disabled={sale.isDisabled} // 비활성화일 경우 체크박스 비활성화
                               />
                             )}
                           </td>
@@ -1011,15 +1009,13 @@ const checkStreamingStatus = async () => {
                           <td>{new Date(sale.buyDate).toLocaleDateString()}</td>
 
                           <td>
-                            {sale.state === 0
-                              ? "판매중"
-                              : sale.state === 1
+                            {sale.state === 2
                               ? "판매완료"
-                              : sale.state === 2
+                              : sale.state === 6
                               ? "정산 신청 완료"
-                              : sale.state === 3
+                              : sale.state === 7
                               ? "정산 완료"
-                              : "상태값 4이상은 뭐넣습니까?"}
+                              : "나도 몰랑"}
                           </td>
                         </tr>
                       ))}
