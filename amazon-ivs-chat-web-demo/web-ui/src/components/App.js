@@ -204,7 +204,6 @@ function App() {
                     <Route path="/payment" element={<Payment />} />
                     <Route path="/personal" element={<Personal navigateTo={navigate} />} />
                     <Route path="/personalList" element={<PersonalList navigateTo={navigate} />} />
-                    <Route path="/payment" element={<Payment/>} />
                     <Route path="/auction/register" element={<AuctionRegisterPage />} />
                     <Route path="/auction/:auctionSeq" element={<BidPage />} />
                     <Route path="/product/:stockSeq" element={<Product/>}/>

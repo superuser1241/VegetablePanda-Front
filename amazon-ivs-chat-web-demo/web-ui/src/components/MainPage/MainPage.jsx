@@ -57,10 +57,13 @@ const MainPage = ({ onJoinRoom }) => {
                 console.error(err);
             }
         };
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> origin/main
         const fetchShopItems = async () => {
             try {
                 const response = await axios.get(`${serverIp}/api/shop`);

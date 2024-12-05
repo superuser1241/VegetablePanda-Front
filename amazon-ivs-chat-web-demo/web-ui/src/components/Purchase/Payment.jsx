@@ -162,7 +162,7 @@ const Payment = () => {
                       
                       const sendValidateData = async () => {
                         try {
-                            const response3 = await axios.post(`${serverIp}/payment/validate?status=2`, {
+                            const response3 = await axios.post(`${serverIp}/api/payment/validate?status=2`, {
                                     orderUid: rsp.merchant_uid, 
                                     paymentUid: rsp.imp_uid
                             },
@@ -178,7 +178,6 @@ const Payment = () => {
                             console.log("item.stockSeq = ");
                             console.log(item.stockSeq);
                             const stockSeq = item.stockSeq
-                            
                             if(response3.status === 200){
                                 const response4 = await axios.put(`${serverIp}/stock/quantity`, { stockSeq, quantity }, 
                                 {
@@ -188,6 +187,7 @@ const Payment = () => {
                                     }
                                 });
                             }
+
                             // 재고 개수 차감 메소드 -> 결제 검증에서 차감까지 수행
                             // if(response3.status === 200){
                             //     const response4 = await axios.put('http://localhost:9001/stock/quantity', { stockSeq, quantity }, 
