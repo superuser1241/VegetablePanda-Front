@@ -20,7 +20,44 @@ const BiddingSection = memo(({
     userRole 
 }) => {
     const [localAuctionData, setLocalAuctionData] = useState(auctionData);
+    const [bid, setBid] = useState(null);
     const navigate = useNavigate();
+
+    const findBidByAuctionId = async (auctionSeq) => {
+        const token = localStorage.getItem('token');
+        try {
+            const serverIp = process.env.REACT_APP_SERVER_IP;
+            const currentHour = new Date().getHours();
+            
+            let result;
+            if (currentHour >= 18 || currentHour < 24) {
+                result = await axios.get(`${serverIp}/bidCom/${auctionSeq}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                console.log('법인 경매 시간 - bidCom API 호출');
+            } else if (currentHour >= 13 && currentHour < 18) {
+                result = await axios.get(`${serverIp}/bidUser/${auctionSeq}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                console.log('개인 경매 시간 - bidUser API 호출');
+            } else {
+                console.log('경매 시간이 아닙니다');
+                return;
+            }
+            
+            setBid(result.data);
+            console.log('설정된 데이터:', result.data);
+        } catch (error) {
+            console.error('입찰 정보 조회 실패:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (localAuctionData?.auctionSeq) {
+            findBidByAuctionId(localAuctionData.auctionSeq);
+        }
+    }, [localAuctionData?.auctionSeq]);
+
     useEffect(() => {
         const serverIp = process.env.REACT_APP_SERVER_IP;
         const client = new Client({
@@ -96,6 +133,7 @@ const BiddingSection = memo(({
                         onEndAuction={onEndAuction}
                         onCheckPrice={onCheckPrice}
                         onCheckSalesHistory={onCheckSalesHistory}
+                        bid={bid}
                     />
                 ) : (
                     <AuctionRegisterPage 
@@ -117,6 +155,7 @@ const BiddingSection = memo(({
                         onCheckSalesHistory={onCheckSalesHistory}
                         userWallet={userWallet}
                         userRole={userRole}
+                        bid={bid}
                     />
                 ) : (
                     <div className="waiting-message">
