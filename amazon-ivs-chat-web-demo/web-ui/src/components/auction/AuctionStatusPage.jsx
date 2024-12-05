@@ -1,13 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { useAuctionData } from './useAuctionData';
 import './AuctionStatusPage.css';
+import axios from 'axios';
 
 const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAuction}) => {
-    const { highestBid, auction, bid } = useAuctionData(
+    const { highestBid, auction } = useAuctionData(
         streamingRoom.farmerSeq,
         auctionData.auctionSeq
     );
+    
     const [remainingTime, setRemainingTime] = useState('');
+    const [bid, setBid] = useState(null);
+
+    useEffect(() => {
+        if (auctionData?.auctionSeq) {
+            findBidByAuctionSeq(auctionData.auctionSeq);
+        }
+    }, [auctionData?.auctionSeq]);
+
+    const findBidByAuctionSeq = async (auctionSeq) => {
+        const token = localStorage.getItem('token');
+        try {
+            const serverIp = process.env.REACT_APP_SERVER_IP;
+            const currentHour = new Date().getHours(); // 현재 시간 (24시간 형식)
+        
+            let result;
+            if (currentHour >= 18 || currentHour < 24) { // 오후 6시 ~ 자정
+                result = await axios.get(`${serverIp}/bidCom/${auctionSeq}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log('법인 경매 시간 - bidCom API 호출');
+            } else if (currentHour >= 13 && currentHour < 18) { // 오후 1시 ~ 오후 6시
+                result = await axios.get(`${serverIp}/bidUser/${auctionSeq}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log('개인 경매 시간 - bidUser API 호출');
+            } else {
+                console.log('경매 시간이 아닙니다');
+                return; // 경매 시간이 아닐 경우 API 호출하지 않음
+            }
+            
+            setBid(result.data);
+            console.log('설정된 데이터:', result.data);
+
+        } catch (error) {
+            console.error('입찰 정보 조회 실패:', error);
+            if (error.response?.status === 401) {
+                alert('로그인이 필요한 서비스입니다.');
+            }
+        }
+    };
 
     const calculateRemainingTime = (closeTime) => {
         const now = new Date();
@@ -27,7 +73,7 @@ const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAucti
         }
         return `${minutes}분 ${seconds}초`;
     };
-
+    
     useEffect(() => {
         if (auctionData?.closeTime) {
             const timer = setInterval(() => {

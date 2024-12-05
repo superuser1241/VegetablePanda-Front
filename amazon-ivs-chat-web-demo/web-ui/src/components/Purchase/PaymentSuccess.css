@@ -1,0 +1,77 @@
+.payment-success-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.success-order-info {
+    margin: 20px 0;
+}
+
+.success-order-table-container {
+    margin: 20px 0;
+    overflow-x: auto;  /* 모바일에서 가로 스크롤 가능하도록 */
+}
+
+.success-order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.success-order-table th {
+    background-color: #f8f9fa;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.success-order-table td {
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.success-image-cell {
+    width: 175px;
+    height: 150px;
+    padding: 10px;
+}
+
+.success-image-cell img {
+    width: 175px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.success-total-price {
+    margin-top: 20px;
+    text-align: right;
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 20px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .success-order-table {
+        font-size: 14px;
+    }
+
+    .success-image-cell {
+        width: 100px;
+        height: 100px;
+    }
+
+    .success-image-cell img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .success-order-table th,
+    .success-order-table td {
+        padding: 8px;
+    }
+} 

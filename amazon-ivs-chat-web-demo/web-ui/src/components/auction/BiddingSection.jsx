@@ -33,13 +33,17 @@ const BiddingSection = memo(({
                     refreshAuctionData();
                 });
 
-                client.subscribe("/end/notifications", async (message) => {
+                client.subscribe(`/end/${streamingRoom.farmerSeq}/notifications`, async (message) => {
                     if(message.body==="BroadCastEnd"){
                         sessionStorage.clear();
                     }
                     else{
                         refreshAuctionData();
                     }
+                });
+
+                client.subscribe(`/end/notifications`, async (message) => {
+                        refreshAuctionData();
                 });
 
 
@@ -63,6 +67,7 @@ const BiddingSection = memo(({
      // 메시지 닫기 버튼
      const handleHideMessages = () => {
         setShowMessage(false);
+
         sessionStorage.clear();
         navigate('/');
     };
