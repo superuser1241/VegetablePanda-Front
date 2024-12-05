@@ -209,7 +209,7 @@ function App() {
                     <Route path="/shop" element={<Shop/>}/>
                     <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
                     <Route path="/cart" element={<CartPage />} />
-                    <Route path="/payment-success" element={<PaymentSuccess />} />
+                    <Route path="/payment-success/:id" element={<PaymentSuccess />} />
                 </Routes>
             </main>
             <Footer />
