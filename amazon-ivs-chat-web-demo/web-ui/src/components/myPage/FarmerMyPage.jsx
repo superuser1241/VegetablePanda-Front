@@ -22,7 +22,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
         email: ''
     });
     const [reviews, setReviews] = useState([]);
-    const [activeTab, setActiveTab] = useState('product'); // 기본 탭을 product로 변경
+    const [activeTab, setActiveTab] = useState('info');
     const [newProduct, setNewProduct] = useState({
         color: '',
         count: '',

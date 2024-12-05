@@ -34,7 +34,7 @@ const CompanyMyPage = () => {
   const [codePart3, setCodePart3] = useState("");
   const [auctions, setAuctions] = useState([]);
   const [review, setReview] = useState([]);
-  const [activeTab, setActiveTab] = useState("info"); // 'info', 'edit', 'review' 탭 관리
+  const [activeTab, setActiveTab] = useState("info");
   const navigate = useNavigate();
   const [pw, setPassword] = useState("");
   const [pwConfirm, setConfirmPassword] = useState("");

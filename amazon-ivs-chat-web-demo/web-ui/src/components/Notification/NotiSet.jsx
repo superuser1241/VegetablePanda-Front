@@ -41,6 +41,7 @@ const NotiSet = ({ onSetStreamingRoom }) => {
                     setMessages(text);
                     setShowMessage(true); 
                 });
+                
             },
             onDisconnect: () => console.log("Disconnected from WebSocket"),
         });

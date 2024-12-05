@@ -26,6 +26,8 @@
     transition: background-color 0.3s ease, color 0.3s ease;
     min-height: 40px;        /* 버튼의 최소 높이 설정 */
     padding: 8px 16px;       /* 상하좌우 여백 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+
   }
   
   .category-button:hover {
@@ -57,3 +59,26 @@
   .load-more button:hover {
     background-color: #1d7c43;
   }
+
+  /* 반응형 디자인 */
+@media (max-width: 768px) {
+
+  .category-buttons {
+    flex-wrap: wrap;  /* 버튼들이 여러 줄로 나뉘도록 설정 */
+    margin: 10px;     /* 좌우 여백 줄이기 */
+    margin-left: 20px;
+  }
+
+  .category-button {
+    font-size: 14px;     /* 글자 크기 줄이기 */
+    padding: 6px 12px;   /* 패딩 줄이기 */
+    min-height: 32px;    /* 최소 높이 줄이기 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  }
+
+  .product-list {
+    margin: 20px;        /* 리스트 여백 줄이기 */
+    grid-template-columns: repeat(2, 1fr); /* 모바일에서는 2열로 변경 */
+  }
+  
+}

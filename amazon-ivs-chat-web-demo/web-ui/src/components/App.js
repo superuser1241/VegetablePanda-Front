@@ -34,7 +34,8 @@ import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 import axios from 'axios';
 import Personal from './Personal/Personal'; // 에러나도 건들지 말아줘요
-import PersonalList from './Personal/PersonalList';// 에러나도 건들지 말아줘요
+import PersonalList from './Personal/PersonalList';
+import PaymentSuccess from './Purchase/PaymentSuccess';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -206,6 +207,7 @@ function App() {
                     <Route path="/shop" element={<Shop/>}/>
                     <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
                     <Route path="/cart" element={<CartPage />} />
+                    <Route path="/payment-success" element={<PaymentSuccess />} />
                 </Routes>
             </main>
             <Footer />
