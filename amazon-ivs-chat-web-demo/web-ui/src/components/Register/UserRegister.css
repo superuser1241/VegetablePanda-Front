@@ -160,14 +160,3 @@
 .image-upload-btn:hover {
     background-color: #45a049;
 }
-
-.image-preview-container {
-    margin-top: 10px;
-    width: 150px;
-    height: 150px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}

@@ -46,7 +46,7 @@ const StockList = ({onStockSelect, setActiveTab}) => {
     const fetchProductList = async () => {
         try {
 
-            const response = await axios.get(`${serverIp}/stock/${userId}`, {
+            const response = await axios.get(`${serverIp}/stock/farmer/${userId}`, {
                 headers: { 
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -62,6 +62,7 @@ const StockList = ({onStockSelect, setActiveTab}) => {
 
     return (
         <div className='stock-list-container'>
+            <div className='stock-list-middle'>
             <h3>재고 목록</h3>
             <div className='stock-table-container'>
                 <table className='stocklist-table'>
@@ -86,17 +87,23 @@ const StockList = ({onStockSelect, setActiveTab}) => {
                             <td >{item.count.toLocaleString()}</td>
                             <td >{item.stockGrade}</td>
                             <td >{item.stockOrganic}</td>
-                            <td >{item.color}</td>
-                            <td><button onClick={(e) => {
+                            <td >{item.color === 1 ? '빨간색'
+                            : item.color === 2 ? '주황색'
+                            : item.color === 3 ? '초록색'
+                            : item.color === 4 ? '보라색'
+                            : item.color === 5 ? '흰색'
+                            : '무색'}</td>
+                            {/* <td><button onClick={(e) => {
                                     e.stopPropagation();  // 행 클릭 이벤트 전파 방지
                                     onStockSelect(item);
-                                }}>수정</button></td>
+                                }}>수정</button></td> */}
                         {/* </Link> */}
                         </tr>
                     ))}
                 </tbody>
 
                 </table>
+                </div>
             </div>
         </div>
     );

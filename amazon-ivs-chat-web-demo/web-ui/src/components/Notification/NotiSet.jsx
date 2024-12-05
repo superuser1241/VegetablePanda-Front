@@ -41,6 +41,7 @@ const NotiSet = ({ onSetStreamingRoom }) => {
                     setMessages(text);
                     setShowMessage(true); 
                 });
+                
             },
             onDisconnect: () => console.log("Disconnected from WebSocket"),
         });
@@ -85,6 +86,7 @@ const NotiSet = ({ onSetStreamingRoom }) => {
     return (
         <>
             {showMessage && (
+            <div className="overlay">
                 <div className="MessageContainer">
                     <div className="MessageContent">
                         <button onClick={handleHideMessages} className="CloseButton">
@@ -98,6 +100,7 @@ const NotiSet = ({ onSetStreamingRoom }) => {
                         )}
                     </div>
                 </div>
+            </div>
             )}
 
 
