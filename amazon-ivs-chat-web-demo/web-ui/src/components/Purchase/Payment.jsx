@@ -8,7 +8,10 @@ const Payment = () => {
     const [userId, setUserId] = useState('');
     const location = useLocation();
     const navigate = useNavigate();
+    // 개별주문
     const { item, quantity } = location.state || {};
+    // 장바구니 주문
+    const { items, totalAmount, userSeq } = location.state || {};
     const serverIp = process.env.REACT_APP_SERVER_IP;
     const [orderUid, setOrderUid] = useState('');
     
