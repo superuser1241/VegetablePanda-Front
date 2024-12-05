@@ -298,3 +298,53 @@
 .button-container .like-btn.active:hover {
     background-color: #e60000 !important;
 }
+
+@media (max-width: 768px) {
+  .product-details {
+      display: flex;
+      flex-direction: column;  /* 세로 방향으로 변경 */
+      align-items: center;     /* 중앙 정렬 */
+      padding: 10px;          /* 패딩 조정 */
+  }
+
+  .product-image {
+      width: 100%;           /* 전체 너비 사용 */
+      margin-bottom: 20px;   /* 이미지와 정보 사이 간격 */
+  }
+
+  .product-image img {
+      max-width: 100%;      /* 이미지가 컨테이너를 벗어나지 않도록 */
+      height: auto;         /* 비율 유지 */
+  }
+
+  .product-info {
+      width: 100%;          /* 전체 너비 사용 */
+      padding: 0 10px;      /* 좌우 패딩 추가 */
+  }
+
+  .product-specs {
+      margin-top: 15px;     /* 상단 여백 추가 */
+  }
+
+  .tab-section {
+    width: 100%;         /* 전체 너비 사용 */
+    padding: 0;          /* 패딩 제거 */
+    margin: 20px 0;      /* 상하 여백만 유지 */
+}
+
+.tab-section-content {
+    width: 100%;         /* 전체 너비 사용 */
+    padding: 10px;       /* 내부 여백 조정 */
+}
+
+.tabs {
+    width: 100%;         /* 전체 너비 사용 */
+    display: flex;
+    justify-content: space-between;
+}
+
+.tabs button {
+    flex: 1;            /* 버튼들이 동일한 너비를 가지도록 설정 */
+    padding: 10px 5px;  /* 버튼 패딩 조정 */
+}
+}
