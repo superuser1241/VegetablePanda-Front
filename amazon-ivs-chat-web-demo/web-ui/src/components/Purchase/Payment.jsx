@@ -58,9 +58,9 @@ const Payment = () => {
         fetchUserInfo();
     }, [navigate]);
 
-    if (!item || !quantity) {
-        return <div>주문 정보를 찾을 수 없습니다.</div>;
-    }
+    // if (!item || !quantity) {
+    //     return <div>주문 정보를 찾을 수 없습니다.</div>;
+    // }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;

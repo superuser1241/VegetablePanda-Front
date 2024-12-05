@@ -198,7 +198,7 @@ function App() {
                     <Route path="/notify-service/edit/:boardNoSeq" element={<NTBoardEdit />} />
                     <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
-                    <Route path="/purchase" element={<CartPurchase />} />
+                    <Route path="/cart-purchase" element={<CartPurchase />} />
                     <Route path="/purchaseD" element={<PurchaseD userName={userName}/>} />
                     <Route path="/personal" element={<Personal navigateTo={navigate} />} />
                     <Route path="/personalList" element={<PersonalList navigateTo={navigate} />} />

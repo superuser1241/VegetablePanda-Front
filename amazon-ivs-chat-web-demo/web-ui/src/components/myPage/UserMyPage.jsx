@@ -695,7 +695,7 @@ const UserMyPage = () => {
                   </div>
                 </div>
 
-                <div className="button-container">
+                <div className="mypage-button-container">
                   <button type="submit" className="update-button">
                     수정하기
                   </button>
