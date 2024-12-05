@@ -8,6 +8,7 @@ const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAucti
         streamingRoom.farmerSeq,
         auctionData.auctionSeq
     );
+    
     const [remainingTime, setRemainingTime] = useState('');
     const [bid, setBid] = useState(null);
 
