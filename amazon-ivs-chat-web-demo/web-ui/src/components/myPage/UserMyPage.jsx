@@ -8,6 +8,7 @@ import "../../index.css";
 import logo from "../../image/기본이미지.png";
 import ReviewCommentList from "../ReviewComment/ReviewCommentList.jsx";
 import Point from "./Point.jsx";
+import UserAuctionHistory from "./UserAuctionHistory.jsx";
 const UserMyPage = () => {
   const token = localStorage.getItem("token");
   const [userId, setUserId] = useState("");
@@ -29,6 +30,8 @@ const UserMyPage = () => {
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
   const serverIp = process.env.REACT_APP_SERVER_IP;
+
+  const [buyInfo, setBuyInfo] = useState(null);
 
   const [editedUser, setEditedUser] = useState({
     pw: "",
@@ -94,13 +97,14 @@ const UserMyPage = () => {
       fetchUserInfo(userId);
       fetchPoint(userId);
       fetchreview(userId);
-      fetchOrderHistory(userId);
+      fetchOrderHistory();
       fetchAuctionHistory(userId);
       fetchUserLikeHistory(userId);
     }
   }, [userId]);
 
-  const fetchOrderHistory = async (userSeq) => {
+  // 주문 내역을 가져오는 함수
+  const fetchOrderHistory = async () => {
     try {
 // <<<<<<< HEAD
 //       setLoading(true); // 로딩 시작
@@ -108,35 +112,16 @@ const UserMyPage = () => {
 //       setOrders(response.data); // 가져온 데이터를 상태에 저장
 // =======
       setLoading(true);
+      const userSeq = localStorage.getItem("userSeq");
       const response = await axios.get(
         `${serverIp}/myPage/buyList/${userSeq}`,
         {
           headers: { 
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
           }
         }
       );
-        
-      if (Array.isArray(response.data)) {
-        const processedOrders = response.data.map(order => {
-          console.log('주문 데이터:', order); // 데이터 구조 확인
-          return {
-            userBuyDetailSeq: order.userBuyDetailSeq,
-            sellerSeq: order.sellerSeq,
-            productName: order.productName || order.content,
-            content: order.content,
-            count: order.count,
-            price: order.price,
-            buyDate: order.buyDate,
-            status: order.status,
-            reviewStatus: order.reviewStatus
-          };
-        });
-        setOrders(processedOrders);
-      } else {
-        setOrders([]);
-      }
+      setBuyInfo(response.data);
     } catch (err) {
       console.error("주문 내역 조회 에러:", err);
       setError("주문 내역을 불러오는 중 오류가 발생했습니다.");
@@ -161,7 +146,9 @@ const UserMyPage = () => {
   const fetchAuctionHistory = async (userId) => {
     try {
       setLoading1(true); // 로딩 시작
-      const response = await axios.get(`${serverIp}/myPage/auction/${userId}`); // API 엔드포인트
+      const response = await axios.get(
+        `http://localhost:9001/myPage/auction/result/2`
+      ); // API 엔드포인트
       setAuctions(response.data); // 데이터 저장
     } catch (err) {
       setError("데이터를 불러오는 중 오류가 발생했습니다.");
@@ -373,7 +360,8 @@ const UserMyPage = () => {
         content: order.productName || order.content,
         count: order.count,
         price: order.price,
-        buyDate: order.buyDate
+        buyDate: order.buyDate,
+        reviewSeq: order.reviewSeq
       };
 
       console.log("ReviewCommentWrite로 전달되는 데이터:", orderInfo);
@@ -537,58 +525,98 @@ const UserMyPage = () => {
           )}
 
 
+          {activeTab === "buyList" && (
+            <div className="order-history-display">
+              <h3>주문 내역</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>번호</th>
+                    <th>주문번호</th>
+                    <th>상품명</th>
+                    <th>수량</th>
+                    <th>가격</th>
+                    <th>주문일자</th>
+                    <th>주문상태</th>
+                    <th>리뷰</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {buyInfo.map((order, index) => (
+                    <tr key={`${index}`}>
+                      <td>{index + 1}</td>
+                      <td>{order.userBuyDetailSeq}</td>
+                      <td>{order.content}</td>
+                      <td>{order.count}개</td>
+                      <td>{order.price}원</td>
+                      <td>{new Date(order.buyDate).toLocaleDateString()}</td>
+                      <td>{order.state}</td>
+                      <td>
+                        <button
+                          onClick={() => handleReviewWrite(order)}
+                          className={`review-button ${order.reviewStatus === 'COMPLETED' ? 'completed' : ''}`}
+                          disabled={order.reviewStatus === 'COMPLETED'}
+                        >
+                          {order.reviewStatus === 'COMPLETED' ? '작성완료' : '리뷰작성'}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {activeTab === "auction" && (
-            <div className="auction-history-display">
-              <h3>경매 참여 내역</h3>
-              {loading1 ? (
-                <div>로딩 중...</div>
-              ) : error ? (
-                <div className="error-message">{error}</div>
-              ) : auctions.length > 0 ? (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>번호</th>
-                      <th>상품명</th>
-                      <th>수량</th>
-                      <th>입찰 금액</th>
-                      <th>참여 일자</th>
-                      <th>판매자명</th>
-                      <th>현재 상태</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {auctions.map((auction, index) => (
-                      <tr key={auction.bidSeq}>
-                        <td>{index + 1}</td> {/* 번호 */}
-                        <td>{auction.content}</td> {/* 상품명 */}
-                        <td>{auction.count}</td> {/* 수량*/}
-                        <td>{auction.price}원</td> {/* 입찰할 금액 */}
-                        <td>{auction.insertDate}</td> {/* 입찰한 날짜 */}
-                        <td>{auction.name}</td> {/* 판매자명 */}
-                        <td>
-                          {auction.status === 0
-                            ? "값 뭐넣어야해여?"
-                            : auction.status === 1
-                            ? "값 뭐넣어야해여?"
-                            : auction.status === 2
-                            ? "값 뭐넣어야해여?"
-                            : auction.status === 3
-                            ? "값 뭐넣어야해여?"
-                            : "값 뭐넣어야해여?"}
-                        </td>
-                        {/* 현재 상태 */}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="no-data-notification">
-                  경매 참여 내역이 없습니다.
-                </div>
-              )}
-            </div>
+            // <div className="auction-history-display">
+            //   <h3>경매 참여 내역</h3>
+            //   {loading1 ? (
+            //     <div>로딩 중...</div>
+            //   ) : error ? (
+            //     <div className="error-message">{error}</div>
+            //   ) : auctions.length > 0 ? (
+            //     <table className="auction-history-table-container">
+            //       <thead>
+            //         <tr>
+            //           <th>번호</th>
+            //           <th>상품명</th>
+            //           <th>수량</th>
+            //           <th>낙찰 금액</th>
+            //           <th>참여 일자</th>
+            //           <th>판매자명</th>
+            //         </tr>
+            //       </thead>
+            //       <tbody>
+            //         {auctions.map((auction, index) => {
+            //           // 날짜 포맷 변경 함수
+            //           const formatDate = (dateString) => {
+            //             const date = new Date(dateString);
+            //             const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            //             const formattedTime = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+            //             return `${formattedDate} ${formattedTime}`;
+            //           };
+            //           return (
+            //           <tr key={auction.bidSeq}>
+            //             <td>{auction.buySeq}</td> {/* 경매번호 */}
+            //             <td>{auction.productName}</td> {/* 상품명 */}
+            //             <td>{auction.count}</td> {/* 수량*/}
+            //             <td>{auction.totalPrice}원</td> {/* 입찰할 금액 */}
+            //             <td>{formatDate(auction.insertDate)}</td> {/* 입찰한 날짜 */}
+            //             <td>{auction.name}</td> {/* 판매자명 */}
+
+            //             {/* 현재 상태 */}
+            //           </tr>
+            //           )
+            //           })}
+            //       </tbody>
+            //     </table>
+            //   ) : (
+            //     <div className="no-data-notification">
+            //       경매 참여 내역이 없습니다.
+            //     </div>
+            //   )}
+            // </div>
+            <UserAuctionHistory  auctions = {auctions} loading1 = {loading1} error = {error}/>
           )}
 
           {activeTab === "update" && (

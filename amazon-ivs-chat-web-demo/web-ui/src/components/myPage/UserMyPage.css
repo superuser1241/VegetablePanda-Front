@@ -527,4 +527,8 @@
 /* 리뷰 작성 버튼 컨테이너 */
 .order-history-display td:last-child {
   text-align: center;
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
 }
+
