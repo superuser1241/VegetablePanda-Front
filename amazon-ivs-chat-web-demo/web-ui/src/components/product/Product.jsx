@@ -301,7 +301,7 @@ const Product = () => {
                     className={activeTab === "details" ? "active" : ""}
                     onClick={() => scrollToSection("details")}
                 >
-                    상세정��
+                    상세정보
                 </button>
                 <button
                     className={activeTab === "reviews" ? "active" : ""}

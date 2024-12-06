@@ -3,6 +3,7 @@ import axios from 'axios';
 import './AdminMyPage.css';
 import AuctionStatus from '../auction/AuctionStatus';
 import AdjustmentPage from './AdjustmentPage';
+import UserStatistics from './UserStatistics';
 
 const AdminMyPage = () => {
     const token = localStorage.getItem('token');
@@ -102,6 +103,9 @@ const AdminMyPage = () => {
                     <li onClick={() => setActiveTab('info')} className={activeTab === 'info' ? 'active' : ''}>
                         관리자 정보
                     </li>
+                    <li onClick={() => setActiveTab('products')} className={activeTab === 'products' ? 'active' : ''}>
+                        승인 대기 상품
+                    </li>
                     <li onClick={() => setActiveTab('streaming')} className={activeTab === 'streaming' ? 'active' : ''}>
                         스트리밍 승인
                     </li>
@@ -194,10 +198,7 @@ const AdminMyPage = () => {
                 )}
 
                 {activeTab === 'stats' && (
-                    <div className="stats-section">
-                        <h2>통계</h2>
-                        {/* 통계 관련 컴포넌트 */}
-                    </div>
+                            <UserStatistics />
                 )}
             </div>
         </div>

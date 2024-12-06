@@ -146,11 +146,19 @@
   }
   
   .detail-body {
-    min-height: 200px;
-    line-height: 1.6;
-    color: #333;
-    white-space: pre-wrap;
-    padding: 20px 0;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 4px;
+  }
+  
+  .detail-body img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .reply-item div[dangerouslySetInnerHTML] {
+    margin: 10px 0;
   }
   
   .detail-buttons {
@@ -246,3 +254,83 @@
     margin: 0;
     line-height: 1.5;
   }
+  .qa-write-container .text-style-buttons {
+    margin-bottom: 10px;
+  }
+  
+  .qa-write-container .style-button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+  }
+  
+  .qa-write-container .style-button:hover {
+    background-color: #ddd;
+  }
+  .qa-write-container .preview-section {
+    margin-top: 20px;
+  }
+  
+  .qa-write-container .preview-content {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    white-space: pre-wrap;
+  }
+  
+  .qa-write-container .text-style-buttons {
+    margin-bottom: 10px;
+  }
+  
+  .qa-write-container .style-button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+  }
+  
+  .qa-write-container .style-button:hover {
+    background-color: #ddd;
+  }
+  
+  /* Quill 컨텐츠 스타일링 */
+  .ql-align-center {
+    text-align: center;
+  }
+  
+  .ql-align-right {
+    text-align: right;
+  }
+  
+  .ql-align-justify {
+    text-align: justify;
+  }
+  
+  /* 파일 다운로드 섹션 스타일 */
+  .file-download-section {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+  }
+  
+  .file-label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .file-download-link {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .file-download-link:hover {
+    text-decoration: underline;
+  }
+  
+  

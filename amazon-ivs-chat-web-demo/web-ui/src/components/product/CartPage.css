@@ -43,11 +43,16 @@
     font-weight: bold;
 }
 
-.cart-item-image {
+.cart-table .cart-item-image {
     width: 80px;
     height: 80px;
     object-fit: cover;
     border-radius: 5px;
+}
+
+.cart-table td div {
+    display: flex;
+    justify-content: center;
 }
 
 .quantity-control {

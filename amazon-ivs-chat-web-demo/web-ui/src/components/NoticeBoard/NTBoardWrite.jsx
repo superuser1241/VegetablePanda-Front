@@ -11,6 +11,7 @@ const NotifyBoardWrite = () => {
     subject: '',
     content: '',
   });
+  const [image, setImage] = useState(null); // 이미지 상태 추가
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -29,38 +30,48 @@ const NotifyBoardWrite = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]); // 파일 선택 시 이미지 상태 업데이트
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    
+
     try {
-      const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
-      
-      await axios.post(`${serverIp}/notifyBoard/`, 
-        {
-          subject: formData.subject,
-          content: formData.content,
-          managementUser: payload.user_seq
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+        const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
+        
+        // FormData 객체 생성
+        const data = new FormData();
+        data.append('noticeBoard', JSON.stringify({
+            title: formData.subject,
+            content: formData.content,
+            managementUser: payload.user_seq,
+        }));
+        if (image) {
+            data.append('image', image); // 이미지 파일 추가
         }
-      );
-      alert('공지가 등록되었습니다.');
-      navigate('/Notify-service');
+
+        await axios.post('http://localhost:9001/notifyBoard/', 
+            data,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Authorization 헤더 추가
+                }
+            }
+        );
+        alert('공지가 등록되었습니다.');
+        navigate('/Notify-service');
     } catch (error) {
-      console.error('등록 실패:', error);
-      if (error.response?.status === 403) {
-        alert('권한이 없습니다.');
-        navigate('/notify-service');
-      } else {
-        alert('공지 등록에 실패했습니다.');
-      }
+        console.error('등록 실패:', error);
+        if (error.response?.status === 403) {
+            alert('권한이 없습니다.');
+            navigate('/notify-service');
+        } else {
+            alert('공지 등록에 실패했습니다.');
+        }
     }
-  };
+};
 
   return (
     <div className="nt-write-container">
@@ -86,6 +97,14 @@ const NotifyBoardWrite = () => {
             rows="10"
           />
         </div>
+        <div className="form-group">
+          <label>이미지 업로드</label>
+          <input 
+            type="file" 
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+        </div>
         <div className="button-group">
           <button type="submit" className="submit-button">등록</button>
           <button 
@@ -101,4 +120,4 @@ const NotifyBoardWrite = () => {
   );
 };
 
-export default NotifyBoardWrite; 
+export default NotifyBoardWrite;
