@@ -1,12 +1,13 @@
 .admin-mypage {
     display: flex;
-    max-width: 1200px;
+    max-width: none;
     margin: 0 auto;
     padding: 20px;
     gap: 20px;
 }
 
 .admin-sidebar {
+    position: fixed;
     width: 200px;
     background-color: #f8f9fa;
     padding: 20px;
@@ -43,6 +44,7 @@
 
 .admin-content {
     flex: 1;
+    margin-left: 220px;
     min-width: 940px;
     padding: 30px;
     background-color: white;
@@ -290,6 +292,7 @@
     }
     
     .admin-sidebar {
+        position: static;
         width: 100%;
         margin-bottom: 20px;
     }
@@ -299,6 +302,7 @@
     }
     
     .admin-content {
+        margin-left: 0;
         min-width: auto;
     }
     
