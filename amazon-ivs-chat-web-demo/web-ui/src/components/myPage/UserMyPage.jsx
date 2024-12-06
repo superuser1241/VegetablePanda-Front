@@ -254,6 +254,7 @@ const UserMyPage = () => {
         ? `${phoneWithoutHyphen.slice(0, 3)}-${phoneWithoutHyphen.slice(3, 6)}-${phoneWithoutHyphen.slice(6)}`
         : `${phoneWithoutHyphen.slice(0, 3)}-${phoneWithoutHyphen.slice(3, 7)}-${phoneWithoutHyphen.slice(7)}`;
   
+      
     const formData = new FormData();
     formData.append(
       "userData",
@@ -502,7 +503,7 @@ const UserMyPage = () => {
               <div className="user-info-details">
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
-                  <img src={userInfo.path || logo} />
+                  <img src={userInfo?.path || logo} />
                 </div>
                 <p>
                   <strong>아이디:</strong> {userInfo.id}
@@ -642,18 +643,19 @@ const UserMyPage = () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {userInfo.path !== null ? (
+                    {imagePreview !== null ? (
                       <img
-                        src={userInfo.path}
-                        alt="userInfo.path"
-                        className="image-preview"
-                      />
+                      src={imagePreview}
+                      alt="imagePreview"
+                      className="image-preview"
+                    />
+                      
                     ) : (
                       <img
-                        src={imagePreview || logo}
-                        alt="imagePreview"
-                        className="image-preview"
-                      />
+                      src={userInfo.path}
+                      alt="userInfo.path"
+                      className="image-preview"
+                    />
                     )}
                   </div>
                   <button

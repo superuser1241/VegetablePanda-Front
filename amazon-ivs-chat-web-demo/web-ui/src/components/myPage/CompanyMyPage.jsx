@@ -22,7 +22,7 @@ const CompanyMyPage = () => {
     pw: "",
   });
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(logo);
+  const [imagePreview, setImagePreview] = useState(null);
   const [point, setPoint] = useState(0);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -193,14 +193,14 @@ const CompanyMyPage = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+        setImage(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImagePreview(reader.result);
+        };
+        reader.readAsDataURL(file);
     }
-  };
+};
 
   const handleImageReset = () => {
     setCompanyInfo((prevState) => ({
@@ -255,15 +255,14 @@ const CompanyMyPage = () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
-    const id = companyInfo.companyId;
-    setImage(companyInfo.path);
+    
     const formData = new FormData();
     formData.append(
       "companyData",
       new Blob(
         [
           JSON.stringify({
-            id,
+            id: companyInfo.companyId,
             comName: editedCompany.comName,
             ownerName: editedCompany.ownerName,
             regName: editedCompany.regName,
@@ -280,9 +279,9 @@ const CompanyMyPage = () => {
     );
 
     if (image) {
-      formData.append("image", image); // 새로운 이미지
+      formData.append("image", image); 
     } else if (image === null || imagePreview === null) {
-      formData.append("image", companyInfo.path); // 기존 이미지 경로
+      formData.append("image", companyInfo.path);
     }
 
     try {
@@ -412,7 +411,7 @@ const CompanyMyPage = () => {
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
                   <img
-                    src={companyInfo.path || logo }
+                    src={companyInfo?.path || logo }
                     alt={companyInfo.path}
                   />
                 </div>
@@ -465,19 +464,20 @@ const CompanyMyPage = () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {companyInfo.path ?
-                      <img
-                        src={companyInfo.path}
-                        alt="companyInfo.path"
-                        className="image-preview"
-                        />
-                        : 
-                      <img
-                        src={imagePreview}
-                        alt="imagePreview"
-                        className="image-preview"
-                      />
-                    }
+                  {imagePreview ? (
+    <img
+        src={imagePreview}
+        alt="imagePreview"
+        className="image-preview"
+    />
+) : (
+    <img
+        src={companyInfo?.path || logo}
+        alt="프로필 이미지"
+        className="image-preview"
+        onError={(e) => e.target.src = logo}
+    />
+)}
                   </div>
                   <button
                     type="button"
