@@ -1,0 +1,45 @@
+.auction-history-display {
+}
+
+.auction-history-display table {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  caption {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  thead {
+    background-color: #f2f2f2;
+  }
+  
+  thead th {
+    padding: 12px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  tbody tr {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  tbody td {
+    padding: 10px;
+    text-align: center;
+  }
+  
+  tbody tr:hover {
+    background-color: #f1f1f1;
+  }
