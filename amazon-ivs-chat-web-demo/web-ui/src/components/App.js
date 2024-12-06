@@ -30,12 +30,11 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
-import Personal from './Personal/Personal';
-import PersonalList from './Personal/PersonalList';
-import './Personal/PersonalList';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 import axios from 'axios';
+import Personal from './Personal/Personal'; // 에러나도 건들지 말아줘요
+import PersonalList from './Personal/PersonalList';
 import ReviewCommentWrite from './ReviewComment/ReviewCommentWrite';
 import ReviewCommentList from './ReviewComment/ReviewCommentList';
 import ReviewCommentDetail from './ReviewComment/ReviewCommentDetail';

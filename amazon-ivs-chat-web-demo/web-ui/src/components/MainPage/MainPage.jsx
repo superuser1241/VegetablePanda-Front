@@ -319,7 +319,13 @@ const MainPage = ({ onJoinRoom }) => {
     const handleLoadMoreShops = () => {
         setVisibleShops(prev => prev + 4);
     };
-
+    const truncateText = (text, maxLength) => {
+        if (text.length > maxLength) {
+            return text.substring(0, maxLength) + '...';
+        }
+        return text;
+    };
+    
     return (
         <>
             <div className="slider-wrapper">
@@ -358,33 +364,41 @@ const MainPage = ({ onJoinRoom }) => {
 
                 <section className="streaming-section-MainPage">
                     <h2 className="section-title">실시간 스트리밍</h2>
-                    <div className="room-list">
-                        {rooms.slice(0, visibleRooms).map((room) => (
-                            <div key={room.streamingSeq} className="room-card">
-                                <div className="room-image">
-                                    <img 
-                                        src={room.filePath || 'https://placehold.co/200x200?text=NoImage'} 
-                                        alt={room.productName}
-                                    />
-                                    <img src={liveImg} alt="LIVE" className="live-badge" />
-                                </div>
-                                <div className="room-info">
-                                    <h3 className='product-name-mainPage'>{room.productName || '상품명 없음'}</h3>
-                                    <p className="farmer-name">판매자: {room.farmerName || '판매자 정보 없음'}</p>
-                                    <button
-                                        className="join-button"
-                                        onClick={() => onJoinRoom(room)}
-                                    >
-                                        방송 입장하기
-                                    </button>
-                                </div>
+                    {rooms.length > 0 ? (
+                        <>
+                            <div className="room-list">
+                                {rooms.slice(0, visibleRooms).map((room) => (
+                                    <div key={room.streamingSeq} className="room-card">
+                                        <div className="room-image">
+                                            <img 
+                                                src={room.filePath || 'https://placehold.co/200x200?text=NoImage'} 
+                                                alt={room.productName}
+                                            />
+                                            <img src={liveImg} alt="LIVE" className="live-badge" />
+                                        </div>
+                                        <div className="room-info">
+                                            <h3 className='product-name-mainPage'>{room.productName || '상품명 없음'}</h3>
+                                            <p className="farmer-name">판매자: {room.farmerName || '판매자 정보 없음'}</p>
+                                            <button
+                                                className="join-button"
+                                                onClick={() => onJoinRoom(room)}
+                                            >
+                                                방송 입장하기
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                    {rooms.length > visibleRooms && (
-                        <button className="load-more-button" onClick={handleLoadMoreRooms}>
-                            더보기
-                        </button>
+                            {rooms.length > visibleRooms && (
+                                <button className="load-more-button" onClick={handleLoadMoreRooms}>
+                                    더보기
+                                </button>
+                            )}
+                        </>
+                    ) : (
+                        <div className="no-streams-message">
+                            진행중인 라이브 경매가 없습니다.
+                        </div>
                     )}
                 </section>
 
@@ -398,7 +412,7 @@ const MainPage = ({ onJoinRoom }) => {
                                 <div className="shop-image">
                                     <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
                                 </div>
-                                <h3>{item.productName}</h3>
+                                <h3>{truncateText(item.productName, 25)}</h3>
                                 <div className="shop-info">
                                     <p><span>가격:</span> {item.price.toLocaleString()}원</p>
                                     <p><span>수량:</span> {item.count}개</p>

@@ -22,7 +22,7 @@ const CompanyMyPage = () => {
     pw: "",
   });
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(logo);
+  const [imagePreview, setImagePreview] = useState(null);
   const [point, setPoint] = useState(0);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ const CompanyMyPage = () => {
   const [codePart3, setCodePart3] = useState("");
   const [auctions, setAuctions] = useState([]);
   const [review, setReview] = useState([]);
-  const [activeTab, setActiveTab] = useState("info"); // 'info', 'edit', 'review' 탭 관리
+  const [activeTab, setActiveTab] = useState("info");
   const navigate = useNavigate();
   const [pw, setPassword] = useState("");
   const [pwConfirm, setConfirmPassword] = useState("");
@@ -190,25 +190,24 @@ const CompanyMyPage = () => {
     }
   };
 
-  // 이미지
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+        setImage(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImagePreview(reader.result);
+        };
+        reader.readAsDataURL(file);
     }
-  };
+};
 
   const handleImageReset = () => {
     setCompanyInfo((prevState) => ({
       ...prevState,
       path: null,
     }));
-    setImagePreview(logo);
+    setImagePreview(null);
     setImage(null);
   };
 
@@ -256,58 +255,50 @@ const CompanyMyPage = () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
-
-    const id = companyInfo.companyId;
-
+    
     const formData = new FormData();
     formData.append(
       "companyData",
       new Blob(
         [
           JSON.stringify({
-            id,
+            id: companyInfo.companyId,
             comName: editedCompany.comName,
             ownerName: editedCompany.ownerName,
             regName: editedCompany.regName,
             email: editedCompany.email,
             code: code,
             address: editedCompany.address,
-            phone: editedCompany.phone,
+            phone: formattedPhone,
             pw: editedCompany.pw,
+            path: companyInfo.path,
           }),
         ],
         { type: "application/json" }
       )
     );
 
-    if (image !== null) {
-      formData.append("image", image); // 새 이미지 추가
-    } else if (image === null) {
-      formData.append("image", null); // 이미지에 null값
+    if (image) {
+      formData.append("image", image); 
+    } else if (image === null || imagePreview === null) {
+      formData.append("image", companyInfo.path);
     }
 
     try {
-      const response = await axios.put(`${serverIp}/myPage/company/update/${userId}`, formData, {
+      const response = await axios.put(
+        `${serverIp}/myPage/company/update/${userId}`, 
+        formData, 
+        {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
-      });
+      }
+    );
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
-        setCompanyInfo({
-          ...companyInfo,
-          comName: editedCompany.comName,
-          ownerName: editedCompany.ownerName,
-          regName: editedCompany.regName,
-          pw: editedCompany.pw,
-          email: editedCompany.email,
-          phone: formattedPhone,
-          address: editedCompany.address,
-          code: code,
-          path: image,
-        });
-        setActiveTab("info");
+          await fetchCompanyInfo(userId);
+          setActiveTab("info");
       }
     } catch (error) {
       console.error("회원정보 수정 실패:", error);
@@ -315,7 +306,6 @@ const CompanyMyPage = () => {
     }
   };
 
-  //회원탈퇴
   const handleDeleteAccount = async () => {
     const confirmDelete = window.confirm(
       "정말로 회원 탈퇴를 진행하시겠습니까?"
@@ -421,7 +411,7 @@ const CompanyMyPage = () => {
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
                   <img
-                    src={companyInfo.path || logo }
+                    src={companyInfo?.path || logo }
                     alt={companyInfo.path}
                   />
                 </div>
@@ -474,19 +464,20 @@ const CompanyMyPage = () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {companyInfo.path ?
-                      <img
-                        src={companyInfo.path}
-                        alt="companyInfo.path"
-                        className="image-preview"
-                        />
-                        : 
-                      <img
-                        src={imagePreview}
-                        alt="imagePreview"
-                        className="image-preview"
-                      />
-                    }
+                  {imagePreview ? (
+    <img
+        src={imagePreview}
+        alt="imagePreview"
+        className="image-preview"
+    />
+) : (
+    <img
+        src={companyInfo?.path || logo}
+        alt="프로필 이미지"
+        className="image-preview"
+        onError={(e) => e.target.src = logo}
+    />
+)}
                   </div>
                   <button
                     type="button"
@@ -674,7 +665,7 @@ const CompanyMyPage = () => {
           )}
 
           {activeTab === "buyList" && (
-            <div className="order-history-display">
+            <div className="yun-order-history-display">
               <h3>주문 내역</h3>
               {loading ? (
                 <div>로딩 중...</div>
@@ -683,7 +674,7 @@ const CompanyMyPage = () => {
               ) : orders.length > 0 ? (
                 <table>
                   <thead>
-                    <tr className="company-mypage-tr">
+                    <tr className="yun-company-mypage-tr">
                       <th>번호</th>
                       <th>주문 번호</th>
                       <th>상품명</th>
@@ -695,7 +686,7 @@ const CompanyMyPage = () => {
                   </thead>
                   <tbody>
                     {orders.map((order, index) => (
-                      <tr key={order.orderId} className="company-mypage-tr">
+                      <tr key={order.orderId} className="yun-company-mypage-tr">
                         <td>{index + 1}</td> {/* 번호 */}
                         <td>{order.userBuySeq}</td> {/* 주문 번호 */}
                         <td>{order.content}</td> {/* 상품명 */}
@@ -722,7 +713,7 @@ const CompanyMyPage = () => {
                   </tbody>
                 </table>
               ) : (
-                <div className="no-data-notification">
+                <div className="yun-no-data-notification">
                   주문 내역이 없습니다.
                 </div>
               )}

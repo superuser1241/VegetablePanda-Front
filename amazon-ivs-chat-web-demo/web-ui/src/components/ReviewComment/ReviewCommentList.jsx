@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './ReviewComment.css';
+import DOMPurify from 'dompurify';
+import '../../index.css';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -10,15 +12,18 @@ const ReviewCommentList = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
+
   useEffect(() => {
     const fetchMyReviews = async () => {
       try {
-        const response = await axios.get(`${serverIp}/reviewComment/myComments`, {
+        const userSeq = localStorage.getItem("userSeq");
+        const response = await axios.get(`${serverIp}/myComments/${userSeq}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         setReviews(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('리뷰 목록 조회 실패:', error);
       }
@@ -51,19 +56,22 @@ const ReviewCommentList = () => {
                   {'★'.repeat(review.score)}{'☆'.repeat(5-review.score)}
                 </div>
               </div>
-              <div className="review-content">
-                <p>{review.content}</p>
-                {review.file && (
-                  <img 
-                    src={review.file.path} 
-                    alt="리뷰 이미지" 
-                    className="review-image"
-                  />
-                )}
-              </div>
+              <div 
+                className="review-content"
+                dangerouslySetInnerHTML={{ 
+                  __html: DOMPurify.sanitize(review.content) 
+                }} 
+              />
+              {review.file && (
+                <img 
+                  src={review.path} 
+                  alt="리뷰 이미지" 
+                  className="review-image"
+                />
+              )}
               <div className="review-footer">
                 <span className="review-date">
-                  작성일: {new Date(review.createDate).toLocaleDateString()}
+                  작성일: {new Date(review.regDate).toLocaleDateString()}
                 </span>
               </div>
             </div>

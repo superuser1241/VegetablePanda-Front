@@ -46,7 +46,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const [review, setReview] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [settlements, setSettlements] = useState([]);
-  const [imagePreview, setImagePreview] = useState(logo);
+  const [imagePreview, setImagePreview] = useState(null);
   const [farmerInfo, setFarmerInfo] = useState(null);
   const [streamingStatus, setStreamingStatus] = useState(null);
   const [availableRoom, setAvailableRoom] = useState(null);
@@ -263,21 +263,26 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+        setImage(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImagePreview(reader.result);
+            // setFarmerInfo(prev => ({
+            //     ...prev,
+            //     path: null // 기존 path를 null로 설정
+            // }));
+        };
+        reader.readAsDataURL(file);
     }
-  };
+};
+
 
   const handleImageReset = () => {
     setFarmerInfo((prevState) => ({
       ...prevState,
       path: null,
     }));
-    setImagePreview(logo);
+    setImagePreview(null);
     setImage(null);
   };
 
@@ -341,18 +346,20 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
             address: editedFarmer.address,
             phone: editedFarmer.phone,
             pw: editedFarmer.pw,
-            // image: imagePreview
+            path: farmerInfo.path
           }),
         ],
         { type: "application/json" }
       )
     );
 
-    if (image !== null) {
-      formData.append("image", image); // 새 이미지 추가
-    } else if (image === null) {
-      formData.append("image", null); // 이미지에 null값
+    if (image) {
+      formData.append("image", image); // 새로운 이미지
+    } else if (image === null || imagePreview === null) {
+      // 이미지가 null일 경우 기존 경로를 보내기 (userInfo.path)
+      formData.append("image", farmerInfo.path); // 기존 이미지 경로
     }
+
 
     try {
       const response = await axios.put(
@@ -368,17 +375,8 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
 
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
-        setFarmerInfo({
-          ...farmerInfo,
-          path: image,
-          name: editedFarmer.name,
-          email: editedFarmer.email,
-          code: code,
-          address: editedFarmer.address,
-          phone: formattedPhone,
-          pw: editedFarmer.pw,
-        });
-        setActiveTab("info");
+          await fetchFarmerInfo(userId);
+          setActiveTab("info");
       }
     } catch (error) {
       console.error("회원정보 수정 실패:", error);
@@ -720,10 +718,7 @@ const checkStreamingStatus = async () => {
               <div className="user-info-details">
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
-                  <img
-                    src={farmerInfo.path || logo}
-                    alt={farmerInfo.path}
-                  />
+                  <img src={ farmerInfo.path || logo} />
                 </div>
                 <p>
                   <strong>아이디 :</strong> {farmerInfo.farmerId}
@@ -768,18 +763,18 @@ const checkStreamingStatus = async () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {farmerInfo.path ?
+                  {imagePreview ?
+                  <img
+                        src={imagePreview || logo}
+                        alt="imagePreview"
+                        className="image-preview"
+                      />
+                     :
                       <img
                       src={farmerInfo.path}
                       alt="farmerInfo.path"
                       className="image-preview"
                     />
-                     :
-                      <img
-                        src={imagePreview}
-                        alt="imagePreview"
-                        className="image-preview"
-                      />
                     }
                   </div>
                   <button
@@ -991,7 +986,7 @@ const checkStreamingStatus = async () => {
                       {sales.map((sale) => (
                         <tr key={sale.userBuySeq}>
                           <td>
-                            {sale.state === 2 && (
+                            {[1, 2, 4].includes(sale.state) && (
                               <input
                                 type="checkbox"
                                 checked={selectedItems.includes(
@@ -1011,16 +1006,15 @@ const checkStreamingStatus = async () => {
                           <td>{new Date(sale.buyDate).toLocaleDateString()}</td>
 
                           <td>
+
                             {sale.state === 0 
                               ? "정산 승인"
                               : sale.state === 1
-                              ? "일반 유저 경매 판매 완료"
+                              ? "일반 유저 경매 판매"
                               : sale.state === 2
-                              ? "일반 상점 판매 완료"
+                              ? "일반 상점 판매"
                               : sale.state === 4
-                              ? "업체 경매 판매 완료"
-                              : sale.state === 6
-                              ? "정산 신청 완료"
+                              ? "업체 경매 판매"
                               : "상태 확인 필요"}
                           </td>
                         </tr>
