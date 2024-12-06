@@ -20,6 +20,7 @@ const BidPage = ({
     const [isAuctionEnded, setIsAuctionEnded] = useState(false);
     const [remainingTime, setRemainingTime] = useState('');
     const [pricePerKg, setPricePerKg] = useState(0);
+    const [bid, setBid] = useState(null);
 
     const calculateRemainingTime = (closeTime) => {
         const now = new Date();
@@ -68,7 +69,7 @@ const BidPage = ({
 
     console.log('BidPage streamingRoom:', streamingRoom); // 디버깅용
 
-    const { highestBid, auction, bid } = useAuctionData(streamingRoom.farmerSeq, auctionData.auctionSeq);
+    const { highestBid, auction } = useAuctionData(streamingRoom.farmerSeq, auctionData.auctionSeq);
     const { bidAmount, setBidAmount, handleBid } = useBidding(highestBid, auctionData.auctionSeq);
     console.log('useBidding return values:', { bidAmount, setBidAmount, handleBid }); // 디버깅용
 
@@ -77,7 +78,47 @@ const BidPage = ({
             const calculatedPricePerKg = Math.floor(bidAmount / auction.count);
             setPricePerKg(calculatedPricePerKg);
         }
-    }, [bidAmount, auction?.count]);
+        if (auctionData?.auctionSeq) {
+            findBidByAuctionSeq(auctionData.auctionSeq);
+        }
+    }, [bidAmount, auction?.count,auctionData?.auctionSeq]);
+
+    const findBidByAuctionSeq = async (auctionSeq) => {
+        const token = localStorage.getItem('token');
+        try {
+            const serverIp = process.env.REACT_APP_SERVER_IP;
+            const currentHour = new Date().getHours(); // 현재 시간 (24시간 형식)
+        
+            let result;
+            if (currentHour >= 18 || currentHour < 24) { // 오후 6시 ~ 자정
+                result = await axios.get(`${serverIp}/bidCom/${auctionSeq}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log('법인 경매 시간 - bidCom API 호출');
+            } else if (currentHour >= 13 && currentHour < 18) { // 오후 1시 ~ 오후 6시
+                result = await axios.get(`${serverIp}/bidUser/${auctionSeq}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log('개인 경매 시간 - bidUser API 호출');
+            } else {
+                console.log('경매 시간이 아닙니다');
+                return; // 경매 시간이 아닐 경우 API 호출하지 않음
+            }
+            
+            setBid(result.data);
+            console.log('설정된 데이터:', result.data);
+
+        } catch (error) {
+            console.error('입찰 정보 조회 실패:', error);
+            if (error.response?.status === 401) {
+                alert('로그인이 필요한 서비스입니다.');
+            }
+        }
+    };
 
     const handlePriceChange = (amount) => {
         const newBidAmount = bidAmount + amount;

@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Payment.css';
 import productImage from '../../image/상품1.png';
-import * as PortOne from './PortOne.jsx'
 
 const Payment = () => {
     const [userId, setUserId] = useState('');
@@ -11,7 +10,8 @@ const Payment = () => {
     const navigate = useNavigate();
     const { item, quantity } = location.state || {};
     const serverIp = process.env.REACT_APP_SERVER_IP;
-
+    const [orderUid, setOrderUid] = useState('');
+    
     const [shippingInfo, setShippingInfo] = useState({
         name: '',
         phone: '',
@@ -110,7 +110,7 @@ const Payment = () => {
 
             // 주문번호 받아오기
 
-            const response2 = await axios.get(`${serverIp}/payment/` + response.data + '?status=2', {
+            const response2 = await axios.get(`${serverIp}/api/payment/` + response.data + '?status=2', {
 
                 headers: { 
                     Authorization: `Bearer ${token}`,
@@ -119,10 +119,13 @@ const Payment = () => {
 
             console.log("response2");
             console.log(response2);
+            console.log(response2.data.orderUid);
+            setOrderUid(response2.data.orderUid);
+            console.log('orderUid : ', orderUid);
 
             if(response2.success === false) {
                 console("주문실패 : 주문을 삭제합니다.");
-                const deleteResult = await axios.get(`${serverIp}/shop/cancel?id` + response.data, {
+                const deleteResult = await axios.delete(`${serverIp}/shop/cancel?id=` + response.data, {
                     headers: { 
                         Authorization: `Bearer ${token}`,
                     }
@@ -161,7 +164,7 @@ const Payment = () => {
                       
                       const sendValidateData = async () => {
                         try {
-                            const response3 = await axios.post(`${serverIp}/payment/validate?status=2`, {
+                            const response3 = await axios.post(`${serverIp}/api/payment/validate?status=2`, {
                                     orderUid: rsp.merchant_uid, 
                                     paymentUid: rsp.imp_uid
                             },
@@ -178,19 +181,10 @@ const Payment = () => {
                             console.log(item.stockSeq);
                             const stockSeq = item.stockSeq
                             
-
-                            if(response3.status === 200){
-                                const response4 = await axios.put(`${serverIp}/stock/quantity`, { stockSeq, quantity }, 
-                                {
-                                    headers: { 
-                                        Authorization: `Bearer ${token}`,
-                                        'Content-Type': 'application/json'
-                                    }
-                                });
-                            }
-            
                             alert('결제가 완료되었습니다.');
-                            navigate('/');
+                            console.log(response3.data.response.merchantUid);
+                            // navigate('/payment-success', { state : { orderUid: response3.data.response.merchantUid }});
+                            navigate('/payment-success/'+response3.data.response.merchantUid);
             
                         } catch(err) {
                             console.log(err);
@@ -202,6 +196,20 @@ const Payment = () => {
                     } else {
                       console.log('결제실패')
                       console.log(rsp);
+                      const removeOrder = async () => {
+                        try {
+                            const deleteResult2 = await axios.delete(`${serverIp}/shop/afterPayment?orderUid=` + response.data, {
+                                headers: { 
+                                    Authorization: `Bearer ${token}`,
+                                }
+                            });
+            
+                        } catch(err) {
+                            console.log(err);
+                        }
+                      }
+                        
+                      removeOrder();
                       
                       alert("상품 결제 실패");
                       

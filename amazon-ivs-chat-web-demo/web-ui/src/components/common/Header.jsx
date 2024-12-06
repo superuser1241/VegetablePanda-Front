@@ -13,13 +13,12 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
     const [redirectPath, setRedirectPath] = useState('/');
 
     const handleLinkClick = (path) => (e) => {
-        if (userRole === 'ROLE_FARMER' && streamingRoom) { // 방송 중인 파머 유저인지 확인
+        const sessionStreamingRoom = sessionStorage.getItem('streamingRoom');
+        if (userRole === 'ROLE_FARMER' && sessionStreamingRoom && streamingRoom) {
             e.preventDefault();
             setRedirectPath(path);
             setShowExitModal(true);
         } else {
-            // 방송 중이 아닌 경우 세션 스토리지의 정보를 삭제하고 바로 이동
-            sessionStorage.removeItem('streamingRoom');
             window.location.href = path;
         }
     };
@@ -66,6 +65,13 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
             <nav className="nav">
                 {userName ? (
                     <>
+                        { userRole === 'ROLE_USER' ? (
+                            <div className='cart-container'> 
+                                <Link to = "/shop" className="nav-item">
+                                    상점
+                                </Link>
+                            </div>
+                            ) : null }
                         <Link to={getMyPagePath(userRole)} className="nav-item" onClick={handleLinkClick(getMyPagePath(userRole))}>
                             마이페이지
                         </Link>

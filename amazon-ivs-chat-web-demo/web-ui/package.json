@@ -16,7 +16,6 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "dompurify": "^3.2.2",
     "js-cookie": "^3.0.5",
-    "jwt-decode": "^4.0.0",
     "linkify-react": "^4.0.2",
     "linkifyjs": "^4.0.2",
     "node-forge": ">=0.10.0",

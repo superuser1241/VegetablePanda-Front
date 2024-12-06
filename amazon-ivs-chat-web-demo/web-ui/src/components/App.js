@@ -40,6 +40,7 @@ import ReviewCommentWrite from './ReviewComment/ReviewCommentWrite';
 import ReviewCommentList from './ReviewComment/ReviewCommentList';
 import ReviewCommentDetail from './ReviewComment/ReviewCommentDetail';
 import ReviewCommentEdit from './ReviewComment/ReviewCommentEdit';
+import PaymentSuccess from './Purchase/PaymentSuccess';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -70,6 +71,7 @@ function App() {
         }
         setUserName('');
         setUserRole('');
+        setStreamingRoom(null);
         navigate('/');
         localStorage.removeItem("token");
         localStorage.setItem("token", null);
@@ -211,6 +213,7 @@ function App() {
                     <Route path="/shop" element={<Shop/>}/>
                     <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
                     <Route path="/cart" element={<CartPage />} />
+                    <Route path="/payment-success/:id" element={<PaymentSuccess />} />
                     <Route path="/reviewComment/write" element={<ReviewCommentWrite />} />
                     <Route path="/reviewComment/edit/:reviewCommentSeq" element={<ReviewCommentEdit />} />
                     <Route path="/reviewComment/:reviewCommentSeq" element={<ReviewCommentDetail />} />

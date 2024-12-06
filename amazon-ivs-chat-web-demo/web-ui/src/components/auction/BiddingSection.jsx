@@ -5,6 +5,7 @@ import AuctionRegisterPage from './AuctionRegisterPage';
 import { Client } from "@stomp/stompjs";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../Notification/NotiSet.css';
 
 const BiddingSection = memo(({ 
 
@@ -20,6 +21,8 @@ const BiddingSection = memo(({
     userRole 
 }) => {
     const [localAuctionData, setLocalAuctionData] = useState(auctionData);
+    const [messages, setMessages] = useState(""); // 메시지 내용
+    const [showMessage, setShowMessage] = useState(false); // 메시지 표시 상태
     const navigate = useNavigate();
     useEffect(() => {
         const serverIp = process.env.REACT_APP_SERVER_IP;
@@ -30,15 +33,26 @@ const BiddingSection = memo(({
                     refreshAuctionData();
                 });
 
-                client.subscribe("/end/notifications", async (message) => {
+                client.subscribe(`/end/${streamingRoom.farmerSeq}/notifications`, async (message) => {
                     if(message.body==="BroadCastEnd"){
                         sessionStorage.clear();
-                        navigate('/');
                     }
                     else{
                         refreshAuctionData();
                     }
                 });
+
+                client.subscribe(`/end/notifications`, async (message) => {
+                        refreshAuctionData();
+                });
+
+
+                client.subscribe(`/biduser/${streamingRoom.farmerSeq}/notifications`, (message) => {
+                    const body = message.body;
+                    setMessages(body);
+                    setShowMessage(true); 
+                });
+
             },
             onDisconnect: () => console.log("WebSocket 연결 종료"),
         });
@@ -49,6 +63,14 @@ const BiddingSection = memo(({
             client.deactivate();
         };
     }, []);
+
+     // 메시지 닫기 버튼
+     const handleHideMessages = () => {
+        setShowMessage(false);
+
+        sessionStorage.clear();
+        navigate('/');
+    };
 
     const refreshAuctionData = async () => {
         try {
@@ -124,6 +146,21 @@ const BiddingSection = memo(({
                     </div>
                 )
             )}
+
+
+            {!isFarmer&&showMessage && (
+             <div className="overlay">
+                <div className="MessageContainer">
+                    <div className="MessageContent">
+                        <button onClick={handleHideMessages} className="CloseButton">
+                            X
+                        </button>
+                        <div className="MessageItem">{messages}</div>
+                    </div>
+                </div>
+             </div>
+            )}
+
         </div>
     );
 });

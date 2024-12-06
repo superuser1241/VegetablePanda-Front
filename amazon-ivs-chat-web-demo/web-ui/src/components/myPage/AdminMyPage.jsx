@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AdminMyPage.css';
 import AuctionStatus from '../auction/AuctionStatus';
+import AdjustmentPage from './AdjustmentPage';
 
 const AdminMyPage = () => {
     const token = localStorage.getItem('token');
@@ -79,7 +80,14 @@ const AdminMyPage = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             alert(`스트리밍 ${streamingSeq}이 승인되었습니다.`);
-            setApprovalTriggered((prev) => !prev);
+            
+            setPendingStreamings(prev => prev.filter(stream => stream.streamingSeq !== streamingSeq));
+            
+            if (pendingStreamings.length === 1) {
+                setTimeout(() => {
+                    setActiveTab('info');
+                }, 1000);
+            }
         } catch (error) {
             console.error('Failed to approve streaming:', error);
             alert('승인 작업 중 오류가 발생했습니다.');
@@ -96,6 +104,9 @@ const AdminMyPage = () => {
                     </li>
                     <li onClick={() => setActiveTab('streaming')} className={activeTab === 'streaming' ? 'active' : ''}>
                         스트리밍 승인
+                    </li>
+                    <li onClick={() => setActiveTab('settlements')} className={activeTab === 'settlements' ? 'active' : ''}>
+                        정산 승인
                     </li>
                     <li onClick={() => setActiveTab('auctions')} className={activeTab === 'auctions' ? 'active' : ''}>
                         실시간 경매 현황
@@ -119,7 +130,7 @@ const AdminMyPage = () => {
                 )}
 
                 {activeTab === 'streaming' && (
-                    <div className="streaming-section">
+                    <div className="streaming-section-Admin">
                         <h2>스트리밍 승인 관리</h2>
                         {pendingStreamings.length === 0 ? (
                             <p>승인 대기중인 스트리밍이 없습니다.</p>
@@ -128,7 +139,9 @@ const AdminMyPage = () => {
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>서버 주소</th>
+                                        <th>농가명</th>
+                                        <th>상품 이미지</th>
+                                        <th>상품명</th>
                                         <th>상태</th>
                                         <th>액션</th>
                                     </tr>
@@ -137,8 +150,20 @@ const AdminMyPage = () => {
                                     {pendingStreamings.map((room) => (
                                         <tr key={room.streamingSeq}>
                                             <td>{room.streamingSeq}</td>
-                                            <td>{room.serverAddress}</td>
-                                            <td>{room.state === 2 ? '승인 대기중' : '알 수 없음'}</td>
+                                            <td>{room.farmerName}</td>
+                                            <td>
+                                                <img 
+                                                    src={room.filePath} 
+                                                    alt={room.productName}
+                                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                                />
+                                            </td>
+                                            <td>{room.productName}</td>
+                                            <td>
+                                                {room.state === 2 ? '승인 대기중' : 
+                                                 room.state === 1 ? '승인 완료' : 
+                                                 room.state === 0 ? '방송 종료' : '알 수 없음'}
+                                            </td>
                                             <td>
                                                 <button 
                                                     onClick={() => handleApproveStreaming(room.streamingSeq)}
@@ -152,6 +177,12 @@ const AdminMyPage = () => {
                                 </tbody>
                             </table>
                         )}
+                    </div>
+                )}
+
+                {activeTab === 'settlements' && (
+                    <div className="settlements-section">
+                        <AdjustmentPage />
                     </div>
                 )}
 
