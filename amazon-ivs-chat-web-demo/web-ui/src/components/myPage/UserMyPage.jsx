@@ -30,6 +30,8 @@ const UserMyPage = () => {
   const [pwMessage, setPwMessage] = useState("");
   const serverIp = process.env.REACT_APP_SERVER_IP;
 
+  const [buyInfo, setBuyInfo] = useState(null);
+
   const [editedUser, setEditedUser] = useState({
     pw: "",
     name: "",
@@ -92,44 +94,25 @@ const UserMyPage = () => {
       fetchUserInfo(userId);
       fetchPoint(userId);
       fetchreview(userId);
-      fetchOrderHistory(userId);
+      fetchOrderHistory();
       fetchAuctionHistory(userId);
     }
   }, [userId]);
 
   // 주문 내역을 가져오는 함수
-  const fetchOrderHistory = async (userSeq) => {
+  const fetchOrderHistory = async () => {
     try {
       setLoading(true);
+      const userSeq = localStorage.getItem("userSeq");
       const response = await axios.get(
         `${serverIp}/myPage/buyList/${userSeq}`,
         {
           headers: { 
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
           }
         }
       );
-        
-      if (Array.isArray(response.data)) {
-        const processedOrders = response.data.map(order => {
-          console.log('주문 데이터:', order); // 데이터 구조 확인
-          return {
-            userBuyDetailSeq: order.userBuyDetailSeq,
-            sellerSeq: order.sellerSeq,
-            productName: order.productName || order.content,
-            content: order.content,
-            count: order.count,
-            price: order.price,
-            buyDate: order.buyDate,
-            status: order.status,
-            reviewStatus: order.reviewStatus
-          };
-        });
-        setOrders(processedOrders);
-      } else {
-        setOrders([]);
-      }
+      setBuyInfo(response.data);
     } catch (err) {
       console.error("주문 내역 조회 에러:", err);
       setError("주문 내역을 불러오는 중 오류가 발생했습니다.");
@@ -388,7 +371,8 @@ const UserMyPage = () => {
         content: order.productName || order.content,
         count: order.count,
         price: order.price,
-        buyDate: order.buyDate
+        buyDate: order.buyDate,
+        reviewSeq: order.reviewSeq
       };
 
       console.log("ReviewCommentWrite로 전달되는 데이터:", orderInfo);
@@ -586,15 +570,15 @@ const UserMyPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.map((order, index) => (
-                    <tr key={`${order.userBuySeq}-${index}`}>
+                  {buyInfo.map((order, index) => (
+                    <tr key={`${index}`}>
                       <td>{index + 1}</td>
-                      <td>{order.userBuySeq}</td>
+                      <td>{order.userBuyDetailSeq}</td>
                       <td>{order.content}</td>
                       <td>{order.count}개</td>
                       <td>{order.price}원</td>
                       <td>{new Date(order.buyDate).toLocaleDateString()}</td>
-                      <td>{order.status}</td>
+                      <td>{order.state}</td>
                       <td>
                         <button
                           onClick={() => handleReviewWrite(order)}

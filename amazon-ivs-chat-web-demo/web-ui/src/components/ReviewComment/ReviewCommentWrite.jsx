@@ -64,6 +64,7 @@ const ReviewCommentWrite = () => {
     
     // reviewCommentDTO JSON 추가
     const reviewCommentDTO = {
+      reviewSeq: location.state.orderInfo.reviewSeq,
       content: reviewData.content,
       score: reviewData.score
     };

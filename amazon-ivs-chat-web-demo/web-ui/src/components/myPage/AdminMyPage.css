@@ -1,12 +1,13 @@
 .admin-mypage {
     display: flex;
-    max-width: 1200px;
+    max-width: none;
     margin: 0 auto;
     padding: 20px;
     gap: 20px;
 }
 
 .admin-sidebar {
+    position: fixed;
     width: 200px;
     background-color: #f8f9fa;
     padding: 20px;
@@ -43,6 +44,7 @@
 
 .admin-content {
     flex: 1;
+    margin-left: 220px;
     min-width: 940px;
     padding: 30px;
     background-color: white;
@@ -290,6 +292,7 @@
     }
     
     .admin-sidebar {
+        position: static;
         width: 100%;
         margin-bottom: 20px;
     }
@@ -299,6 +302,7 @@
     }
     
     .admin-content {
+        margin-left: 0;
         min-width: auto;
     }
     
@@ -310,4 +314,17 @@
     .streaming-table td {
         padding: 10px;
     }
+}
+
+.left-section, .right-section {
+    flex: 1;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.left-section:hover, .right-section:hover {
+    transform: translateY(-5px);
 }
