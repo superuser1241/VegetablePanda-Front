@@ -19,6 +19,13 @@ const ReviewCommentWrite = () => {
   const token = localStorage.getItem('token');
   const { reviewSeq, userBuyDetailSeq } = location.state?.orderInfo || {};
 
+  const [newProduct, setNewProduct] = useState({
+    file: {
+      fileSeq: '',
+      name: ''
+    }
+  });
+
   useEffect(() => {
     // 필수 데이터 검증
     if (!reviewSeq || !userBuyDetailSeq || !token) {
@@ -47,6 +54,7 @@ const ReviewCommentWrite = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
 
     // 입력값 검증
     if (!reviewData.content.trim()) {
@@ -58,32 +66,38 @@ const ReviewCommentWrite = () => {
       alert('평점을 선택해주세요.');
       return;
     }
+    // reviewCommentDTO JSON 추가
+    console.log(localStorage.getItem("userSeq"));
+    const reviewCommentDTO = {
+      content: reviewData.content,
+      score: reviewData.score,
+      userSeq: localStorage.getItem("userSeq"),
+      reviewSeq: location.state.orderInfo.reviewSeq,
+      userBuyDetailSeq: location.state.orderInfo.userBuyDetailSeq,
+      file : {fileSeq: '', name: newProduct.file.name},
+    };
 
     const formData = new FormData();
-    formData.append('userBuyDetailSeq', String(userBuyDetailSeq));
+    // ReviewCommentDTO를 문자열로 변환하여 추가
+    formData.append('reviewCommentDTO', new Blob([JSON.stringify(reviewCommentDTO)], {
+      type: 'application/json'
+    }));
     
-    // reviewCommentDTO JSON 추가
-    const reviewCommentDTO = {
-      reviewSeq: location.state.orderInfo.reviewSeq,
-      content: reviewData.content,
-      score: reviewData.score
-    };
-    formData.append('reviewCommentDTO', JSON.stringify(reviewCommentDTO));
-    
-    // 이미지 파일이 있는 경우에만 추가
-    if (image && image.size > 0) {
+    // 이미지가 있는 경우에만 추가
+    if (image) {
       formData.append('image', image);
     }
-
+    console.log(newProduct);
+    console.log(reviewCommentDTO);
     try {
       const response = await axios.post(
-        `${serverIp}/reviewComment/`,
+        `${serverIp}/reviewComment`,
         formData,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
+            'Content-Type': 'multipart/form-data'
+          }
         }
       );
 
@@ -119,6 +133,13 @@ const ReviewCommentWrite = () => {
         return;
       }
       setImage(file);
+      setNewProduct(prev => ({
+        ...prev,
+        file: {
+          fileSeq: '',
+          name: file.name
+        }
+      }));
     }
   };
 
