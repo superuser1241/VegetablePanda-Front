@@ -23,7 +23,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
     const [salesHistory, setSalesHistory] = useState(null);
     const [userWallet, setUserWallet] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+    const serverIp = process.env.REACT_APP_SERVER_IP;
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
@@ -38,7 +38,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                 console.log('Token:', token);
 
                 const response = await axios.get(
-                    `http://localhost:9001/auction/${streamingRoom.farmerSeq}`,
+                    `${serverIp}/auction/${streamingRoom.farmerSeq}`,
                     {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }
@@ -79,7 +79,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                 const userSeq = localStorage.getItem('userSeq');
                 const token = localStorage.getItem('token');
                 const response = await axios.get(
-                    `http://localhost:9001/userTempWallet/${userSeq}`,
+                    `${serverIp}/userTempWallet/${userSeq}`,
                     {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }
@@ -106,7 +106,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                 const token = localStorage.getItem('token');
                 // PATCH로 변경하여 상태값만 업데이트
                 await axios.patch(
-                    `http://localhost:9001/auction/${auctionData.auctionSeq}`,
+                    `${serverIp}/auction/${auctionData.auctionSeq}`,
                     {},
                     {
                         headers: { 'Authorization': `Bearer ${token}` }
@@ -136,7 +136,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(
-                `http://localhost:9001/price/${streamingRoom.productName}`,
+                `${serverIp}/price/${streamingRoom.productName}`,
                 {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }
@@ -153,7 +153,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(
-                `http://localhost:9001/buy/${streamingRoom.stockSeq}`,
+                `${serverIp}/buy/${streamingRoom.stockSeq}`,
                 {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }

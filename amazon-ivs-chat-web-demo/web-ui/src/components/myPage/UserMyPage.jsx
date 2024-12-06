@@ -31,7 +31,6 @@ const UserMyPage = () => {
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
 
-  const serverIp = process.env.REACT_APP_SERVER_IP;
 
   const [buyInfo, setBuyInfo] = useState(null);
 
@@ -49,6 +48,8 @@ const UserMyPage = () => {
 
   const [activeTab, setActiveTab] = useState("info");
   const navigate = useNavigate();
+  const serverIp = process.env.REACT_APP_SERVER_IP;
+
   useEffect(() => {
     if (token) {
       try {
@@ -149,7 +150,7 @@ const UserMyPage = () => {
     try {
       setLoading1(true); // 로딩 시작
       const response = await axios.get(
-        `http://localhost:9001/myPage/auction/result/2`
+        `${serverIp}/myPage/auction/result/2`
       ); // API 엔드포인트
       setAuctions(response.data); // 데이터 저장
     } catch (err) {
