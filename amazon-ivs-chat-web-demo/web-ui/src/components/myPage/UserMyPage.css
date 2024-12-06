@@ -375,3 +375,111 @@
     font-size: 1em;
     opacity: 0.9;
 } 
+.review-write-button {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .review-write-button:hover {
+    background-color: #45a049;
+  }
+  
+  .review-write-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+
+.order-history-display {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.order-history-display table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.order-history-display th,
+.order-history-display td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.order-history-display th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+/* 각 열의 너비 조정 */
+.order-history-display th:nth-child(1), /* 번호 */
+.order-history-display td:nth-child(1) {
+  width: 5%;
+}
+
+.order-history-display th:nth-child(2), /* 주문 번호 */
+.order-history-display td:nth-child(2) {
+  width: 10%;
+}
+
+.order-history-display th:nth-child(3), /* 상품명 */
+.order-history-display td:nth-child(3) {
+  width: 25%;
+  text-align: left;
+}
+
+.order-history-display th:nth-child(4), /* 수량 */
+.order-history-display td:nth-child(4) {
+  width: 8%;
+}
+
+.order-history-display th:nth-child(5), /* 금액 */
+.order-history-display td:nth-child(5) {
+  width: 12%;
+}
+
+.order-history-display th:nth-child(6), /* 주문일자 */
+.order-history-display td:nth-child(6) {
+  width: 15%;
+}
+
+.order-history-display th:nth-child(7), /* 주문 상태 */
+.order-history-display td:nth-child(7) {
+  width: 12%;
+}
+
+.order-history-display th:nth-child(8), /* 리뷰 작성 */
+.order-history-display td:nth-child(8) {
+  width: 13%;
+}
+
+.order-history-display tr:hover {
+  background-color: #f8f9fa;
+}
+
+.no-data-notification {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* 금액 우측 정렬 */
+.order-history-display td:nth-child(5) {
+  text-align: right;
+}
+
+/* 리뷰 작성 버튼 컨테이너 */
+.order-history-display td:last-child {
+  text-align: center;
+}

@@ -22,7 +22,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
         email: ''
     });
     const [reviews, setReviews] = useState([]);
-    const [activeTab, setActiveTab] = useState('product'); // 기본 탭을 product로 변경
+    const [activeTab, setActiveTab] = useState('info');
     const [newProduct, setNewProduct] = useState({
         color: '',
         count: '',
@@ -178,10 +178,8 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
 
   const handleCheckboxChange = (userBuySeq) => {
     if (selectedItems.includes(userBuySeq)) {
-      // 이미 선택된 항목은 제거
       setSelectedItems(selectedItems.filter((item) => item !== userBuySeq));
     } else {
-      // 선택되지 않은 항목은 추가
       setSelectedItems([...selectedItems, userBuySeq]);
     }
   };
@@ -192,18 +190,17 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     if (isConfirmed) {
       if (selectedItems.length > 0) {
         try {
-          // 선택된 항목의 buySeq 값을 settlements 배열로 보낼 준비
           const settlementsData = selectedItems
             .map((userBuySeq) => {
               const sale = sales.find((s) => s.userBuySeq === userBuySeq); // 해당 buySeq를 가진 sale 객체 찾기
               if (sale) {
                 return {
                   userBuySeq: sale.userBuySeq,
-                  totalPoint: sale.price, // 가격이 없으면 0으로 설정
+                  totalPoint: sale.price,
                 };
               }
             })
-            .filter((item) => item !== undefined); // 잘못된 항목 필터링
+            .filter((item) => item !== undefined);
 
           console.log("보낼 데이터:", settlementsData);
 
@@ -296,8 +293,8 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const handleUpdateFarmerInfo = async (e) => {
     const confirmUpdate = window.confirm("수정 하시겠습니까?");
 
-    if (!confirmUpdate) {
-      return;
+    if (confirmUpdate) {
+
     }
 
     e.preventDefault();
@@ -344,6 +341,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
             address: editedFarmer.address,
             phone: editedFarmer.phone,
             pw: editedFarmer.pw,
+            // image: imagePreview
           }),
         ],
         { type: "application/json" }
@@ -367,6 +365,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
           },
         }
       );
+
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
         setFarmerInfo({
@@ -385,6 +384,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
       console.error("회원정보 수정 실패:", error);
       alert("정보 수정에 실패했습니다.");
     }
+    
   };
 
   //회원탈퇴
@@ -991,7 +991,7 @@ const checkStreamingStatus = async () => {
                       {sales.map((sale) => (
                         <tr key={sale.userBuySeq}>
                           <td>
-                            {sale.state === 1 && (
+                            {sale.state === 2 && (
                               <input
                                 type="checkbox"
                                 checked={selectedItems.includes(
@@ -1000,7 +1000,7 @@ const checkStreamingStatus = async () => {
                                 onChange={() =>
                                   handleCheckboxChange(sale.userBuySeq)
                                 } // 클릭 시 선택된 항목 처리
-                                disabled={sale.isDisabled} // 비활성화 ���태일 경우 체크박스 비활성화
+                                disabled={sale.isDisabled} // 비활성화일 경우 체크박스 비활성화
                               />
                             )}
                           </td>
@@ -1011,15 +1011,17 @@ const checkStreamingStatus = async () => {
                           <td>{new Date(sale.buyDate).toLocaleDateString()}</td>
 
                           <td>
-                            {sale.state === 0
-                              ? "판매중"
+                            {sale.state === 0 
+                              ? "정산 승인"
                               : sale.state === 1
-                              ? "판매완료"
+                              ? "일반 유저 경매 판매 완료"
                               : sale.state === 2
+                              ? "일반 상점 판매 완료"
+                              : sale.state === 4
+                              ? "업체 경매 판매 완료"
+                              : sale.state === 6
                               ? "정산 신청 완료"
-                              : sale.state === 3
-                              ? "정산 완료"
-                              : "상태값 4이상은 뭐넣습니까?"}
+                              : "상태 확인 필요"}
                           </td>
                         </tr>
                       ))}
