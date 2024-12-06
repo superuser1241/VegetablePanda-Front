@@ -76,7 +76,7 @@ const Point = ({userId, point, fetchPoint}) => {
         setChargeAmount("");
       }
     } catch (error) {
-      console.error("포인트 충전 실패:", error);
+      console.log("포인트 충전 실패:", error);
       alert("포인트 충전에 실패했습니다.");
     }
   };

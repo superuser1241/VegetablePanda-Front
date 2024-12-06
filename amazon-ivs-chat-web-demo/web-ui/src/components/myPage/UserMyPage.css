@@ -375,6 +375,51 @@
     font-size: 1em;
     opacity: 0.9;
 } 
+
+.userMyPage-main-content {
+    padding: 20px;
+  }
+  
+  .userMyPage-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+  
+  .userMyPage-loading,
+  .userMyPage-error-message,
+  .userMyPage-no-data-notification {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 20px;
+  }
+  
+  .userMyPage-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+  }
+  
+  .userMyPage-card {
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .userMyPage-card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .userMyPage-card-name {
+    font-size: 1.2rem;
+    padding: 10px 0;
+  }
+  
 .review-write-button {
     padding: 5px 10px;
     background-color: #4CAF50;

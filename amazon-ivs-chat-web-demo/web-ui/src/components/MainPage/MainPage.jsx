@@ -319,7 +319,13 @@ const MainPage = ({ onJoinRoom }) => {
     const handleLoadMoreShops = () => {
         setVisibleShops(prev => prev + 4);
     };
-
+    const truncateText = (text, maxLength) => {
+        if (text.length > maxLength) {
+            return text.substring(0, maxLength) + '...';
+        }
+        return text;
+    };
+    
     return (
         <>
             <div className="slider-wrapper">
@@ -405,7 +411,7 @@ const MainPage = ({ onJoinRoom }) => {
                                 <div className="shop-image">
                                     <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
                                 </div>
-                                <h3>{item.productName}</h3>
+                                <h3>{truncateText(item.productName, 25)}</h3>
                                 <div className="shop-info">
                                     <p><span>가격:</span> {item.price.toLocaleString()}원</p>
                                     <p><span>수량:</span> {item.count}개</p>
