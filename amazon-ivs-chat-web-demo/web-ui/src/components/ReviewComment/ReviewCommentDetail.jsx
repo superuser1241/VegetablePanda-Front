@@ -11,55 +11,37 @@ const ReviewCommentDetail = () => {
   const [comment, setComment] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const token = localStorage.getItem('token');
   const [currentUser, setCurrentUser] = useState(null);
 
-  const token = localStorage.getItem('token');
+  useEffect(() => {
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setCurrentUser(payload.id);
+      } catch (error) {
+        console.error('토큰 디코딩 실패:', error);
+      }
+    }
+  }, [token]);
 
   useEffect(() => {
-    // 토큰 체크 및 사용자 정보 파싱
-    const checkAuthAndGetUserInfo = () => {
-      if (!token) {
-        alert('로그인이 필요합니다.');
-        navigate('/login');
-        return false;
-      }
-
-      try {
-        const base64Url = token.split('.')[1];
-        if (!base64Url) {
-          throw new Error('Invalid token format');
-        }
-        
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const payload = JSON.parse(window.atob(base64));
-        setCurrentUser(payload.sub);
-        return true;
-      } catch (error) {
-        console.error('토큰 파싱 실패:', error);
-        alert('인증 정보가 올바르지 않습니다.');
-        navigate('/login');
-        return false;
-      }
-    };
-
     const fetchComment = async () => {
-      if (!checkAuthAndGetUserInfo()) return;
-
       try {
-        const response = await axios.get(`${serverIp}/review-comment/${reviewCommentSeq}`, {
+        const response = await axios.get(`${serverIp}/reviewComment/${reviewCommentSeq}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setComment(response.data);
-        setIsLoading(false);
       } catch (error) {
         console.error('댓글 로딩 실패:', error);
         setError('댓글을 불러오는데 실패했습니다.');
+      } finally {
         setIsLoading(false);
       }
     };
 
     fetchComment();
-  }, [reviewCommentSeq, navigate, token]);
+  }, [reviewCommentSeq, token]);
 
   const handleDelete = async () => {
     if (!window.confirm('정말로 삭제하시겠습니까?')) {
@@ -67,13 +49,13 @@ const ReviewCommentDetail = () => {
     }
 
     try {
-      await axios.delete(`${serverIp}/review-comment/${reviewCommentSeq}`, {
+      await axios.delete(`${serverIp}/reviewComment/${reviewCommentSeq}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       alert('댓글이 삭제되었습니다.');
-      navigate('/review');
+      navigate('/reviewComment/list');
     } catch (error) {
       console.error('삭제 실패:', error);
       alert('댓글 삭제에 실패했습니다.');
@@ -102,16 +84,16 @@ const ReviewCommentDetail = () => {
         </div>
         <div className="detail-buttons">
           <button 
-            onClick={() => navigate(`/review/${comment.reviewSeq}`)} 
+            onClick={() => navigate('/reviewComment/list')} 
             className="list-button"
           >
-            리뷰로 돌아가기
+            목록으로 돌아가기
           </button>
           
-          {currentUser === comment.userId && (
+          {currentUser && comment.userId === currentUser && (
             <>
               <button 
-                onClick={() => navigate(`/review-comment/edit/${reviewCommentSeq}`)} 
+                onClick={() => navigate(`/reviewComment/edit/${reviewCommentSeq}`)} 
                 className="edit-button"
               >
                 수정

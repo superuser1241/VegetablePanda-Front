@@ -41,6 +41,13 @@ const QABoardDetail = () => {
         const response = await axios.get(`${serverIp}/QABoard/${boardNoSeq}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
+        
+        console.log("서버 응답 전체 데이터:", response);
+        
+        console.log("response.data:", response.data);
+        
+        console.log("파일 정보:", response.data.file);
+        
         if (isMounted) {
           setPost(response.data);
           setIsLoading(false);
@@ -144,6 +151,81 @@ const QABoardDetail = () => {
     }
   };
 
+  const handleFileDownload = async () => {
+    if (!post?.filePath) {
+      console.error('파일 경로가 없습니다.');
+      alert('파일 정보를 찾을 수 없습니다.');
+      return;
+    }
+
+    try {
+      console.log("다운로드 시도:", post.filePath);
+      
+      const response = await axios.get(`${serverIp}/QABoard/downloadFile/${boardNoSeq}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        responseType: 'blob'
+      });
+      
+      console.log("다운로드 응답:", response);
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', post.fileName || 'download');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('파일 다운로드 실패:', error);
+      alert('파일 다운로드에 실패했습니다.');
+    }
+  };
+
+  const renderFileContent = () => {
+    console.log("파일 정보:", post?.fileName, post?.filePath);
+    
+    if (!post?.filePath) {
+      console.log("파일 정보 없음");
+      return null;
+    }
+
+    const fileName = post.fileName || '다운로드';
+    const isImage = /\.(jpg|jpeg|png|gif)$/i.test(fileName);
+    
+    console.log("파일명:", fileName);
+    console.log("이미지 여부:", isImage);
+    console.log("파일 경로:", post.filePath);
+
+    return (
+      <div className="file-content-section">
+        {isImage && (
+          <div className="image-preview">
+            <img 
+              src={post.filePath} 
+              alt="첨부 이미지" 
+              className="attached-image"
+              onError={(e) => {
+                console.error("이미지 로드 실패");
+                e.target.style.display = 'none';
+              }}
+            />
+          </div>
+        )}
+        <div className="file-download-section">
+          <span className="file-label">첨부파일: </span>
+          <button 
+            onClick={handleFileDownload}
+            className="file-download-button"
+          >
+            <span className="file-name">{fileName}</span>
+            <span className="download-icon">⬇️</span>
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   if (isLoading) return <div>로딩중...</div>;
   if (error) return <div>{error}</div>;
   if (!post) return <div>게시글을 찾을 수 없습니다.</div>;
@@ -166,18 +248,14 @@ const QABoardDetail = () => {
               __html: DOMPurify.sanitize(post.content) 
             }} 
           />
-          {post.fileUrl && (
-            <div className="file-download-section">
-              <span className="file-label">첨부파일: </span>
-              <a 
-                href={`http://localhost:9001/QABoard/download/${post.boardNoSeq}`}
-                className="file-download-link"
-                download
-              >
-                {post.originalFileName || '파일 다운로드'}
-              </a>
-            </div>
-          )}
+          <div>
+            {post?.file ? (
+              <div>파일 존재: {JSON.stringify(post.file)}</div>
+            ) : (
+              <div>파일 없음</div>
+            )}
+          </div>
+          {renderFileContent()}
         </div>
         <div className="detail-buttons">
           <button 

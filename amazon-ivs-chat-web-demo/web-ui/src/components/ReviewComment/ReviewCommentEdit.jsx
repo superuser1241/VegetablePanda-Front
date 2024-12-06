@@ -12,47 +12,68 @@ const ReviewCommentEdit = () => {
     image: null
   });
   const [deleteFile, setDeleteFile] = useState(false);
+  const [reviewSeq, setReviewSeq] = useState(null);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     const fetchComment = async () => {
       try {
-        const response = await axios.get(`/reviewComment/${reviewCommentSeq}`);
+        const response = await axios.get(`/reviewComment/${reviewCommentSeq}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const comment = response.data;
         setFormData({
-          content: response.data.content,
-          score: response.data.score,
+          content: comment.content,
+          score: comment.score,
           image: null
         });
+        setReviewSeq(comment.reviewSeq);
       } catch (error) {
         console.error('댓글 조회 실패:', error);
+        alert('댓글 조회에 실패했습니다.');
+        navigate('/mypage');
       }
     };
 
-    fetchComment();
-  }, [reviewCommentSeq]);
+    if (reviewCommentSeq) {
+      fetchComment();
+    }
+  }, [reviewCommentSeq, token, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const submitData = new FormData();
+    const formDataToSend = new FormData();
+    
     const reviewCommentDTO = {
       content: formData.content,
-      score: formData.score
+      score: parseInt(formData.score)
     };
 
-    submitData.append('reviewCommentDTO', JSON.stringify(reviewCommentDTO));
+    formDataToSend.append('reviewCommentDTO', new Blob([JSON.stringify(reviewCommentDTO)], {
+      type: 'application/json'
+    }));
+    
+    formDataToSend.append('reviewSeq', reviewSeq);
+    
     if (formData.image) {
-      submitData.append('image', formData.image);
+      formDataToSend.append('image', formData.image);
     }
-    submitData.append('deleteFile', deleteFile);
+    formDataToSend.append('deleteFile', deleteFile);
 
     try {
-      await axios.put(`/reviewComment/${reviewCommentSeq}`, submitData, {
+      await axios.put(`/reviewComment/${reviewCommentSeq}`, formDataToSend, {
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         }
       });
-      navigate('/review-comment');
+      alert('리뷰가 수정되었습니다.');
+      navigate('/mypage');
     } catch (error) {
-      console.error('댓글 수정 실패:', error);
+      console.error('리뷰 수정 실패:', error);
+      alert('리뷰 수정에 실패했습니다.');
     }
   };
 

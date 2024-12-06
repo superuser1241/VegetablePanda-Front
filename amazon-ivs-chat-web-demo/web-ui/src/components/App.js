@@ -36,6 +36,10 @@ import './Personal/PersonalList';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 import axios from 'axios';
+import ReviewCommentWrite from './ReviewComment/ReviewCommentWrite';
+import ReviewCommentList from './ReviewComment/ReviewCommentList';
+import ReviewCommentDetail from './ReviewComment/ReviewCommentDetail';
+import ReviewCommentEdit from './ReviewComment/ReviewCommentEdit';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -207,7 +211,12 @@ function App() {
                     <Route path="/shop" element={<Shop/>}/>
                     <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
                     <Route path="/cart" element={<CartPage />} />
-                </Routes>
+                    <Route path="/reviewComment/write" element={<ReviewCommentWrite />} />
+                    <Route path="/reviewComment/edit/:reviewCommentSeq" element={<ReviewCommentEdit />} />
+                    <Route path="/reviewComment/:reviewCommentSeq" element={<ReviewCommentDetail />} />
+                    <Route path="/reviewComment/list" element={<ReviewCommentList />} />
+                    <Route path="/reviewComment/detail/:reviewCommentSeq" element={<ReviewCommentDetail />} />
+                    </Routes>
             </main>
             <Footer />
         </div>
