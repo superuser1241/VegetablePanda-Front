@@ -9,6 +9,7 @@ import logo from "../../image/기본이미지.png";
 import ReviewCommentList from "../ReviewComment/ReviewCommentList.jsx";
 import Point from "./Point.jsx";
 import UserAuctionHistory from "./UserAuctionHistory.jsx";
+import UserLikedShops from "./UserLikedShops.jsx";
 const UserMyPage = () => {
   const token = localStorage.getItem("token");
   const [userId, setUserId] = useState("");
@@ -481,20 +482,7 @@ const UserMyPage = () => {
           )}
 
           {activeTab === "saleLike" && (
-            <div className="auction-history-display">
-              <h3>좋아요 누른 상품 목록</h3>
-              {loading1 ? (
-                <div>로딩 중...</div>
-              ) : error ? (
-                <div className="error-message">{error}</div>
-              ) : auctions.length > 0 ? (
-                <div>이건 ㄱㄷ</div>
-              ) : (
-                <div className="no-data-notification">
-                  좋아요를 누른 상품이 없습니다.
-                </div>
-              )}
-            </div>
+            <UserLikedShops />
           )}
 
           {activeTab === "info" && userInfo && (
@@ -763,7 +751,7 @@ const UserMyPage = () => {
                       checked={editedUser.gender === "여자"}
                       onChange={() =>
                         setEditedUser({ ...editedUser, gender: "여자" })
-                      } // editedUser.gender 업데이트
+                      } // editedUser.gender 업데이���
                       className="user-gender-radio"
                     />
                     <label htmlFor="female" className="gender-label">
