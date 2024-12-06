@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import './QABoard.css';
+import DOMPurify from 'dompurify';
+import 'react-quill/dist/quill.snow.css';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -11,12 +13,15 @@ const QABoardDetail = () => {
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [currentUser, setCurrentUser] = useState('');
   const [replies, setReplies] = useState([]);
   const [replyContent, setReplyContent] = useState('');
-  
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const token = localStorage.getItem('token');
+  const { name: currentUser, role } = token
+    ? JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))))
+    : {};
+  const isAdmin = role === 'ROLE_ADMIN';
 
   useEffect(() => {
     if (!token) {
@@ -25,15 +30,7 @@ const QABoardDetail = () => {
       return;
     }
 
-    try {
-      const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
-      setCurrentUser(payload.name);
-      setIsAdmin(payload.role === 'ROLE_ADMIN');
-    } catch (error) {
-      console.error('토큰 파싱 실패:', error);
-      navigate('/login');
-      return;
-    }
+    let isMounted = true;
 
     const fetchPost = async () => {
       try {
@@ -44,16 +41,31 @@ const QABoardDetail = () => {
         const response = await axios.get(`${serverIp}/QABoard/${boardNoSeq}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        setPost(response.data);
-        setIsLoading(false);
+        
+        console.log("서버 응답 전체 데이터:", response);
+        
+        console.log("response.data:", response.data);
+        
+        console.log("파일 정보:", response.data.file);
+        
+        if (isMounted) {
+          setPost(response.data);
+          setIsLoading(false);
+        }
       } catch (error) {
         console.error('게시글 로딩 실패:', error);
-        setError('게시글을 불러오는데 실패했습니다.');
-        setIsLoading(false);
+        if (isMounted) {
+          setError('게시글을 불러오는데 실패했습니다.');
+          setIsLoading(false);
+        }
       }
     };
 
     fetchPost();
+
+    return () => {
+      isMounted = false;
+    };
   }, [boardNoSeq, navigate, token]);
 
   useEffect(() => {
@@ -67,7 +79,7 @@ const QABoardDetail = () => {
         console.error('댓글 조회 실패:', error);
       }
     };
-    
+
     if (boardNoSeq) {
       fetchReplies();
     }
@@ -94,6 +106,14 @@ const QABoardDetail = () => {
 
   const handleReplySubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('comment', replyContent);
+    formData.append('qaBoard', JSON.stringify({ boardNoSeq }));
+    if (selectedFile) {
+      formData.append('file', selectedFile);
+    }
+
     try {
       await axios.post(
         `${serverIp}/QaReplyBoard/${boardNoSeq}`,
@@ -104,18 +124,22 @@ const QABoardDetail = () => {
         { 
           headers: { 
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'multipart/form-data'
           }
         }
       );
 
       setReplyContent('');
+      setSelectedFile(null);
+
       const repliesResponse = await axios.get(
         `${serverIp}/QaReplyBoard/${boardNoSeq}`,
         {
           headers: { 'Authorization': `Bearer ${token}` }
         }
       );
+      alert('댓글 등록에 성공했습니다.');
+
       setReplies(repliesResponse.data);
     } catch (error) {
       console.error('댓글 등록 실패:', error);
@@ -125,6 +149,81 @@ const QABoardDetail = () => {
         alert('댓글 등록에 실패했습니다.');
       }
     }
+  };
+
+  const handleFileDownload = async () => {
+    if (!post?.filePath) {
+      console.error('파일 경로가 없습니다.');
+      alert('파일 정보를 찾을 수 없습니다.');
+      return;
+    }
+
+    try {
+      console.log("다운로드 시도:", post.filePath);
+      
+      const response = await axios.get(`${serverIp}/QABoard/downloadFile/${boardNoSeq}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        responseType: 'blob'
+      });
+      
+      console.log("다운로드 응답:", response);
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', post.fileName || 'download');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('파일 다운로드 실패:', error);
+      alert('파일 다운로드에 실패했습니다.');
+    }
+  };
+
+  const renderFileContent = () => {
+    console.log("파일 정보:", post?.fileName, post?.filePath);
+    
+    if (!post?.filePath) {
+      console.log("파일 정보 없음");
+      return null;
+    }
+
+    const fileName = post.fileName || '다운로드';
+    const isImage = /\.(jpg|jpeg|png|gif)$/i.test(fileName);
+    
+    console.log("파일명:", fileName);
+    console.log("이미지 여부:", isImage);
+    console.log("파일 경로:", post.filePath);
+
+    return (
+      <div className="file-content-section">
+        {isImage && (
+          <div className="image-preview">
+            <img 
+              src={post.filePath} 
+              alt="첨부 이미지" 
+              className="attached-image"
+              onError={(e) => {
+                console.error("이미지 로드 실패");
+                e.target.style.display = 'none';
+              }}
+            />
+          </div>
+        )}
+        <div className="file-download-section">
+          <span className="file-label">첨부파일: </span>
+          <button 
+            onClick={handleFileDownload}
+            className="file-download-button"
+          >
+            <span className="file-name">{fileName}</span>
+            <span className="download-icon">⬇️</span>
+          </button>
+        </div>
+      </div>
+    );
   };
 
   if (isLoading) return <div>로딩중...</div>;
@@ -144,7 +243,19 @@ const QABoardDetail = () => {
           </div>
         </div>
         <div className="detail-body">
-          <p>{post.content}</p>
+          <div 
+            dangerouslySetInnerHTML={{ 
+              __html: DOMPurify.sanitize(post.content) 
+            }} 
+          />
+          <div>
+            {post?.file ? (
+              <div>파일 존재: {JSON.stringify(post.file)}</div>
+            ) : (
+              <div>파일 없음</div>
+            )}
+          </div>
+          {renderFileContent()}
         </div>
         <div className="detail-buttons">
           <button 
@@ -177,12 +288,16 @@ const QABoardDetail = () => {
       <div className="qa-reply-section">
         <h3>답변</h3>
         {isAdmin && (
-          <form onSubmit={handleReplySubmit}>
+          <form onSubmit={handleReplySubmit} encType="multipart/form-data">
             <textarea
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
               placeholder="답변을 입력하세요"
               required
+            />
+            <input
+              type="file"
+              onChange={(e) => setSelectedFile(e.target.files[0])}
             />
             <button type="submit">답변 등록</button>
           </form>
@@ -195,13 +310,24 @@ const QABoardDetail = () => {
                 <span>{reply.writerId}</span>
                 <span>{new Date(reply.regDate).toLocaleDateString()}</span>
               </div>
-              <p>{reply.content}</p>
+              <div 
+                dangerouslySetInnerHTML={{ 
+                  __html: DOMPurify.sanitize(reply.comment) 
+                }} 
+              />
+              {reply.fileUrl && (
+                <div className="reply-file">
+                  <a href={reply.fileUrl} target="_blank" rel="noopener noreferrer">
+                    첨부파일
+                  </a>
+                </div>
+              )}
             </div>
           ))}
         </div>
-      </div>
+      </div> 
     </div>
   );
 };
 
-export default QABoardDetail; 
+export default QABoardDetail;
