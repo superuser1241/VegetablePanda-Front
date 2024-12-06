@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './ReviewComment.css';
+import DOMPurify from 'dompurify';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -18,7 +19,9 @@ const ReviewCommentDetail = () => {
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        setCurrentUser(payload.id);
+        setCurrentUser(payload.user_seq);
+        console.log('현재 사용자:', payload.user_seq);
+        console.log('댓글 작성자:', comment?.userSeq);
       } catch (error) {
         console.error('토큰 디코딩 실패:', error);
       }
@@ -32,6 +35,7 @@ const ReviewCommentDetail = () => {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setComment(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('댓글 로딩 실패:', error);
         setError('댓글을 불러오는데 실패했습니다.');
@@ -68,18 +72,22 @@ const ReviewCommentDetail = () => {
 
   return (
     <div className="rc-detail-container">
-      <h2>댓글 상세</h2>
+      <h2>리뷰 상세</h2>
       <div className="rc-detail-content">
         <div className="detail-header">
           <div className="detail-info">
-            <span>작성자: {comment.userId}</span>
+            <span>작성자: {comment.name}</span>
             <span>작성일: {new Date(comment.regDate).toLocaleDateString()}</span>
           </div>
         </div>
         <div className="detail-body">
-          <p>{comment.content}</p>
-          {comment.imageUrl && (
-            <img src={comment.imageUrl} alt="댓글 이미지" className="comment-image" />
+          <div 
+            dangerouslySetInnerHTML={{ 
+              __html: DOMPurify.sanitize(comment.content) 
+            }} 
+          />
+          {comment.path && (
+            <img src={comment.path} alt="댓글 이미지" className="comment-image" />
           )}
         </div>
         <div className="detail-buttons">
@@ -90,7 +98,7 @@ const ReviewCommentDetail = () => {
             목록으로 돌아가기
           </button>
           
-          {currentUser && comment.userId === currentUser && (
+          {Number(localStorage.getItem("userSeq")) === comment?.userSeq && (
             <>
               <button 
                 onClick={() => navigate(`/reviewComment/edit/${reviewCommentSeq}`)} 
