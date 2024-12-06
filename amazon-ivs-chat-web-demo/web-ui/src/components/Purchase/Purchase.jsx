@@ -31,16 +31,16 @@ const Purchase = () => {
     };
 
     return (
-        <div className="purchase-container">
+        <div className="product-purchase-container">
             <h2>상품 구매</h2>
-            <div className="purchase-details">
-                <div className="product-info">
-                    <div className="product-image">
+            <div className="product-purchase-details">
+                <div className="product-purchase-info">
+                    <div className="product-purchase-image">
                         <img src={item.file} alt={item.productName} />
                     </div>
-                    <h3>{item.productName}</h3>
-                    <p className="description">{item.content}</p>
+                    
                     <div className="specs">
+                        <h3>{item.productName}</h3>
                         <p><span>등급:</span> {item.stockGrade}</p>
                         <p><span>인증:</span> {item.stockOrganic}</p>
                         <p><span>재고:</span> {item.count}개</p>

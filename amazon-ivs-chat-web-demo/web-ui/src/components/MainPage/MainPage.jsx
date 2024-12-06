@@ -393,7 +393,8 @@ const MainPage = ({ onJoinRoom }) => {
                     <div className="shop-list">
                         {shopItems.slice(0, visibleShops).map((item) => (
                             <div key={item.shopSeq} className="shop-card">
-                            <Link to = {`/product/${item.stockSeq}`} state={{ product:item }} className='default-link product-name'>
+                            {/* <Link to = {`/product/${item.stockSeq}`} state={{ product:item }} className='default-link product-name'> */}
+                            <div onClick={() => navigate(`/product/${item.stockSeq}`, { state: { product: item } })} className="default-link product-name">
                                 <div className="shop-image">
                                     <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
                                 </div>
@@ -405,13 +406,14 @@ const MainPage = ({ onJoinRoom }) => {
                                     <p><span>등급:</span> {item.stockGrade}</p>
                                     <p><span>인증:</span> {item.stockOrganic}</p>
                                 </div>
+                            </div>
                                 <button 
                                     className="buy-button" 
                                     onClick={() => navigate('/purchase', { state: { item } })}
                                 >
                                     구매하기
                                 </button>
-                                </Link>
+                                {/* </Link> */}
                             </div>
                         ))}
                     </div>

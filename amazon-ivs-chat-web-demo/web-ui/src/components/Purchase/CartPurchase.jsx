@@ -5,8 +5,11 @@ import './CartPurchase.css';
 import axios from 'axios';
 import { handlePayment } from './PortOne';
 import PurchaseList from './PurchaseList';
+import { useDaumPostcodePopup } from '../../../node_modules/react-daum-postcode/lib';
+import { postcodeScriptUrl } from 'react-daum-postcode/lib/loadPostcode';
 
 const CartPurchase = () => {
+    const open = useDaumPostcodePopup(postcodeScriptUrl)
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userSeq');
     const serverIp = process.env.REACT_APP_SERVER_IP;
@@ -97,6 +100,29 @@ const CartPurchase = () => {
         handleClearCart();
     };
 
+    
+
+    const handleComplete = (data) => {
+        let fullAddress = data.address;
+        let extraAddress = '';
+
+        if (data.addressType === 'R') {
+        if (data.bname !== '') {
+            extraAddress += data.bname;
+        }
+        if (data.buildingName !== '') {
+            extraAddress += extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
+        }
+        fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
+        }
+
+        console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+    };
+
+    const handleClick = () => {
+        open({ onComplete: handleComplete });
+    };
+
     return (
         <div className="purchase-container">
             <h2>주문서</h2>
@@ -163,6 +189,7 @@ const CartPurchase = () => {
                             <div className="address-item">
                                 <label className="item-label">주소</label>
                                 <input type = 'text' className="item-value" name="address" value={shippingInfo.address} onChange={handleInputChange}/>
+                                {/* <button onClick={handleClick}>주소</button> */}
                             </div>
                         </div>
                     </div>
