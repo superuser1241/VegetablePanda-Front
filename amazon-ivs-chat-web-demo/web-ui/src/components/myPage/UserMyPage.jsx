@@ -29,6 +29,7 @@ const UserMyPage = () => {
   const [pw, setPassword] = useState("");
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
+
   const serverIp = process.env.REACT_APP_SERVER_IP;
 
   const [buyInfo, setBuyInfo] = useState(null);
@@ -96,7 +97,7 @@ const UserMyPage = () => {
     if (userId) { 
       fetchUserInfo(userId);
       fetchPoint(userId);
-      fetchreview(userId);
+      fetchreview();
       fetchOrderHistory();
       fetchAuctionHistory(userId);
       fetchUserLikeHistory(userId);
@@ -169,6 +170,7 @@ const UserMyPage = () => {
     }
   };
 
+
   const fetchPoint = async (userId) => {
     try {
       const response = await axios.get(`${serverIp}/myPage/point/${userId}`, {
@@ -183,14 +185,21 @@ const UserMyPage = () => {
     }
   };
 
-  const fetchreview = async (userId) => {
+  const fetchreview = async () => {
     try {
-      const response = await axios.get(`${serverIp}/myPage/review/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+
+      const userSeq = localStorage.getItem("userSeq");
+      const response = await axios.get(
+        `${serverIp}/myComments/${userSeq}`,
+        {
+          headers: {            
+            'Authorization': `Bearer ${token}`
+        },
+        }
+      );
       setreview(response.data);
     } catch (error) {
-      console.error("리뷰 조회 실패:", error);
+      console.error("회원 리뷰 조회 실패:", error);
     }
   };
 
@@ -828,7 +837,7 @@ const UserMyPage = () => {
           {activeTab === "review" && (
             <div className="review-history-display">
               <h3>나의 리뷰</h3>
-              <ReviewCommentList userSeq={userId} />
+              <ReviewCommentList userSeq={localStorage.getItem("userSeq")} />
             </div>
           )}
 
