@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import './PaymentSuccess.css';
+import PurchaseList from './PurchaseList';
 
 const PaymentSuccess = () => {
    const params = useParams();
@@ -91,43 +92,46 @@ const PaymentSuccess = () => {
     }, []);
     return (
         <div className="payment-success-container">
-        <h2>결제 완료</h2>
-        <div className="success-order-info">
-            <p>주문번호: {orderInfo.orderUid}</p>
-            <p>구매날짜: {orderInfo.buyDate?.split('T')[0]}</p>
-        </div>
-        <hr />
-        <h3>주문 상세 내역</h3>
-        <div className="success-order-table-container">
-            <table className="success-order-table">
-                <thead>
-                    <tr>
-                        <th>상품이미지</th>
-                        <th>상품명</th>
-                        <th>구매수량</th>
-                        <th>가격</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {orderDetailInfo.map((item) => (
-                        <tr key={item.stockSeq} className="success-order-row">
-                            <td className="success-image-cell">
-                                <img 
-                                    src={item.file || 'https://placehold.co/150x150?text=vegetable'} 
-                                    alt={item.productName}
-                                />
-                            </td>
-                            <td>{item.productName}</td>
-                            <td>{item.count}개</td>
-                            <td>{item.price.toLocaleString()}원</td>
+            <div className='payment-success-summary'>
+                <h2 className="payment-title">🎉 결제 완료 🎉</h2>
+                <div className="success-order-info">
+                    <p><strong>주문번호</strong> {orderInfo.orderUid}</p>
+                    {/* <p>구매날짜 {orderInfo.buyDate?.split('T')[0]}</p> */}
+                </div>
+            </div>
+            <hr className="divider"/>
+            <h3 className="order-details-title">📦 주문 상세 내역</h3>
+            <div className="success-order-table-container">
+                {/* <table className="success-order-table">
+                    <thead>
+                        <tr>
+                            <th>상품 사진</th>
+                            <th>상품명</th>
+                            <th>수량</th>
+                            <th>가격</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-        <div className="success-total-price">
-            <p>총 결제 금액: {orderInfo.totalPrice.toLocaleString()}원</p>
-        </div>
+                    </thead>
+                    <tbody>
+                        {orderDetailInfo.map((item) => (
+                            <tr key={item.stockSeq} className="success-order-row">
+                                <td className="success-image-cell">
+                                    <img 
+                                        src={item.imageUrl || 'https://placehold.co/150x150?text=vegetable'} 
+                                        alt={item.productName}
+                                    />
+                                </td>
+                                <td>{item.productName}</td>
+                                <td>{item.count}개</td>
+                                <td>{item.price.toLocaleString()}원</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table> */}
+                <PurchaseList items = {orderDetailInfo}/>
+            </div>
+            <div className="success-total-price">
+                <p>총 결제 금액: {orderInfo.totalPrice.toLocaleString()}원</p>
+            </div>
     </div>
     );
 };

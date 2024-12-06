@@ -35,7 +35,12 @@ import CartPage from './product/CartPage';
 import axios from 'axios';
 import Personal from './Personal/Personal'; // 에러나도 건들지 말아줘요
 import PersonalList from './Personal/PersonalList';
+import ReviewCommentWrite from './ReviewComment/ReviewCommentWrite';
+import ReviewCommentList from './ReviewComment/ReviewCommentList';
+import ReviewCommentDetail from './ReviewComment/ReviewCommentDetail';
+import ReviewCommentEdit from './ReviewComment/ReviewCommentEdit';
 import PaymentSuccess from './Purchase/PaymentSuccess';
+import CartPurchase from './Purchase/CartPurchase';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -66,6 +71,7 @@ function App() {
         }
         setUserName('');
         setUserRole('');
+        setStreamingRoom(null);
         navigate('/');
         localStorage.removeItem("token");
         localStorage.setItem("token", null);
@@ -196,6 +202,7 @@ function App() {
                     <Route path="/notify-service/edit/:boardNoSeq" element={<NTBoardEdit />} />
                     <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
+                    <Route path="/cart-purchase" element={<CartPurchase />} />
                     <Route path="/purchaseD" element={<PurchaseD userName={userName}/>} />
                     <Route path="/personal" element={<Personal navigateTo={navigate} />} />
                     <Route path="/personalList" element={<PersonalList navigateTo={navigate} />} />
@@ -208,7 +215,12 @@ function App() {
                     <Route path="/stock-info/:stockSeq" element={<StockInfo/>}/>
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/payment-success/:id" element={<PaymentSuccess />} />
-                </Routes>
+                    <Route path="/reviewComment/write" element={<ReviewCommentWrite />} />
+                    <Route path="/reviewComment/edit/:reviewCommentSeq" element={<ReviewCommentEdit />} />
+                    <Route path="/reviewComment/:reviewCommentSeq" element={<ReviewCommentDetail />} />
+                    <Route path="/reviewComment/list" element={<ReviewCommentList />} />
+                    <Route path="/reviewComment/detail/:reviewCommentSeq" element={<ReviewCommentDetail />} />
+                    </Routes>
             </main>
             <Footer />
         </div>

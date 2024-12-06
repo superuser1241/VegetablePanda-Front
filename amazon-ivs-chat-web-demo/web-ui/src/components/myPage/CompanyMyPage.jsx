@@ -279,11 +279,9 @@ const CompanyMyPage = () => {
       )
     );
 
-    // 이미지 처리: 새로운 이미지가 없으면 기존 이미지 경로를 보내기
     if (image) {
       formData.append("image", image); // 새로운 이미지
     } else if (image === null || imagePreview === null) {
-      // 이미지가 null일 경우 기존 경로를 보내기 (userInfo.path)
       formData.append("image", companyInfo.path); // 기존 이미지 경로
     }
 
@@ -300,8 +298,7 @@ const CompanyMyPage = () => {
     );
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
-          await fetchCompanyInfo(companyInfo.id);
-          setImage(companyInfo.path); // 기존 이미지 경로로 설정
+          await fetchCompanyInfo(userId);
           setActiveTab("info");
       }
     } catch (error) {
@@ -310,7 +307,6 @@ const CompanyMyPage = () => {
     }
   };
 
-  //회원탈퇴
   const handleDeleteAccount = async () => {
     const confirmDelete = window.confirm(
       "정말로 회원 탈퇴를 진행하시겠습니까?"

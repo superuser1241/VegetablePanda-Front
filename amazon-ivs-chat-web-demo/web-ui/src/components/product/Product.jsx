@@ -16,6 +16,7 @@ const Product = () => {
     const userRole = localStorage.getItem('userRole');
     const navigate = useNavigate();
     const serverIp = process.env.REACT_APP_SERVER_IP;
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     const renderTabContent = () => {
         switch (activeTab) {
@@ -71,8 +72,14 @@ const Product = () => {
                     }
                 }
             );
-            
-            // state가 1이면 true(빨간색), 0이면 false(회색)
+            console.log(response.data.state);
+
+            if(response.data.state===true) {
+                alert('찜하기가 완료되었습니다.');
+            } else {
+                alert('찜하기가 취소되었습니다.');
+            }
+
             setShopLike(response.data);
         } catch (err) {
             console.error('찜하기 처리에 실패했습니다:', err);
@@ -91,22 +98,32 @@ const Product = () => {
                         'Authorization': `Bearer ${token}`
                     }
                 }
-                
             );
             
-            // shopLike가 없거나 state가 0이면 false, state가 1이면 true
+            console.log('찜하기 상태:', response.data);
+            
             setShopLike(response.data);
+            
         } catch (err) {
             console.error('찜하기 상태 조회에 실패했습니다:', err);
-            setShopLike(false);  // 에러 시 기본값 false (회색 버튼)
         }
     }
 
     useEffect(() => {
-        if (product?.shopSeq) {
-            getShopLike(product.shopSeq);
-        }
+        const fetchShopLike = async () => {
+            if (product?.shopSeq && isInitialLoad) {
+                const result = await getShopLike(product.shopSeq);
+                setShopLike(result);
+                setIsInitialLoad(false);
+            }
+        };
+        fetchShopLike();
     }, [product?.shopSeq]);
+
+    useEffect(() => {
+        console.log('shopLike 상태 변경됨:', shopLike);
+        setShopLike(shopLike);
+    }, [shopLike]);
 
     const handleQuantityChange = (e) => {
         const value = parseInt(e.target.value);
@@ -265,7 +282,7 @@ const Product = () => {
                         </div>
                 <div className='button-container'>
                     <button 
-                        className={`like-btn ${shopLike.status ? 'active' : ''}`} 
+                        className={`like-btn ${shopLike?.state ? 'active' : ''}`} 
                         onClick={() => handleLike(product.shopSeq)}
                     >
                         찜하기

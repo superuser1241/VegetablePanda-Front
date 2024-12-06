@@ -140,7 +140,8 @@ const CartPage = () => {
             alert('장바구니가 비어있습니다.');
             return;
         }
-        navigate('/payment', { 
+        // navigate('/payment', { 
+        navigate('/cart-purchase', { 
             state: { 
                 items: cartItems, 
                 totalAmount,
@@ -166,7 +167,7 @@ const CartPage = () => {
                         <table className="cart-table">
                             <thead>
                                 <tr>
-                                    <th>상품 이미지</th>
+                                    <th>상품 사진</th>
                                     <th>상품명</th>
                                     <th>가격</th>
                                     <th>수량</th>
@@ -178,11 +179,13 @@ const CartPage = () => {
                                 {cartItems.map((item) => (
                                     <tr key={item.stockSeq}>
                                         <td>
+                                            <div>
                                             <img 
                                                 src={item.imageUrl} 
                                                 alt={item.productName} 
                                                 className="cart-item-image"
                                             />
+                                            </div>
                                         </td>
                                         <td>{item.productName}</td>
                                         <td>{item.price.toLocaleString()}원</td>

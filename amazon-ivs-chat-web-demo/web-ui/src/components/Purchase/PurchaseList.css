@@ -1,0 +1,29 @@
+.cart-purchase-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.cart-purchase-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;     /* 세로 중앙 정렬 */
+    height: 100%; 
+}
+
+.purchase-table {
+    text-align: center;
+}
+
+.purchase-table th,
+.purchase-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.purchase-table th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}

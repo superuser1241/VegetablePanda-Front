@@ -293,8 +293,8 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const handleUpdateFarmerInfo = async (e) => {
     const confirmUpdate = window.confirm("수정 하시겠습니까?");
 
-    if (!confirmUpdate) {
-      return;
+    if (confirmUpdate) {
+
     }
 
     e.preventDefault();
@@ -367,16 +367,17 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
           },
         }
       );
+
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
-          await fetchFarmerInfo(farmerInfo.id);
-          setImage(farmerInfo.path); // 기존 이미지 경로로 설정
+          await fetchFarmerInfo(userId);
           setActiveTab("info");
       }
     } catch (error) {
       console.error("회원정보 수정 실패:", error);
       alert("정보 수정에 실패했습니다.");
     }
+    
   };
 
   //회원탈퇴
@@ -1003,13 +1004,18 @@ const checkStreamingStatus = async () => {
                           <td>{new Date(sale.buyDate).toLocaleDateString()}</td>
 
                           <td>
-                            {sale.state === 2
-                              ? "판매완료"
+
+                            {sale.state === 0 
+                              ? "정산 승인"
+                              : sale.state === 1
+                              ? "일반 유저 경매 판매 완료"
+                              : sale.state === 2
+                              ? "일반 상점 판매 완료"
+                              : sale.state === 4
+                              ? "업체 경매 판매 완료"
                               : sale.state === 6
                               ? "정산 신청 완료"
-                              : sale.state === 7
-                              ? "정산 완료"
-                              : "나도 몰랑"}
+                              : "상태 확인 필요"}
                           </td>
                         </tr>
                       ))}

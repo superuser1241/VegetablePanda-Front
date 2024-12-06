@@ -8,7 +8,10 @@ const Payment = () => {
     const [userId, setUserId] = useState('');
     const location = useLocation();
     const navigate = useNavigate();
+    // 개별주문
     const { item, quantity } = location.state || {};
+    // 장바구니 주문
+    const { items, totalAmount, userSeq } = location.state || {};
     const serverIp = process.env.REACT_APP_SERVER_IP;
     const [orderUid, setOrderUid] = useState('');
     
@@ -55,9 +58,9 @@ const Payment = () => {
         fetchUserInfo();
     }, [navigate]);
 
-    if (!item || !quantity) {
-        return <div>주문 정보를 찾을 수 없습니다.</div>;
-    }
+    // if (!item || !quantity) {
+    //     return <div>주문 정보를 찾을 수 없습니다.</div>;
+    // }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
