@@ -101,12 +101,6 @@ const ReviewCommentDetail = () => {
           {Number(localStorage.getItem("userSeq")) === comment?.userSeq && (
             <>
               <button 
-                onClick={() => navigate(`/reviewComment/edit/${reviewCommentSeq}`)} 
-                className="edit-button"
-              >
-                수정
-              </button>
-              <button 
                 onClick={handleDelete} 
                 className="delete-button"
               >

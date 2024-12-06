@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ReviewComment.css';
 
+const serverIp = process.env.REACT_APP_SERVER_IP;
+
 const ReviewCommentEdit = () => {
   const { reviewCommentSeq } = useParams();
   const navigate = useNavigate();
@@ -13,12 +15,13 @@ const ReviewCommentEdit = () => {
   });
   const [deleteFile, setDeleteFile] = useState(false);
   const [reviewSeq, setReviewSeq] = useState(null);
-  const [token, setToken] = useState(null);
+  const token = localStorage.getItem('token');
+  const userRole = localStorage.getItem('userRole');
 
   useEffect(() => {
     const fetchComment = async () => {
       try {
-        const response = await axios.get(`/reviewComment/${reviewCommentSeq}`, {
+        const response = await axios.get(`${serverIp}/reviewComment/${reviewCommentSeq}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -33,7 +36,7 @@ const ReviewCommentEdit = () => {
       } catch (error) {
         console.error('댓글 조회 실패:', error);
         alert('댓글 조회에 실패했습니다.');
-        navigate('/mypage');
+        navigateToMyPage();
       }
     };
 
@@ -41,6 +44,26 @@ const ReviewCommentEdit = () => {
       fetchComment();
     }
   }, [reviewCommentSeq, token, navigate]);
+
+  const navigateToMyPage = () => {
+    switch(userRole) {
+      case 'ROLE_USER':
+        navigate('/user-mypage');
+        break;
+      case 'ROLE_FARMER':
+        navigate('/farmer-mypage');
+        break;
+      case 'ROLE_COMPANY':
+        navigate('/company-mypage');
+        break;
+      case 'ROLE_ADMIN':
+        navigate('/admin-mypage');
+        break;
+      default:
+        navigate('/');
+        break;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,14 +86,14 @@ const ReviewCommentEdit = () => {
     formDataToSend.append('deleteFile', deleteFile);
 
     try {
-      await axios.put(`/reviewComment/${reviewCommentSeq}`, formDataToSend, {
+      await axios.put(`${serverIp}/reviewComment/${reviewCommentSeq}`, formDataToSend, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         }
       });
       alert('리뷰가 수정되었습니다.');
-      navigate('/mypage');
+      navigateToMyPage();
     } catch (error) {
       console.error('리뷰 수정 실패:', error);
       alert('리뷰 수정에 실패했습니다.');
