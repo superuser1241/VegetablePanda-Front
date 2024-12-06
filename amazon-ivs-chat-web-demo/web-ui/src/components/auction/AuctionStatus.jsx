@@ -10,8 +10,21 @@ const AuctionStatus = () => {
 
     const fetchAuctions = async () => {
         try {
-            const response = await axios.get(`${serverIp}/api/auction/status`);
-            setAuctions(response.data);
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${serverIp}/current`, {
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const now = new Date();
+            const activeAuctions = response.data.filter(auction => {
+                const closeTime = new Date(auction.closeTime);
+                return closeTime > now;
+            });
+            
+            setAuctions(activeAuctions);
             setLoading(false);
         } catch (error) {
             console.error('경매 정보를 불러오는데 실패했습니다:', error);
