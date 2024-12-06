@@ -34,7 +34,7 @@ const CompanyMyPage = () => {
   const [codePart3, setCodePart3] = useState("");
   const [auctions, setAuctions] = useState([]);
   const [review, setReview] = useState([]);
-  const [activeTab, setActiveTab] = useState("info"); // 'info', 'edit', 'review' 탭 관리
+  const [activeTab, setActiveTab] = useState("info");
   const navigate = useNavigate();
   const [pw, setPassword] = useState("");
   const [pwConfirm, setConfirmPassword] = useState("");
@@ -190,7 +190,6 @@ const CompanyMyPage = () => {
     }
   };
 
-  // 이미지
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -208,7 +207,7 @@ const CompanyMyPage = () => {
       ...prevState,
       path: null,
     }));
-    setImagePreview(logo);
+    setImagePreview(null);
     setImage(null);
   };
 
@@ -256,9 +255,8 @@ const CompanyMyPage = () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
-
     const id = companyInfo.companyId;
-
+    setImage(companyInfo.path);
     const formData = new FormData();
     formData.append(
       "companyData",
@@ -272,42 +270,36 @@ const CompanyMyPage = () => {
             email: editedCompany.email,
             code: code,
             address: editedCompany.address,
-            phone: editedCompany.phone,
+            phone: formattedPhone,
             pw: editedCompany.pw,
+            path: companyInfo.path,
           }),
         ],
         { type: "application/json" }
       )
     );
 
-    if (image !== null) {
-      formData.append("image", image); // 새 이미지 추가
-    } else if (image === null) {
-      formData.append("image", null); // 이미지에 null값
+    if (image) {
+      formData.append("image", image); // 새로운 이미지
+    } else if (image === null || imagePreview === null) {
+      formData.append("image", companyInfo.path); // 기존 이미지 경로
     }
 
     try {
-      const response = await axios.put(`${serverIp}/myPage/company/update/${userId}`, formData, {
+      const response = await axios.put(
+        `${serverIp}/myPage/company/update/${userId}`, 
+        formData, 
+        {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
-      });
+      }
+    );
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
-        setCompanyInfo({
-          ...companyInfo,
-          comName: editedCompany.comName,
-          ownerName: editedCompany.ownerName,
-          regName: editedCompany.regName,
-          pw: editedCompany.pw,
-          email: editedCompany.email,
-          phone: formattedPhone,
-          address: editedCompany.address,
-          code: code,
-          path: image,
-        });
-        setActiveTab("info");
+        await fetchCompanyInfo(userId);
+          setActiveTab("info");
       }
     } catch (error) {
       console.error("회원정보 수정 실패:", error);
@@ -315,7 +307,6 @@ const CompanyMyPage = () => {
     }
   };
 
-  //회원탈퇴
   const handleDeleteAccount = async () => {
     const confirmDelete = window.confirm(
       "정말로 회원 탈퇴를 진행하시겠습니까?"
@@ -674,7 +665,7 @@ const CompanyMyPage = () => {
           )}
 
           {activeTab === "buyList" && (
-            <div className="order-history-display">
+            <div className="yun-order-history-display">
               <h3>주문 내역</h3>
               {loading ? (
                 <div>로딩 중...</div>
@@ -683,7 +674,7 @@ const CompanyMyPage = () => {
               ) : orders.length > 0 ? (
                 <table>
                   <thead>
-                    <tr className="company-mypage-tr">
+                    <tr className="yun-company-mypage-tr">
                       <th>번호</th>
                       <th>주문 번호</th>
                       <th>상품명</th>
@@ -695,7 +686,7 @@ const CompanyMyPage = () => {
                   </thead>
                   <tbody>
                     {orders.map((order, index) => (
-                      <tr key={order.orderId} className="company-mypage-tr">
+                      <tr key={order.orderId} className="yun-company-mypage-tr">
                         <td>{index + 1}</td> {/* 번호 */}
                         <td>{order.userBuySeq}</td> {/* 주문 번호 */}
                         <td>{order.content}</td> {/* 상품명 */}
@@ -722,7 +713,7 @@ const CompanyMyPage = () => {
                   </tbody>
                 </table>
               ) : (
-                <div className="no-data-notification">
+                <div className="yun-no-data-notification">
                   주문 내역이 없습니다.
                 </div>
               )}
