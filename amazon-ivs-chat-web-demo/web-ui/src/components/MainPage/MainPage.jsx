@@ -397,7 +397,7 @@ const MainPage = ({ onJoinRoom }) => {
                                 <div className="shop-image">
                                     <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
                                 </div>
-                                <h3>{item.content}</h3>
+                                <h3>{item.productName}</h3>
                                 <div className="shop-info">
                                     <p><span>가격:</span> {item.price.toLocaleString()}원</p>
                                     <p><span>수량:</span> {item.count}개</p>
