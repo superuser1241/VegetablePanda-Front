@@ -148,7 +148,8 @@
 .address-item input {
     width: 40%;
     height: 90%;
-    text-align: center;
+    text-align: right;
+    padding-right: 15px;
 }
 
 .address-item:last-child {
