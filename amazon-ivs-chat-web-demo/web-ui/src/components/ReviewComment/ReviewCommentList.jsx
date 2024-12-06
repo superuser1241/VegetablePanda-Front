@@ -13,7 +13,8 @@ const ReviewCommentList = () => {
   useEffect(() => {
     const fetchMyReviews = async () => {
       try {
-        const response = await axios.get(`${serverIp}/reviewComment/myComments`, {
+        const userSeq = localStorage.getItem("userSeq");
+        const response = await axios.get(`${serverIp}/myComments/${userSeq}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -63,7 +64,7 @@ const ReviewCommentList = () => {
               </div>
               <div className="review-footer">
                 <span className="review-date">
-                  작성일: {new Date(review.createDate).toLocaleDateString()}
+                  작성일: {new Date(review.regDate).toLocaleDateString()}
                 </span>
               </div>
             </div>
