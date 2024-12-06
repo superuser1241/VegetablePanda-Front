@@ -5,6 +5,7 @@ import StarRating from './StarRating';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './ReviewComment.css';
+import DOMPurify from 'dompurify';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -91,7 +92,7 @@ const ReviewCommentWrite = () => {
     console.log(reviewCommentDTO);
     try {
       const response = await axios.post(
-        `${serverIp}/reviewComment`,
+        `${serverIp}/reviewComment/all`,
         formData,
         {
           headers: {

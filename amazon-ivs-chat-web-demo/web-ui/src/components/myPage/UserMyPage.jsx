@@ -105,7 +105,7 @@ const UserMyPage = () => {
   }, [userId]);
 
   // 주문 내역을 가져오는 함수
-  const fetchOrderHistory = async () => {
+  const fetchOrderHistory = async (userId) => {
     try {
 // <<<<<<< HEAD
 //       setLoading(true); // 로딩 시작
