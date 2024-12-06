@@ -6,6 +6,7 @@ import '../MainPage/MainPage.css';
 import logo from "../../image/기본이미지.png";
 import liveImg from '../../image/라이브.png';
 
+
 const Personal = ({ onJoinRoom }) => {
   const token = localStorage.getItem("token");
   const [error, setError] = useState("");
@@ -236,6 +237,7 @@ const Personal = ({ onJoinRoom }) => {
                                     <div>#{item.productName}</div>
                                     <div><span>#등급:</span> {item.stockGrade}</div>
                                     <div><span>#인증:</span> {item.stockOrganic}</div>
+
                                 </div>
                                 <button 
                                     className="buy-button" 

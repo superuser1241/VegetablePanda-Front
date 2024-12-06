@@ -623,13 +623,17 @@ const Chat = ({streamingRoom, handleExitChat }) => {
             await axios.post(
                 `${serverIp}/api/streaming/exit/${streamingRoom.streamingSeq}`
             );
+            
+            // 세션스토리지에서 방송 정보 삭제
+            sessionStorage.removeItem('streamingRoom');
         }
 
         // 성공하면 메인으로 이동
         navigate('/');
     } catch (error) {
         console.error('방송 종료 실패:', error);
-        // API 호출이 실패해도 메인으로 이동
+        // API 호출이 실패해도 세션스토리지 삭제 후 메인으로 이동
+        sessionStorage.removeItem('streamingRoom');
         navigate('/');
     }
   };

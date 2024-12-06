@@ -984,7 +984,7 @@ const checkStreamingStatus = async () => {
                       {sales.map((sale) => (
                         <tr key={sale.userBuySeq}>
                           <td>
-                            {sale.state === 2 && (
+                            {[1, 2, 4].includes(sale.state) && (
                               <input
                                 type="checkbox"
                                 checked={selectedItems.includes(
@@ -1008,13 +1008,11 @@ const checkStreamingStatus = async () => {
                             {sale.state === 0 
                               ? "정산 승인"
                               : sale.state === 1
-                              ? "일반 유저 경매 판매 완료"
+                              ? "일반 유저 경매 판매"
                               : sale.state === 2
-                              ? "일반 상점 판매 완료"
+                              ? "일반 상점 판매"
                               : sale.state === 4
-                              ? "업체 경매 판매 완료"
-                              : sale.state === 6
-                              ? "정산 신청 완료"
+                              ? "업체 경매 판매"
                               : "상태 확인 필요"}
                           </td>
                         </tr>

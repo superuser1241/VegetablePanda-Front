@@ -298,7 +298,7 @@ const CompanyMyPage = () => {
     );
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
-        await fetchCompanyInfo(userId);
+          await fetchCompanyInfo(userId);
           setActiveTab("info");
       }
     } catch (error) {
