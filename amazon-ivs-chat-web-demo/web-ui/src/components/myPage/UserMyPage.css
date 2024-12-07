@@ -580,3 +580,12 @@
     margin-top: 8px;
 }
 
+.image-and-point-container {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.point-container {
+    width: 70%;
+}
