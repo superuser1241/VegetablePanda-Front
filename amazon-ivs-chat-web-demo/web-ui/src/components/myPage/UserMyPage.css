@@ -583,7 +583,7 @@
 .image-and-point-container {
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 40px;
 }
 
 .point-container {

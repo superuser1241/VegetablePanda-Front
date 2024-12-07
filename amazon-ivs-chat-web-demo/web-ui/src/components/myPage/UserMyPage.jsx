@@ -436,12 +436,7 @@ const UserMyPage = () => {
             >
               나의 리뷰
             </li>
-            <li
-              onClick={() => setActiveTab("point")}
-              className={activeTab === "point" ? "active" : ""}
-            >
-              포인트 충전
-            </li>
+
             <li
               onClick={() => setActiveTab("cart")}
               className={activeTab === "cart" ? "active" : ""}
@@ -835,10 +830,6 @@ const UserMyPage = () => {
               <h3>나의 리뷰</h3>
               <ReviewCommentList userSeq={localStorage.getItem("userSeq")} />
             </div>
-          )}
-
-          {activeTab === "point" && (
-            <Point userId={userId} point={point} fetchPoint={fetchPoint} />
           )}
 
           {activeTab === "cart" && (

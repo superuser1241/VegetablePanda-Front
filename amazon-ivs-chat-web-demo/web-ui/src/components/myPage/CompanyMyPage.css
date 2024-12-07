@@ -343,3 +343,13 @@ table {
 .charge-button:hover {
     background-color: #357abd;
 } 
+
+.image-and-point-container {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.point-container {
+    width: 70%;
+}
