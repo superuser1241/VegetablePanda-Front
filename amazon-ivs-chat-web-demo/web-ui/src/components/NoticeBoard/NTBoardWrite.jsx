@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import './NTBoard.css';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
@@ -10,8 +12,27 @@ const NotifyBoardWrite = () => {
   const [formData, setFormData] = useState({
     subject: '',
     content: '',
+    readnum: 0,
+    regDate: new Date().toISOString()
   });
-  const [image, setImage] = useState(null); // 이미지 상태 추가
+  const [image, setImage] = useState(null);
+
+  const modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'align': [] }]
+    ],
+  };
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike',
+    'list', 'bullet',
+    'color', 'background',
+    'align'
+  ];
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -30,8 +51,23 @@ const NotifyBoardWrite = () => {
     }));
   };
 
+  const handleContentChange = (content) => {
+    setFormData(prev => ({
+      ...prev,
+      content: content
+    }));
+  };
+
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]); // 파일 선택 시 이미지 상태 업데이트
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB 제한
+        alert('파일 크기는 5MB를 초과할 수 없습니다.');
+        e.target.value = '';
+        return;
+      }
+      setImage(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -39,39 +75,44 @@ const NotifyBoardWrite = () => {
     const token = localStorage.getItem('token');
 
     try {
-        const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
-        
-        // FormData 객체 생성
-        const data = new FormData();
-        data.append('noticeBoard', JSON.stringify({
-            title: formData.subject,
-            content: formData.content,
-            managementUser: payload.user_seq,
-        }));
-        if (image) {
-            data.append('image', image); // 이미지 파일 추가
-        }
+      const formDataToSend = new FormData();
+      
+      // 이미지가 있는 경우 추가
+      if (image) {
+        formDataToSend.append('image', image);
+      }
 
-        await axios.post('http://localhost:9001/notifyBoard/', 
-            data,
-            {
-                headers: {
-                    'Authorization': `Bearer ${token}`, // Authorization 헤더 추가
-                }
-            }
-        );
-        alert('공지가 등록되었습니다.');
-        navigate('/Notify-service');
-    } catch (error) {
-        console.error('등록 실패:', error);
-        if (error.response?.status === 403) {
-            alert('권한이 없습니다.');
-            navigate('/notify-service');
-        } else {
-            alert('공지 등록에 실패했습니다.');
+      // NoticeBoardDTO 데이터 추가
+      const noticeBoardDTO = new Blob([JSON.stringify(formData)], {
+        type: 'application/json'
+      });
+      formDataToSend.append('noticeBoard', noticeBoardDTO);
+
+      const response = await axios({
+        method: 'post',
+        url: `${serverIp}/notifyBoard/`,
+        data: formDataToSend,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         }
+      });
+
+      if (response.status === 201) {
+        alert('공지가 등록되었습니다.');
+        navigate('/notify-service');
+      }
+    } catch (error) {
+      console.error('등록 실패:', error);
+      if (error.response?.status === 403) {
+        alert('권한이 없습니다.');
+        navigate('/notify-service');
+      } else {
+        alert('공지 등록에 실패했습니다. ' + (error.response?.data?.message || ''));
+      }
+      navigate('/notify-service');
     }
-};
+  };
 
   return (
     <div className="nt-write-container">
@@ -89,12 +130,12 @@ const NotifyBoardWrite = () => {
         </div>
         <div className="form-group">
           <label>내용</label>
-          <textarea
-            name="content"
+          <ReactQuill
             value={formData.content}
-            onChange={handleChange}
-            required
-            rows="10"
+            onChange={handleContentChange}
+            modules={modules}
+            formats={formats}
+            className="quill-editor"
           />
         </div>
         <div className="form-group">
@@ -110,7 +151,7 @@ const NotifyBoardWrite = () => {
           <button 
             type="button" 
             className="cancel-button"
-            onClick={() => navigate('/Notify-service')}
+            onClick={() => navigate('/notify-service')}
           >
             취소
           </button>

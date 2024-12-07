@@ -56,27 +56,34 @@ const NTBoardEdit = () => {
     const token = localStorage.getItem('token');
     
     try {
+      const formDataToSend = new FormData();
+      const noticeBoardData = {
+        subject: formData.subject,
+        content: formData.content
+      };
+      
+      formDataToSend.append('noticeBoard', new Blob([JSON.stringify(noticeBoardData)], {
+        type: 'application/json'
+      }));
+
       await axios.put(`${serverIp}/notifyBoard/${boardNoSeq}`, 
-        {
-          subject: formData.subject,
-          content: formData.content,
-        },
+        formDataToSend,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'multipart/form-data'
           }
         }
       );
-      alert('문의가 수정되었습니다.');
+      alert('공지가 수정되었습니다.');
       navigate('/notify-service');
     } catch (error) {
       console.error('수정 실패:', error);
       if (error.response?.status === 403) {
         alert('권한이 없습니다.');
-        navigate('/login');
+        navigate('/notify-service');
       } else {
-        alert('문의 수정에 실패했습니다.');
+        alert('공지 수정에 실패했습니다.');
       }
     }
   };

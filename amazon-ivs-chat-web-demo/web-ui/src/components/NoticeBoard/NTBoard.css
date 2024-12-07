@@ -45,7 +45,8 @@
     background-color: #74b816;
   }
   
-  .nt-write-container {
+  .nt-write-container,
+  .nt-detail-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -223,4 +224,107 @@
   .reply-item p {
     margin: 0;
     line-height: 1.5;
+  }
+  
+  /* Quill 에디터 스타일 */
+  .quill-editor {
+    height: 300px;
+    margin-bottom: 20px;
+  }
+  
+  .ql-container {
+    min-height: 300px;
+    font-size: 16px;
+  }
+  
+  .ql-editor {
+    padding: 20px;
+  }
+  
+  /* 상세 페이지 Quill 컨텐츠 스타일 */
+  .quill-content {
+    padding: 20px;
+    line-height: 1.6;
+  }
+  
+  .quill-content img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .quill-content p {
+    margin-bottom: 1em;
+  }
+  
+  .quill-content h1,
+  .quill-content h2,
+  .quill-content h3,
+  .quill-content h4,
+  .quill-content h5,
+  .quill-content h6 {
+    margin: 1em 0;
+    font-weight: bold;
+  }
+  
+  .quill-content ul,
+  .quill-content ol {
+    margin-left: 2em;
+    margin-bottom: 1em;
+  }
+  
+  .quill-content blockquote {
+    border-left: 4px solid #ccc;
+    margin: 1em 0;
+    padding-left: 1em;
+    color: #666;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  .button-group button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .submit-button,
+  .edit-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+  }
+  
+  .cancel-button,
+  .delete-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+  }
+  
+  .back-button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+  }
+  
+  .nt-detail-info {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    color: #666;
+  }
+  
+  .nt-detail-content {
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  
+  .nt-detail-image img {
+    max-width: 100%;
+    height: auto;
   }
