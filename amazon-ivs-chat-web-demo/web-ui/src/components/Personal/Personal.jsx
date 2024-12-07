@@ -20,6 +20,7 @@ const Personal = ({ onJoinRoom }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [farmerInfo, setFarmerInfo] = useState(null);
   const [like, setLike] = useState(null);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -89,12 +90,17 @@ const Personal = ({ onJoinRoom }) => {
           },
         });
         setState(response.data);
+        setIsSubscribed(response.data);
         console.log("상태값 받음:", response.data);
       } catch (error) {
         console.error("상태값 못받음:", error);
       }
     };
-  }, []);
+    
+    if (seq && farmerSeq) {
+      fetchState();
+    }
+  }, [seq, farmerSeq]);
 
   const fetchFarmerInfo = async (farmerSeq) => {
     try {
@@ -127,6 +133,7 @@ const Personal = ({ onJoinRoom }) => {
         }
       );
       setLike(response.data);
+      setIsSubscribed(!isSubscribed);
       console.log("구독 요청 성공:", response.data);
     } catch (error) {
       console.error("구독 요청 실패:", error);
@@ -175,10 +182,10 @@ const Personal = ({ onJoinRoom }) => {
           ""
         ) : (
           <button
-            className="yun-like-button1"
+            className={`yun-like-button1 ${isSubscribed ? 'yun-subscribed' : 'yun-not-subscribed'}`}
             onClick={() => fetchLike(farmerSeq)}
           >
-            구독
+            {isSubscribed ? '구독중' : '구독하기'}
           </button>
         )}
       </div>
@@ -195,9 +202,6 @@ const Personal = ({ onJoinRoom }) => {
                     <span className="yun-review-score">
                       평점: {review.score}점
                     </span>
-                    <span className="yun-review-date">
-                      {new Date(review.date).toLocaleDateString()}
-                    </span>
                   </div>
                   <div className="yun-review-content">{review.content}</div>
                   <div className="yun-review-image">
@@ -205,9 +209,6 @@ const Personal = ({ onJoinRoom }) => {
                       <img src={review.file.path} alt="리뷰 이미지" />
                     )}
                   </div>
-                  <span className="yun-review-date">
-                    작성날짜 : {new Date(review.date).toLocaleDateString()}
-                  </span>
                 </div>
               ))}
             </div>
@@ -239,12 +240,6 @@ const Personal = ({ onJoinRoom }) => {
                                     <div><span>#인증:</span> {item.stockOrganic}</div>
 
                                 </div>
-                                <button 
-                                    className="buy-button" 
-                                    onClick={() => navigate('/purchase', { state: { item } })}
-                                    >
-                                    구매하기
-                                </button>
                                 </Link>
                             </div>
                         ))}

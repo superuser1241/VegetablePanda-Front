@@ -41,7 +41,7 @@
     padding-top: 10%;
     flex-direction: row; /* 가로 방향 정렬 */
     flex-wrap: wrap; /* 공간이 부족하면 다음 줄로 넘어가도록 설정 */
-    gap: 5%; /* 요소 간의 간격 추가 */
+    gap: 5%; /* 요소 간의 간격 추�� */
     align-items: center; /* 세로 방향 가운데 정렬 */
     width: 50%; /* 카드의 너비 유지 */
 }
@@ -234,4 +234,24 @@
     color: #888;
     margin-top: 10px;
     text-align: center;
+}
+
+.yun-like-button1 {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.yun-subscribed {
+  background-color: red;
+  color: white;
+  border: 1px solid #ccc;
+}
+
+.yun-not-subscribed {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
 }
