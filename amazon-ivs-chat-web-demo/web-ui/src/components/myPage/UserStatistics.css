@@ -1,0 +1,57 @@
+.statistics-container {
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+}
+
+.charts-wrapper {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.chart-box {
+    flex: 1;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.chart-box h3 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.pie-chart {
+    height: 300px;
+    position: relative;
+}
+
+.chart-details {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px #000000;
+}
+
+.chart-details p {
+    margin: 10px 0;
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .charts-wrapper {
+        flex-direction: column;
+    }
+    
+    .chart-box {
+        margin-bottom: 20px;
+    }
+} 

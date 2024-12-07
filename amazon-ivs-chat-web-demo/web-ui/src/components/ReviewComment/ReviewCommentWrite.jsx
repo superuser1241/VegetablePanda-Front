@@ -5,6 +5,7 @@ import StarRating from './StarRating';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './ReviewComment.css';
+import DOMPurify from 'dompurify';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -18,6 +19,13 @@ const ReviewCommentWrite = () => {
   const [image, setImage] = useState(null);
   const token = localStorage.getItem('token');
   const { reviewSeq, userBuyDetailSeq } = location.state?.orderInfo || {};
+
+  const [newProduct, setNewProduct] = useState({
+    file: {
+      fileSeq: '',
+      name: ''
+    }
+  });
 
   useEffect(() => {
     // 필수 데이터 검증
@@ -47,6 +55,8 @@ const ReviewCommentWrite = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
+    const userRole = localStorage.getItem('userRole');
 
     // 입력값 검증
     if (!reviewData.content.trim()) {
@@ -58,31 +68,38 @@ const ReviewCommentWrite = () => {
       alert('평점을 선택해주세요.');
       return;
     }
-
-    const formData = new FormData();
-    formData.append('userBuyDetailSeq', String(userBuyDetailSeq));
-    
     // reviewCommentDTO JSON 추가
+    console.log(localStorage.getItem("userSeq"));
     const reviewCommentDTO = {
       content: reviewData.content,
-      score: reviewData.score
+      score: reviewData.score,
+      userSeq: localStorage.getItem("userSeq"),
+      reviewSeq: location.state.orderInfo.reviewSeq,
+      userBuyDetailSeq: location.state.orderInfo.userBuyDetailSeq,
+      file : {fileSeq: '', name: newProduct.file.name},
     };
-    formData.append('reviewCommentDTO', JSON.stringify(reviewCommentDTO));
+
+    const formData = new FormData();
+    // ReviewCommentDTO를 문자열로 변환하여 추가
+    formData.append('reviewCommentDTO', new Blob([JSON.stringify(reviewCommentDTO)], {
+      type: 'application/json'
+    }));
     
-    // 이미지 파일이 있는 경우에만 추가
-    if (image && image.size > 0) {
+    // 이미지가 있는 경우에만 추가
+    if (image) {
       formData.append('image', image);
     }
-
+    console.log(newProduct);
+    console.log(reviewCommentDTO);
     try {
       const response = await axios.post(
-        `${serverIp}/reviewComment/`,
+        `${serverIp}/reviewComment/all`,
         formData,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
+            'Content-Type': 'multipart/form-data'
+          }
         }
       );
 
@@ -95,7 +112,25 @@ const ReviewCommentWrite = () => {
 
       if (response.status === 201) {
         alert('리뷰가 성공적으로 등록되었습니다.');
-        navigate('/mypage');
+        
+        // role에 따른 페이지 이동
+        switch(userRole) {
+          case 'ROLE_USER':
+            navigate('/user-mypage');
+            break;
+          case 'ROLE_FARMER':
+            navigate('/farmer-mypage');
+            break;
+          case 'ROLE_COMPANY':
+            navigate('/company-mypage');
+            break;
+          case 'ROLE_ADMIN':
+            navigate('/admin-mypage');
+            break;
+          default:
+            navigate('/');
+            break;
+        }
       }
     } catch (error) {
       console.error('리뷰 등록 실패:', error);
@@ -118,6 +153,13 @@ const ReviewCommentWrite = () => {
         return;
       }
       setImage(file);
+      setNewProduct(prev => ({
+        ...prev,
+        file: {
+          fileSeq: '',
+          name: file.name
+        }
+      }));
     }
   };
 

@@ -3,10 +3,12 @@ import axios from 'axios';
 import './AdminMyPage.css';
 import AuctionStatus from '../auction/AuctionStatus';
 import AdjustmentPage from './AdjustmentPage';
+import UserStatistics from './UserStatistics';
+import ProductStatistics from './ProductStatistics';
 
 const AdminMyPage = () => {
     const token = localStorage.getItem('token');
-    const [activeTab, setActiveTab] = useState('info');
+    const [activeTab, setActiveTab] = useState('stats');
     const [pendingProducts, setPendingProducts] = useState([]);
     const [adminInfo, setAdminInfo] = useState({
         name: '',
@@ -16,6 +18,7 @@ const AdminMyPage = () => {
     const [pendingStreamings, setPendingStreamings] = useState([]);
     const [approvalTriggered, setApprovalTriggered] = useState(false);
     const serverIp = process.env.REACT_APP_SERVER_IP;
+    const [statsType, setStatsType] = useState('product');
 
     useEffect(() => {
         if (token) {
@@ -99,8 +102,11 @@ const AdminMyPage = () => {
             <div className="admin-sidebar">
                 <h3>관리자 메뉴</h3>
                 <ul>
-                    <li onClick={() => setActiveTab('info')} className={activeTab === 'info' ? 'active' : ''}>
-                        관리자 정보
+                    <li onClick={() => setActiveTab('stats')} className={activeTab === 'stats' ? 'active' : ''}>
+                        통계
+                    </li>
+                    <li onClick={() => setActiveTab('products')} className={activeTab === 'products' ? 'active' : ''}>
+                        승인 대기 상품
                     </li>
                     <li onClick={() => setActiveTab('streaming')} className={activeTab === 'streaming' ? 'active' : ''}>
                         스트리밍 승인
@@ -111,21 +117,26 @@ const AdminMyPage = () => {
                     <li onClick={() => setActiveTab('auctions')} className={activeTab === 'auctions' ? 'active' : ''}>
                         실시간 경매 현황
                     </li>
-                    <li onClick={() => setActiveTab('stats')} className={activeTab === 'stats' ? 'active' : ''}>
-                        통계
-                    </li>
                 </ul>
             </div>
 
             <div className="admin-content">
-                {activeTab === 'info' && (
-                    <div className="admin-info-section">
-                        <h2>관리자 정보</h2>
-                        <div className="admin-info-card">
-                            <p><strong>이름:</strong> {adminInfo.name}</p>
-                            <p><strong>아이디:</strong> {adminInfo.id}</p>
-                            <p><strong>역할:</strong> {adminInfo.role}</p>
+                {activeTab === 'stats' && (
+                    <div className="stats-section">
+                        <h2>통계</h2>
+                        <div className="stats-tabs">
+                            <button onClick={() => setStatsType('product')} className={statsType === 'product' ? 'active' : ''}>
+                                상품 통계
+                            </button>
+                            <button onClick={() => setStatsType('user')} className={statsType === 'user' ? 'active' : ''}>
+                                회원 통계
+                            </button>
                         </div>
+                        {statsType === 'product' ? (
+                            <ProductStatistics />
+                        ) : (
+                            <UserStatistics />
+                        )}
                     </div>
                 )}
 
@@ -190,13 +201,6 @@ const AdminMyPage = () => {
                     <div className="auctions-section">
                         <h2>실시간 경매 현황</h2>
                         <AuctionStatus />
-                    </div>
-                )}
-
-                {activeTab === 'stats' && (
-                    <div className="stats-section">
-                        <h2>통계</h2>
-                        {/* 통계 관련 컴포넌트 */}
                     </div>
                 )}
             </div>

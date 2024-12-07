@@ -6,6 +6,7 @@ const Point = ({userId, point, fetchPoint}) => {
   const [chargeAmount, setChargeAmount] = useState("");
   const token = localStorage.getItem("token");
 
+  const serverIp = process.env.REACT_APP_SERVER_IP;
 
   const handleCharge = async () => {
     try {
@@ -16,7 +17,7 @@ const Point = ({userId, point, fetchPoint}) => {
 
       // 충전금액 및 주문정보 등록
       const response = await axios.post(
-        "http://localhost:9001/charge",
+        `${serverIp}:9001/charge`,
         {
           managementUserSeq: parseInt(userId),
           price: parseInt(chargeAmount),
@@ -31,7 +32,7 @@ const Point = ({userId, point, fetchPoint}) => {
 
       // 주문번호 받아오기
       const response2 = await axios.get(
-        "http://localhost:9001/api/payment/" + response.data + '?status=1',
+        `${serverIp}/api/payment/` + response.data + '?status=1',
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -76,7 +77,7 @@ const Point = ({userId, point, fetchPoint}) => {
         setChargeAmount("");
       }
     } catch (error) {
-      console.error("포인트 충전 실패:", error);
+      console.log("포인트 충전 실패:", error);
       alert("포인트 충전에 실패했습니다.");
     }
   };

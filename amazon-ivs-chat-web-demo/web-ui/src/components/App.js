@@ -30,17 +30,17 @@ import AuctionChatPage from './auction/AuctionChatPage';
 import Product from './product/Product';
 import Shop from './product/Shop';
 import PurchaseD from './Purchase/PurchaseD';
-import Personal from './Personal/Personal';
-import PersonalList from './Personal/PersonalList';
-import './Personal/PersonalList';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 import axios from 'axios';
+import Personal from './Personal/Personal'; // 에러나도 건들지 말아줘요
+import PersonalList from './Personal/PersonalList';
 import ReviewCommentWrite from './ReviewComment/ReviewCommentWrite';
 import ReviewCommentList from './ReviewComment/ReviewCommentList';
 import ReviewCommentDetail from './ReviewComment/ReviewCommentDetail';
 import ReviewCommentEdit from './ReviewComment/ReviewCommentEdit';
 import PaymentSuccess from './Purchase/PaymentSuccess';
+import CartPurchase from './Purchase/CartPurchase';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -202,6 +202,7 @@ function App() {
                     <Route path="/notify-service/edit/:boardNoSeq" element={<NTBoardEdit />} />
                     <Route path="/notify-service/:boardNoSeq" element={<NotifyBoardDetail />} />
                     <Route path="/purchase" element={<Purchase />} />
+                    <Route path="/cart-purchase" element={<CartPurchase />} />
                     <Route path="/purchaseD" element={<PurchaseD userName={userName}/>} />
                     <Route path="/personal" element={<Personal navigateTo={navigate} />} />
                     <Route path="/personalList" element={<PersonalList navigateTo={navigate} />} />
