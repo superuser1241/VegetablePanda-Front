@@ -7,11 +7,12 @@ const StreamingStatus = ({ userId, token, onStartStreaming }) => {
     const [streamingStatus, setStreamingStatus] = useState(null);
     const [approvedStreaming, setApprovedStreaming] = useState(null);
     const [availableRoom, setAvailableRoom] = useState(null);
+    const serverIp = process.env.REACT_APP_SERVER_IP;
 
     // 초기 사용 가능한 방 조회 (상태값 0)
     const fetchAvailableRoom = async () => {
         try {
-            const response = await axios.get('http://localhost:9001/api/streaming/available', {
+            const response = await axios.get(`${serverIp}/api/streaming/available`, {
                 headers: { 
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -33,7 +34,7 @@ const StreamingStatus = ({ userId, token, onStartStreaming }) => {
             }
 
             const response = await axios.post(
-                `http://localhost:9001/api/streaming/request/${availableRoom.streamingSeq}`, 
+                `${serverIp}/api/streaming/request/${availableRoom.streamingSeq}`, 
                 null,
                 {
                     headers: { 
@@ -60,7 +61,7 @@ const StreamingStatus = ({ userId, token, onStartStreaming }) => {
     // 승인된 방송 체크 (상태값 1)
     const checkApprovedStreaming = async () => {
         try {
-            const response = await axios.get('http://localhost:9001/api/streaming/active-rooms', {
+            const response = await axios.get(`${serverIp}/api/streaming/active-rooms`, {
                 headers: { 
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -128,16 +129,34 @@ const StreamingStatus = ({ userId, token, onStartStreaming }) => {
                 </div>
             ) : streamingStatus === 'approved' ? (
                 <div className="streaming-info">
-                    <h4>승인된 방송 정보</h4>
-                    <p><strong>서버 주소:</strong> {approvedStreaming?.serverAddress}</p>
-                    <p><strong>토큰:</strong> {approvedStreaming?.token}</p>
-                    <p><strong>상품명:</strong> {approvedStreaming?.productName}</p>
-                    <button 
-                        className="streaming-btn"
-                        onClick={handleStartStreaming}
-                    >
-                        방송 시작하기
-                    </button>
+                    <div className="streaming-info-grid">
+                        <div className="streaming-product-info">
+                            <div className="streaming-product-image">
+                                <img src={approvedStreaming?.filePath || '/default-product.png'} 
+                                     alt={approvedStreaming?.productName} />
+                            </div>
+                            <div className="streaming-product-details">
+                                <h5>상품 정보</h5>
+                                <p className="product-name">{approvedStreaming?.productName}</p>
+                            </div>
+                        </div>
+                        <div className="streaming-server-info">
+                            <div className="info-item">
+                                <span className="info-label">서버 주소</span>
+                                <span className="info-value">{approvedStreaming?.serverAddress}</span>
+                            </div>
+                            <div className="info-item">
+                                <span className="info-label">스트리밍 토큰</span>
+                                <span className="info-value">{approvedStreaming?.token}</span>
+                            </div>
+                            <button 
+                                className="streaming-start-btn"
+                                onClick={handleStartStreaming}
+                            >
+                                방송 시작하기
+                            </button>
+                        </div>
+                    </div>
                 </div>
             ) : (
                 <div className="streaming-buttons">

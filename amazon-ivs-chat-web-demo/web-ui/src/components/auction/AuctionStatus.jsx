@@ -65,13 +65,11 @@ const AuctionStatus = () => {
 
     return (
         <div className="auction-status-container">
-            <h2>실시간 경매 현황</h2>
             <div className="auction-table-container">
                 <table className="auction-table">
                     <thead>
                         <tr>
                             <th>상품명</th>
-                            <th>내용</th>
                             <th>수량</th>
                             <th>현재가</th>
                             <th>입찰수</th>
@@ -85,7 +83,6 @@ const AuctionStatus = () => {
                         {auctions.map((auction) => (
                             <tr key={auction.auctionSeq}>
                                 <td>{auction.productName}</td>
-                                <td>{auction.content}</td>
                                 <td>{auction.count}개</td>
                                 <td>{auction.currentPrice?.toLocaleString()}원</td>
                                 <td>{auction.bidCount}회</td>
