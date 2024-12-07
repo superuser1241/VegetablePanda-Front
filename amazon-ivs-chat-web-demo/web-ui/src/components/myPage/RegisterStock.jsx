@@ -258,7 +258,7 @@ const RegisterStock = () => {
     return (
         <div className='RegisterStock'>
             <div className='product-section'>
-                <h3>재고등록</h3>
+                <h3>재고 등록</h3>
                 <form action="" onSubmit={handleProductSubmit}>
                     <div className='product-form'>
                         <div className='form-group'>
