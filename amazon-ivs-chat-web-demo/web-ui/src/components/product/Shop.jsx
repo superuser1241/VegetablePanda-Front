@@ -10,6 +10,7 @@ const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [visibleItems, setVisibleItems] = useState(5);
   const [search, setSearch] = useState('');
+  const [word, setWord] = useState('');
   const serverIp = process.env.REACT_APP_SERVER_IP;
 
   const showMoreItems = () => {
@@ -61,7 +62,17 @@ const Shop = () => {
     };
 
 
-const filteredVegetables = getFilteredProducts();
+    const filteredVegetables = getFilteredProducts();
+
+    const handleWord = (e) => {
+      setWord(e.target.value);
+    }
+
+    const handleSearch = (e) => {
+      if(e.key === "Enter") {
+        setSearch(e.target.value);
+      }
+    }
 
 
 
@@ -83,7 +94,7 @@ const filteredVegetables = getFilteredProducts();
               </div>
               <div className='category-search-container'>
                 <div className="search-input-wrapper">
-                    <input type="text" className='search-text' placeholder='검색어를 입력하세요' value={search} onChange={(e)=>setSearch(e.target.value)}/>
+                    <input type="text" className='search-text' placeholder='검색어를 입력하세요' value={word} onChange={handleWord} onKeyUp={handleSearch}/>
                     <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon"/>
                 </div>
               </div>
