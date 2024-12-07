@@ -6,7 +6,7 @@ import Auction from '../auction/AuctionStock';
 import productImage from '../../image/상품1.png';
 import BidPage from '../auction/BidPage';
 import { Pie, Line, Chart } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement, BarController, LineController } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import AuctionStatus from '../auction/AuctionStatus';
 import AuctionRegisterPage from '../auction/AuctionRegisterPage';
@@ -20,7 +20,9 @@ ChartJS.register(
     LinearScale,
     PointElement,
     LineElement,
-    BarElement
+    BarElement,
+    BarController,
+    LineController
 );
 
 const slides = [
@@ -51,11 +53,18 @@ const MainPage = ({ onJoinRoom }) => {
         const fetchActiveRooms = async () => {
             try {
                 const response = await axios.get(`${serverIp}/api/streaming/active-rooms`);
-                setRooms(response.data);
+                setRooms(response.data || []);
                 console.log('rooms:', rooms);
             } catch (err) {
-                setError('Failed to fetch active rooms. Please try again.');
-                console.error(err);
+                if (err.response?.status === 404) {
+                    // 404 에러인 경우 빈 배열로 처리
+                    setRooms([]);
+                    console.log('현재 활성화된 방이 없습니다.');
+                } else {
+                    // 다른 에러의 경우
+                    console.error('방 목록을 불러오는데 실패했습니다:', err);
+                    setError('Failed to fetch active rooms. Please try again.');
+                }
             }
         };
         const fetchShopItems = async () => {
