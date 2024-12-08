@@ -188,7 +188,7 @@ const CartPurchase = () => {
                             </div>
                             <div className="address-item">
                                 <label className="item-label">주소</label>
-                                <input type = 'text' className="item-value" name="address" value={shippingInfo.address} onChange={handleInputChange}/>
+                                <input type = 'textarea' className="item-value" name="address" value={shippingInfo.address} onChange={handleInputChange}/>
                                 {/* <button onClick={handleClick}>주소</button> */}
                             </div>
                         </div>
