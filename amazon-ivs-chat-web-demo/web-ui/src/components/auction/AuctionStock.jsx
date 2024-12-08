@@ -51,7 +51,7 @@ const AuctionStock = ({ streamingRoom }) => {
 
                         <div className="product-info-item">
                             <div className="info-label">남은 재고량 </div>
-                            <div className="info-value">{stockInfo.count}개</div>
+                            <div className="info-value">{stockInfo.count}Kg</div>
                         </div>
 
                             <div className="product-info-item">

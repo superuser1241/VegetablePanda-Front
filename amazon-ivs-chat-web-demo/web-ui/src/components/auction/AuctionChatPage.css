@@ -29,8 +29,8 @@
 
 .auction-sidebar-toggle {
     position: fixed;
-    right: 20px;
-    top: 40px;
+    right: 0px;
+    top: 160px;
     background-color: #007bff;
     color: white;
     border: none;
