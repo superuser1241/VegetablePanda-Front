@@ -5,6 +5,7 @@ import "./Personal.css";
 import '../MainPage/MainPage.css';
 import logo from "../../image/기본이미지.png";
 import liveImg from '../../image/라이브.png';
+import DOMPurify from 'dompurify';
 
 
 const Personal = ({ onJoinRoom }) => {
@@ -70,6 +71,8 @@ const Personal = ({ onJoinRoom }) => {
     fetchShopItems(farmerSeq);
   }, []);
 
+  
+
   useEffect(() => {
     if (seq) {
       fetchFarmerInfo(farmerSeq);
@@ -79,28 +82,28 @@ const Personal = ({ onJoinRoom }) => {
 
   useEffect(() => {
     const fetchState = async () => {
+      if (!seq || !farmerSeq) return;
+
       try {
-        const response = await axios.get(`${serverIp}/likeState`, {
-          params: {
-            userSeq: seq,
-            farmerSeq
-          },
+        const response = await axios.post(`${serverIp}/likeState`, {
+          userSeq: seq,
+          farmerSeq: farmerSeq
+        }, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setState(response.data);
-        setIsSubscribed(response.data);
-        console.log("상태값 받음:", response.data);
+        
+        if (response.data !== null && response.data !== undefined) {
+          setState(response.data);
+          setIsSubscribed(response.data);
+        }
       } catch (error) {
-        console.error("상태값 못받음:", error);
       }
     };
-    
-    if (seq && farmerSeq) {
-      fetchState();
-    }
-  }, [seq, farmerSeq]);
+
+    fetchState();
+  }, [seq, farmerSeq, token, serverIp]);
 
   const fetchFarmerInfo = async (farmerSeq) => {
     try {
@@ -114,7 +117,6 @@ const Personal = ({ onJoinRoom }) => {
       );
       setFarmerInfo(response.data);
     } catch (error) {
-      console.error("회원 정보 조회 실패:", error);
     }
   };
 
@@ -134,9 +136,7 @@ const Personal = ({ onJoinRoom }) => {
       );
       setLike(response.data);
       setIsSubscribed(!isSubscribed);
-      console.log("구독 요청 성공:", response.data);
     } catch (error) {
-      console.error("구독 요청 실패:", error);
     }
   };
 
@@ -150,7 +150,6 @@ const Personal = ({ onJoinRoom }) => {
       );
       setReview(response.data);
     } catch (error) {
-      console.error("리뷰 조회 실패:", error);
     }
   };
 
@@ -174,49 +173,54 @@ const Personal = ({ onJoinRoom }) => {
               <>
                 <h1 className="yun-seller-name">{farmerInfo.name}</h1>
                 <p className="yun-seller-description">{farmerInfo.intro}</p>
+                {farmerSeq === undefined || farmerSeq === seq || null ? (
+                  ""
+                ) : (
+                  <button
+                    className={`yun-like-button1 ${isSubscribed ? 'yun-subscribed' : 'yun-not-subscribed'}`}
+                    onClick={() => fetchLike(farmerSeq)}
+                  >
+                    {isSubscribed ? '구독중' : '구독하기'}
+                  </button>
+                )}
               </>
             )}
+            
           </div>
         </div>
-        {farmerSeq === undefined || farmerSeq === seq || null ? (
-          ""
-        ) : (
-          <button
-            className={`yun-like-button1 ${isSubscribed ? 'yun-subscribed' : 'yun-not-subscribed'}`}
-            onClick={() => fetchLike(farmerSeq)}
-          >
-            {isSubscribed ? '구독중' : '구독하기'}
-          </button>
-        )}
+       
       </div>
 
       {/* 하단 3칸 컨테이너 */}
       <div className="yun-bottom-container">
         <div className="yun-item-container1">
           <h2 className="yun-item-title">판매자 리뷰</h2>
-          {review.length > 0 ? (
-            <div className="yun-review-list">
-              {review.map((review) => (
-                <div key={review.reviewCommentSeq} className="yun-review-item">
-                  <div className="yun-review-header">
-                    <span className="yun-review-score">
-                      평점: {review.score}점
-                    </span>
-                  </div>
-                  <div className="yun-review-content">{review.content}</div>
-                  <div className="yun-review-image">
-                    {review.file && review.file.path && (
-                      <img src={review.file.path} alt="리뷰 이미지" />
-                    )}
-                  </div>
+          {review.length === 0 ? (
+        <p className="no-reviews">작성한 리뷰가 없습니다.</p>
+      ) : (
+        <div className="review-grid">
+          {review.map((review) => (
+            <div 
+              key={review.reviewCommentSeq} 
+              className="review-item"
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="review-header">
+                <h3>{review.productName}</h3>
+                <div className="star-rating">
+                  {'★'.repeat(review.score)}{'☆'.repeat(5-review.score)}
                 </div>
-              ))}
+              </div>
+              <div 
+                className="review-content"
+                dangerouslySetInnerHTML={{ 
+                  __html: DOMPurify.sanitize(review.content) 
+                }} 
+              />
             </div>
-          ) : (
-            <div className="yun-no-data-notification">
-              작성한 리뷰가 없습니다.
-            </div>
-          )}
+          ))}
+        </div>
+      )}
         </div>
 
         <div className="yun-item-container1">
