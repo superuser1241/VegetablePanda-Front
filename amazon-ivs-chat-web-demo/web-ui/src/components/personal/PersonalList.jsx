@@ -49,7 +49,7 @@ const PersonalList = () => {
 
             <div className="yun-farmer-info">
               <h2 className="yun-farmer-name">{farmer.name}</h2>
-              <p className="yun-farmer-intro text-ellipsis">{farmer.intro}</p>
+              <p className="yun-farmer-intro yun-text-ellipsis">{farmer.intro}</p>
             </div>
           </div>
         ))}
