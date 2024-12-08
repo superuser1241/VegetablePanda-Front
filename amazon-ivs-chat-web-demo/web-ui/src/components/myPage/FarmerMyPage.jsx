@@ -645,7 +645,7 @@ const checkStreamingStatus = async () => {
                     : ""
                 }`}
               >
-                상품 관리
+                재고 관리
               </div>
               {isProductMenuOpen && (
                 <ul className="dropdown-content">
@@ -653,13 +653,13 @@ const checkStreamingStatus = async () => {
                     onClick={() => setActiveTab("product")}
                     className={activeTab === "product" ? "active" : ""}
                   >
-                    └ 상품 등록
+                    └ 재고 등록
                   </li>
                   <li
                     onClick={() => setActiveTab("productList")}
                     className={activeTab === "productList" ? "active" : ""}
                   >
-                    └ 상품 목록
+                    └ 재고 목록
                   </li>
                 </ul>
               )}
