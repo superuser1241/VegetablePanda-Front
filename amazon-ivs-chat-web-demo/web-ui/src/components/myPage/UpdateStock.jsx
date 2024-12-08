@@ -44,6 +44,8 @@ const UpdateStock = ({stock, onBack}) => {
 
     const textarea = useRef();
 
+    const serverIp = process.env.REACT_APP_SERVER_IP;
+
     useEffect(() => {
         if (token) {
             try {
@@ -97,7 +99,7 @@ const UpdateStock = ({stock, onBack}) => {
    
     const fetchStock = async () => {
         try {
-            const response = await axios.get(`http://localhost:9001/stock/`+stock.stockSeq, {
+            const response = await axios.get(`${serverIp}/stock/`+stock.stockSeq, {
                 headers: { Authorization: `Bearer ${token}` }
             }
         );
@@ -114,7 +116,7 @@ const UpdateStock = ({stock, onBack}) => {
 
     const fetchProductCategory = async () => {
         try {
-            const response = await axios.get(`http://localhost:9001/category`, {
+            const response = await axios.get(`${serverIp}/category`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
                         
@@ -127,7 +129,7 @@ const UpdateStock = ({stock, onBack}) => {
 
     const fetchProductInfo = async (categorySeq) => {
         try{
-            const response = await axios.get(`http://localhost:9001/product/`+categorySeq, {
+            const response = await axios.get(`${serverIp}/product/`+categorySeq, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -140,7 +142,7 @@ const UpdateStock = ({stock, onBack}) => {
 
     const fetchStockGrade = async () => {
         try{
-            const response = await axios.get(`http://localhost:9001/stockGrade`, {
+            const response = await axios.get(`${serverIp}/stockGrade`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -153,7 +155,7 @@ const UpdateStock = ({stock, onBack}) => {
 
     const fetchOrganic = async () => {
         try{
-            const response = await axios.get(`http://localhost:9001/stockOrganic`, {
+            const response = await axios.get(`${serverIp}/stockOrganic`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -197,7 +199,7 @@ const UpdateStock = ({stock, onBack}) => {
         try{
             e.preventDefault();
 
-            const url = `http://localhost:9001/stock`;
+            const url = `${serverIp}:9001/stock`;
             
             const stockData = {
                 stockSeq: stock.stockSeq,
@@ -284,7 +286,7 @@ const UpdateStock = ({stock, onBack}) => {
     formData.append("image", image);
 
     try {
-        const response = await axios.post("http://localhost:9001/s3/upload", formData, {
+        const response = await axios.post(`${serverIp}/s3/upload`, formData, {
             headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
         });
         alert("업로드 성공: " + response.data);
