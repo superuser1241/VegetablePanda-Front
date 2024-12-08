@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Statistics.css';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { 
+    LineChart, 
+    Line, 
+    XAxis, 
+    YAxis, 
+    CartesianGrid, 
+    Tooltip as RechartsTooltip, 
+    Legend as RechartsLegend, 
+    ResponsiveContainer 
+} from 'recharts';
 
 const Statistics = ({ stockSeq }) => {
     const [period, setPeriod] = useState('daily');
@@ -105,8 +114,8 @@ const Statistics = ({ stockSeq }) => {
                             interval={period === 'daily' ? 6 : period === 'weekly' ? 0 : 4} // 일별: 7일 간격, 주간: 모든 레이블, 월별: 7일 간격
                         />
                         <YAxis />
-                        <Tooltip />
-                        <Legend 
+                        <RechartsTooltip />
+                        <RechartsLegend 
                             verticalAlign="bottom"
                             height={36}
                             wrapperStyle={{
