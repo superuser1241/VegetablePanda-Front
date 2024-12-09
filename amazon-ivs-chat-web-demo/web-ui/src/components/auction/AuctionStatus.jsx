@@ -65,13 +65,11 @@ const AuctionStatus = () => {
 
     return (
         <div className="auction-status-container">
-            <h2>실시간 경매 현황</h2>
             <div className="auction-table-container">
                 <table className="auction-table">
                     <thead>
                         <tr>
                             <th>상품명</th>
-                            <th>내용</th>
                             <th>수량</th>
                             <th>현재가</th>
                             <th>입찰수</th>

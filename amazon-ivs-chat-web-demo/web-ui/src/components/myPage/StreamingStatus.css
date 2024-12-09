@@ -1,0 +1,169 @@
+.streaming-section {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.streaming-section h3 {
+    color: #2c3e50;
+    font-size: 22px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #4CAF50;
+}
+
+/* 승인된 방송 정보 스타일 */
+.streaming-info {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.streaming-info h4 {
+    color: #2c3e50;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.streaming-info-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+/* 상품 정보 영역 */
+.streaming-product-info {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.streaming-product-image {
+    width: 100%;
+    height: 200px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.streaming-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.streaming-product-details h5 {
+    color: #2c3e50;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.product-name {
+    font-size: 15px;
+    color: #4a4a4a;
+    line-height: 1.4;
+}
+
+/* 서버 정보 영역 */
+.streaming-server-info {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.info-item {
+    margin-bottom: 20px;
+}
+
+.info-label {
+    display: block;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    display: block;
+    color: #2c3e50;
+    font-size: 15px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    word-break: break-all;
+}
+
+/* 방송 시작 버튼 */
+.streaming-start-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.streaming-start-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+/* 대기 상태 메시지 */
+.streaming-status {
+    text-align: center;
+    padding: 30px;
+    background-color: #fff3e0;
+    border-radius: 8px;
+    color: #f57c00;
+}
+
+/* 방송 신청 버튼 */
+.streaming-buttons {
+    text-align: center;
+    padding: 20px;
+}
+
+.streaming-btn {
+    padding: 12px 30px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.streaming-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+.streaming-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .streaming-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .streaming-section {
+        padding: 20px;
+    }
+
+    .streaming-product-image {
+        height: 180px;
+    }
+}

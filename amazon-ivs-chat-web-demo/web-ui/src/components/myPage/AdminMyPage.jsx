@@ -18,7 +18,7 @@ const AdminMyPage = () => {
     const [pendingStreamings, setPendingStreamings] = useState([]);
     const [approvalTriggered, setApprovalTriggered] = useState(false);
     const serverIp = process.env.REACT_APP_SERVER_IP;
-    const [statsType, setStatsType] = useState('product');
+    const [statsType, setStatsType] = useState('user');
 
     useEffect(() => {
         if (token) {
@@ -105,9 +105,6 @@ const AdminMyPage = () => {
                     <li onClick={() => setActiveTab('stats')} className={activeTab === 'stats' ? 'active' : ''}>
                         통계
                     </li>
-                    <li onClick={() => setActiveTab('products')} className={activeTab === 'products' ? 'active' : ''}>
-                        승인 대기 상품
-                    </li>
                     <li onClick={() => setActiveTab('streaming')} className={activeTab === 'streaming' ? 'active' : ''}>
                         스트리밍 승인
                     </li>
@@ -125,17 +122,17 @@ const AdminMyPage = () => {
                     <div className="stats-section">
                         <h2>통계</h2>
                         <div className="stats-tabs">
-                            <button onClick={() => setStatsType('product')} className={statsType === 'product' ? 'active' : ''}>
-                                상품 통계
-                            </button>
                             <button onClick={() => setStatsType('user')} className={statsType === 'user' ? 'active' : ''}>
                                 회원 통계
                             </button>
+                            <button onClick={() => setStatsType('product')} className={statsType === 'product' ? 'active' : ''}>
+                                상품 통계
+                            </button>
                         </div>
-                        {statsType === 'product' ? (
-                            <ProductStatistics />
-                        ) : (
+                        {statsType === 'user' ? (
                             <UserStatistics />
+                        ) : (
+                            <ProductStatistics />
                         )}
                     </div>
                 )}

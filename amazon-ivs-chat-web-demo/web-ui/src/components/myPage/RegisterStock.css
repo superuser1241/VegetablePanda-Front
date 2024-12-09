@@ -223,7 +223,7 @@ textarea {
 }
 
 .product-description {
-    width: 595px;
+    width: 900px;
     margin: 20px auto;
     grid-column: 1 / -1;
 }

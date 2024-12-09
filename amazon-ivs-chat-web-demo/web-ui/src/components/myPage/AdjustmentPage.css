@@ -2,7 +2,6 @@
     padding: 20px;
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .settlement-table {
@@ -30,7 +29,7 @@
 
 .approve-button {
     padding: 8px 16px;
-    background-color: #4CAF50;
+    background-color: #4a90e2;
     color: white;
     border: none;
     border-radius: 4px;
@@ -38,11 +37,39 @@
 }
 
 .approve-button:hover {
-    background-color: #45a049;
+    background-color: #4a90e2;
 }
 
 .no-data {
     text-align: center;
     padding: 20px;
     color: #666;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 20px 0;
+}
+
+.page-button {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background-color: white;
+    color: #333;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.page-button:hover {
+    background-color: #f0f0f0;
+}
+
+.page-button.active {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
 } 

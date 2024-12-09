@@ -11,6 +11,8 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import AuctionStatus from '../auction/AuctionStatus';
 import AuctionRegisterPage from '../auction/AuctionRegisterPage';
 import liveImg from '../../image/라이브.png';
+import slider1 from '../../image/광고 슬라이더1.png';
+import slider2 from '../../image/광고 슬라이더2.png';
 
 ChartJS.register(
     ArcElement, 
@@ -26,10 +28,9 @@ ChartJS.register(
 );
 
 const slides = [
-    { id: 1, text: 'Welcome to 농산물 판다!', backgroundColor: '#f8d7da' },
-    { id: 2, text: 'Find the freshest products!', backgroundColor: '#d1ecf1' },
-    { id: 3, text: 'Join the best farmers today!', backgroundColor: '#d4edda' },
-    { id: 4, text: 'Get discounts on bulk orders!', backgroundColor: '#fff3cd' },
+    { id: 1, image: slider1 },
+    { id: 2, image: slider2 },
+
 ];
 
 
@@ -338,11 +339,12 @@ const MainPage = ({ onJoinRoom }) => {
     return (
         <>
             <div className="slider-wrapper">
-                <div
-                    className="slider"
-                    style={{ backgroundColor: slides[currentSlide].backgroundColor }}
-                >
-                    <h2>{slides[currentSlide].text}</h2>
+                <div className="slider">
+                    <img 
+                        src={slides[currentSlide].image} 
+                        alt={`slide ${currentSlide + 1}`}
+                        className="slider-image"
+                    />
                 </div>
             </div>
             <div className="container">
@@ -416,8 +418,8 @@ const MainPage = ({ onJoinRoom }) => {
                     <div className="shop-list">
                         {shopItems.slice(0, visibleShops).map((item) => (
                             <div key={item.shopSeq} className="shop-card">
-                            {/* <Link to = {`/product/${item.stockSeq}`} state={{ product:item }} className='default-link product-name'> */}
-                            <div onClick={() => navigate(`/product/${item.stockSeq}`, { state: { product: item } })} className="default-link product-name">
+                            <Link to = {`/product/${item.stockSeq}`} state={{ product:item }} className='default-link product-name'>
+                            {/* <div onClick={() => navigate(`/product/${item.stockSeq}`, { state: { product: item } })} className="default-link product-name"> */}
                                 <div className="shop-image">
                                     <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
                                 </div>
@@ -429,14 +431,17 @@ const MainPage = ({ onJoinRoom }) => {
                                     <p><span>등급:</span> {item.stockGrade}</p>
                                     <p><span>인증:</span> {item.stockOrganic}</p>
                                 </div>
-                            </div>
-                                <button 
+                            {/* </div> */}
+                                {/* <button 
                                     className="buy-button" 
                                     onClick={() => navigate('/purchase', { state: { item } })}
+                                > */}
+                                <button 
+                                    className="buy-button" 
                                 >
                                     구매하기
                                 </button>
-                                {/* </Link> */}
+                                </Link>
                             </div>
                         ))}
                     </div>

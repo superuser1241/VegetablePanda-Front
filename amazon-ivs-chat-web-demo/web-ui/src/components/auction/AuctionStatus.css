@@ -1,78 +1,142 @@
 .auction-status-container {
-    padding: 20px;
+    padding: 30px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .auction-status-container h2 {
-    color: #333;
-    margin-bottom: 20px;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: 600;
     text-align: center;
+    padding-bottom: 15px;
 }
 
 .auction-table-container {
     overflow-x: auto;
+    border-radius: 12px;
 }
 
 .auction-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     background-color: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .auction-table th,
 .auction-table td {
-    padding: 12px;
+    padding: 15px;
     text-align: center;
-    border: 1px solid #ddd;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .auction-table th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-    color: #333;
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
-.auction-table tr:nth-child(even) {
-    background-color: #f8f8f8;
+.auction-table th:first-child {
+    border-top-left-radius: 12px;
 }
 
-.auction-table tr:hover {
-    background-color: #f0f0f0;
+.auction-table th:last-child {
+    border-top-right-radius: 12px;
 }
 
-.bid-button {
-    padding: 8px 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.auction-table tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
 }
 
-.bid-button:hover {
-    background-color: #45a049;
+.auction-table tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+.auction-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.auction-table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.auction-table td {
+    color: #495057;
+}
+
+/* 가격 칼럼 스타일 */
+.auction-table td:nth-child(4) {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* 남은 시간 칼럼 스타일 */
+.auction-table td:last-child {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+/* 입찰 수 칼럼 스타일 */
+.auction-table td:nth-child(5) {
+    color: #3498db;
+    font-weight: 600;
+}
+
+/* 등급과 인증 칼럼 스타일 */
+.auction-table td:nth-child(6),
+.auction-table td:nth-child(7) {
+    font-weight: 500;
 }
 
 .loading {
     text-align: center;
-    padding: 20px;
+    padding: 40px;
     color: #666;
+    font-size: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {
+    .auction-status-container {
+        padding: 15px;
+    }
+
     .auction-table {
         font-size: 14px;
     }
 
     .auction-table th,
     .auction-table td {
-        padding: 8px;
+        padding: 10px 8px;
     }
 
-    .bid-button {
-        padding: 6px 12px;
+    .auction-status-container h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
     }
+}
+
+/* 애니메이션 효과 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auction-table tbody tr {
+    animation: fadeIn 0.3s ease-out forwards;
 } 

@@ -913,7 +913,7 @@ const checkStreamingStatus = async () => {
           )}
 
           {activeTab === "review" && (
-            <div className="review-section">
+            <div className="my-reviews-section">
               <h3>나에게 작성된 리뷰</h3>
               {review.length > 0 ? (
                 <table className="review-table">
@@ -924,7 +924,6 @@ const checkStreamingStatus = async () => {
                       <th>내용</th>
                       <th>점수</th>
                       <th>작성 날짜</th>
-                      <th>작성자</th>
                       <th>삭제</th>
                     </tr>
                   </thead>
@@ -944,7 +943,6 @@ const checkStreamingStatus = async () => {
                         <td>{review.content}</td>
                         <td>{review.score}</td>
                         <td>{new Date(review.date).toLocaleDateString()}</td>
-                        <td>{review.name}</td>
                         <td>
                           <button
                             className=""
@@ -1050,9 +1048,7 @@ const checkStreamingStatus = async () => {
                     <tr>
                       <th>번호</th>
                       <th>판매 금액</th>
-                      <th>세후 금액</th>
                       <th>신청 날짜</th>
-                      <th>완료 날짜</th>
                       <th>상태</th>
                     </tr>
                   </thead>
@@ -1062,28 +1058,18 @@ const checkStreamingStatus = async () => {
                         <td>{index + 1}</td>
                         <td>{settlement.totalPoint}원</td>
                         <td>
-                          {settlement.pointToCash === null
-                            ? ""
-                            : settlement.pointToCash + "원"}
-                        </td>
-                        <td>
                           {new Date(
                             settlement.insertDate
                           ).toLocaleDateString() || "검토중"}
                         </td>
                         <td>
-                          {settlement.tradeDate === null
-                            ? ""
-                            : new Date(
-                                settlement.tradeDate
-                              ).toLocaleDateString()}
-                        </td>
-                        <td>
                           {settlement.state === 0
-                            ? "정산 전"
-                            : settlement.state === 1
-                            ? "정산 진행 중"
-                            : "정산 완료"}
+                            ? "정산 완료"
+                            : settlement.state === 9
+                            ? "정산 완료"
+                            : settlement.state === 10
+                            ? "정산 완료"
+                            : "정산 진행중"}
                         </td>{" "}
                       </tr>
                     ))}
