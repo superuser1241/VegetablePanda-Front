@@ -109,7 +109,7 @@ const BiddingSection = memo(({
 
     return (
         <div className={getClassName()}>
-            {isFarmer ? (
+        {isFarmer ? (
                 // 농부일 때
                 localAuctionData && localAuctionData.auctionSeq ? (
                     <AuctionStatusPage 

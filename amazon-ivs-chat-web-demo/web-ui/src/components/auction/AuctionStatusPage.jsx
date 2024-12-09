@@ -97,7 +97,7 @@ const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAucti
     };
 
     return (
-        <div className="auction-status-container">
+        <div className=".auction-status-page-container">
             <div className="status-header">
                 <h2>경매 진행 현황</h2>
             </div>
