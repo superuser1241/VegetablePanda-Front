@@ -82,6 +82,7 @@ const StockList = ({onStockSelect, setActiveTab}) => {
                             <tr key={item.stockSeq}
                                 onClick={() => onStockSelect(item)}
                                 style={{ cursor: 'pointer' }}
+                                className='stocklist-item'
                             >
                                 {/* <Link to = {`/stock-info/{${item.stockSeq}}`} state={{ item }}> */}
                                 <td >{item.productName}</td>

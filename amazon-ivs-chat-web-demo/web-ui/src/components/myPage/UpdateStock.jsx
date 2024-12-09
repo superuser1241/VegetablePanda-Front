@@ -199,7 +199,7 @@ const UpdateStock = ({stock, onBack}) => {
         try{
             e.preventDefault();
 
-            const url = `${serverIp}:9001/stock`;
+            const url = `${serverIp}/stock`;
             
             const stockData = {
                 stockSeq: stock.stockSeq,

@@ -296,54 +296,6 @@ table {
     background-color: #ff5252;
 }
 
-.point-section {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.point-info {
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: 6px;
-}
-
-.point-info p {
-    font-size: 1.2em;
-    color: #333;
-    margin: 0;
-}
-
-.charge-input-group {
-    display: flex;
-    gap: 10px;
-}
-
-.charge-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1em;
-}
-
-.charge-button {
-    padding: 10px 20px;
-    background-color: #4a90e2;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.charge-button:hover {
-    background-color: #357abd;
-} 
-
 .image-and-point-container {
     display: flex;
     align-items: center;

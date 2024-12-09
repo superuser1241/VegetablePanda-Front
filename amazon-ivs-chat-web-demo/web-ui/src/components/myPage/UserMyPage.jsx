@@ -31,6 +31,7 @@ const UserMyPage = () => {
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
 
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const [buyInfo, setBuyInfo] = useState(null);
 
@@ -49,6 +50,14 @@ const UserMyPage = () => {
   const [activeTab, setActiveTab] = useState("info");
   const navigate = useNavigate();
   const serverIp = process.env.REACT_APP_SERVER_IP;
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
 
   useEffect(() => {
     if (token) {
@@ -510,13 +519,21 @@ const UserMyPage = () => {
                     <strong>가입일자:</strong>{" "}
                     {new Date(userInfo.regDate).toLocaleDateString()}
                   </p>
-                  <p>
-                    <strong>보유 포인트:</strong> {point.toLocaleString() + "P"}
+                  <p className="userMyPage-point-container">
+                    <strong>보유 포인트: </strong> {point.toLocaleString() + "P"}<button className="mypage-charge-button" onClick={openPopup}>포인트 충전</button>
                   </p>
                 </div>
               </div>
-              <div className="userMyPage-point-container">
-                    <Point userId={userId} point={point} fetchPoint={fetchPoint} />
+            </div>
+          )}
+
+          {isPopupOpen && (
+            <div className="popup-overlay">
+              <div className="popup-content">
+                <button className="close-popup" onClick={closePopup}>
+                  닫기
+                </button>
+                <Point userId={userId} point={point} fetchPoint={fetchPoint} />
               </div>
             </div>
           )}

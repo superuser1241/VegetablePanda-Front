@@ -44,7 +44,18 @@ const CompanyMyPage = () => {
   const [pw, setPassword] = useState("");
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const serverIp = process.env.REACT_APP_SERVER_IP;
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   useEffect(() => {
     if (token) {
       try {
@@ -421,12 +432,6 @@ const CompanyMyPage = () => {
             >
               구독 목록
             </li>
-            <li
-              onClick={() => setActiveTab("point")}
-              className={activeTab === "point" ? "active" : ""}
-            >
-              포인트 충전
-            </li>
           </ul>
         </div>
 
@@ -472,15 +477,23 @@ const CompanyMyPage = () => {
                   <strong>가입일자 :</strong>{" "}
                   {new Date(companyInfo.regDate).toLocaleDateString()}
                 </p>
-                <p>
-                  <strong>보유 포인트:</strong> {point.toLocaleString()}P
-                </p>
+                <p className="userMyPage-point-container">
+                    <strong>보유 포인트: </strong> {point.toLocaleString() + "P"}<button className="mypage-charge-button" onClick={openPopup}>포인트 충전</button>
+                  </p>
               </div>
-                  </div>
-                  <div className="userMyPage-point-container">
-                    <Point userId={userId} point={point} fetchPoint={fetchPoint} />
-                  </div>
+            </div>
+          </div>
+          )}
+
+          {isPopupOpen && (
+            <div className="popup-overlay">
+              <div className="popup-content">
+                <button className="close-popup" onClick={closePopup}>
+                  닫기
+                </button>
+                <Point userId={userId} point={point} fetchPoint={fetchPoint} />
               </div>
+            </div>
           )}
 
           {activeTab === "update" && (
@@ -809,31 +822,6 @@ const CompanyMyPage = () => {
                   구독한 내역이 없습니다.
                 </div>
               )}
-            </div>
-          )}
-
-
-
-
-
-          {activeTab === "point" && (
-            <div className="point-section">
-              <h3>포인트 충전</h3>
-              <div className="point-info">
-                <p>현재 보유 포인트: {point.toLocaleString()}P</p>
-              </div>
-              <div className="charge-input-group">
-                <input
-                  type="number"
-                  value={chargeAmount}
-                  onChange={(e) => setChargeAmount(e.target.value)}
-                  placeholder="충전할 금액을 입력하세요"
-                  className="charge-input"
-                />
-                <button onClick={handleCharge} className="charge-button">
-                  충전하기
-                </button>
-              </div>
             </div>
           )}
         </div>
