@@ -371,6 +371,11 @@
     font-size: 1.2rem;
     padding: 10px 0;
   }
+
+  .userMyPage-card-name span {
+    position: relative;
+    color: red;
+  }
   
 .review-write-button {
     padding: 5px 10px;
