@@ -771,13 +771,13 @@ const checkStreamingStatus = async () => {
                   <div className="image-preview-container">
                   {imagePreview ?
                   <img
-                        src={imagePreview || logo}
+                        src={imagePreview }
                         alt="imagePreview"
                         className="image-preview"
                       />
                      :
                       <img
-                      src={farmerInfo.path}
+                      src={farmerInfo.path || logo}
                       alt="farmerInfo.path"
                       className="image-preview"
                     />

@@ -596,7 +596,7 @@ const UserMyPage = () => {
                       
                     ) : (
                       <img
-                      src={userInfo.path}
+                      src={userInfo.path || logo}
                       alt="userInfo.path"
                       className="image-preview"
                     />
