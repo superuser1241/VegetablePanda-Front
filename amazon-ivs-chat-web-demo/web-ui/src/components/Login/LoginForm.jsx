@@ -62,75 +62,81 @@ function LoginForm({ onLoginSuccess }) {
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoApiKey}&redirect_uri=${kakaoRedirectUri}&prompt=select_account`;
 
   return (
-    <div className="form-container">
-      <div className="tab-menu">
-        <button
-          className={activeTab === "login" ? "tab active" : "tab"}
-          onClick={() => setActiveTab("login")}
-        >
-          로그인
-        </button>
-        <button
-          className={activeTab === "register" ? "tab active" : "tab"}
-          onClick={() => setActiveTab("register")}
-        >
-          회원가입
-        </button>
-      </div>
-
-      <div className="tab-content">
-        {activeTab === "login" && (
-          <div className="login-tab">
-            <h2>로그인</h2>
-            <form className="login-form" onSubmit={handleLogin}>
-              <div className="form-group">
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="아이디를 입력하세요"
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="비밀번호를 입력하세요"
-                />
-              </div>
-              <button className="login-button" type="submit">
-                로그인
-              </button>
-              <hr className="divider" />
-
-              <div className="kakaoLogin">
-                <a href={kakaoURL}>
-                  <img src={kakaoLogin} alt="카카오 로그인" />
-                </a>
-              </div>
-            </form>
-            {message && <p className="error-message">{message}</p>}
-          </div>
-        )}
-
-        {activeTab === "register" && (
-          <div className="register-tab">
-            <h2>회원가입</h2>
-            <div className="register-buttons">
-              <Link to="/UserRegister" className="register-link">
-                일반 회원
-              </Link>
-              <Link to="/CompanyRegister" className="register-link">
-                업체 회원
-              </Link>
-              <Link to="/FarmerRegister" className="register-link">
-                판매자 회원
-              </Link>
+    <div className="login-page-container">
+        <div className="site-description">
+            <h1>농산물 판다 라이브 커머스</h1>
+            <p>라이브를 통한 신선한 농산물을 직접 만나보세요</p>
+            <p>농부님들이 직접 재배한 신선한 농산물</p>
+            <p>중간 유통 과정 없는 합리적인 가격</p>
+            <p>산지 직송으로 더욱 신선한 배송</p>
+            <p>믿을 수 있는 품질 인증 시스템</p>
+            <p>농산물 직거래 국내 1위 플랫폼!!</p>
+        </div>
+        <div className="form-container">
+            <div className="tab-menu">
+                <button
+                    className={activeTab === "login" ? "tab active" : "tab"}
+                    onClick={() => setActiveTab("login")}
+                >
+                    로그인
+                </button>
+                <button
+                    className={activeTab === "register" ? "tab active" : "tab"}
+                    onClick={() => setActiveTab("register")}
+                >
+                    회원가입
+                </button>
             </div>
-          </div>
-        )}
-      </div>
+
+            <div className="tab-content">
+                {activeTab === "login" && (
+                    <div className="login-tab">
+                        <h2>로그인</h2>
+                        <form className="login-form" onSubmit={handleLogin}>
+                            <div className="form-group">
+                                <input
+                                    type="text"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    placeholder="아이디를 입력하세요"
+                                    className="login-input"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="비밀번호를 입력하세요"
+                                    className="login-input"
+                                />
+                            </div>
+                            <button className="login-button" type="submit">
+                                로그인
+                            </button>
+                        </form>
+                        {message && <p className="error-message">{message}</p>}
+                    </div>
+                )}
+
+                {activeTab === "register" && (
+                    <div className="register-tab">
+                        <h2>회원가입</h2>
+                        <div className="register-buttons">
+                            <Link to="/UserRegister" className="register-link">
+                                일반 회원
+                            </Link>
+                            <Link to="/CompanyRegister" className="register-link">
+                                업체 회원
+                            </Link>
+                            <Link to="/FarmerRegister" className="register-link">
+                                판매자 회원
+                            </Link>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
     </div>
   );
 }

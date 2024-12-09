@@ -1,181 +1,217 @@
-.form-container {
-    max-width: 700px;
-    height: 500px;
-    margin: 0 auto;
-    font-family: 'Roboto', sans-serif;
-    border: 2px solid #d6d6d6;
-    border-radius: 12px;
-    background-color: #ffffff;
+.login-page-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 50px auto;
+    min-height: 600px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    background-color: #fff;
+}
 
+.site-description {
+    flex: 1;
+    background: linear-gradient(135deg, #28a745 0%, #82c91e 100%);
+    padding: 60px 40px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 12px 0 0 12px;
+}
+
+.site-description h1 {
+    font-size: 2.6em;
+    margin-bottom: 30px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.site-description p {
+    font-size: 1.2em;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    padding-left: 25px;
+    position: relative;
+}
+
+.site-description p:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.form-container {
+    flex: 1;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 0 12px 12px 0;
 }
 
 .tab-menu {
     display: flex;
-    justify-content: space-around;
-    margin: 0;
-    padding: 0;
-    height: 50px;
-    border-radius: 12px 12px 0 0;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
 .tab-menu button {
-    flex: 1;
-    padding: 12px 0;
+    padding: 12px 30px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
     border: none;
-    background-color: #f8f9fa;
-    color: #555;
-    transition: all 0.3s;
-    border-bottom: 2px solid #ccc;
+    background: none;
+    color: #666;
+    position: relative;
+    transition: color 0.3s;
 }
 
 .tab-menu button.active {
-    color: #ffffff;
+    color: #28a745;
+}
+
+.tab-menu button.active:after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 3px;
     background-color: #28a745;
-    border-bottom: 1px solid #28a745;
+    border-radius: 2px;
 }
 
-.tab-content {
-    padding: 20px 0;
-    text-align: center;
-}
-
-.login-form, .register-tab {
-    background-color: #ffffff;
-    text-align: center;
-    padding: 15px;
-    
+.login-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .form-group {
-    width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-.form-group label {
-    font-weight: 600;
-    color: #6b4e24;
-    margin-bottom: 20px;
-    display: block;
+.login-input {
+    width: 360px !important;
+    padding: 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s;
 }
 
-.form-group input {
-    border: 1px solid #c6b28e;
-    background-color: #fcf8f3;
-     width: 60%;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-
-.form-group input:focus {
-    border-color: #4caf50;
-    box-shadow: 0 0 6px rgba(166, 124, 82, 0.3);
+.login-input:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
     outline: none;
-    
-}
-
-input::placeholder {
-    color: #b8a189;
-    font-style: italic;
-    
 }
 
 .login-button {
-    width: 60%;
-    height: 50px;
-    background-color: #82c91e;
+    width: 100%;
+    padding: 15px;
+    background-color: #28a745;
     color: white;
-    font-size: 18px;
-    font-weight: 700;
     border: none;
     border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    display: block;  
-    margin: 0 auto;
+    transition: all 0.3s;
+    margin-top: 10px;
 }
 
 .login-button:hover {
-    background-color: #5d9c13;
-    transform: scale(1.03);
-}
-
-.register-tab {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
 }
 
 .register-buttons {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 30px;
 }
 
 .register-link {
-    flex: 1;
-    aspect-ratio: 1;
-    padding: 0;
-    background-color: #28a745;
-    color: white;
+    padding: 20px;
+    background-color: #f8f9fa;
+    color: #28a745;
     text-decoration: none;
     border-radius: 8px;
-    font-size: 18px;
-    font-weight: bold;
+    font-weight: 600;
     text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: all 0.3s;
+    border: 2px solid #e9ecef;
 }
 
 .register-link:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-}
-
-.error-message {
-    color: #e74c3c;
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 15px;
-    text-align: center;
+    background-color: #28a745;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
 }
 
 .divider {
-    border-top: 2px solid #ccc;
-    margin: 30px;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 30px 0;
+    color: #adb5bd;
 }
 
-@media (max-width: 480px) {
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.divider span {
+    padding: 0 10px;
+}
+
+.kakaoLogin {
+    text-align: center;
+}
+
+.kakaoLogin img {
+    max-width: 100%;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.kakaoLogin img:hover {
+    transform: scale(1.02);
+}
+
+.error-message {
+    color: #dc3545;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .login-page-container {
+        flex-direction: column;
+        margin: 20px;
+        min-height: auto;
+    }
+
+    .site-description {
+        border-radius: 12px 12px 0 0;
+        padding: 30px;
+    }
+
     .form-container {
-        padding: 10px;
-    }
-
-    h2 {
-        font-size: 24px;
-    }
-
-    .form-group input {
-        font-size: 14px;
-        padding: 12px;
-    }
-
-    .login-button {
-        height: px;
-        font-size: 16px;
+        border-radius: 0 0 12px 12px;
     }
 
     .register-buttons {
-        flex-direction: column;
-        gap: 10px;
+        grid-template-columns: 1fr;
     }
 }
