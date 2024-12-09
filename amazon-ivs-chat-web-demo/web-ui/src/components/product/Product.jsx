@@ -3,6 +3,8 @@ import './Product.css';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Statistics from './Statistics';
 import axios from 'axios';
+import ReviewSummary from './ReviewSummary';
+import ReviewDetail from './ReviewDetail';
 
 const Product = () => {
 
@@ -13,10 +15,13 @@ const Product = () => {
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState(1);
     const [shopLike, setShopLike] = useState(false);
+    const [reviewList, setReviewList] = useState([]);
+    const [reviewStatistics, setReviewStatistics] = useState({});
     const userRole = localStorage.getItem('userRole');
     const navigate = useNavigate();
     const serverIp = process.env.REACT_APP_SERVER_IP;
     const [isInitialLoad, setIsInitialLoad] = useState(true);
+
 
     const renderTabContent = () => {
         switch (activeTab) {
@@ -31,7 +36,8 @@ const Product = () => {
                 return (
                     <div className="tab-section-content" id="reviews">
                         <h2>후기</h2>
-                        <p>리뷰 정보가 여기에 표시됩니다.</p>
+                        <ReviewSummary averageRating = {reviewStatistics.averageRating} totalReviews = {reviewStatistics.reviewCount}/>
+                        <ReviewDetail reviews = {reviewList}/>
                     </div>
                 );
             case "stats":
@@ -109,6 +115,50 @@ const Product = () => {
         }
     }
 
+    const fetchReviewList = async () => {
+        const token = localStorage.getItem('token');
+
+        try {
+            const response = await axios.get(
+                `${serverIp}/stock/review?stockSeq=${product.stockSeq}`,
+                {
+                  headers: { 
+                    'Authorization': `Bearer ${token}`,
+                  }
+                }
+            );
+
+            console.log(response.data);
+            setReviewList(response.data);
+
+        } catch (err) {
+            console.error("리뷰 목록 조회 에러 : ", err);
+        }
+
+    }
+
+    const fetchReviewStatistics = async () => {
+        const token = localStorage.getItem('token');
+
+        try {
+            const response = await axios.get(
+                `${serverIp}/stock/reviewStatistics?stockSeq=${product.stockSeq}`,
+                {
+                  headers: { 
+                    'Authorization': `Bearer ${token}`,
+                  }
+                }
+            );
+
+            console.log('평균평점');
+            console.log(response.data);
+            setReviewStatistics(response.data);
+
+        } catch (err) {
+            console.error("리뷰 통계 조회 에러 : ", err);
+        }
+    }
+
     useEffect(() => {
         const fetchShopLike = async () => {
             if (product?.shopSeq && isInitialLoad) {
@@ -124,6 +174,12 @@ const Product = () => {
         console.log('shopLike 상태 변경됨:', shopLike);
         setShopLike(shopLike);
     }, [shopLike]);
+
+    useEffect(() => {
+        console.log('Review 상태 변경됨:', shopLike);
+        fetchReviewList();
+        fetchReviewStatistics();
+    }, []);
 
     const handleQuantityChange = (e) => {
         const value = parseInt(e.target.value);

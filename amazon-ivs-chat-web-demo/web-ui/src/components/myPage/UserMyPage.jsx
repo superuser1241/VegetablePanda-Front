@@ -10,6 +10,9 @@ import ReviewCommentList from "../ReviewComment/ReviewCommentList.jsx";
 import Point from "./Point.jsx";
 import UserAuctionHistory from "./UserAuctionHistory.jsx";
 import UserLikedShops from "./UserLikedShops.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons"
+
 const UserMyPage = () => {
   const token = localStorage.getItem("token");
   const [userId, setUserId] = useState("");
@@ -31,6 +34,7 @@ const UserMyPage = () => {
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
 
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const [buyInfo, setBuyInfo] = useState(null);
 
@@ -49,6 +53,14 @@ const UserMyPage = () => {
   const [activeTab, setActiveTab] = useState("info");
   const navigate = useNavigate();
   const serverIp = process.env.REACT_APP_SERVER_IP;
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
 
   useEffect(() => {
     if (token) {
@@ -510,13 +522,27 @@ const UserMyPage = () => {
                     <strong>가입일자:</strong>{" "}
                     {new Date(userInfo.regDate).toLocaleDateString()}
                   </p>
-                  <p>
-                    <strong>보유 포인트:</strong> {point.toLocaleString() + "P"}
+                  <p className="userMyPage-point-container">
+                    <strong>보유 포인트: </strong> {point.toLocaleString() + "P"}<button className="mypage-charge-button" onClick={openPopup}>포인트 충전</button>
                   </p>
                 </div>
               </div>
-              <div className="userMyPage-point-container">
+            </div>
+          )}
+
+          {isPopupOpen && (
+            <div className="popup-overlay">
+              <div className="popup-container">
+                <div className="popup-header">
+                  <button className="close-popup" onClick={closePopup}>
+                  <FontAwesomeIcon icon={faXmark}/>
+                  </button>
+                </div>
+                <div className="popup-content">
+                  <div className="popup-body">
                     <Point userId={userId} point={point} fetchPoint={fetchPoint} />
+                  </div>
+                </div>
               </div>
             </div>
           )}

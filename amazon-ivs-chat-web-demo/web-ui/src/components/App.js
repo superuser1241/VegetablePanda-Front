@@ -96,9 +96,21 @@ function App() {
     useEffect(() => {
         const checkAuthStatus = () => {
             const token = localStorage.getItem('token');
-            if (token) {
+            if (token && token !== 'null') {
                 try {
-                    const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
+                    if (!token.includes('.')) {
+                        throw new Error('Invalid token format');
+                    }
+
+                    const base64Url = token.split('.')[1];
+                    const base64 = base64Url
+                        .replace(/-/g, '+')
+                        .replace(/_/g, '/')
+                        .padEnd(base64Url.length + (4 - (base64Url.length % 4)) % 4, '=');
+
+                    const decodedPayload = decodeURIComponent(escape(atob(base64)));
+                    const payload = JSON.parse(decodedPayload);
+
                     if (Date.now() >= payload.exp * 1000) {
                         localStorage.removeItem('token');
                         setUserName('');

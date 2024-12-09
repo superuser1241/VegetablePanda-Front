@@ -1,0 +1,93 @@
+.review-detail-container {
+    margin: 20px auto;
+    padding: 10px;
+    width: 90%;
+  }
+  
+  .review-item {
+    margin-bottom: 20px;
+    cursor: pointer; /* 클릭 가능 */
+  }
+  
+  .review-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .review-user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  
+  .review-user-info {
+    flex-grow: 1;
+  }
+  
+  .review-user-id {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .review-date {
+    font-size: 12px;
+    color: #777;
+    margin-left: 10px;
+  }
+  
+  .review-stars {
+    color: #ff5a00;
+    font-size: 16px;
+  }
+  
+  .review-content {
+    font-size: 14px;
+    color: #333;
+    margin: 10px 0;
+  }
+  
+  .review-image {
+    max-width: 80%;
+    border-radius: 10px;
+    margin-top: 10px;
+    object-fit: cover;
+  }
+
+  .review-image.expanded {
+    width: 100%; /* 가로 폭에 맞춤 */
+    height: auto; /* 비율 유지 */
+    object-fit: contain;
+    margin-top: 10px;
+    border-radius: 0;
+  }
+  
+  .review-divider {
+    border: 0;
+    height: 1px;
+    background-color: #ddd;
+    margin: 20px 0;
+  }
+
+  .content-image-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px;
+  }
+
+  .content-image-container img {
+    width:100px;
+    height: 100px;
+    object-fit: cover;
+  }
+
+  .review-stars {
+    margin-right: 30px;
+  }
+
+  .review-image-expanded {
+    border-radius: 10px;
+  }
