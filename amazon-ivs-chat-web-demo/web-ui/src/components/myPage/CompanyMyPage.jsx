@@ -5,14 +5,13 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../image/기본이미지.png";
 import Point from "./Point";
 import UserLikedShops from "./UserLikedShops.jsx";
-
+import UserAuctionHistory from "./UserAuctionHistory.jsx";
 
 const CompanyMyPage = () => {
   const [chargeAmount, setChargeAmount] = useState("");
   const [companyInfo, setCompanyInfo] = useState(null);
   const token = localStorage.getItem("token");
   const [userId, setUserId] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
   const [editedCompany, setEditedCompany] = useState({
     comName: "",
     ownerName: "",
@@ -29,11 +28,9 @@ const CompanyMyPage = () => {
   const [point, setPoint] = useState(0);
   const [buyInfo, setBuyInfo] = useState(null);
   const [userLike, setUserLike] = useState([]);
-  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [loading1, setLoading1] = useState(false);
-  const [buyList, setBuyList] = useState([]);
   const [codePart1, setCodePart1] = useState("");
   const [codePart2, setCodePart2] = useState("");
   const [codePart3, setCodePart3] = useState("");
@@ -41,7 +38,6 @@ const CompanyMyPage = () => {
   const [review, setReview] = useState([]);
   const [activeTab, setActiveTab] = useState("info");
   const navigate = useNavigate();
-  const [pw, setPassword] = useState("");
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
   const serverIp = process.env.REACT_APP_SERVER_IP;
@@ -421,12 +417,6 @@ const CompanyMyPage = () => {
             >
               구독 목록
             </li>
-            <li
-              onClick={() => setActiveTab("point")}
-              className={activeTab === "point" ? "active" : ""}
-            >
-              포인트 충전
-            </li>
           </ul>
         </div>
 
@@ -702,6 +692,7 @@ const CompanyMyPage = () => {
 {activeTab === "buyList" && (
             <div className="userMyPage-order-history-display">
               <h3>주문 내역</h3>
+              {review.length > 0 ? (
               <table className="userMyPage-order-history-table">
                 <thead>
                   <tr>
@@ -726,60 +717,16 @@ const CompanyMyPage = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
-          )}
-
-          {activeTab === "auction" && (
-            <div className="auction-history-display">
-              <h3>경매 참여 내역</h3>
-              {loading1 ? (
-                <div>로딩 중...</div>
-              ) : error ? (
-                <div className="error-message">{error}</div>
-              ) : auctions.length > 0 ? (
-                <table>
-                  <thead>
-                    <tr className="company-mypage-tr">
-                      <th>번호</th>
-                      <th>상품명</th>
-                      <th>수량</th>
-                      <th>입찰 금액</th>
-                      <th>참여 날짜</th>
-                      <th>판매자명</th>
-                      <th>현재 상태</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {auctions.map((auction, index) => (
-                      <tr key={auction.bidSeq} className="company-mypage-tr">
-                        <td>{index + 1}</td> {/* 번호 */}
-                        <td>{auction.content}</td> {/* 상품명 */}
-                        <td>{auction.count}</td> {/* 수량*/}
-                        <td>{auction.price}원</td> {/* 입찰할 금액 */}
-                        <td>{auction.insertDate}</td> {/* 입찰한 날짜 */}
-                        <td>{auction.name}</td> {/* 판매자명 */}
-                        <td>
-                          {auction.status === 0
-                            ? "값 뭐넣어야해여?"
-                            : auction.status === 1
-                            ? "값 뭐넣어야해여?"
-                            : auction.status === 2
-                            ? "값 뭐넣어야해여?"
-                            : auction.status === 3
-                            ? "값 뭐넣어야해여?"
-                            : "값 뭐넣어야해여?"}
-                        </td>
-                        {/* 현재 상태 */}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
+               ) : (
                 <div className="no-data-notification">
-                  경매 참여 내역이 없습니다.
+                  주문한 내역이 없습니다.
                 </div>
               )}
             </div>
+          )}
+
+{activeTab === "auction" && (
+            <UserAuctionHistory  auctions = {auctions} loading1 = {loading1} error = {error}/>
           )}
 
 {activeTab === "userLike" && (
@@ -809,31 +756,6 @@ const CompanyMyPage = () => {
                   구독한 내역이 없습니다.
                 </div>
               )}
-            </div>
-          )}
-
-
-
-
-
-          {activeTab === "point" && (
-            <div className="point-section">
-              <h3>포인트 충전</h3>
-              <div className="point-info">
-                <p>현재 보유 포인트: {point.toLocaleString()}P</p>
-              </div>
-              <div className="charge-input-group">
-                <input
-                  type="number"
-                  value={chargeAmount}
-                  onChange={(e) => setChargeAmount(e.target.value)}
-                  placeholder="충전할 금액을 입력하세요"
-                  className="charge-input"
-                />
-                <button onClick={handleCharge} className="charge-button">
-                  충전하기
-                </button>
-              </div>
             </div>
           )}
         </div>
