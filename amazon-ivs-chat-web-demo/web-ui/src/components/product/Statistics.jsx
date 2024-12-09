@@ -23,7 +23,17 @@ const Statistics = ({ stockSeq }) => {
         const fetchData = async () => {
             try {
                 const today = new Date();
-                const oneMonthAgo = new Date(today.setMonth(today.getMonth() - 1));
+                let startDate, endDate;
+                
+                if (period === 'monthly') {
+                    startDate = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+                } else if (period === 'weekly') {
+                    startDate = new Date(today.setMonth(today.getMonth() - 1));
+                } else {
+                    startDate = new Date(today.setMonth(today.getMonth() - 1));
+                }
+                
+                endDate = new Date();
                 
                 const formatDate = (date) => {
                     const year = date.getFullYear();
@@ -32,13 +42,13 @@ const Statistics = ({ stockSeq }) => {
                     return `${year}-${month}-${day}`;
                 };
                 
-                const startDate = formatDate(oneMonthAgo);
-                const endDate = formatDate(new Date());
+                const formattedStartDate = formatDate(startDate);
+                const formattedEndDate = formatDate(endDate);
                 
                 const response = await axios.get(`${serverIp}/api/${period}`, {
                     params: {
-                        startDate: startDate,
-                        endDate: endDate,
+                        startDate: formattedStartDate,
+                        endDate: formattedEndDate,
                         stockSeq: stockSeq
                     }
                 });
@@ -61,6 +71,19 @@ const Statistics = ({ stockSeq }) => {
             fetchData();
         }
     }, [period, stockSeq]);
+
+    const getXAxisInterval = () => {
+        switch (period) {
+            case 'monthly':
+                return 0;
+            case 'weekly':
+                return 1;
+            case 'daily':
+                return 6;
+            default:
+                return 0;
+        }
+    };
 
     return (
         <div className="statistics-container">
@@ -111,7 +134,7 @@ const Statistics = ({ stockSeq }) => {
                             angle={-45}
                             textAnchor="end"
                             height={70}
-                            interval={period === 'daily' ? 6 : period === 'weekly' ? 0 : 4} // 일별: 7일 간격, 주간: 모든 레이블, 월별: 7일 간격
+                            interval={getXAxisInterval()}
                         />
                         <YAxis />
                         <RechartsTooltip />

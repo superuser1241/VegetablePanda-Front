@@ -587,7 +587,6 @@ const UserMyPage = () => {
           )}
 
           {activeTab === "auction" && (
-            
             <UserAuctionHistory  auctions = {auctions} loading1 = {loading1} error = {error}/>
           )}
 
