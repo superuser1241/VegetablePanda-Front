@@ -40,7 +40,7 @@ const NotifyBoardWrite = () => {
 
     try {
         const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
-        
+        const serverIp = process.env.REACT_APP_SERVER_IP;
         // FormData 객체 생성
         const data = new FormData();
         data.append('noticeBoard', JSON.stringify({
@@ -52,7 +52,7 @@ const NotifyBoardWrite = () => {
             data.append('image', image); // 이미지 파일 추가
         }
 
-        await axios.post('http://localhost:9001/notifyBoard/', 
+        await axios.post(`${serverIp}/notifyBoard/`, 
             data,
             {
                 headers: {

@@ -97,7 +97,7 @@ const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAucti
     };
 
     return (
-        <div className="auction-status-container">
+        <div className=".auction-status-page-container">
             <div className="status-header">
                 <h2>경매 진행 현황</h2>
             </div>
@@ -105,7 +105,11 @@ const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAucti
             <div className="auction-info">
                 <div className="current-price">
                     <h3>현재 입찰가</h3>
-                    <p>{highestBid ? `${highestBid.price}원` : '입찰자 없음'}</p>
+                    <p>{highestBid ? `${highestBid.price.toLocaleString('ko-KR', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    })}원` : '입찰자 없음'}
+                    </p>
                 </div>
                 <div className="quantity">
                     <h3>수량</h3>

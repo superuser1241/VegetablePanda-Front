@@ -83,7 +83,8 @@ const AuctionStatus = () => {
                         {auctions.map((auction) => (
                             <tr key={auction.auctionSeq}>
                                 <td>{auction.productName}</td>
-                                <td>{auction.count}개</td>
+                                <td>{auction.content}</td>
+                                <td>{auction.count}Kg</td>
                                 <td>{auction.currentPrice?.toLocaleString()}원</td>
                                 <td>{auction.bidCount}회</td>
                                 <td>{auction.stockGrade}</td>

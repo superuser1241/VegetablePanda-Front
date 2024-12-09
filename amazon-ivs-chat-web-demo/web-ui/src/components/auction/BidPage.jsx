@@ -228,7 +228,7 @@ const BidPage = ({
                                         (kg당 {pricePerKg.toLocaleString()}원)
                                     </span>
                                     
-                                    {userRole === 'ROLE_USER' && (
+                                    {userRole === 'ROLE_COMPANY' && (
                                         <span className="price-deposit">
                                             선금 포인트 {Math.floor(bidAmount * 0.1).toLocaleString()}원
                                         </span>

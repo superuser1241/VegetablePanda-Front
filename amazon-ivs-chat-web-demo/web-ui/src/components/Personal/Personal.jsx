@@ -4,6 +4,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Personal.css";
 import '../MainPage/MainPage.css';
 import logo from "../../image/기본이미지.png";
+import liveImg from '../../image/라이브.png';
+import DOMPurify from 'dompurify';
+
 
 const Personal = ({ onJoinRoom }) => {
   const token = localStorage.getItem("token");
@@ -18,6 +21,7 @@ const Personal = ({ onJoinRoom }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [farmerInfo, setFarmerInfo] = useState(null);
   const [like, setLike] = useState(null);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -67,6 +71,8 @@ const Personal = ({ onJoinRoom }) => {
     fetchShopItems(farmerSeq);
   }, []);
 
+  
+
   useEffect(() => {
     if (seq) {
       fetchFarmerInfo(farmerSeq);
@@ -76,23 +82,28 @@ const Personal = ({ onJoinRoom }) => {
 
   useEffect(() => {
     const fetchState = async () => {
+      if (!seq || !farmerSeq) return;
+
       try {
-        const response = await axios.get(`${serverIp}/likeState`, {
-          params: {
-            userSeq: seq,
-            farmerSeq
-          },
+        const response = await axios.post(`${serverIp}/likeState`, {
+          userSeq: seq,
+          farmerSeq: farmerSeq
+        }, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setState(response.data);
-        console.log("상태값 받음:", response.data);
+        
+        if (response.data !== null && response.data !== undefined) {
+          setState(response.data);
+          setIsSubscribed(response.data);
+        }
       } catch (error) {
-        console.error("상태값 못받음:", error);
       }
     };
-  }, []);
+
+    fetchState();
+  }, [seq, farmerSeq, token, serverIp]);
 
   const fetchFarmerInfo = async (farmerSeq) => {
     try {
@@ -106,7 +117,6 @@ const Personal = ({ onJoinRoom }) => {
       );
       setFarmerInfo(response.data);
     } catch (error) {
-      console.error("회원 정보 조회 실패:", error);
     }
   };
 
@@ -125,9 +135,8 @@ const Personal = ({ onJoinRoom }) => {
         }
       );
       setLike(response.data);
-      console.log("구독 요청 성공:", response.data);
+      setIsSubscribed(!isSubscribed);
     } catch (error) {
-      console.error("구독 요청 실패:", error);
     }
   };
 
@@ -141,7 +150,6 @@ const Personal = ({ onJoinRoom }) => {
       );
       setReview(response.data);
     } catch (error) {
-      console.error("리뷰 조회 실패:", error);
     }
   };
 
@@ -163,58 +171,56 @@ const Personal = ({ onJoinRoom }) => {
           <div className="yun-profile-details">
             {farmerInfo && (
               <>
-                {farmerSeq + "= 판매자 시퀀스"} , {seq + " = 로그인한 시퀀스"}
                 <h1 className="yun-seller-name">{farmerInfo.name}</h1>
                 <p className="yun-seller-description">{farmerInfo.intro}</p>
+                {farmerSeq === undefined || farmerSeq === seq || null ? (
+                  ""
+                ) : (
+                  <button
+                    className={`yun-like-button1 ${isSubscribed ? 'yun-subscribed' : 'yun-not-subscribed'}`}
+                    onClick={() => fetchLike(farmerSeq)}
+                  >
+                    {isSubscribed ? '구독중' : '구독하기'}
+                  </button>
+                )}
               </>
             )}
+            
           </div>
         </div>
-        {farmerSeq === undefined || farmerSeq === seq || null ? (
-          ""
-        ) : (
-          <button
-            className="yun-like-button1"
-            onClick={() => fetchLike(farmerSeq)}
-          >
-            구독
-          </button>
-        )}
+       
       </div>
 
       {/* 하단 3칸 컨테이너 */}
       <div className="yun-bottom-container">
         <div className="yun-item-container1">
           <h2 className="yun-item-title">판매자 리뷰</h2>
-          {review.length > 0 ? (
-            <div className="yun-review-list">
-              {review.map((review) => (
-                <div key={review.reviewCommentSeq} className="yun-review-item">
-                  <div className="yun-review-header">
-                    <span className="yun-review-score">
-                      평점: {review.score}점
-                    </span>
-                    <span className="yun-review-date">
-                      {new Date(review.date).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="yun-review-content">{review.content}</div>
-                  <div className="yun-review-image">
-                    {review.file && review.file.path && (
-                      <img src={review.file.path} alt="리뷰 이미지" />
-                    )}
-                  </div>
-                  <span className="yun-review-date">
-                    작성날짜 : {new Date(review.date).toLocaleDateString()}
-                  </span>
+          {review.length === 0 ? (
+        <p className="no-reviews">작성한 리뷰가 없습니다.</p>
+      ) : (
+        <div className="review-grid">
+          {review.map((review) => (
+            <div 
+              key={review.reviewCommentSeq} 
+              className="review-item"
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="review-header">
+                <h3>{review.productName}</h3>
+                <div className="star-rating">
+                  {'★'.repeat(review.score)}{'☆'.repeat(5-review.score)}
                 </div>
-              ))}
+              </div>
+              <div 
+                className="review-content"
+                dangerouslySetInnerHTML={{ 
+                  __html: DOMPurify.sanitize(review.content) 
+                }} 
+              />
             </div>
-          ) : (
-            <div className="yun-no-data-notification">
-              작성한 리뷰가 없습니다.
-            </div>
-          )}
+          ))}
+        </div>
+      )}
         </div>
 
         <div className="yun-item-container1">
@@ -232,20 +238,12 @@ const Personal = ({ onJoinRoom }) => {
                                 <div className="yun-shop-image">
                                     <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
                                 </div>
-                                <h3>{item.content}</h3>
                                 <div className="yun-shop-info">
-                                    <p><span>가격:</span> {item.price.toLocaleString()}원</p>
-                                    <p><span>수량:</span> {item.count}개</p>
-                                    <p><span>상품:</span> {item.productName}</p>
-                                    <p><span>등급:</span> {item.stockGrade}</p>
-                                    <p><span>인증:</span> {item.stockOrganic}</p>
+                                    <div>#{item.productName}</div>
+                                    <div><span>#등급:</span> {item.stockGrade}</div>
+                                    <div><span>#인증:</span> {item.stockOrganic}</div>
+
                                 </div>
-                                <button 
-                                    className="buy-button" 
-                                    onClick={() => navigate('/purchase', { state: { item } })}
-                                    >
-                                    구매하기
-                                </button>
                                 </Link>
                             </div>
                         ))}
@@ -264,13 +262,20 @@ const Personal = ({ onJoinRoom }) => {
               <div className="yun-room-list">
                 {rooms.slice(0, visibleRooms).map((room) => (
                   <div key={room.streamingSeq} className="room-card">
-                    <h3>Room ID: {room.chatRoomId}</h3>
-                    <button
-                      className="join-button"
-                      onClick={() => onJoinRoom(room)}
-                    >
-                      방송 입장하기
-                    </button>
+                    <img src={room.filePath || 'https://placehold.co/200x200?text=NoImage'} 
+                                        alt={room.productName} className="yun-live-image"
+                                    />
+                                    <img src={liveImg} alt="LIVE" className="yun-live-badge" />
+                                    <div className="room-info">
+                                    <h3 className='product-name-mainPage'>{room.productName || '상품명 없음'}</h3>
+                                    <p className="farmer-name">판매자: {room.farmerName || '판매자 정보 없음'}</p>
+                                    <button
+                                        className="join-button"
+                                        onClick={() => onJoinRoom(room)}
+                                    >
+                                        방송 입장하기
+                                    </button>
+                                </div>
                   </div>
                   
                 ))}

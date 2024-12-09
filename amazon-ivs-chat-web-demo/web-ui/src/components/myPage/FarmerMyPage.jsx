@@ -46,7 +46,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const [review, setReview] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [settlements, setSettlements] = useState([]);
-  const [imagePreview, setImagePreview] = useState(logo);
+  const [imagePreview, setImagePreview] = useState(null);
   const [farmerInfo, setFarmerInfo] = useState(null);
   const [streamingStatus, setStreamingStatus] = useState(null);
   const [availableRoom, setAvailableRoom] = useState(null);
@@ -263,21 +263,26 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+        setImage(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImagePreview(reader.result);
+            // setFarmerInfo(prev => ({
+            //     ...prev,
+            //     path: null // 기존 path를 null로 설정
+            // }));
+        };
+        reader.readAsDataURL(file);
     }
-  };
+};
+
 
   const handleImageReset = () => {
     setFarmerInfo((prevState) => ({
       ...prevState,
       path: null,
     }));
-    setImagePreview(logo);
+    setImagePreview(null);
     setImage(null);
   };
 
@@ -640,7 +645,7 @@ const checkStreamingStatus = async () => {
                     : ""
                 }`}
               >
-                상품 관리
+                재고 관리
               </div>
               {isProductMenuOpen && (
                 <ul className="dropdown-content">
@@ -648,13 +653,13 @@ const checkStreamingStatus = async () => {
                     onClick={() => setActiveTab("product")}
                     className={activeTab === "product" ? "active" : ""}
                   >
-                    └ 상품 등록
+                    └ 재고 등록
                   </li>
                   <li
                     onClick={() => setActiveTab("productList")}
                     className={activeTab === "productList" ? "active" : ""}
                   >
-                    └ 상품 목록
+                    └ 재고 목록
                   </li>
                 </ul>
               )}
@@ -713,10 +718,7 @@ const checkStreamingStatus = async () => {
               <div className="user-info-details">
                 <strong>프로필 사진</strong>
                 <div className="image-preview-container">
-                  <img
-                    src={farmerInfo.path || logo}
-                    alt={farmerInfo.path}
-                  />
+                  <img src={ farmerInfo.path || logo} />
                 </div>
                 <p>
                   <strong>아이디 :</strong> {farmerInfo.farmerId}
@@ -761,18 +763,18 @@ const checkStreamingStatus = async () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {farmerInfo.path ?
+                  {imagePreview ?
+                  <img
+                        src={imagePreview || logo}
+                        alt="imagePreview"
+                        className="image-preview"
+                      />
+                     :
                       <img
                       src={farmerInfo.path}
                       alt="farmerInfo.path"
                       className="image-preview"
                     />
-                     :
-                      <img
-                        src={imagePreview}
-                        alt="imagePreview"
-                        className="image-preview"
-                      />
                     }
                   </div>
                   <button
@@ -784,7 +786,7 @@ const checkStreamingStatus = async () => {
                   >
                     사진 등록
                   </button>
-                  {(image !== null ) && (
+                  {(image !== null || farmerInfo.path !== null) && (
                     <button
                       type="button"
                       className="image-reset-btn"

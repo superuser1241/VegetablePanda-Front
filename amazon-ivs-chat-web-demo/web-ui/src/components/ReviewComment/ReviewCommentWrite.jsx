@@ -5,6 +5,7 @@ import StarRating from './StarRating';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './ReviewComment.css';
+import DOMPurify from 'dompurify';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -55,6 +56,7 @@ const ReviewCommentWrite = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
+    const userRole = localStorage.getItem('userRole');
 
     // 입력값 검증
     if (!reviewData.content.trim()) {
@@ -91,7 +93,7 @@ const ReviewCommentWrite = () => {
     console.log(reviewCommentDTO);
     try {
       const response = await axios.post(
-        `${serverIp}/reviewComment`,
+        `${serverIp}/reviewComment/all`,
         formData,
         {
           headers: {
@@ -110,7 +112,25 @@ const ReviewCommentWrite = () => {
 
       if (response.status === 201) {
         alert('리뷰가 성공적으로 등록되었습니다.');
-        navigate('/mypage');
+        
+        // role에 따른 페이지 이동
+        switch(userRole) {
+          case 'ROLE_USER':
+            navigate('/user-mypage');
+            break;
+          case 'ROLE_FARMER':
+            navigate('/farmer-mypage');
+            break;
+          case 'ROLE_COMPANY':
+            navigate('/company-mypage');
+            break;
+          case 'ROLE_ADMIN':
+            navigate('/admin-mypage');
+            break;
+          default:
+            navigate('/');
+            break;
+        }
       }
     } catch (error) {
       console.error('리뷰 등록 실패:', error);

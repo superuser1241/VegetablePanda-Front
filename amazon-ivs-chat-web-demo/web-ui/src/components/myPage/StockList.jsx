@@ -54,9 +54,9 @@ const StockList = ({onStockSelect, setActiveTab}) => {
             });
             setProductList(response.data);
             console.log(productList);
-            console.log("상품 목록:", response.data);
+            console.log("재고 목록:", response.data);
         } catch (error) {
-            console.error('상품 목록 조회 실패:', error);
+            console.error('재고 목록 조회 실패:', error);
         }
     };
 
@@ -65,44 +65,48 @@ const StockList = ({onStockSelect, setActiveTab}) => {
             <div className='stock-list-middle'>
             <h3>재고 목록</h3>
             <div className='stock-table-container'>
-                <table className='stocklist-table'>
-                <thead className='stocklist-thead'>
-                    <tr>
-                        <th>상품명</th>
-                        <th>수량</th>
-                        <th>등급</th>
-                        <th>인증</th>
-                        <th>색상</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody className='stocklist-tbody'>
-                    {productList.map((item, index) => (
-                        <tr key={item.stockSeq}
-                            onClick={() => onStockSelect(item)}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            {/* <Link to = {`/stock-info/{${item.stockSeq}}`} state={{ item }}> */}
-                            <td >{item.productName}</td>
-                            <td >{item.count.toLocaleString()}</td>
-                            <td >{item.stockGrade}</td>
-                            <td >{item.stockOrganic}</td>
-                            <td >{item.color === 1 ? '빨간색'
-                            : item.color === 2 ? '주황색'
-                            : item.color === 3 ? '초록색'
-                            : item.color === 4 ? '보라색'
-                            : item.color === 5 ? '흰색'
-                            : '무색'}</td>
-                            {/* <td><button onClick={(e) => {
-                                    e.stopPropagation();  // 행 클릭 이벤트 전파 방지
-                                    onStockSelect(item);
-                                }}>수정</button></td> */}
-                        {/* </Link> */}
+                {productList.length > 0 ? (
+                    <table className='stocklist-table'>
+                    <thead className='stocklist-thead'>
+                        <tr>
+                            <th>상품명</th>
+                            <th>수량</th>
+                            <th>등급</th>
+                            <th>인증</th>
+                            <th>색상</th>
+                            <th></th>
                         </tr>
-                    ))}
-                </tbody>
+                    </thead>
+                    <tbody className='stocklist-tbody'>
+                        {productList.map((item, index) => (
+                            <tr key={item.stockSeq}
+                                onClick={() => onStockSelect(item)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {/* <Link to = {`/stock-info/{${item.stockSeq}}`} state={{ item }}> */}
+                                <td >{item.productName}</td>
+                                <td >{item.count.toLocaleString()}</td>
+                                <td >{item.stockGrade}</td>
+                                <td >{item.stockOrganic}</td>
+                                <td >{item.color === 1 ? '빨간색'
+                                : item.color === 2 ? '주황색'
+                                : item.color === 3 ? '초록색'
+                                : item.color === 4 ? '보라색'
+                                : item.color === 5 ? '흰색'
+                                : '무색'}</td>
+                                {/* <td><button onClick={(e) => {
+                                        e.stopPropagation();  // 행 클릭 이벤트 전파 방지
+                                        onStockSelect(item);
+                                    }}>수정</button></td> */}
+                            {/* </Link> */}
+                            </tr>
+                        ))}
+                    </tbody>
 
-                </table>
+                    </table> ) : (
+                        <div className='no-data-notification'>등록된 재고가 없습니다.</div>
+                )
+                }
                 </div>
             </div>
         </div>

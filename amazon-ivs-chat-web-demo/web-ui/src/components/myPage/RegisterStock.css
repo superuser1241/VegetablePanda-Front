@@ -1,210 +1,246 @@
-.stock-register-container {
+.RegisterStock h2 {
+    text-align: center;
+}
+
+.RegisterStock select {
+    display: inline-flex;
+}
+
+.btn {
     width: 100%;
-    padding: 20px;
-}
-
-.stock-register-section {
-    background-color: white;
-    padding: 35px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.stock-register-section h3 {
-    color: #2c3e50;
-    font-size: 22px;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #4CAF50;
-}
-
-.stock-register-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-}
-
-/* 기본 폼 그룹 스타일 */
-.stock-form-group {
-    margin-bottom: 20px;
-}
-
-.stock-form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #2c3e50;
-    font-weight: 500;
-    font-size: 15px;
-}
-
-.stock-form-group select,
-.stock-form-group input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 15px;
-    background-color: #f8f9fa;
-}
-
-/* 설명 입력 영역 - 전체 너비 사용 */
-.stock-description-group {
-    grid-column: 1 / -1;  /* 전체 너비 사용 */
-    margin-bottom: 20px;
-}
-
-.stock-description-group textarea {
-    width: 100%;
-    min-height: 120px;
-    padding: 12px 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    resize: vertical;
-}
-
-/* 이미지 업로드 섹션 - 전체 너비 사용 */
-.stock-image-group {
-    grid-column: 1 / -1;
-    margin-bottom: 20px;
-}
-
-.stock-image-upload-wrapper {
     display: flex;
-    gap: 20px;
+    justify-content: flex-end;
+    background-color: transparent;
+    gap: 10px;
+}
+
+.stock-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    margin-right: 0px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.stock-reset-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #9b9b9b;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    margin-right: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.stock-submit-btn:hover {
+    background-color: #36833a;
+}
+
+.stock-reset-btn:hover {
+    background-color: rgb(97, 97, 97);
+}
+
+.stock-submit-btn:active, .stock-reset-btn:active {
+    background-color: #2e2e2e;
+    border: none;
+}
+
+.stock-image-upload-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: flex-start;
+    width: 100%;
+    gap: 10px;
+}
+
+.stock-image-upload-input {
+    display: none;
+}
+
+.stock-image-upload-btn {
+    margin-bottom: 10px;
+    padding: 8px 18px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    margin-top: 10px;
+    justify-content: center;
+    align-self: center;
+}
+
+.stock-image-upload-btn:hover {
+    background-color: #45a049;
+}
+
+.stock-image-reset-btn {
+    padding: 8px 18px;
+    background-color: #363636;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    justify-content: center;
+    align-self: center;
+}
+
+.stock-image-preview-container {
+    margin-top: 10px;
+    width: 150px;
+    height: 150px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    display: inline-block;
+    justify-content: left;
+    align-items: center;
+}
+
+.stock-image-preview-container img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
 }
 
 .stock-image-component {
     display: flex;
-    gap: 20px;
+    flex-direction: column;
 }
 
-.stock-image-preview-container {
-    width: 150px;
-    height: 150px;
-    border: 2px dashed #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.stock-image-preview {
+.stock-image-textarea-container {
+    margin-top: 10px;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    justify-content: center;
+    align-items: center;
+}
+
+textarea {
+    resize: none;
+}
+
+.stock-image-textarea-container textarea {
+    height: 66%;
+    resize: none;
+}
+
+#fileContent {
+    height: 150px;
+    resize: none;
 }
 
 .stock-image-btn {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.stock-image-upload-btn,
-.stock-image-reset-btn {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.stock-image-upload-btn {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.stock-image-reset-btn {
-    background-color: #ff5252;
-    color: white;
-}
-
-.stock-image-textarea-container {
-    flex: 1;
-}
-
-.stock-image-textarea-container textarea {
-    width: 100%;
-    height: 150px;
-    padding: 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    resize: none;
-}
-
-/* 버튼 컨테이너 */
-.btn {
-    display: flex;
+    flex-direction: row;
     justify-content: center;
-    gap: 20px;
-    margin-top: 30px;
+    align-items: center;
+    gap: 8px;
 }
 
-.stock-submit-btn,
-.stock-reset-btn {
-    padding: 12px 35px;
-    border: none;
+.product-section {
+    background-color: white;
+    padding: 20px;
     border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-.stock-submit-btn {
-    background-color: #4CAF50;
-    color: white;
+.product-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    width: 80%;
+    margin-left: 30px;
 }
 
-.stock-reset-btn {
-    background-color: #ff5252;
-    color: white;
+.product-form .form-group:nth-child(1),
+.product-form .form-group:nth-child(2) {
+    grid-column: span 1;
 }
 
-.stock-submit-btn:hover,
-.stock-reset-btn:hover {
-    transform: translateY(-2px);
+.product-form .form-group:nth-child(3),
+.product-form .form-group:nth-child(4) {
+    grid-column: span 1;
 }
 
-/* 색상 선택 박스 */
-.colorBox {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    margin-left: 8px;
-    border-radius: 50%;
-    vertical-align: middle;
-    border: 1px solid #e0e0e0;
+.product-form .form-group:nth-child(5),
+.product-form .form-group:nth-child(6) {
+    grid-column: span 1;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-    .stock-register-section {
-        padding: 20px;
-    }
-
-    .stock-register-form {
-        grid-template-columns: 1fr;
-    }
-
-    .stock-image-upload-wrapper {
-        flex-direction: column;
-    }
-
-    .stock-image-component {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .stock-image-btn {
-        flex-direction: row;
-        justify-content: center;
-    }
-
-    .btn {
-        flex-direction: column;
-    }
-
-    .stock-submit-btn,
-    .stock-reset-btn {
-        width: 100%;
-    }
+.product-form .form-group:last-child {
+    grid-column: 1 / -1;
 }
+
+.product-form textarea {
+    min-height: 150px;
+}
+
+.product-form .button-group {
+    grid-column: 1 / -1;
+}
+
+.product-form select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.product-form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    min-height: 100px;
+    resize: vertical;
+}
+
+.product-form .form-group {
+    margin-bottom: 15px;
+}
+
+.product-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.product-description {
+    width: 595px;
+    margin: 20px auto;
+    grid-column: 1 / -1;
+}
+
+.product-description label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.product-description textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    resize: vertical;
+} 

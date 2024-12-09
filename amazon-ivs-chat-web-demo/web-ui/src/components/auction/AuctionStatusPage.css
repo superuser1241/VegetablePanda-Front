@@ -1,10 +1,3 @@
-.auction-status-container {
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
 .status-header {
     margin-bottom: 20px;
     text-align: center;
@@ -213,6 +206,8 @@
     transform: translateY(1px);
 }
 .auction-status-container {
+    width: 100%;
+    height: 100%;
     padding: 20px;
     background: white;
     border-radius: 8px;

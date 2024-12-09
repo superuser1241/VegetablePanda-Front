@@ -8,7 +8,6 @@ const StreamingStatus = ({ userId, token, onStartStreaming }) => {
     const [approvedStreaming, setApprovedStreaming] = useState(null);
     const [availableRoom, setAvailableRoom] = useState(null);
     const serverIp = process.env.REACT_APP_SERVER_IP;
-
     // 초기 사용 가능한 방 조회 (상태값 0)
     const fetchAvailableRoom = async () => {
         try {

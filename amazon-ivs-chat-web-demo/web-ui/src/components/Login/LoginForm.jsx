@@ -33,14 +33,18 @@ function LoginForm({ onLoginSuccess }) {
       console.log('Auth Header:', authHeader);
       console.log('Token:', token);
 
-      if (token) {
+      if (token&&loginResponse.data.state===1) {
         localStorage.setItem('token', token);
         localStorage.setItem('userSeq', loginResponse.data.user_seq);
         localStorage.setItem('userRole', loginResponse.data.role);
         const userData = loginResponse.data;
         onLoginSuccess(userData.name, userData.role);
       } else {
-        setMessage('토큰을 받아올 수 없습니다.');
+        if(loginResponse.data.state===0){
+          setMessage('탈퇴한 유저입니다.');
+        }else{
+          setMessage('토큰을 받아올 수 없습니다.');
+        }
       }
     } catch (error) {
       console.error('Login Error:', error);

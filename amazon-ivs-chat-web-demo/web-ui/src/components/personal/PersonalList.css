@@ -96,3 +96,12 @@
   border: 2px solid #ddd;
   border-radius: 10%;
 }
+
+.yun-text-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;      /* 표시할 줄 수 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
