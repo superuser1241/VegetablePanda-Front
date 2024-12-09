@@ -436,13 +436,6 @@ const UserMyPage = () => {
             >
               나의 리뷰
             </li>
-
-            <li
-              onClick={() => setActiveTab("cart")}
-              className={activeTab === "cart" ? "active" : ""}
-            >
-              장바구니
-            </li>
           </ul>
         </div>
 
@@ -481,53 +474,59 @@ const UserMyPage = () => {
             <UserLikedShops />
           )}
 
-          {activeTab === "info" && userInfo && (
-            <div className="user-info-section">
+        {activeTab === "info" && userInfo && (
+            <div className="userMyPage-user-info-section">
               <h3>회원 정보</h3>
-              <div className="user-info-details">
-                <strong>프로필 사진</strong>
-                <div className="image-and-point-container">
-                  <div className="image-preview-container">
-                    <img src={userInfo?.path || logo} />
+              <div className="userMyPage-user-info-details">
+                <div className="userMyPage-image-container">
+                  <strong>프로필 사진</strong>
+                  <div className="image-and-point-container">
+                  <div className="userMyPage-image-preview-container">
+                    <img src={userInfo?.path || logo} alt="프로필 사진" />
                   </div>
-                  <div className="point-container">
-                    <Point userId={userId} point={point} fetchPoint={fetchPoint} />
+                  
                   </div>
                 </div>
-                <p>
-                  <strong>아이디:</strong> {userInfo.id}
-                </p>
-                <p>
-                  <strong>이름:</strong> {userInfo.name}
-                </p>
-                <p>
-                  <strong>이메일:</strong> {userInfo.email}
-                </p>
-                <p>
-                  <strong>전화번호:</strong> {userInfo.phone}
-                </p>
-                <p>
-                  <strong>주소:</strong> {userInfo.address}
-                </p>
-                <p>
-                  <strong>성별:</strong> {userInfo.gender}
-                </p>
-                <p>
-                  <strong>가입일자:</strong>{" "}
-                  {new Date(userInfo.regDate).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>보유 포인트:</strong> {point.toLocaleString() + "P"}
-                </p>
+                <div className="userMyPage-info-list">
+                  <p>
+                    <strong>아이디:</strong> {userInfo.id}
+                  </p>
+                  <p>
+                    <strong>이름:</strong> {userInfo.name}
+                  </p>
+                  <p>
+                    <strong>이메일:</strong> {userInfo.email}
+                  </p>
+                  <p>
+                    <strong>전화번호:</strong> {userInfo.phone}
+                  </p>
+                  <p>
+                    <strong>주소:</strong> {userInfo.address}
+                  </p>
+                  <p>
+                    <strong>성별:</strong> {userInfo.gender}
+                  </p>
+                  <p>
+                    <strong>가입일자:</strong>{" "}
+                    {new Date(userInfo.regDate).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <strong>보유 포인트:</strong> {point.toLocaleString() + "P"}
+                  </p>
+                </div>
+              </div>
+              <div className="userMyPage-point-container">
+                    <Point userId={userId} point={point} fetchPoint={fetchPoint} />
               </div>
             </div>
           )}
 
 
+
           {activeTab === "buyList" && (
-            <div className="order-history-display">
+            <div className="userMyPage-order-history-display">
               <h3>주문 내역</h3>
-              <table>
+              <table className="userMyPage-order-history-table">
                 <thead>
                   <tr>
                     <th>번호</th>
@@ -536,7 +535,6 @@ const UserMyPage = () => {
                     <th>수량</th>
                     <th>가격</th>
                     <th>주문일자</th>
-                    <th>주문상태</th>
                     <th>리뷰</th>
                   </tr>
                 </thead>
@@ -549,14 +547,19 @@ const UserMyPage = () => {
                       <td>{order.count}개</td>
                       <td>{order.price}원</td>
                       <td>{new Date(order.buyDate).toLocaleDateString()}</td>
-                      <td>{order.state}</td>
                       <td>
                         <button
                           onClick={() => handleReviewWrite(order)}
-                          className={`review-button ${order.reviewStatus === 'COMPLETED' ? 'completed' : ''}`}
-                          disabled={order.reviewStatus === 'COMPLETED'}
+                          className={`userMyPage-review-button ${
+                            order.reviewStatus === "COMPLETED"
+                              ? "completed"
+                              : ""
+                          }`}
+                          disabled={order.reviewStatus === "COMPLETED"}
                         >
-                          {order.reviewStatus === 'COMPLETED' ? '작성완료' : '리뷰작성'}
+                          {order.reviewStatus === "COMPLETED"
+                            ? "작성완료"
+                            : "리뷰작성"}
                         </button>
                       </td>
                     </tr>
@@ -567,54 +570,7 @@ const UserMyPage = () => {
           )}
 
           {activeTab === "auction" && (
-            // <div className="auction-history-display">
-            //   <h3>경매 참여 내역</h3>
-            //   {loading1 ? (
-            //     <div>로딩 중...</div>
-            //   ) : error ? (
-            //     <div className="error-message">{error}</div>
-            //   ) : auctions.length > 0 ? (
-            //     <table className="auction-history-table-container">
-            //       <thead>
-            //         <tr>
-            //           <th>번호</th>
-            //           <th>상품명</th>
-            //           <th>수량</th>
-            //           <th>낙찰 금액</th>
-            //           <th>참여 일자</th>
-            //           <th>판매자명</th>
-            //         </tr>
-            //       </thead>
-            //       <tbody>
-            //         {auctions.map((auction, index) => {
-            //           // 날짜 포맷 변경 함수
-            //           const formatDate = (dateString) => {
-            //             const date = new Date(dateString);
-            //             const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-            //             const formattedTime = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
-            //             return `${formattedDate} ${formattedTime}`;
-            //           };
-            //           return (
-            //           <tr key={auction.bidSeq}>
-            //             <td>{auction.buySeq}</td> {/* 경매번호 */}
-            //             <td>{auction.productName}</td> {/* 상품명 */}
-            //             <td>{auction.count}</td> {/* 수량*/}
-            //             <td>{auction.totalPrice}원</td> {/* 입찰할 금액 */}
-            //             <td>{formatDate(auction.insertDate)}</td> {/* 입찰한 날짜 */}
-            //             <td>{auction.name}</td> {/* 판매자명 */}
-
-            //             {/* 현재 상태 */}
-            //           </tr>
-            //           )
-            //           })}
-            //       </tbody>
-            //     </table>
-            //   ) : (
-            //     <div className="no-data-notification">
-            //       경매 참여 내역이 없습니다.
-            //     </div>
-            //   )}
-            // </div>
+            
             <UserAuctionHistory  auctions = {auctions} loading1 = {loading1} error = {error}/>
           )}
 
@@ -781,19 +737,6 @@ const UserMyPage = () => {
             <div className="review-history-display">
               <h3>나의 리뷰</h3>
               <ReviewCommentList userSeq={localStorage.getItem("userSeq")} />
-            </div>
-          )}
-
-          {activeTab === "cart" && (
-            <div
-              className="cart-banner-section"
-              onClick={() => navigate("/cart")}
-            >
-              <div className="cart-banner-content">
-                <i className="fas fa-shopping-cart"></i>
-                <h3>장바구니</h3>
-                <p>장바구니에서 선택하신 상품을 확인하세요</p>
-              </div>
             </div>
           )}
         </div>

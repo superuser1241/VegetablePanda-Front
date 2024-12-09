@@ -4,6 +4,8 @@ import "./CompanyMyPage.css";
 import { useNavigate } from "react-router-dom";
 import logo from "../../image/기본이미지.png";
 import Point from "./Point";
+import UserLikedShops from "./UserLikedShops.jsx";
+
 
 const CompanyMyPage = () => {
   const [chargeAmount, setChargeAmount] = useState("");
@@ -25,6 +27,8 @@ const CompanyMyPage = () => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [point, setPoint] = useState(0);
+  const [buyInfo, setBuyInfo] = useState(null);
+  const [userLike, setUserLike] = useState([]);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -100,21 +104,43 @@ const CompanyMyPage = () => {
       fetchreview(userId);
       fetchOrderHistory(userId);
       fetchAuctionHistory(userId);
+      fetchUserLikeHistory(userId)
     }
   }, [userId]);
+
+  const fetchUserLikeHistory = async (userId) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${serverIp}/myPage/userLike/${userId}`);
+      setUserLike(response.data);
+    } catch (err) {
+      setError("구독 내역을 불러오는 중 오류가 발생했습니다.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   // 주문 내역을 가져오는 함수
   const fetchOrderHistory = async (userId) => {
     try {
-      setLoading(true); // 로딩 시작
-      const serverIp = process.env.REACT_APP_SERVER_IP;
-      const response = await axios.get(`${serverIp}/myPage/buyList/${userId}`);
-      setOrders(response.data); // 가져온 데이터를 상태에 저장
+      setLoading(true);
+      const userSeq = localStorage.getItem("userSeq");
+      const response = await axios.get(
+        `${serverIp}/myPage/buyList/${userSeq}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setBuyInfo(response.data);
     } catch (err) {
+      console.error("주문 내역 조회 에러:", err);
       setError("주문 내역을 불러오는 중 오류가 발생했습니다.");
-      console.error(err);
     } finally {
-      setLoading(false); // 로딩 종료
+      setLoading(false);
     }
   };
 
@@ -405,22 +431,19 @@ const CompanyMyPage = () => {
         </div>
 
         <div className="main-content">
-          {activeTab === "info" && companyInfo && (
-            <div className="user-info-section">
+        {activeTab === "info" && companyInfo && (
+            <div className="userMyPage-user-info-section">
               <h3>회원 정보</h3>
-              <div className="user-info-details">
-                <strong>프로필 사진</strong>
-                <div className="image-and-point-container">
-                  <div className="image-preview-container">
-                    <img
-                      src={companyInfo?.path || logo }
-                      alt={companyInfo.path}
-                    />
+              <div className="userMyPage-user-info-details">
+                <div className="userMyPage-image-container">
+                  <strong>프로필 사진</strong>
+                  <div className="image-and-point-container">
+                  <div className="userMyPage-image-preview-container">
+                    <img src={companyInfo?.path || logo} alt="프로필 사진" />
                   </div>
-                  <div className="point-container">
-                    <Point userId={userId} point={point} fetchPoint={fetchPoint} />
                   </div>
                 </div>
+                <div className="userMyPage-info-list">
                 <p>
                   <strong>아이디 :</strong> {companyInfo.companyId}
                 </p>
@@ -453,7 +476,11 @@ const CompanyMyPage = () => {
                   <strong>보유 포인트:</strong> {point.toLocaleString()}P
                 </p>
               </div>
-            </div>
+                  </div>
+                  <div className="userMyPage-point-container">
+                    <Point userId={userId} point={point} fetchPoint={fetchPoint} />
+                  </div>
+              </div>
           )}
 
           {activeTab === "update" && (
@@ -670,59 +697,35 @@ const CompanyMyPage = () => {
             </div>
           )}
 
-          {activeTab === "buyList" && (
-            <div className="yun-order-history-display">
+{activeTab === "saleLike" && <UserLikedShops />}
+
+{activeTab === "buyList" && (
+            <div className="userMyPage-order-history-display">
               <h3>주문 내역</h3>
-              {loading ? (
-                <div>로딩 중...</div>
-              ) : error ? (
-                <div className="error-message">{error}</div>
-              ) : orders.length > 0 ? (
-                <table>
-                  <thead>
-                    <tr className="yun-company-mypage-tr">
-                      <th>번호</th>
-                      <th>주문 번호</th>
-                      <th>상품명</th>
-                      <th>수량</th>
-                      <th>금액</th>
-                      <th>주문일자</th>
-                      <th>주문 상태</th>
+              <table className="userMyPage-order-history-table">
+                <thead>
+                  <tr>
+                    <th>번호</th>
+                    <th>주문번호</th>
+                    <th>상품명</th>
+                    <th>수량</th>
+                    <th>가격</th>
+                    <th>주문일자</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {buyInfo.map((order, index) => (
+                    <tr key={`${index}`}>
+                      <td>{index + 1}</td>
+                      <td>{order.userBuyDetailSeq}</td>
+                      <td>{order.content}</td>
+                      <td>{order.count}개</td>
+                      <td>{order.price}원</td>
+                      <td>{new Date(order.buyDate).toLocaleDateString()}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {orders.map((order, index) => (
-                      <tr key={order.orderId} className="yun-company-mypage-tr">
-                        <td>{index + 1}</td> {/* 번호 */}
-                        <td>{order.userBuySeq}</td> {/* 주문 번호 */}
-                        <td>{order.content}</td> {/* 상품명 */}
-                        <td>{order.count}</td> {/* 수량 */}
-                        <td>{order.price}원</td> {/* 금액 */}
-                        <td>
-                          {new Date(order.buyDate).toLocaleDateString()}
-                        </td>{" "}
-                        {/* 주문일자 */}
-                        <td>
-                          {order.state === 0
-                            ? "값 뭐넣어야해여?"
-                            : order.state === 1
-                            ? "값 뭐넣어야해여?"
-                            : order.state === 2
-                            ? "값 뭐넣어야해여?"
-                            : order.state === 3
-                            ? "값 뭐넣어야해여?"
-                            : "값 뭐넣어야해여?"}
-                        </td>
-                        {/* 주문 상태 */}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="yun-no-data-notification">
-                  주문 내역이 없습니다.
-                </div>
-              )}
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
 
@@ -778,6 +781,40 @@ const CompanyMyPage = () => {
               )}
             </div>
           )}
+
+{activeTab === "userLike" && (
+            <div className="main-content">
+              <h3 className="userMyPage-title">구독한 판매자 목록</h3>
+              {loading1 ? (
+                <div className="userMyPage-loading">로딩 중...</div>
+              ) : error ? (
+                <div className="userMyPage-error-message">{error}</div>
+              ) : userLike.length < 0 ? (
+                <div className="userMyPage-card-container">
+                  {userLike.map((userLike, index) => (
+                    <div className="userMyPage-card" key={index}>
+                      <img
+                        src={userLike.imageUrl}
+                        alt={userLike.name}
+                        className="userMyPage-card-image"
+                      />
+                      <div className="userMyPage-card-name">
+                        {userLike.name}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="no-data-notification">
+                  구독한 내역이 없습니다.
+                </div>
+              )}
+            </div>
+          )}
+
+
+
+
 
           {activeTab === "point" && (
             <div className="point-section">
