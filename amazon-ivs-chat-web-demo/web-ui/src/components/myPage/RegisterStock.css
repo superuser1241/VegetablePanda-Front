@@ -55,61 +55,6 @@
     border: none;
 }
 
-/* .stock-image-upload-container {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    width: 100%;
-    gap: 10px;
-}
-
-.stock-image-upload-input {
-    display: none;
-}
-
-.stock-image-upload-btn {
-    margin-bottom: 10px;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    margin-top: 10px;
-    justify-content: end;
-    align-self: flex-end;
-}
-
-.stock-image-upload-btn:hover {
-    background-color: #45a049;
-}
-
-.stock-image-reset-btn {
-    margin-bottom: 10px;
-    padding: 10px 20px;
-    background-color: #363636;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    margin-top: 10px;
-    justify-content: end;
-    align-self: flex-end;
-}
-
-.stock-image-preview-container {
-    margin-top: 10px;
-    width: 150px;
-    height: 150px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    display: inline-block;
-    justify-content: left;
-    align-items: center;
-} */
-
 .stock-image-upload-container {
     margin-bottom: 20px;
     display: flex;
@@ -203,3 +148,99 @@ textarea {
     align-items: center;
     gap: 8px;
 }
+
+.product-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    width: 80%;
+    margin-left: 30px;
+}
+
+.product-form .form-group:nth-child(1),
+.product-form .form-group:nth-child(2) {
+    grid-column: span 1;
+}
+
+.product-form .form-group:nth-child(3),
+.product-form .form-group:nth-child(4) {
+    grid-column: span 1;
+}
+
+.product-form .form-group:nth-child(5),
+.product-form .form-group:nth-child(6) {
+    grid-column: span 1;
+}
+
+.product-form .form-group:last-child {
+    grid-column: 1 / -1;
+}
+
+.product-form textarea {
+    min-height: 150px;
+}
+
+.product-form .button-group {
+    grid-column: 1 / -1;
+}
+
+.product-form select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.product-form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    min-height: 100px;
+    resize: vertical;
+}
+
+.product-form .form-group {
+    margin-bottom: 15px;
+}
+
+.product-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.product-description {
+    width: 595px;
+    margin: 20px auto;
+    grid-column: 1 / -1;
+}
+
+.product-description label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.product-description textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    resize: vertical;
+} 

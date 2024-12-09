@@ -54,9 +54,9 @@ const StockList = ({onStockSelect, setActiveTab}) => {
             });
             setProductList(response.data);
             console.log(productList);
-            console.log("상품 목록:", response.data);
+            console.log("재고 목록:", response.data);
         } catch (error) {
-            console.error('상품 목록 조회 실패:', error);
+            console.error('재고 목록 조회 실패:', error);
         }
     };
 

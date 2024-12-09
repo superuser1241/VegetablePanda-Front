@@ -3,6 +3,7 @@ import axios from "axios";
 import "./CompanyMyPage.css";
 import { useNavigate } from "react-router-dom";
 import logo from "../../image/기본이미지.png";
+import Point from "./Point";
 
 const CompanyMyPage = () => {
   const [chargeAmount, setChargeAmount] = useState("");
@@ -409,11 +410,16 @@ const CompanyMyPage = () => {
               <h3>회원 정보</h3>
               <div className="user-info-details">
                 <strong>프로필 사진</strong>
-                <div className="image-preview-container">
-                  <img
-                    src={companyInfo?.path || logo }
-                    alt={companyInfo.path}
-                  />
+                <div className="image-and-point-container">
+                  <div className="image-preview-container">
+                    <img
+                      src={companyInfo?.path || logo }
+                      alt={companyInfo.path}
+                    />
+                  </div>
+                  <div className="point-container">
+                    <Point userId={userId} point={point} fetchPoint={fetchPoint} />
+                  </div>
                 </div>
                 <p>
                   <strong>아이디 :</strong> {companyInfo.companyId}
