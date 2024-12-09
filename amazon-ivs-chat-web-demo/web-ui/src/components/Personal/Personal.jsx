@@ -139,9 +139,10 @@ const Personal = ({ onJoinRoom }) => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
+      console.log('Fetched review data:', response.data);
       setReview(response.data);
     } catch (error) {
-      console.error("리뷰 조회 실패:", error);
+      console.error('리뷰 조회 실패:', error);
     }
   };
 
@@ -163,7 +164,6 @@ const Personal = ({ onJoinRoom }) => {
           <div className="yun-profile-details">
             {farmerInfo && (
               <>
-                {farmerSeq + "= 판매자 시퀀스"} , {seq + " = 로그인한 시퀀스"}
                 <h1 className="yun-seller-name">{farmerInfo.name}</h1>
                 <p className="yun-seller-description">{farmerInfo.intro}</p>
               </>
@@ -189,7 +189,10 @@ const Personal = ({ onJoinRoom }) => {
           {review.length > 0 ? (
             <div className="yun-review-list">
               {review.map((review) => (
-                <div key={review.reviewCommentSeq} className="yun-review-item">
+                <div 
+                  key={`${review.userSeq}-${review.date}`}
+                  className="yun-review-item"
+                >
                   <div className="yun-review-header">
                     <span className="yun-review-score">
                       평점: {review.score}점
@@ -198,15 +201,12 @@ const Personal = ({ onJoinRoom }) => {
                       {new Date(review.date).toLocaleDateString()}
                     </span>
                   </div>
-                  <div className="yun-review-content">{review.content}</div>
-                  <div className="yun-review-image">
-                    {review.file && review.file.path && (
-                      <img src={review.file.path} alt="리뷰 이미지" />
-                    )}
+                  <div className="yun-review-content" 
+                    dangerouslySetInnerHTML={{ __html: review.content }}>
                   </div>
-                  <span className="yun-review-date">
-                    작성날짜 : {new Date(review.date).toLocaleDateString()}
-                  </span>
+                  {review.filePath && (
+                    <img src={review.filePath} alt="리뷰 이미지" />
+                  )}
                 </div>
               ))}
             </div>

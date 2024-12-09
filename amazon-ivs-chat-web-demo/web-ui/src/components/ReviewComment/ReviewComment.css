@@ -59,7 +59,7 @@
   }
   
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
   }
   
   .form-group label {
@@ -82,7 +82,7 @@
     display: flex;
     gap: 10px;
     justify-content: flex-end;
-    margin-top: 20px;
+    margin-top: 1.5rem;
   }
   
   .submit-button,
@@ -222,27 +222,56 @@
   
   .star-rating {
     display: inline-flex;
-    gap: 5px;
-    margin: 10px 0;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 0;
+    padding: 4px 12px;
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    border-radius: 20px;
+    box-shadow: 
+      3px 3px 6px #d1d1d1,
+      -3px -3px 6px #ffffff;
+    width: 200px;
   }
   
   .star {
-    font-size: 24px;
-    cursor: pointer;
-    transition: color 0.2s;
+    font-size: 28px;
+    line-height: 1;
+    height: 28px;
+    flex: 0 0 auto;
   }
   
   .star.filled {
-    color: #ffd700;
+    color: #FFD700;
+    background: linear-gradient(145deg, #FFD700, #FFC000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 
+      2px 2px 4px rgba(255, 215, 0, 0.4),
+      -2px -2px 4px rgba(255, 215, 0, 0.4);
+    transform: scale(1.1) rotate(5deg);
+    animation: starFill 0.4s ease-out;
   }
   
   .star.empty {
-    color: #ccc;
+    color: #D0D0D0;
+    background: linear-gradient(145deg, #E8E8E8, #D0D0D0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   }
   
   .star.clickable:hover {
-    color: #ffed4a;
-    transform: scale(1.1);
+    transform: scale(1.3) rotate(10deg);
+    color: #FFE45C;
+    background: linear-gradient(145deg, #FFE45C, #FFD700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 
+      0 0 20px rgba(255, 228, 92, 0.8),
+      0 0 40px rgba(255, 228, 92, 0.5);
+    filter: brightness(1.2);
   }
   
   .star.readonly {
@@ -265,7 +294,7 @@
   
   /* Quill 에디터 스타일 */
   .review-write-container .quill {
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
   }
   
   .review-write-container .ql-container {
@@ -443,3 +472,190 @@
     color: #666;
     margin-top: 40px;
   }
+  
+  .review-write-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem 3rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .review-write-container h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .order-info {
+    background-color: #f8f9fa;
+    padding: 1.5rem 2rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .order-info p {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* 주문 정보 레이블 스타일 */
+  .order-info p::before {
+    content: attr(data-label);
+    font-weight: 700;
+    margin-right: 0.5rem;
+    color: #222;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #444;
+  }
+  
+  /* Quill 에디터 스타일링 */
+  .quill {
+    margin-bottom: 1.5rem;
+  }
+  
+  .ql-container {
+    height: 200px !important;
+    margin-bottom: 0.8rem;
+  }
+  
+  .ql-editor {
+    min-height: 180px;
+    font-size: 1.1rem;
+  }
+  
+  .ql-toolbar {
+    border-radius: 4px 4px 0 0;
+    background-color: #f8f9fa;
+  }
+  
+  /* 파일 입력 스타일링 */
+  input[type="file"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  /* 버튼 그룹 스타일링 */
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  
+  .button-group button {
+    padding: 12px 30px; /* 좌우 패딩 증가 */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600; /* 글자 두께 증가 */
+    font-size: 1.1rem; /* 글자 크기 증가 */
+    transition: all 0.3s ease;
+    min-width: 120px; /* 최소 너비 설정 */
+  }
+  
+  .button-group button[type="submit"] {
+    background-color: #4CAF50;
+  color: white;
+  font-size: 1.5rem; /* 등록하기 버튼 글자 크기 더 크게 */
+}
+  
+  .button-group button[type="submit"]:hover {
+    opacity: 1.7;
+  transform: translateY(-2px); /* 호버 시 약간 위로 이동 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 호버 시 그림자 효과 */
+}
+  
+  .button-group button[type="button"] {
+    background-color: #f44336;
+    color: white;
+    font-size: 1.7rem; /* 취소 버튼 글자 크기 더 크게 */
+  }
+  
+  .button-group button[type="button"]:hover {
+    background-color: #da190b;
+  }
+  
+  /* 별점 스타일링 */
+  .star-rating {
+    margin: 0.5rem 0;
+  }
+  
+  /* 별 채우기 애니메이션 */
+  @keyframes starFill {
+    0% { 
+      transform: scale(1) rotate(0deg);
+      filter: brightness(1);
+    }
+    50% { 
+      transform: scale(1.4) rotate(15deg);
+      filter: brightness(1.3);
+    }
+    100% { 
+      transform: scale(1.1) rotate(5deg);
+      filter: brightness(1.1);
+    }
+  }
+  
+  /* 별점 컨테이너 스타일 */
+  .rating-section {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 0.8rem 1.2rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 
+      inset 2px 2px 5px rgba(0, 0, 0, 0.05),
+      inset -2px -2px 5px rgba(255, 255, 255, 0.9);
+    width: 280px;
+  }
+  
+  /* 라벨 스타일 */
+  .rating-section label {
+    font-weight: 600;
+    color: #444;
+    width: 50px;
+    font-size: 16px;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+    margin: 0;
+    line-height: 32px;
+    flex-shrink: 0;
+  }
+  
+  /* 별 기본 스타일 */
+  .star {
+    font-size: 28px;
+    line-height: 1;
+    height: 28px;
+    flex: 0 0 auto;
+  }
+  
+  /* 클릭 가능한 별 스타일 */
+  .star.clickable {
+    cursor: pointer;
+  }
+  
+  /* 읽기 전용 별 스타일 */
+  .star.readonly {
+    cursor: default;
+  }
+  
