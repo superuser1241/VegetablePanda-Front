@@ -20,10 +20,9 @@ const NotiSet = ({ onSetStreamingRoom }) => {
                 "Content-Type": "application/json",
                 userId: token,
             },
-            debug: (str) => console.log(str),
+            
             reconnectDelay: 5000,
             onConnect: () => {
-                console.log("Connected to WebSocket");
 
                 client.subscribe(`/user/${token}/notifications`, (message) => {
                     const body = message.body;
@@ -74,7 +73,6 @@ const NotiSet = ({ onSetStreamingRoom }) => {
                 setShowMessage(false);
             }
         } catch (error) {
-            console.error("채팅방 데이터를 가져오는 중 오류 발생:", error);
         }
     };
 

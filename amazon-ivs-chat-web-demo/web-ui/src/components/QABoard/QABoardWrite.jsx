@@ -46,30 +46,40 @@ const QABoardWrite = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.content.trim()) {
       alert('내용을 입력해주세요.');
       return;
     }
-
+  
     const token = localStorage.getItem('token');
     
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      navigate('/login');
+      return;
+    }
+  
     try {
-      const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
-      
-      await axios.post(`${serverIp}/QABoard/`, 
-        {
-          subject: formData.subject,
-          content: formData.content,
-          managementUser: payload.user_seq
+      // FormData 객체 생성
+      const data = new FormData();
+      data.append('qaBoard', JSON.stringify({
+        subject: formData.subject,
+        content: formData.content,
+      }));
+  
+      if (selectedFile) {
+        data.append('file', selectedFile);
+      }
+  
+      // POST 요청
+      await axios.post(`${serverIp}/QABoard/`, data, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+      });
+  
       alert('문의가 등록되었습니다.');
       navigate('/customer-service');
     } catch (error) {

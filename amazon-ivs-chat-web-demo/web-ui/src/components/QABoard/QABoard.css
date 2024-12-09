@@ -1,336 +1,561 @@
 .qa-board-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .qa-list table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    border-radius: 8px;
-  }
-  
-  .qa-list th, .qa-list td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .qa-list th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .qa-list tr:hover {
-    background-color: #f8f9fa;
-  }
-  
-  .write-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #82c91e;
-    color: white;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-    margin-top: 20px;
-    transition: background-color 0.3s;
-  }
-  
-  .write-button:hover {
-    background-color: #74b816;
-  }
-  
-  .qa-write-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .qa-form {
-    background: white;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.qa-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.qa-list th, .qa-list td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.qa-list th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.qa-list tr:hover {
+  background-color: #f8f9fa;
+}
+
+.write-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #82c91e;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.write-button:hover {
+  background-color: #74b816;
+}
+
+.qa-write-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.qa-form {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.submit-button,
+.cancel-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.submit-button {
+  background-color: #82c91e;
+  color: white;
+}
+
+.submit-button:hover {
+  background-color: #74b816;
+}
+
+.cancel-button {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.cancel-button:hover {
+  background-color: #dee2e6;
+}
+
+.qa-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.qa-detail-content {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.detail-header {
+  border-bottom: 2px solid #eee;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.detail-header h3 {
+  margin: 0 0 15px 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.detail-info {
+  display: flex;
+  gap: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.detail-body {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.detail-body img {
+  max-width: 100%;
+  height: auto;
+}
+
+.reply-item div[dangerouslySetInnerHTML] {
+  margin: 10px 0;
+}
+
+.detail-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.detail-buttons .list-button,
+.detail-buttons .edit-button,
+.detail-buttons .delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  height: 36px;
+  line-height: 1;
+  padding: 0 16px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 0;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.detail-buttons .list-button {
+  background-color: #868e96;
+}
+
+.detail-buttons .edit-button {
+  background-color: #4dabf7;
+}
+
+.detail-buttons .delete-button {
+  background-color: #fa5252;
+}
+
+.detail-buttons .list-button:hover {
+  background-color: #495057;
+}
+
+.detail-buttons .edit-button:hover {
+  background-color: #339af0;
+}
+
+.detail-buttons .delete-button:hover {
+  background-color: #e03131;
+}
+
+.qa-reply-section {
+  margin-top: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.qa-reply-section form {
+  margin-bottom: 20px;
+}
+
+.qa-reply-section textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.reply-list .reply-item {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.reply-item .reply-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.reply-item p {
+  margin: 0;
+  line-height: 1.5;
+}
+.qa-write-container .text-style-buttons {
+  margin-bottom: 10px;
+}
+
+.qa-write-container .style-button {
+  margin-right: 5px;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.qa-write-container .style-button:hover {
+  background-color: #ddd;
+}
+.qa-write-container .preview-section {
+  margin-top: 20px;
+}
+
+.qa-write-container .preview-content {
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  white-space: pre-wrap;
+}
+
+.qa-write-container .text-style-buttons {
+  margin-bottom: 10px;
+}
+
+.qa-write-container .style-button {
+  margin-right: 5px;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.qa-write-container .style-button:hover {
+  background-color: #ddd;
+}
+
+/* Quill 컨텐츠 스타일링 */
+.ql-align-center {
+  text-align: center;
+}
+
+.ql-align-right {
+  text-align: right;
+}
+
+.ql-align-justify {
+  text-align: justify;
+}
+
+/* 파일 다운로드 섹션 스타일 */
+.file-download-section {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.file-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.file-download-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.file-download-link:hover {
+  text-decoration: underline;
+}
+
+.qa-board {
+  /* 기존 스타일들... */
+
+  /* 답변 섹션 */
+  .qa-detail-reply {
+    margin: 40px 0;
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #eaeaea;
+
+    .reply-section {
+      h3 {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+
+      .reply-editor {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 50px;
+
+        .ql-toolbar.ql-snow {
+          border: 1px solid #ddd;
+          border-radius: 8px 8px 0 0;
+          background-color: #f8f9fa;
+          padding: 8px;
+        }
+
+        .ql-container.ql-snow {
+          border: 1px solid #ddd;
+          border-top: none;
+          border-radius: 0 0 8px 8px;
+          height: 200px;
+          font-size: 16px;
+          font-family: inherit;
+        }
+
+        .ql-editor {
+          padding: 20px;
+          min-height: 200px;
+          line-height: 1.8;
+          
+          p {
+            margin-bottom: 1em;
+          }
+
+          ul, ol {
+            padding-left: 1.5em;
+            margin-bottom: 1em;
+          }
+        }
+      }
+
+      .reply-submit-button {
+        margin-top: 20px;
+        padding: 12px 24px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background-color: #218838;
+          transform: translateY(-1px);
+        }
+      }
+    }
   }
-  
-  .form-group {
-    margin-bottom: 20px;
+
+  /* 답변 목록의 Quill 컨텐츠 스타일링 */
+  .qa-detail-replies {
+    .reply-content {
+      .ql-align-center {
+        text-align: center;
+      }
+
+      .ql-align-right {
+        text-align: right;
+      }
+
+      .ql-align-justify {
+        text-align: justify;
+      }
+
+      blockquote {
+        border-left: 4px solid #ccc;
+        margin: 1em 0;
+        padding-left: 16px;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+    }
   }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .form-group input,
-  .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  .button-group {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
-  
-  .submit-button,
-  .cancel-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-  
-  .submit-button {
-    background-color: #82c91e;
-    color: white;
-  }
-  
-  .submit-button:hover {
-    background-color: #74b816;
-  }
-  
-  .cancel-button {
-    background-color: #e9ecef;
-    color: #495057;
-  }
-  
-  .cancel-button:hover {
-    background-color: #dee2e6;
-  }
-  
-  .qa-detail-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
+
+  /* 본문 Quill 컨텐츠 스타일링 */
   .qa-detail-content {
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    .post-content {
+      .ql-align-center {
+        text-align: center;
+      }
+
+      .ql-align-right {
+        text-align: right;
+      }
+
+      .ql-align-justify {
+        text-align: justify;
+      }
+
+      blockquote {
+        border-left: 4px solid #ccc;
+        margin: 1em 0;
+        padding-left: 16px;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+    }
   }
-  
-  .detail-header {
-    border-bottom: 2px solid #eee;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
+
+  /* Quill 에디터 공통 스타일 */
+  .ql-container {
+    font-size: 16px;
+    min-height: 200px;
+    font-family: inherit;
   }
-  
-  .detail-header h3 {
-    margin: 0 0 15px 0;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  .detail-info {
-    display: flex;
-    gap: 20px;
-    color: #666;
-    font-size: 14px;
-  }
-  
-  .detail-body {
-    margin: 20px 0;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 4px;
-  }
-  
-  .detail-body img {
-    max-width: 100%;
-    height: auto;
-  }
-  
-  .reply-item div[dangerouslySetInnerHTML] {
-    margin: 10px 0;
-  }
-  
-  .detail-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-  }
-  
-  .detail-buttons .list-button,
-  .detail-buttons .edit-button,
-  .detail-buttons .delete-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 80px;
-    height: 36px;
-    line-height: 1;
-    padding: 0 16px;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin: 0;
-    text-decoration: none;
-    box-sizing: border-box;
-  }
-  
-  .detail-buttons .list-button {
-    background-color: #868e96;
-  }
-  
-  .detail-buttons .edit-button {
-    background-color: #4dabf7;
-  }
-  
-  .detail-buttons .delete-button {
-    background-color: #fa5252;
-  }
-  
-  .detail-buttons .list-button:hover {
-    background-color: #495057;
-  }
-  
-  .detail-buttons .edit-button:hover {
-    background-color: #339af0;
-  }
-  
-  .detail-buttons .delete-button:hover {
-    background-color: #e03131;
-  }
-  
-  .qa-reply-section {
-    margin-top: 30px;
+
+  .ql-editor {
+    min-height: 200px;
     padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    line-height: 1.8;
   }
-  
-  .qa-reply-section form {
-    margin-bottom: 20px;
-  }
-  
-  .qa-reply-section textarea {
-    width: 100%;
-    min-height: 100px;
-    padding: 10px;
-    margin-bottom: 10px;
+
+  /* 툴바 스타일링 */
+  .ql-toolbar.ql-snow {
     border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .reply-list .reply-item {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .reply-item .reply-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    color: #666;
-    font-size: 0.9em;
-  }
-  
-  .reply-item p {
-    margin: 0;
-    line-height: 1.5;
-  }
-  .qa-write-container .text-style-buttons {
-    margin-bottom: 10px;
-  }
-  
-  .qa-write-container .style-button {
-    margin-right: 5px;
-    padding: 5px 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-  }
-  
-  .qa-write-container .style-button:hover {
-    background-color: #ddd;
-  }
-  .qa-write-container .preview-section {
-    margin-top: 20px;
-  }
-  
-  .qa-write-container .preview-content {
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    white-space: pre-wrap;
-  }
-  
-  .qa-write-container .text-style-buttons {
-    margin-bottom: 10px;
-  }
-  
-  .qa-write-container .style-button {
-    margin-right: 5px;
-    padding: 5px 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-  }
-  
-  .qa-write-container .style-button:hover {
-    background-color: #ddd;
-  }
-  
-  /* Quill 컨텐츠 스타일링 */
-  .ql-align-center {
-    text-align: center;
-  }
-  
-  .ql-align-right {
-    text-align: right;
-  }
-  
-  .ql-align-justify {
-    text-align: justify;
-  }
-  
-  /* 파일 다운로드 섹션 스타일 */
-  .file-download-section {
-    margin-top: 20px;
-    padding: 10px;
+    border-radius: 8px 8px 0 0;
     background-color: #f8f9fa;
-    border-radius: 4px;
+    padding: 8px;
   }
-  
-  .file-label {
-    font-weight: bold;
-    margin-right: 10px;
+
+  .ql-container.ql-snow {
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    background-color: #fff;
   }
-  
-  .file-download-link {
-    color: #007bff;
-    text-decoration: none;
+
+  /* 답변 작성 에디터 */
+  .reply-section {
+    .reply-editor {
+      margin-bottom: 50px;  /* 버튼과의 간격 */
+
+      .ql-container {
+        min-height: 150px;  /* 답변은 좀 더 작게 */
+      }
+
+      .ql-editor {
+        min-height: 150px;
+      }
+    }
   }
-  
-  .file-download-link:hover {
-    text-decoration: underline;
+
+  /* 읽기 전용 컨텐츠 스타일링 */
+  .post-content, .reply-content {
+    .ql-align-center {
+      text-align: center;
+    }
+
+    .ql-align-right {
+      text-align: right;
+    }
+
+    .ql-align-justify {
+      text-align: justify;
+    }
+
+    p {
+      margin-bottom: 1em;
+    }
+
+    ul, ol {
+      padding-left: 1.5em;
+      margin-bottom: 1em;
+    }
+
+    blockquote {
+      border-left: 4px solid #ccc;
+      padding-left: 16px;
+      margin: 1em 0;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
   }
-  
-  
+}
+
+/* 반응형 디자인 - 기존 코드 유지 */
+@media (max-width: 768px) {
+  .qa-board {
+    .reply-editor {
+      .ql-container.ql-snow {
+        height: 150px;
+      }
+
+      .ql-editor {
+        min-height: 150px;
+      }
+    }
+  }
+}
+
