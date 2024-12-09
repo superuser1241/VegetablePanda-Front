@@ -82,9 +82,7 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
                             공지사항
                         </Link>
                         { userRole === 'ROLE_FARMER' ?
-                       <Link to="/personal" className="nav-item" onClick={handleLinkClick('/personal')}>
-                           개인 페이지
-                       </Link>
+                       ""
                
                         : <Link to="/PersonalList" className='nav-item'>
                             판매자 목록
