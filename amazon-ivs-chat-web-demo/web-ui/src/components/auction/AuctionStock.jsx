@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Client } from "@stomp/stompjs";
 import './AuctionStock.css';
 
 const AuctionStock = ({ streamingRoom }) => {
     const [stockInfo, setStockInfo] = useState(null);
 
     useEffect(() => {
+        const serverIp = process.env.REACT_APP_SERVER_IP;
+        const token = localStorage.getItem('token');
         const findStockById = async () => {
-            const serverIp = process.env.REACT_APP_SERVER_IP;
-            const token = localStorage.getItem('token');
             try {
                 const result = await axios.get(
                     `${serverIp}/auctionStock/${streamingRoom.farmerSeq}`,
@@ -27,7 +28,26 @@ const AuctionStock = ({ streamingRoom }) => {
             }
         };
         findStockById();
+
+        const client = new Client({
+            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
+            onConnect: () => {
+                client.subscribe(`/end/notifications`, async (message) => {
+                    findStockById();
+                });
+            },
+            onDisconnect: () => console.log("WebSocket 연결 종료"),
+        });
+    
+        client.activate();
+    
+        return () => {
+            client.deactivate();
+        };
+
+
     }, []);
+
 
     return (
         <>
