@@ -1,6 +1,6 @@
 .farmer-mypage {
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 0 200px;
     padding: 20px;
 }
 
@@ -21,11 +21,14 @@
 
 .mypage-container {
     display: flex;
-    gap: 20px;
+    gap: 30px; /* 간격 조금 증가 */
+    min-width: 1400px; /* 전체 최대 넓이 증가 */
+    margin: 0 auto;
 }
 
 .sidebar {
     width: 200px;
+    min-width: 200px;
     background-color: white;
     padding: 20px;
     border-radius: 8px;
@@ -76,6 +79,8 @@
 
 .main-content {
     flex: 1;
+    min-width: 0;
+    max-width: 1300px;
 }
 
 .user-info-section {
@@ -208,57 +213,175 @@
 }
 
 .streaming-section {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
 }
 
 .streaming-section h3 {
-    color: #444;
+    color: #2c3e50;
+    font-size: 22px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #4CAF50;
+}
+
+/* 승인된 방송 정보 스타일 */
+.streaming-info {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.streaming-info h4 {
+    color: #2c3e50;
+    font-size: 18px;
     margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
 }
 
-.streaming-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
+.streaming-info-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    align-items: start;
 }
 
-.streaming-btn, .register-stock-btn {
-    display: inline-flex;
-    align-items: center;
+/* 상품 정보 영역 */
+.streaming-product-info {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.streaming-product-image {
+    width: 100%;
+    height: 200px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.streaming-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.streaming-product-details h5 {
+    color: #2c3e50;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.product-name {
+    font-size: 15px;
+    color: #4a4a4a;
+    line-height: 1.4;
+}
+
+/* 서버 정보 영역 */
+.streaming-server-info {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.info-item {
+    margin-bottom: 20px;
+}
+
+.info-label {
+    display: block;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    display: block;
+    color: #2c3e50;
+    font-size: 15px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    word-break: break-all;
+}
+
+/* 방송 시작 버튼 */
+.streaming-start-btn {
+    width: 100%;
+    padding: 15px;
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 12px 24px;
-    border-radius: 4px;
-    cursor: pointer;
+    border-radius: 8px;
     font-size: 16px;
-    transition: background-color 0.3s;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
 }
 
-.streaming-btn:hover, .register-stock-btn:hover {
+.streaming-start-btn:hover {
     background-color: #45a049;
+    transform: translateY(-2px);
 }
 
-.streaming-btn:active, .register-stock-btn:active {
-    background-color: #3d8b40;
+/* 대기 상태 메시지 */
+.streaming-status {
+    text-align: center;
+    padding: 30px;
+    background-color: #fff3e0;
+    border-radius: 8px;
+    color: #f57c00;
 }
 
-@media (max-width: 600px) {
-    .farmer-mypage {
-        padding: 10px;
+/* 방송 신청 버튼 */
+.streaming-buttons {
+    text-align: center;
+    padding: 20px;
+}
+
+.streaming-btn {
+    padding: 12px 30px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.streaming-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+.streaming-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* StreamingStatus 반응형 디자인 */
+@media (max-width: 768px) {
+    .streaming-info-grid {
+        grid-template-columns: 1fr;
     }
 
-    .streaming-btn {
-        padding: 10px 20px;
-        font-size: 14px;
+    .streaming-section {
+        padding: 20px;
     }
-} 
+
+    .streaming-product-image {
+        height: 180px;
+    }
+}
 
 .stock-register-section {
     background-color: #fff;
@@ -271,3 +394,518 @@
     padding-bottom: 10px;
 }
 
+.product-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.product-form .form-group:nth-child(1),
+.product-form .form-group:nth-child(2) {
+    grid-column: span 1;
+}
+
+.product-form .form-group:nth-child(3),
+.product-form .form-group:nth-child(4) {
+    grid-column: span 1;
+}
+
+.product-form .form-group:nth-child(5),
+.product-form .form-group:nth-child(6) {
+    grid-column: span 1;
+}
+
+.product-form .form-group:last-child {
+    grid-column: 1 / -1;
+}
+
+.product-form textarea {
+    min-height: 150px;
+}
+
+.product-form .button-group {
+    grid-column: 1 / -1;
+}
+
+.product-form select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.product-form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    min-height: 100px;
+    resize: vertical;
+}
+
+.product-form .form-group {
+    margin-bottom: 15px;
+}
+
+.product-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.product-description {
+    width: 595px;
+    margin: 20px auto;
+    grid-column: 1 / -1;
+}
+
+.product-description label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.product-description textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    resize: vertical;
+} 
+
+.settlement-history-display {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.settlement-history-display h3 {
+    color: #2c3e50;
+    font-size: 22px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+}
+
+.settlement-history-display table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+}
+
+.settlement-history-display th {
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    font-weight: 600;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.settlement-history-display td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #e9ecef;
+    color: #495057;
+}
+
+.settlement-history-display tr:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease;
+}
+
+.settlement-history-display tr:last-child td {
+    border-bottom: none;
+}
+
+/* 상태 표시 스타일 */
+.settlement-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.status-completed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-pending {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+/* 금액 표시 스타일 */
+.settlement-amount {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* 로딩 상태 스타일 */
+.loading-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+}
+
+/* 에러 메시지 스타일 */
+.error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+/* 데이터 없음 메시지 스타일 */
+.no-data-notification {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px dashed #dee2e6;
+}
+
+@media (max-width: 768px) {
+    .settlement-history-display {
+        padding: 15px;
+    }
+
+    .settlement-history-display table {
+        font-size: 14px;
+    }
+
+    .settlement-history-display th,
+    .settlement-history-display td {
+        padding: 10px;
+    }
+
+    .settlement-status {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+} 
+
+/* 판매 내역 스타일 */
+.sales-history-display {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.sales-history-display h3 {
+    color: #2c3e50;
+    font-size: 22px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+}
+
+.sales-history-display table {
+    width: 100%;
+    min-width: 1000px;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 20px;
+}
+
+.sales-history-display th {
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    font-weight: 600;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.sales-history-display td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #e9ecef;
+    color: #495057;
+    vertical-align: middle;
+}
+
+.sales-history-display tr:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease;
+}
+
+/* 체크박스 스타일 */
+.sales-history-display input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #4CAF50;
+}
+
+/* 판매 상태 뱃지 스타일 */
+.sale-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.status-auction {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-shop {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-company {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+/* 금액 스타일 */
+.price-column {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* 정산 신청 버튼 */
+.sales-history-display button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+    margin-top: 20px;
+    position: relative;
+    left: 0;
+}
+
+.sales-history-display button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+.sales-history-display button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 로딩 및 에러 상태 */
+.loading-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+}
+
+.error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+/* 데이터 없음 메시지 */
+.no-data-notification {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px dashed #dee2e6;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .sales-history-display {
+        padding: 15px;
+    }
+
+    .sales-history-display table {
+        font-size: 14px;
+    }
+
+    .sales-history-display th,
+    .sales-history-display td {
+        padding: 10px 5px;
+    }
+
+    .sale-status {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .sales-history-display button {
+        width: 100%;
+        margin-top: 15px;
+    }
+} 
+
+/* 나의 리뷰 섹션 스타일 */
+.my-reviews-section {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.my-reviews-section h3 {
+    color: #2c3e50;
+    font-size: 22px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #4CAF50;
+}
+
+.my-reviews-section table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+}
+
+.my-reviews-section th {
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    font-weight: 600;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.my-reviews-section td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+.my-reviews-section tr:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease;
+}
+
+/* 리뷰 이미지 스타일 */
+.my-review-image {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.my-review-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 리뷰 점수 스타일 */
+.my-review-score {
+    font-weight: bold;
+    color: #4CAF50;
+    font-size: 16px;
+}
+
+/* 삭제 버튼 스타일 */
+.my-reviews-section button {
+    background-color: #ff5252;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.my-reviews-section button:hover {
+    background-color: #ff1744;
+    transform: translateY(-2px);
+}
+
+/* 리뷰 내용 스타일 */
+.my-review-content {
+    max-width: 300px;
+    text-align: left;
+    padding: 10px;
+    line-height: 1.5;
+}
+
+/* 작성자 및 날짜 스타일 */
+.my-review-author {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.my-review-date {
+    color: #666;
+    font-size: 14px;
+}
+
+/* 데이터 없음 메시지 */
+.my-reviews-section .no-data-notification {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px dashed #dee2e6;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .my-reviews-section {
+        padding: 15px;
+    }
+
+    .my-reviews-section table {
+        font-size: 14px;
+    }
+
+    .my-review-image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .my-review-content {
+        max-width: 200px;
+    }
+
+    .my-reviews-section th,
+    .my-reviews-section td {
+        padding: 10px 5px;
+    }
+
+    .my-reviews-section button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+} 
