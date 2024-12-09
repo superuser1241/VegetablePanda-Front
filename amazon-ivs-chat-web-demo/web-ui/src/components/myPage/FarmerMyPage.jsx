@@ -713,13 +713,18 @@ const checkStreamingStatus = async () => {
                         </div>
                     )}
           {activeTab === "info" && farmerInfo && (
-            <div className="user-info-section">
+            <div className="userMyPage-user-info-section">
               <h3>회원 정보</h3>
-              <div className="user-info-details">
-                <strong>프로필 사진</strong>
-                <div className="image-preview-container">
-                  <img src={ farmerInfo.path || logo} />
+              <div className="userMyPage-user-info-details">
+                <div className="userMyPage-image-container">
+                  <strong>프로필 사진</strong>
+                  <div className="image-and-point-container">
+                  <div className="userMyPage-image-preview-container">
+                    <img src={farmerInfo?.path || logo} alt="프로필 사진" />
+                  </div>
+                  </div>
                 </div>
+                <div className="userMyPage-info-list">
                 <p>
                   <strong>아이디 :</strong> {farmerInfo.farmerId}
                 </p>
@@ -742,10 +747,11 @@ const checkStreamingStatus = async () => {
                   <strong>등급 :</strong> {farmerInfo.grade}
                 </p>
                 <p>
-                  <strong>가입일자 :</strong>
+                  <strong>가입일자 : </strong>
                   {new Date(farmerInfo.regDate).toLocaleDateString()}
                 </p>
               </div>
+            </div>
             </div>
           )}
 

@@ -35,18 +35,22 @@ const PersonalList = () => {
     <div className="yun-farmer-list-page">
       <h1 className="yun-class">판매자 목록</h1>
       <div className="yun-farmer-list">
-        {farmer.map((farmer) => (
+        {farmer.map((farmer, index) => (
           <div
-            className="yun-farmer-card"
+            className={`yun-farmer-card ${index < 4 ? `yun-rank-${index + 1}` : ''}`}
             key={farmer.userSeq}
             onClick={() => handleCardClick(farmer.userSeq)}
           >
+            {index < 4 && (
+              <div className="yun-rank-badge">
+                {index + 1+"등"}
+              </div>
+            )}
             <img
               className="yun-image-preview-container"
               src={farmer.path || logo}
               alt={farmer.path}
             />
-
             <div className="yun-farmer-info">
               <h2 className="yun-farmer-name">{farmer.name}</h2>
               <p className="yun-farmer-intro yun-text-ellipsis">{farmer.intro}</p>
