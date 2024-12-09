@@ -26,6 +26,64 @@
     align-items: center;
 }
 
+.yun-shop-image {
+    /* position: left는 유효한 값이 아닙니다 */
+    float: left;  /* 왼쪽 정렬을 위해 float 사용 */
+    display: flex;
+    width: 50%;
+    height: 50%;
+    object-fit: cover; /* 이미지 비율 유지 */
+}
+
+.yun-shop-info {
+    float: right; /* 오른쪽 정렬 유지 */
+    display: flex; /* flexbox 활성화 */
+    padding-top: 10%;
+    flex-direction: row; /* 가로 방향 정렬 */
+    flex-wrap: wrap; /* 공간이 부족하면 다음 줄로 넘어가도록 설정 */
+    gap: 5%; /* 요소 간의 간격 추�� */
+    align-items: center; /* 세로 방향 가운데 정렬 */
+    width: 50%; /* 카드의 너비 유지 */
+}
+
+.yun-shop-info div {
+    border: 1px solid #66bb6a; /* 부드러운 초록색 테두리 */
+    border-radius: 8px; /* 테두리 둥글게 */
+    padding: 2% 2%; /* 내부 여백 추가 */
+    margin: 1% ; /* 요소 간격 */
+    margin-left: 5%;
+    font-size: 15px; /* 텍스트 크기 */
+    font-weight: 51000; /* 글씨 두께 */
+    color: #333; /* 텍스트 색상 */
+    background-color: #f9fff9; /* 연한 초록 배경 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 살짝 그림자 효과 */
+    display: block; /* 가로로 배치 가능 */
+}
+
+.yun-shop-info div span {
+    font-weight: 700; /* 강조된 텍스트 */
+    color: #388e3c; /* 진한 초록색 */
+}
+.yun-live-badge{
+    width: 20%;
+    height: 20%;
+}
+.yun-live-image{
+    width: 60%;
+    height: 30%;
+    align-items: center;
+    align-content: center;
+    align-self: center;
+}
+
+.yun-shop-info div:hover {
+    background-color: #e8f5e9; /* 호버 시 배경색 변경 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 효과 강화 */
+    transform: scale(1.02); /* 살짝 커지는 효과 */
+    transition: all 0.3s ease; /* 애니메이션 부드럽게 */
+}
+
+
 .yun-profile-image {
     width: 160px;
     height: 160px;
@@ -95,8 +153,8 @@
 
 .yun-item-container1 {
     flex: 1;
-    max-width: 100%;
-    height: 100%;
+    max-width: 30%;
+    height: 10%;
     background-color: #ffffff;
     border-radius: 10px;
     padding: 20px;
@@ -210,3 +268,23 @@
     white-space: pre-wrap;
     word-break: break-word;
   }
+
+.yun-like-button1 {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.yun-subscribed {
+  background-color: red;
+  color: white;
+  border: 1px solid #ccc;
+}
+
+.yun-not-subscribed {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+}

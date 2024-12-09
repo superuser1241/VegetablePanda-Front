@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../../image/기본이미지.png";
-import './PersonalList.css';
 
 const PersonalList = () => {
   const token = localStorage.getItem("token");
@@ -50,7 +49,7 @@ const PersonalList = () => {
 
             <div className="yun-farmer-info">
               <h2 className="yun-farmer-name">{farmer.name}</h2>
-              <p className="yun-farmer-intro">{farmer.intro}</p>
+              <p className="yun-farmer-intro yun-text-ellipsis">{farmer.intro}</p>
             </div>
           </div>
         ))}

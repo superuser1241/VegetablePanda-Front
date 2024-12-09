@@ -436,12 +436,7 @@ const UserMyPage = () => {
             >
               나의 리뷰
             </li>
-            <li
-              onClick={() => setActiveTab("point")}
-              className={activeTab === "point" ? "active" : ""}
-            >
-              포인트 충전
-            </li>
+
             <li
               onClick={() => setActiveTab("cart")}
               className={activeTab === "cart" ? "active" : ""}
@@ -491,8 +486,13 @@ const UserMyPage = () => {
               <h3>회원 정보</h3>
               <div className="user-info-details">
                 <strong>프로필 사진</strong>
-                <div className="image-preview-container">
-                  <img src={userInfo?.path || logo} />
+                <div className="image-and-point-container">
+                  <div className="image-preview-container">
+                    <img src={userInfo?.path || logo} />
+                  </div>
+                  <div className="point-container">
+                    <Point userId={userId} point={point} fetchPoint={fetchPoint} />
+                  </div>
                 </div>
                 <p>
                   <strong>아이디:</strong> {userInfo.id}
@@ -777,63 +777,11 @@ const UserMyPage = () => {
             </div>
           )}
 
-{activeTab === "buyList" && (
-            <div className="user-order-history-display">
-              <h3>주문 내역</h3>
-              {orders.length > 0 ? (
-              <table>
-                <thead>
-                  <tr>
-                    <th>번호</th>
-                    <th>주문번호</th>
-                    <th>상품명</th>
-                    <th>수량</th>
-                    <th>가격</th>
-                    <th>주문일자</th>
-                    <th>주문상태</th>
-                    <th>리뷰</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map((order, index) => (
-                    <tr key={`${order.userBuySeq}-${index}`}>
-                      <td>{index + 1}</td>
-                      <td>{order.userBuySeq}</td>
-                      <td>{order.content}</td>
-                      <td>{order.count}개</td>
-                      <td>{order.price}원</td>
-                      <td>{new Date(order.buyDate).toLocaleDateString()}</td>
-                      <td>{order.status}</td>
-                      <td>
-                        <button
-                          onClick={() => handleReviewWrite(order)}
-                          className={`review-button ${order.reviewStatus === 'COMPLETED' ? 'completed' : ''}`}
-                          disabled={order.reviewStatus === 'COMPLETED'}
-                        >
-                          {order.reviewStatus === 'COMPLETED' ? '작성완료' : '리뷰작성'}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-               ) : (
-                <div className="no-data-notification">
-                  주문 내역이 없습니다.
-                </div>
-              )}
-            </div>
-          )}
-
           {activeTab === "review" && (
             <div className="review-history-display">
               <h3>나의 리뷰</h3>
               <ReviewCommentList userSeq={localStorage.getItem("userSeq")} />
             </div>
-          )}
-
-          {activeTab === "point" && (
-            <Point userId={userId} point={point} fetchPoint={fetchPoint} />
           )}
 
           {activeTab === "cart" && (

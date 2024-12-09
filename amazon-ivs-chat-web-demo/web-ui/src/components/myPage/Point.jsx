@@ -17,7 +17,7 @@ const Point = ({userId, point, fetchPoint}) => {
 
       // 충전금액 및 주문정보 등록
       const response = await axios.post(
-        `${serverIp}:9001/charge`,
+        `${serverIp}/charge`,
         {
           managementUserSeq: parseInt(userId),
           price: parseInt(chargeAmount),

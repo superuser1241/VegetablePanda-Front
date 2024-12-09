@@ -6,6 +6,7 @@ import { Client } from "@stomp/stompjs";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../Notification/NotiSet.css';
+import logo from '../../image/경매대기.png';
 
 const BiddingSection = memo(({ 
 
@@ -108,7 +109,7 @@ const BiddingSection = memo(({
 
     return (
         <div className={getClassName()}>
-            {isFarmer ? (
+        {isFarmer ? (
                 // 농부일 때
                 localAuctionData && localAuctionData.auctionSeq ? (
                     <AuctionStatusPage 
@@ -142,7 +143,7 @@ const BiddingSection = memo(({
                     />
                 ) : (
                     <div className="waiting-message">
-                        <p>경매 시작을 기다리는 중입니다...</p>
+                        <img src={logo} width="100%" height="100%" alt="경매 대기" srcset="" />
                     </div>
                 )
             )}
