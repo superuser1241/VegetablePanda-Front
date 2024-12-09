@@ -39,7 +39,6 @@ const UserAuctionHistory = ({auctions, loading1, error}) => {
                         <td>{auction.totalPrice}원</td> {/* 입찰할 금액 */}
                         <td>{formatDate(auction.insertDate)}</td> {/* 입찰한 날짜 */}
                         <td>{auction.name}</td> {/* 판매자명 */}
-
                         {/* 현재 상태 */}
                       </tr>
                       )

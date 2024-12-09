@@ -1,0 +1,63 @@
+.point-section {
+    /* margin-top: 20px; */
+    /* padding: 20px; */
+    background-color: #fff;
+    border-radius: 8px;
+    align-items: center;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
+.point-section .charge-input-group {
+    margin: 0px;
+}
+
+.point-info {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+}
+
+.point-info p {
+    font-size: 1.2em;
+    color: #333;
+    margin: 0;
+}
+
+.charge-input-group {
+    display: flex;
+    gap: 10px;
+    margin: 0px;
+}
+
+.charge-input-group input  {
+    height: 30%;
+}
+
+.charge-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.charge-input-group .charge-button {
+    padding: 10px 20px;
+    height: 45px;
+    /* background-color: #4a90e2; */
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.charge-button:hover {
+    /* background-color: #357abd; */
+    background-color: #357abd;
+} 

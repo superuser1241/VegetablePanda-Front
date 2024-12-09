@@ -35,9 +35,9 @@
 }
  
   
-  /* tbody tr:hover {
-    background-color: #82c91e83; 
-  } */
+  tbody tr:hover {
+    background-color: #dddddd83; 
+  }
 
 .stock-status-container h2 {
     color: #333;

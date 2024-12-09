@@ -41,7 +41,7 @@
     padding-top: 10%;
     flex-direction: row; /* 가로 방향 정렬 */
     flex-wrap: wrap; /* 공간이 부족하면 다음 줄로 넘어가도록 설정 */
-    gap: 5%; /* 요소 간의 간격 추�� */
+    gap: 5%; /* 요소 간의 간격 추가 */
     align-items: center; /* 세로 방향 가운데 정렬 */
     width: 50%; /* 카드의 너비 유지 */
 }
@@ -287,4 +287,76 @@
   background-color: #4CAF50;
   color: white;
   border: none;
+}
+.yun-rank-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  z-index: 2;
+  color: #023f2b;
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+  border-radius: 50%;
+}
+
+.yun-rank-badge::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 50px;
+  height: 50px;
+  background-image: url('../../image/laurel.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.yun-rank-1 {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
+  border: 2px solid gold;
+}
+
+.yun-rank-2 {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(192, 192, 192, 0.4);
+  border: 2px solid silver;
+}
+
+.yun-rank-3 {
+  transform: scale(1.01);
+  box-shadow: 0 4px 10px rgba(205, 127, 50, 0.4);
+  border: 2px solid #cd7f32;
+}
+
+.yun-rank-4 {
+  transform: scale(1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  border: 2px solid #388e3c;
+}
+
+.yun-farmer-card {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.yun-rank-1 .yun-rank-badge {
+  background-color: gold;
+}
+
+.yun-rank-2 .yun-rank-badge {
+  background-color: silver;
+}
+
+.yun-rank-3 .yun-rank-badge {
+  background-color: #cd7f32;
 }

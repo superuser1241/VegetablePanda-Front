@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import * as ChargePoint from "./ChargePoint.jsx";
-import './Point.css'
 
 const Point = ({userId, point, fetchPoint}) => {
   const [chargeAmount, setChargeAmount] = useState("");
@@ -86,6 +85,10 @@ const Point = ({userId, point, fetchPoint}) => {
     return (
         <div>
             <div className="point-section">
+              <h3>포인트 충전</h3>
+              <div className="point-info">
+                <p>현재 보유 포인트: {point.toLocaleString()}P</p>
+              </div>
               <div className="charge-input-group">
                 <input
                   type="number"
