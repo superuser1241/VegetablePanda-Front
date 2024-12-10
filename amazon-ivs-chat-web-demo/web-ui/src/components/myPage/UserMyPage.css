@@ -349,7 +349,9 @@
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    justify-content: center;
+    /* justify-content: center; */
+    max-width: 1200px;
+    margin: 0 100px;
   }
   
   .userMyPage-card {

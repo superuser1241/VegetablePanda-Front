@@ -82,6 +82,11 @@
     font-weight: bold;
     color: #666;
     font-size: 0.9em;
+    background-color: #f8f9fa;
+    padding:7px;
+    border: 1px solid #d6d6d6;
+    border-radius: 3px;
+    margin-bottom: 5px;
 }
 
 .info-item span {
@@ -109,8 +114,9 @@
     margin-left: 20px;
 }
 
-.explanation {
+.explanation span {
     text-align: left;
+    text-indent: 3%;
 }
 
 .update-button-container button {
