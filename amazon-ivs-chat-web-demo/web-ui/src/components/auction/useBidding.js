@@ -32,13 +32,14 @@ export const useBidding = (highestBid, auctionSeq) => {
             console.log('입찰 요청 데이터:', {
                 userSeq,
                 price: bidAmount,
-                auctionSeq
+                auctionSeq,
             });
 
             const response = await axios.post(`${serverIp}/bid`, {
                 userSeq: userSeq,
                 price: bidAmount,
-                auctionSeq: auctionSeq
+                auctionSeq: auctionSeq,
+
             }, {
                 headers: {
                     'Authorization': `Bearer ${token}`
