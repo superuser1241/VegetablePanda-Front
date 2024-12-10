@@ -1,6 +1,6 @@
 .farmer-mypage {
     max-width: 1000px;
-    margin: 0 200px;
+    margin: 0 130px;
     padding: 20px;
 }
 
@@ -230,38 +230,50 @@
 
 /* 승인된 방송 정보 스타일 */
 .streaming-info {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    padding: 30px;
+    background: linear-gradient(to right, #ffffff, #f8f9fa);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .streaming-info h4 {
     color: #2c3e50;
-    font-size: 18px;
-    margin-bottom: 20px;
+    font-size: 20px;
+    margin-bottom: 25px;
+    font-weight: 600;
 }
 
-.streaming-info-grid {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 30px;
-    align-items: start;
+/* 상품 정보와 서버 정보를 한 영역에 표시 */
+.streaming-info-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 /* 상품 정보 영역 */
 .streaming-product-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background-color: white;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* 왼쪽 영역 (이미지와 상품 정보) */
+.product-info-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 .streaming-product-image {
-    width: 100%;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     border-radius: 8px;
     overflow: hidden;
-    margin-bottom: 15px;
 }
 
 .streaming-product-image img {
@@ -270,65 +282,133 @@
     object-fit: cover;
 }
 
+.streaming-product-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
 .streaming-product-details h5 {
     color: #2c3e50;
     font-size: 16px;
-    margin-bottom: 10px;
+    margin: 0;
 }
 
 .product-name {
-    font-size: 15px;
-    color: #4a4a4a;
-    line-height: 1.4;
+    color: #4a5568;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
 }
 
 /* 서버 정보 영역 */
 .streaming-server-info {
-    background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    border-radius: 15px;
 }
 
-.info-item {
+.info-item-streaming {
+    position: relative;
+    background: white;
     margin-bottom: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(76, 175, 80, 0.15);
+    transition: all 0.3s ease;
 }
 
-.info-label {
-    display: block;
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 5px;
+.info-item-streaming:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border-color: #4CAF50;
 }
 
-.info-value {
+.info-label-streaming {
+    display: inline-block;
+    background: #4CAF50;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 15px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 5px rgba(76, 175, 80, 0.2);
+}
+
+.info-value-streaming {
     display: block;
     color: #2c3e50;
-    font-size: 15px;
-    padding: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    padding: 15px;
     background-color: #f8f9fa;
-    border-radius: 6px;
+    border-radius: 8px;
+    border: 1px dashed #e0e0e0;
     word-break: break-all;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.info-value-streaming:hover {
+    background-color: #e8f5e9;
+    border-color: #4CAF50;
+}
+
+.info-value-streaming::after {
+    content: "클릭하여 복사";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #666;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 4px 8px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.info-value-streaming:hover::after {
+    opacity: 1;
+}
+
+.info-value-streaming.copied {
+    background-color: #e8f5e9;
+    border-color: #4CAF50;
+}
+
+.info-value-streaming.copied::after {
+    content: "복사 완료!";
+    color: #4CAF50;
 }
 
 /* 방송 시작 버튼 */
 .streaming-start-btn {
-    width: 100%;
-    padding: 15px;
-    background-color: #4CAF50;
+    width: auto;
+    padding: 12px 25px;
+    margin: 0;
+    background: linear-gradient(45deg, #4CAF50, #45a049);
     color: white;
     border: none;
     border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
 }
 
 .streaming-start-btn:hover {
-    background-color: #45a049;
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+    background: linear-gradient(45deg, #45a049, #4CAF50);
+}
+
+.streaming-start-btn:active {
+    transform: translateY(-1px);
 }
 
 /* 대기 상태 메시지 */

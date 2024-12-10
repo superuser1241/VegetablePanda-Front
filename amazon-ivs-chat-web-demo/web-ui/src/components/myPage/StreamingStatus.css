@@ -75,18 +75,18 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.info-item {
+.info-item-streaming {
     margin-bottom: 20px;
 }
 
-.info-label {
+.info-label-streaming {
     display: block;
     color: #666;
     font-size: 14px;
     margin-bottom: 5px;
 }
 
-.info-value {
+.info-value-streaming {
     display: block;
     color: #2c3e50;
     font-size: 15px;
@@ -166,4 +166,10 @@
     .streaming-product-image {
         height: 180px;
     }
+}
+
+.info-item-streaming span{
+    height: 1px;
+    color: #333;
+    font-size: 1.1em;
 }

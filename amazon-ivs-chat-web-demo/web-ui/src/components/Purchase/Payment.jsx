@@ -92,7 +92,7 @@ const Payment = () => {
             const orderData2 = {
                 userSeq: userId,
                 state:5,
-                totalPrice: item.price * quantity, //+ 3000,
+                totalPrice: item.price * quantity+ 3000,
                 userBuyDetailDTOs: [{
                     price: item.price,
                     count: quantity,
