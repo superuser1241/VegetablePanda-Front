@@ -34,7 +34,7 @@ const BidHistoryModal = ({ isOpen, onClose, bidHistory }) => {
                             bidHistory.map((bid, index) => (
                                 <div key={index} className="bid-table-row">
                                     <div className="bid-column">{bidHistory.length - index}</div>
-                                    <div className="bid-column">{bid.comName}</div>
+                                    <div className="bid-column">{bid.name}</div>
                                     <div className="bid-column price">{bid.price}원</div>
                                     <div className="bid-column">{formatDate(bid.insertDate)}</div>
                                 </div>

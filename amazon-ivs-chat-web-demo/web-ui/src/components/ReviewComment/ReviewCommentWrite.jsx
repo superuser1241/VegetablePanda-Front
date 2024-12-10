@@ -68,19 +68,21 @@ const ReviewCommentWrite = () => {
       alert('평점을 선택해주세요.');
       return;
     }
+
     // reviewCommentDTO JSON 추가
-    console.log(localStorage.getItem("userSeq"));
     const reviewCommentDTO = {
       content: reviewData.content,
       score: reviewData.score,
       userSeq: localStorage.getItem("userSeq"),
       reviewSeq: location.state.orderInfo.reviewSeq,
       userBuyDetailSeq: location.state.orderInfo.userBuyDetailSeq,
-      file : {fileSeq: '', name: newProduct.file.name},
+      file: image ? {
+        fileSeq: '',
+        name: newProduct.file.name
+      } : null  // 이미지가 없을 경우 null로 설정
     };
 
     const formData = new FormData();
-    // ReviewCommentDTO를 문자열로 변환하여 추가
     formData.append('reviewCommentDTO', new Blob([JSON.stringify(reviewCommentDTO)], {
       type: 'application/json'
     }));
@@ -89,8 +91,7 @@ const ReviewCommentWrite = () => {
     if (image) {
       formData.append('image', image);
     }
-    console.log(newProduct);
-    console.log(reviewCommentDTO);
+
     try {
       const response = await axios.post(
         `${serverIp}/reviewComment/all`,
@@ -102,13 +103,6 @@ const ReviewCommentWrite = () => {
           }
         }
       );
-
-      // 디버깅을 위한 로그
-      console.log('전송된 데이터:', {
-        userBuyDetailSeq,
-        reviewCommentDTO: JSON.stringify(reviewCommentDTO),
-        hasImage: !!image
-      });
 
       if (response.status === 201) {
         alert('리뷰가 성공적으로 등록되었습니다.');

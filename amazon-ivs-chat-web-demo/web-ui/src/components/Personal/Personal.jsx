@@ -148,8 +148,10 @@ const Personal = ({ onJoinRoom }) => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
+      console.log('Fetched review data:', response.data);
       setReview(response.data);
     } catch (error) {
+      console.error('리뷰 조회 실패:', error);
     }
   };
 
