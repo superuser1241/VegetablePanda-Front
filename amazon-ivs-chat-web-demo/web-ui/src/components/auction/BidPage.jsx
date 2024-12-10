@@ -14,19 +14,40 @@ const BidPage = ({
     onOpenModal, 
     onCheckPrice, 
     onCheckSalesHistory,
-    userWallet,
     userRole 
 }) => {
     const [isAuctionEnded, setIsAuctionEnded] = useState(false);
     const [remainingTime, setRemainingTime] = useState('');
     const [pricePerKg, setPricePerKg] = useState(0);
     const [bid, setBid] = useState(null);
+    const [userWallet, setUserWallet] = useState(null);
+
+    useEffect(() => {
+        const fetchUserWallet = async () => {
+            try {
+                const userSeq = localStorage.getItem('userSeq');
+                const token = localStorage.getItem('token');
+                const response = await axios.get(
+                    `${serverIp}/userTempWallet/${userSeq}`,
+                    {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }
+                );
+                setUserWallet(response.data);
+                console.log('User wallet:', response.data);
+            } catch (error) {
+                console.error('임시 지갑 정보 조회 실패:', error);
+            }
+        };
+        fetchUserWallet();
+    }, [bid]);
+
 
     const calculateRemainingTime = (closeTime) => {
         const now = new Date();
         const endTime = new Date(closeTime);
         const diff = endTime - now;
-
+        console.log('롤',userRole);
         if (diff <= 0) {
             return '경매 종료';
         }

@@ -21,9 +21,9 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
     const [showSalesModal, setShowSalesModal] = useState(false);
     const [priceInfo, setPriceInfo] = useState(null);
     const [salesHistory, setSalesHistory] = useState(null);
-    const [userWallet, setUserWallet] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const serverIp = process.env.REACT_APP_SERVER_IP;
+    const userRole = localStorage.getItem('userRole');
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
@@ -73,27 +73,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
         }
     }, [streamingRoom, isFarmer]);
 
-    useEffect(() => {
-        const fetchUserWallet = async () => {
-            try {
-                const userSeq = localStorage.getItem('userSeq');
-                const token = localStorage.getItem('token');
-                const response = await axios.get(
-                    `${serverIp}/userTempWallet/${userSeq}`,
-                    {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    }
-                );
-                setUserWallet(response.data);
-                console.log('User wallet:', response.data);
-            } catch (error) {
-                console.error('임시 지갑 정보 조회 실패:', error);
-            }
-        };
-
-        fetchUserWallet();
-    }, []);
-
+   
     const handleAuctionRegister = (newAuction) => {
         console.log('New auction registered:', newAuction);
         setAuctionData(newAuction);
@@ -203,7 +183,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                                 onCheckPrice={handleCheckPrice}
                                 onCheckSalesHistory={handleCheckSalesHistory}
                                 onRegisterSuccess={handleAuctionRegister}
-                                userWallet={userWallet}
+                                userRole={userRole}
                             />
                         </div>
                     </div>

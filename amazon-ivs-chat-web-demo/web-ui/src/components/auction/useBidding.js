@@ -50,7 +50,7 @@ export const useBidding = (highestBid, auctionSeq) => {
              alert('입찰이 완료되었습니다.');
         } catch (error) {
             console.error('입찰 실패:', error);
-            alert(error.message || '입찰에 실패했습니다.');
+            alert('입찰에 실패했습니다.');
         }
     };
 

@@ -90,17 +90,34 @@ const MainPage = ({ onJoinRoom }) => {
     }, []);
 
 
-    useEffect(() => {
+    function decodeBase64Url(base64Url) {
+        // Base64 URL에서 일반 Base64로 변환
+        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        
+        // 패딩 추가 (필요한 경우)
+        const padding = '='.repeat((4 - base64.length % 4) % 4);
+        base64 += padding;
+        
+        return atob(base64); // 일반 Base64로 디코딩
+      }
+      
+      useEffect(() => {
         if (token) {
           try {
-            const payload = JSON.parse(atob(token.split(".")[1]));
-            setUserId(payload.user_Seq);
+            // JWT 토큰을 "."으로 분리하여 페이로드 부분 가져오기
+            const payloadBase64Url = token.split(".")[1];
+      
+            // Base64 URL 디코딩
+            const decodedPayload = decodeBase64Url(payloadBase64Url);
+      
+            // 디코딩된 페이로드를 JSON으로 변환
+            const payload = JSON.parse(decodedPayload);
+            setUserId(payload.user_Seq); // payload에서 user_Seq 값 추출
           } catch (error) {
             console.error("토큰 파싱 실패:", error);
           }
         }
       }, [token]);
-
 
     useEffect(() => {
         const fetchStatistics = async () => {
