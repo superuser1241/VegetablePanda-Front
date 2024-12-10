@@ -22,30 +22,16 @@ const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAucti
         const token = localStorage.getItem('token');
         try {
             const serverIp = process.env.REACT_APP_SERVER_IP;
-            const currentHour = new Date().getHours(); // 현재 시간 (24시간 형식)
+            //const currentHour = new Date().getHours(); // 현재 시간 (24시간 형식)
         
-            let result;
-            if (currentHour >= 18 || currentHour < 24) { // 오후 6시 ~ 자정
-                result = await axios.get(`${serverIp}/bidCom/${auctionSeq}`, {
+            const result = await axios.get(`${serverIp}/bidUser/${auctionSeq}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
-                });
-                console.log('법인 경매 시간 - bidCom API 호출');
-            } else if (currentHour >= 13 && currentHour < 18) { // 오후 1시 ~ 오후 6시
-                result = await axios.get(`${serverIp}/bidUser/${auctionSeq}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                console.log('개인 경매 시간 - bidUser API 호출');
-            } else {
-                console.log('경매 시간이 아닙니다');
-                return; // 경매 시간이 아닐 경우 API 호출하지 않음
-            }
+            });
             
             setBid(result.data);
-            console.log('설정된 데이터:', result.data);
+            console.log('입찰기록설정된 데이터:', result.data);
 
         } catch (error) {
             console.error('입찰 정보 조회 실패:', error);
