@@ -646,7 +646,7 @@ const checkStreamingStatus = async () => {
                     : ""
                 }`}
               >
-                ���고 관리
+                재고 관리
               </div>
               {isProductMenuOpen && (
                 <ul className="dropdown-content">
