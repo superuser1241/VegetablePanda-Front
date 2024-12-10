@@ -74,7 +74,6 @@ const StockList = ({onStockSelect, setActiveTab}) => {
                             <th>등급</th>
                             <th>인증</th>
                             <th>색상</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody className='stocklist-tbody'>

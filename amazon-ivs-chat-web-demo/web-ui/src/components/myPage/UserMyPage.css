@@ -349,7 +349,9 @@
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    justify-content: center;
+    /* justify-content: center; */
+    max-width: 1200px;
+    margin: 0 auto;
   }
   
   .userMyPage-card {
@@ -370,6 +372,11 @@
   .userMyPage-card-name {
     font-size: 1.2rem;
     padding: 10px 0;
+  }
+
+  .userMyPage-card-name span {
+    position: relative;
+    color: red;
   }
   
 .review-write-button {

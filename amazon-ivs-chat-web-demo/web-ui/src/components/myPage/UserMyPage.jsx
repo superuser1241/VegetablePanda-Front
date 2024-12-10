@@ -11,7 +11,8 @@ import Point from "./Point.jsx";
 import UserAuctionHistory from "./UserAuctionHistory.jsx";
 import UserLikedShops from "./UserLikedShops.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons"
+import { faXmark, faCircle } from "@fortawesome/free-solid-svg-icons"
+
 
 const UserMyPage = () => {
   const token = localStorage.getItem("token");
@@ -35,6 +36,7 @@ const UserMyPage = () => {
   const [pwMessage, setPwMessage] = useState("");
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [streamingInfo, setStreamingInfo] = useState([]);
 
   const [buyInfo, setBuyInfo] = useState(null);
 
@@ -114,9 +116,14 @@ const UserMyPage = () => {
       fetchreview();
       fetchOrderHistory();
       fetchAuctionHistory(userId);
-      fetchUserLikeHistory(userId);
     }
   }, [userId]);
+
+  useEffect (() => {
+    // if (activeTab === "userLike") {
+      fetchStreamingInfo(userId);
+    // }
+  }, [activeTab, userId]);
 
   // 주문 내역을 가져오는 함수
   const fetchOrderHistory = async (userId) => {
@@ -148,8 +155,19 @@ const UserMyPage = () => {
   const fetchUserLikeHistory = async (userId) => {
     try {
       setLoading(true);
-      const response = await axios.get(`${serverIp}/myPage/userLike/${userId}`);
-      setUserLike(response.data);
+      // const response = await axios.get(`${serverIp}/myPage/userLike/${userId}`);
+      const response = await axios.get(
+        `${serverIp}/like/list?userSeq=${userId}`,
+        {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+          }
+        }
+      );
+      if(response.status === 200) {
+        checkStreaming(response.data, streamingInfo);
+      }
+      
     } catch (err) {
       setError("구독 내역을 불러오는 중 오류가 발생했습니다.");
       console.error(err);
@@ -158,11 +176,30 @@ const UserMyPage = () => {
     }
   };
 
+  const fetchStreamingInfo = async (userId) => {
+      try {
+        const response = await axios.get(
+          `${serverIp}/api/streaming/active-rooms`, 
+          {
+            headers: { 
+              'Authorization': `Bearer ${token}`,
+            }
+          }
+        )
+        if(response.status === 200) {
+          setStreamingInfo(response.data);
+          fetchUserLikeHistory(userId);
+        }
+    } catch (err) {
+      console.error("방송 상태 확인 중 오류가 발생했습니다.")
+    }
+  }
+
   const fetchAuctionHistory = async (userId) => {
     try {
       setLoading1(true); // 로딩 시작
       const response = await axios.get(
-        `${serverIp}/myPage/auction/result/2`
+        `${serverIp}/myPage/auction/result/${userId}`
       ); // API 엔드포인트
       setAuctions(response.data); // 데이터 저장
     } catch (err) {
@@ -353,6 +390,25 @@ const UserMyPage = () => {
     setEditedUser((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleCardClick = (farmerSeq) => {
+    navigate(`/personal`, { state: { farmerSeq } });
+  };
+
+  const checkStreaming = (userLike, streamingInfo) => {
+    const updatedUserLike = userLike.map(user => {
+      // streamingInfo 배열에서 farmerSeq가 일치하는 항목이 있는지 확인
+      const isStreaming = streamingInfo.some(stream => stream.farmerSeq === user.farmerSeq);
+      // 일치하는 항목이 있으면 state를 true로 설정
+      return {
+          ...user,
+          state: isStreaming
+      };
+    });
+
+    // 업데이트된 배열로 상태 업데이트
+    setUserLike(updatedUserLike);
+  }
+
   // const handleDeletereview = async (revieweq) => {
   //   try {
   //     await axios.delete(`${serverIp}/myPage/review/${userId}/${revieweq}`, {
@@ -461,15 +517,15 @@ const UserMyPage = () => {
                 <div className="userMyPage-error-message">{error}</div>
               ) : userLike.length > 0 ? (
                 <div className="userMyPage-card-container">
-                  {userLike.map((userLike, index) => (
-                    <div className="userMyPage-card" key={index}>
+                  {userLike.map((user, index) => (
+                    <div className="userMyPage-card" key={index} onClick={() => handleCardClick(user.farmerSeq)}>
                       <img
-                        src={userLike.imageUrl}
-                        alt={userLike.name}
+                        src={user.path ? user.path : logo}
+                        alt={user.name}
                         className="userMyPage-card-image"
                       />
                       <div className="userMyPage-card-name">
-                        {userLike.name}
+                        {user.name} {user.state && (<span>&lt;방송중&gt;</span>)}
                       </div>
                     </div>
                   ))}

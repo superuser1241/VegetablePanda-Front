@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import StarRating from '../ReviewComment/StarRating';
 import './ReviewComment.css';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
@@ -16,7 +19,6 @@ const ReviewCommentEdit = () => {
   const [deleteFile, setDeleteFile] = useState(false);
   const [reviewSeq, setReviewSeq] = useState(null);
   const token = localStorage.getItem('token');
-  const userRole = localStorage.getItem('userRole');
 
   useEffect(() => {
     const fetchComment = async () => {
@@ -36,7 +38,7 @@ const ReviewCommentEdit = () => {
       } catch (error) {
         console.error('댓글 조회 실패:', error);
         alert('댓글 조회에 실패했습니다.');
-        navigateToMyPage();
+        navigate('/user-mypage');
       }
     };
 
@@ -45,33 +47,13 @@ const ReviewCommentEdit = () => {
     }
   }, [reviewCommentSeq, token, navigate]);
 
-  const navigateToMyPage = () => {
-    switch(userRole) {
-      case 'ROLE_USER':
-        navigate('/user-mypage');
-        break;
-      case 'ROLE_FARMER':
-        navigate('/farmer-mypage');
-        break;
-      case 'ROLE_COMPANY':
-        navigate('/company-mypage');
-        break;
-      case 'ROLE_ADMIN':
-        navigate('/admin-mypage');
-        break;
-      default:
-        navigate('/');
-        break;
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formDataToSend = new FormData();
     
     const reviewCommentDTO = {
       content: formData.content,
-      score: parseInt(formData.score)
+      score: formData.score
     };
 
     formDataToSend.append('reviewCommentDTO', new Blob([JSON.stringify(reviewCommentDTO)], {
@@ -93,44 +75,60 @@ const ReviewCommentEdit = () => {
         }
       });
       alert('리뷰가 수정되었습니다.');
-      navigateToMyPage();
+      navigate(`/reviewComment/detail/${reviewCommentSeq}`);
     } catch (error) {
       console.error('리뷰 수정 실패:', error);
       alert('리뷰 수정에 실패했습니다.');
     }
   };
 
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['clean']
+    ],
+  };
+
   return (
-    <div className="review-comment-edit">
-      <h2>리뷰 댓글 수정</h2>
+    <div className="review-write-container">
+      <h2>리뷰 수정</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>내용:</label>
-          <textarea
+        <div className="order-info">
+          <div className="order-info-details">
+            <div className="rating-section">
+              <label>평점</label>
+              <StarRating
+                rating={formData.score}
+                onRatingChange={(newRating) => 
+                  setFormData(prev => ({...prev, score: newRating}))
+                }
+              />
+            </div>
+          </div>
+        </div>
+        
+        <div className="form-group">
+          <label>내용</label>
+          <ReactQuill
             value={formData.content}
-            onChange={(e) => setFormData({...formData, content: e.target.value})}
-            required
+            onChange={(content) => setFormData(prev => ({...prev, content}))}
+            modules={modules}
+            className="quill-editor"
           />
         </div>
-        <div>
-          <label>평점:</label>
-          <input
-            type="number"
-            min="1"
-            max="5"
-            value={formData.score}
-            onChange={(e) => setFormData({...formData, score: e.target.value})}
-            required
-          />
-        </div>
-        <div>
-          <label>이미지:</label>
+
+        <div className="form-group">
+          <label>이미지</label>
           <input
             type="file"
-            onChange={(e) => setFormData({...formData, image: e.target.files[0]})}
+            onChange={(e) => setFormData(prev => ({...prev, image: e.target.files[0]}))}
+            className="file-input"
           />
         </div>
-        <div>
+
+        <div className="checkbox-container">
           <label>
             <input
               type="checkbox"
@@ -140,7 +138,16 @@ const ReviewCommentEdit = () => {
             기존 이미지 삭제
           </label>
         </div>
-        <button type="submit">수정하기</button>
+
+        <div className="button-group">
+          <button type="submit">수정하기</button>
+          <button 
+            type="button" 
+            onClick={() => navigate(`/reviewComment/detail/${reviewCommentSeq}`)}
+          >
+            취소
+          </button>
+        </div>
       </form>
     </div>
   );

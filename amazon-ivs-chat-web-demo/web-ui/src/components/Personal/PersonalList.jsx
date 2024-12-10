@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../../image/기본이미지.png";
+import "./PersonalList.css";
 
 const PersonalList = () => {
   const token = localStorage.getItem("token");

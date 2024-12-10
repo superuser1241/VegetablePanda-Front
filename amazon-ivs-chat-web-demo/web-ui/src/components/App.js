@@ -33,7 +33,7 @@ import PurchaseD from './Purchase/PurchaseD';
 import StockInfo from './myPage/StockInfo';
 import CartPage from './product/CartPage';
 import axios from 'axios';
-import Personal from './Personal/Personal'; // 에러나도 건들지 말아줘요
+import Personal from './Personal/Personal';
 import PersonalList from './Personal/PersonalList';
 import ReviewCommentWrite from './ReviewComment/ReviewCommentWrite';
 import ReviewCommentList from './ReviewComment/ReviewCommentList';

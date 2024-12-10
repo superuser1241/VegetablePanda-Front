@@ -1,11 +1,17 @@
 
 .stocklist-table th {
-    background-color: #81c784; /* 연한 초록색 */
+    /* background-color: #81c784; 
     border-bottom: 1px solid #ddd;
     padding: 8px;
-    /* background-color: #f4f4f4; */
+    background-color: #f4f4f4;
     font-weight: bold;
-    color: #333;
+    color: #333; */
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    font-weight: 600;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #e9ecef;
 }
 
 .stocklist-table td {
@@ -14,10 +20,15 @@
 }
 
 .stocklist-table {
-    width: 100%;
+    /* width: 100%;
     border-collapse: collapse;
     border: none;
-    margin-top: 20px;
+    margin-top: 20px; */
+    width: 100%;
+    min-width: 1000px;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 20px;
 }
 
 /* th {

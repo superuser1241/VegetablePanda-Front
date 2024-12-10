@@ -37,6 +37,8 @@ function LoginForm({ onLoginSuccess }) {
         localStorage.setItem('token', token);
         localStorage.setItem('userSeq', loginResponse.data.user_seq);
         localStorage.setItem('userRole', loginResponse.data.role);
+        localStorage.setItem('userName', loginResponse.data.name);
+        console.log('로그인 성공:', localStorage.getItem('userName'));
         const userData = loginResponse.data;
         onLoginSuccess(userData.name, userData.role);
       } else {

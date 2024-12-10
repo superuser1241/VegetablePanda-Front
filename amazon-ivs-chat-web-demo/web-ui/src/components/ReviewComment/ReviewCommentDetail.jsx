@@ -59,7 +59,7 @@ const ReviewCommentDetail = () => {
         }
       });
       alert('댓글이 삭제되었습니다.');
-      navigate('/reviewComment/list');
+      navigate('/user-mypage');
     } catch (error) {
       console.error('삭제 실패:', error);
       alert('댓글 삭제에 실패했습니다.');
@@ -78,6 +78,9 @@ const ReviewCommentDetail = () => {
           <div className="detail-info">
             <span>작성자: {comment.name}</span>
             <span>작성일: {new Date(comment.regDate).toLocaleDateString()}</span>
+            <div className="star-rating">
+              {'★'.repeat(comment.score)}{'☆'.repeat(5-comment.score)}
+            </div>
           </div>
         </div>
         <div className="detail-body">
@@ -91,23 +94,33 @@ const ReviewCommentDetail = () => {
           )}
         </div>
         <div className="detail-buttons">
-          <button 
-            onClick={() => navigate('/reviewComment/list')} 
-            className="list-button"
-          >
-            목록으로 돌아가기
-          </button>
-          
-          {Number(localStorage.getItem("userSeq")) === comment?.userSeq && (
-            <>
+          <div className="left-buttons">
+            {Number(localStorage.getItem("userSeq")) === comment?.userSeq && (
+              <button 
+                onClick={() => navigate(`/reviewComment/edit/${comment.reviewCommentSeq}`)} 
+                className="edit-button"
+              >
+                수정
+              </button>
+            )}
+          </div>
+          <div className="right-buttons">
+            <button 
+              onClick={() => navigate('/user-mypage')} 
+              className="list-button"
+            >
+              돌아가기
+            </button>
+            
+            {Number(localStorage.getItem("userSeq")) === comment?.userSeq && (
               <button 
                 onClick={handleDelete} 
                 className="delete-button"
               >
                 삭제
               </button>
-            </>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
