@@ -5,6 +5,8 @@ import Statistics from './Statistics';
 import axios from 'axios';
 import ReviewSummary from './ReviewSummary';
 import ReviewDetail from './ReviewDetail';
+import apple2 from '../../image/사과2.jpeg';
+import grape2 from '../../image/포도2.jpeg';
 
 const Product = () => {
 
@@ -28,8 +30,83 @@ const Product = () => {
             case "details":
                 return (
                     <div className="tab-section-content" id="details">
-                        <h2>상세정보</h2>
-                        <p>{product.content}</p>
+                        <div className="product-detail-content">
+                            {product.stockSeq === 3 ? (
+                                <>
+                                    <div className="product-top-section">
+                                        <div className="product-image-detail">
+                                            <img src={apple2} alt="사과 상세 이미지" />
+                                        </div>
+                                        <div className="product-main-description">
+                                            <h3>청송 사과</h3>
+                                            <p>
+                                                청송의 맑은 공기와 풍부한 일조량으로 재배된 프리미엄 사과입니다.
+                                                단단하고 아삭한 식감과 높은 당도가 특징이며, 과즙이 풍부합니다.
+                                                엄격한 품질 관리를 통해 선별된 최상품 사과만을 제공합니다.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="product-specs-section">
+                                        <div className="specs-grid">
+                                            <div className="spec-item-large">
+                                                <div className="spec-label-large">당도</div>
+                                                <div className="spec-value-large">14~15 Brix</div>
+                                            </div>
+                                            <div className="spec-item-large">
+                                                <div className="spec-label-large">크기</div>
+                                                <div className="spec-value-large">300g 내외</div>
+                                            </div>
+                                            <div className="spec-item-large">
+                                                <div className="spec-label-large">보관방법</div>
+                                                <div className="spec-value-large">0~5℃</div>
+                                            </div>
+                                            <div className="spec-item-large">
+                                                <div className="spec-label-large">원산지</div>
+                                                <div className="spec-value-large">청송군</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : product.stockSeq === 27 ? (
+                                <>
+                                    <div className="product-top-section">
+                                        <div className="product-image-detail">
+                                            <img src={grape2} alt="포도 상세 이미지" />
+                                        </div>
+                                        <div className="product-main-description">
+                                            <h3>프리미엄 포도</h3>
+                                            <p>
+                                                달콤한 향과 맛이 특징인 프리미엄 포도입니다.
+                                                씨가 없고 껍질째 먹을 수 있어 편리하며, 높은 당도와 아삭한 식감이 특징입니다.
+                                                엄선된 농장에서 재배되어 품질이 우수합니다.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="product-specs-section">
+                                        <div className="specs-grid">
+                                            <div className="spec-item-large">
+                                                <div className="spec-label-large">당도</div>
+                                                <div className="spec-value-large">15~16 Brix</div>
+                                            </div>
+                                            <div className="spec-item-large">
+                                                <div className="spec-label-large">중량</div>
+                                                <div className="spec-value-large">2kg 내외</div>
+                                            </div>
+                                            <div className="spec-item-large">
+                                                <div className="spec-label-large">보관방법</div>
+                                                <div className="spec-value-large">0~5℃</div>
+                                            </div>
+                                            <div className="spec-item-large">
+                                                <div className="spec-label-large">원산지</div>
+                                                <div className="spec-value-large">국내산</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <p>{product.content}</p>
+                            )}
+                        </div>
                     </div>
                 );
             case "reviews":
@@ -116,44 +193,30 @@ const Product = () => {
     }
 
     const fetchReviewList = async () => {
-        const token = localStorage.getItem('token');
-
         try {
             const response = await axios.get(
-                `${serverIp}/stock/review?stockSeq=${product.stockSeq}`,
-                {
-                  headers: { 
-                    'Authorization': `Bearer ${token}`,
-                  }
-                }
+                `${serverIp}/stock/review?stockSeq=${product.stockSeq}`
             );
-
+    
             console.log(response.data);
             setReviewList(response.data);
-
+    
         } catch (err) {
             console.error("리뷰 목록 조회 에러 : ", err);
         }
-
     }
+    
 
     const fetchReviewStatistics = async () => {
-        const token = localStorage.getItem('token');
-
         try {
             const response = await axios.get(
-                `${serverIp}/stock/reviewStatistics?stockSeq=${product.stockSeq}`,
-                {
-                  headers: { 
-                    'Authorization': `Bearer ${token}`,
-                  }
-                }
+                `${serverIp}/stock/reviewStatistics?stockSeq=${product.stockSeq}`
             );
-
+    
             console.log('평균평점');
             console.log(response.data);
             setReviewStatistics(response.data);
-
+    
         } catch (err) {
             console.error("리뷰 통계 조회 에러 : ", err);
         }

@@ -789,7 +789,7 @@ const UserMyPage = () => {
                       checked={editedUser.gender === "여자"}
                       onChange={() =>
                         setEditedUser({ ...editedUser, gender: "여자" })
-                      } // editedUser.gender 업데이���
+                      } // editedUser.gender 업데이트
                       className="user-gender-radio"
                     />
                     <label htmlFor="female" className="gender-label">
