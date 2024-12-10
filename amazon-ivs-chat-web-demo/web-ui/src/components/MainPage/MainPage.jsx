@@ -47,6 +47,7 @@ const MainPage = ({ onJoinRoom }) => {
     const navigate = useNavigate();
     const [statistics, setStatistics] = useState([]);
     const [weeklyStats, setWeeklyStats] = useState([]);
+    const [userRole, setUserRole] = useState(null);
 
     const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -112,7 +113,8 @@ const MainPage = ({ onJoinRoom }) => {
       
             // 디코딩된 페이로드를 JSON으로 변환
             const payload = JSON.parse(decodedPayload);
-            setUserId(payload.user_Seq); // payload에서 user_Seq 값 추출
+            setUserId(payload.user_Seq);
+            setUserRole(payload.role);
           } catch (error) {
             console.error("토큰 파싱 실패:", error);
           }
@@ -431,33 +433,30 @@ const MainPage = ({ onJoinRoom }) => {
                 </section>
 
                 <section className="shop-section">
-                    <h2 className="section-title"><Link to = {"/shop"} className='default-link'>일반 상품 목록</Link></h2>
+                    <h2 className="section-title">
+                        <Link to="/shop" className='default-link'>일반 상품 목록</Link>
+                    </h2>
                     <div className="shop-list">
                         {shopItems.slice(0, visibleShops).map((item) => (
                             <div key={item.shopSeq} className="shop-card">
-                            <Link to = {`/product/${item.stockSeq}`} state={{ product:item }} className='default-link product-name'>
-                            {/* <div onClick={() => navigate(`/product/${item.stockSeq}`, { state: { product: item } })} className="default-link product-name"> */}
-                                <div className="shop-image">
-                                    <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
-                                </div>
-                                <h3>{truncateText(item.productName, 25)}</h3>
-                                <div className="shop-info">
-                                    <p><span>가격:</span> {item.price.toLocaleString()}원</p>
-                                    <p><span>수량:</span> {item.count}개</p>
-                                    <p><span>상품:</span> {item.productName}</p>
-                                    <p><span>등급:</span> {item.stockGrade}</p>
-                                    <p><span>인증:</span> {item.stockOrganic}</p>
-                                </div>
-                            {/* </div> */}
-                                {/* <button 
-                                    className="buy-button" 
-                                    onClick={() => navigate('/purchase', { state: { item } })}
-                                > */}
-                                <button 
-                                    className="buy-button" 
-                                >
-                                    구매하기
-                                </button>
+                                <Link to={`/product/${item.stockSeq}`} state={{ product: item }} className='default-link product-name'>
+                                    <div className="shop-image">
+                                        <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
+                                    </div>
+                                    <h3>{truncateText(item.productName, 25)}</h3>
+                                    <div className="shop-info">
+                                        <p><span>가격:</span> {item.price.toLocaleString()}원</p>
+                                        <p><span>수량:</span> {item.count}개</p>
+                                        <p><span>상품:</span> {item.productName}</p>
+                                        <p><span>등급:</span> {item.stockGrade}</p>
+                                        <p><span>인증:</span> {item.stockOrganic}</p>
+                                    </div>
+                                    <button 
+                                        className={`buy-button ${userRole === 'ROLE_COMPANY' ? 'disabled' : ''}`}
+                                        disabled={userRole === 'ROLE_COMPANY'}
+                                    >
+                                        구매하기
+                                    </button>
                                 </Link>
                             </div>
                         ))}
