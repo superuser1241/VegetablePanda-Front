@@ -8,6 +8,7 @@ import StockList from "./StockList";
 import logo from "../../image/기본이미지.png";
 import StockInfo from './StockInfo';
 import UpdateStock from "./UpdateStock";
+import DOMPurify from 'dompurify';
 
 const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     const navigate = useNavigate();
@@ -556,7 +557,7 @@ const checkStreamingStatus = async () => {
   const handleStreamingRequest = async () => {
     try {
       if (!availableRoom) {
-        alert("사용 가능한 방이 없습니다.");
+        alert("사용 가능한 방이 없습��다.");
         return;
       }
 
@@ -645,7 +646,7 @@ const checkStreamingStatus = async () => {
                     : ""
                 }`}
               >
-                재고 관리
+                ���고 관리
               </div>
               {isProductMenuOpen && (
                 <ul className="dropdown-content">
@@ -940,15 +941,19 @@ const checkStreamingStatus = async () => {
                             <p>이미지가 없습니다.</p>
                           )}
                         </td>
-                        <td>{review.content}</td>
+                        <td>
+                          <div 
+                            className="review-content"
+                            dangerouslySetInnerHTML={{ 
+                              __html: DOMPurify.sanitize(review.content) 
+                            }}
+                          />
+                        </td>
                         <td>{review.score}</td>
                         <td>{new Date(review.date).toLocaleDateString()}</td>
                         <td>
                           <button
-                            className=""
-                            onClick={() =>
-                              handleDeleteReview(review.reviewCommentSeq)
-                            }
+                            onClick={() => handleDeleteReview(review.reviewCommentSeq)}
                           >
                             삭제
                           </button>

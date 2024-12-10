@@ -80,19 +80,38 @@
   
   .button-group {
     display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 1.5rem;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
   }
   
-  .submit-button,
-  .cancel-button {
-    padding: 10px 20px;
+  .button-group button {
+    padding: 12px 30px;
     border: none;
     border-radius: 4px;
-    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    min-width: 120px;
+  }
+  
+  .button-group button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1.2rem;
+  }
+  
+  .button-group button[type="button"] {
+    background-color: #f44336;
+    color: white;
+    font-size: 1.2rem;
+  }
+  
+  .button-group button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   .submit-button {
@@ -167,18 +186,29 @@
   
   .detail-buttons {
     display: flex;
-    gap: 10px;
-    margin-top: 20px;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding: 15px 0;
+  }
+  
+  .left-buttons, .right-buttons {
+    display: flex;
+    gap: 16px;
   }
   
   .list-button,
   .edit-button,
   .delete-button {
-    padding: 8px 16px;
+    padding: 10px 28px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    min-width: 100px;
+    text-align: center;
   }
   
   .list-button {
@@ -199,6 +229,8 @@
   .list-button:hover,
   .edit-button:hover,
   .delete-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     opacity: 0.9;
   }
   
@@ -556,38 +588,33 @@
   /* 버튼 그룹 스타일링 */
   .button-group {
     display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
     justify-content: center;
-    gap: 16px;
-    margin-top: 24px;
   }
   
   .button-group button {
-    padding: 12px 30px; /* 좌우 패딩 증가 */
+    padding: 0.9rem 2.5rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-weight: 600; /* 글자 두께 증가 */
-    font-size: 1.1rem; /* 글자 크기 증가 */
-    transition: all 0.3s ease;
-    min-width: 120px; /* 최소 너비 설정 */
+    font-weight: 600;
+    transition: background-color 0.2s;
+    font-size: 1.1rem;
   }
   
   .button-group button[type="submit"] {
     background-color: #4CAF50;
-  color: white;
-  font-size: 1.5rem; /* 등록하기 버튼 글자 크기 더 크게 */
-}
+    color: white;
+  }
   
   .button-group button[type="submit"]:hover {
-    opacity: 1.7;
-  transform: translateY(-2px); /* 호버 시 약간 위로 이동 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 호버 시 그림자 효과 */
-}
+    background-color: #45a049;
+  }
   
   .button-group button[type="button"] {
     background-color: #f44336;
     color: white;
-    font-size: 1.7rem; /* 취소 버튼 글자 크기 더 크게 */
   }
   
   .button-group button[type="button"]:hover {
@@ -657,5 +684,64 @@
   /* 읽기 전용 별 스타일 */
   .star.readonly {
     cursor: default;
+  }
+  
+  /* 읽기 전용 별 스타일 */
+  .star.readonly {
+    cursor: default;
+  }
+  
+  /* Quill 에디터 컨테이너 스타일 */
+  .form-group .quill-editor {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  
+  /* Quill 에디터 툴바 스타일 */
+  .ql-toolbar.ql-snow {
+    border: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+    background-color: #f8f9fa;
+    padding: 8px;
+  }
+  
+  /* Quill 에디터 본문 영역 스타일 */
+  .ql-container.ql-snow {
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    height: 200px !important;
+    background-color: white;
+  }
+  
+  /* 에디터 내부 여백 조정 */
+  .ql-editor {
+    padding: 12px 15px;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 180px;
+  }
+  
+  /* 폼 그룹 전체 너비 조정 */
+  .form-group {
+    width: 100%;
+    max-width: 800px; /* 최대 너비 설정 */
+    margin: 0 auto 20px;
+  }
+  
+  /* 라벨 스타일 통일 */
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  /* 리뷰 작성 컨테이너 전체 스타일 */
+  .review-write-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
   }
   
