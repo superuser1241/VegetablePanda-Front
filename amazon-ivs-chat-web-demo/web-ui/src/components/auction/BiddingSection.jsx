@@ -21,10 +21,25 @@ const BiddingSection = memo(({
     userWallet,
     userRole 
 }) => {
-    const [localAuctionData, setLocalAuctionData] = useState(auctionData);
+    const [localAuctionData, setLocalAuctionData] = useState(null);
     const [messages, setMessages] = useState(""); // 메시지 내용
     const [showMessage, setShowMessage] = useState(false); // 메시지 표시 상태
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (auctionData) {
+            setLocalAuctionData(auctionData);
+        } else {
+            refreshAuctionData();
+        }
+    }, [auctionData]);
+
+    useEffect(() => {
+        if (streamingRoom?.farmerSeq) {
+            refreshAuctionData();
+        }
+    }, [streamingRoom?.farmerSeq]);
+
     useEffect(() => {
         const serverIp = process.env.REACT_APP_SERVER_IP;
         const client = new Client({
@@ -63,7 +78,7 @@ const BiddingSection = memo(({
         return () => {
             client.deactivate();
         };
-    }, []);
+    }, [streamingRoom?.farmerSeq]);
 
      // 메시지 닫기 버튼
      const handleHideMessages = () => {
@@ -83,8 +98,11 @@ const BiddingSection = memo(({
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
-            setLocalAuctionData(response.data);
+            if (response.data) {
+                setLocalAuctionData(response.data);
+            }
         } catch (error) {
+            console.error("경매 데이터 조회 실패:", error);
             setLocalAuctionData(null);
         }
     };
@@ -102,10 +120,6 @@ const BiddingSection = memo(({
                 'waiting-message';           // 경매 없으면 대기 메시지 스타일
         }
     };
-    useEffect(() => {
-        console.log("auctionData가 변경되었습니다:", localAuctionData);
-    }, [localAuctionData]);
-
 
     return (
         <div className={getClassName()}>
