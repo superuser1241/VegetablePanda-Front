@@ -94,7 +94,7 @@ const Shop = () => {
               </div>
               <div className='category-search-container'>
                 <div className="search-input-wrapper">
-                    <input type="text" className='search-text' placeholder='검색어를 입력하세요' value={word} onChange={handleWord} onKeyUp={handleSearch}/>
+                    <input type="text" className='search-text' placeholder='   검색어를 입력하세요' value={word} onChange={handleWord} onKeyUp={handleSearch}/>
                     <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon"/>
                 </div>
               </div>

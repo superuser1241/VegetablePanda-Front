@@ -6,6 +6,8 @@ import logo from "../../image/기본이미지.png";
 import Point from "./Point";
 import UserLikedShops from "./UserLikedShops.jsx";
 import UserAuctionHistory from "./UserAuctionHistory.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 const CompanyMyPage = () => {
   const [chargeAmount, setChargeAmount] = useState("");
@@ -483,11 +485,17 @@ const CompanyMyPage = () => {
 
           {isPopupOpen && (
             <div className="popup-overlay">
-              <div className="popup-content">
-                <button className="close-popup" onClick={closePopup}>
-                  닫기
-                </button>
-                <Point userId={userId} point={point} fetchPoint={fetchPoint} />
+              <div className="popup-container">
+                <div className="popup-header">
+                  <button className="close-popup" onClick={closePopup}>
+                  <FontAwesomeIcon icon={faXmark}/>
+                  </button>
+                </div>
+                <div className="popup-content">
+                  <div className="popup-body">
+                    <Point userId={userId} point={point} fetchPoint={fetchPoint} />
+                  </div>
+                </div>
               </div>
             </div>
           )}

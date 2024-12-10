@@ -336,6 +336,8 @@ const RegisterStock = () => {
                                 <option value="3" data-color = "#7ec850">초록색</option>
                                 <option value="4" data-color = "#9d4ccc">보라색</option>
                                 <option value="5" data-color = "#ffffff">흰색</option>
+                                <option value="6" data-color = "#fadb50">노란색</option>
+                                
                             </select>
                             
                         </div>

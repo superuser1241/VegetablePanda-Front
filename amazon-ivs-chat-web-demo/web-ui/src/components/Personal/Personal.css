@@ -30,15 +30,16 @@
     /* position: left는 유효한 값이 아닙니다 */
     float: left;  /* 왼쪽 정렬을 위해 float 사용 */
     display: flex;
+    
     width: 50%;
-    height: 50%;
-    object-fit: cover; /* 이미지 비율 유지 */
+    height: 70%;
+    
 }
 
 .yun-shop-info {
     float: right; /* 오른쪽 정렬 유지 */
     display: flex; /* flexbox 활성화 */
-    padding-top: 10%;
+    padding-top: 4%;
     flex-direction: row; /* 가로 방향 정렬 */
     flex-wrap: wrap; /* 공간이 부족하면 다음 줄로 넘어가도록 설정 */
     gap: 5%; /* 요소 간의 간격 추가 */
@@ -235,39 +236,6 @@
     margin-top: 10px;
     text-align: center;
 }
-.yun-review-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 10px;
-  }
-  
-  .yun-review-item {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease-in-out;
-  }
-  .yun-review-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .yun-review-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  
-  .yun-review-content {
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
 
 .yun-like-button1 {
   padding: 10px 20px;
@@ -359,4 +327,45 @@
 
 .yun-rank-3 .yun-rank-badge {
   background-color: #cd7f32;
+  background-size: 65% auto;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: soft-light;
+  opacity: 0.7;
+}
+
+.yun-farmer-card {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.yun-rank-1 .yun-rank-badge {
+  background-color: gold;
+}
+
+.yun-rank-2 .yun-rank-badge {
+  background-color: silver;
+}
+
+.yun-rank-3 .yun-rank-badge {
+  background-color: #cd7f32;
+}
+
+.yun-shop-card {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.yun-shop-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
