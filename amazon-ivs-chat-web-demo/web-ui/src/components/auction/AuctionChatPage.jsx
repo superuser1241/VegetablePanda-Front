@@ -86,7 +86,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                 const token = localStorage.getItem('token');
                 // PATCH로 변경하여 상태값만 업데이트
                 await axios.patch(
-                    `${serverIp}/auction/${auctionData.auctionSeq}`,
+                    `${serverIp}/auction/${auctionData.auctionSeq}/${streamingRoom.farmerSeq}`,
                     {},
                     {
                         headers: { 'Authorization': `Bearer ${token}` }

@@ -13,6 +13,7 @@ export const useAuctionData = (userSeq,auctionSeq) => {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setHighestBid(result.data);
+            console.log("최고 입찰가 데이터:", result.data);
         } catch (error) {
             console.error('최고 입찰가 조회 실패:', error);
         }
