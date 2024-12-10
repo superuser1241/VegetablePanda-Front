@@ -8,8 +8,9 @@ const Footer = () => {
     return (
         <footer style={styles.footer}>
             <div className='footer-right'>
-                <p>CONTACT US </p><p><FontAwesomeIcon icon={faEnvelope}/> vegetablePanda@gmail.com</p>
-                {/* <p><Link to = '/team'><FontAwesomeIcon icon={faCircleInfo} /> Info</Link></p> */}
+                <p>CONTACT US </p>
+                <p><FontAwesomeIcon icon={faEnvelope}/> vegetablePanda@gmail.com</p>
+                <p><Link to="/creator"><FontAwesomeIcon icon={faCircleInfo} /> Creator</Link></p>
             </div>
             <div className='footer-left'>
                 <p>© 2024 농산물 판다. All rights reserved.</p>
