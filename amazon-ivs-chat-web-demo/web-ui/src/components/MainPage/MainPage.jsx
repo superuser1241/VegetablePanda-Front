@@ -13,6 +13,7 @@ import AuctionRegisterPage from '../auction/AuctionRegisterPage';
 import liveImg from '../../image/라이브.png';
 import slider1 from '../../image/광고 슬라이더1.png';
 import slider2 from '../../image/광고 슬라이더2.png';
+import UserSideBox from './UserSideBox';
 
 ChartJS.register(
     ArcElement, 
@@ -35,7 +36,7 @@ const slides = [
 
 
 
-const MainPage = ({ onJoinRoom }) => {
+const MainPage = ({ onJoinRoom,userNames,userRole }) => {
     const [rooms, setRooms] = useState([]);
     const [shopItems, setShopItems] = useState([]);
     const [error, setError] = useState('');
