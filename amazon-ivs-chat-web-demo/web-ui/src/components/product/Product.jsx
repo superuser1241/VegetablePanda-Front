@@ -172,7 +172,7 @@ const Product = () => {
     const getShopLike = async (shopSeq) => {
         const userSeq = localStorage.getItem('userSeq');
         const token = localStorage.getItem('token');
-        
+        console.log('shopSeq', shopSeq);
         try {
             const response = await axios.get(
                 `${serverIp}/api/getShopLike?userSeq=${userSeq}&shopSeq=${shopSeq}`,    
