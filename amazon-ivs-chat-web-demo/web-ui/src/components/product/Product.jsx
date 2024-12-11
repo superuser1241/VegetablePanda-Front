@@ -266,60 +266,33 @@ const Product = () => {
         }
 
         try {
-            // 현재 장바구니 상태 확인
-            const cartResponse = await axios.get(
-                `${serverIp}/api/cart`, 
-                {
-                    params: { userSeq },
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    withCredentials: true
+            // 백엔드에서 상품 정보 받아오기
+            const response = await axios.post(`${serverIp}/api/cart/add`, null, {
+                params: {
+                    stockSeq: product.stockSeq,
+                    quantity: quantity,
+                    userSeq: userSeq
+                },
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
-            );
-            
-            const cartItems = cartResponse.data;
-            const isInCart = cartItems.some(item => item.stockSeq === product.stockSeq);
+            });
 
-            if (isInCart) {
-                // 이미 장바구니에 있으면 삭제
-                await axios.delete(
-                    `${serverIp}/api/cart/${product.stockSeq}`,
-                    {
-                        params: { userSeq },
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        withCredentials: true
-                    }
-                );
-                alert('장바구니에서 제거되었습니다.');
-                return;
+            // 로컬스토리지에 장바구니 저장
+            const cartKey = `cart_${userSeq}`;
+            const existingCart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+            
+            const existingItem = existingCart.find(item => item.stockSeq === product.stockSeq);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                existingCart.push(response.data);
             }
 
-            // 장바구니에 없으면 추가
-            const response = await axios.post(
-                `${serverIp}/api/cart/add`,
-                null,
-                {
-                    params: {
-                        stockSeq: product.stockSeq,
-                        quantity: quantity,
-                        userSeq: userSeq
-                    },
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    withCredentials: true
-                }
-            );
-            
-            if (response.data) {
-                alert('장바구니에 추가되었습니다.');
-            }
+            localStorage.setItem(cartKey, JSON.stringify(existingCart));
+            alert('장바구니에 추가되었습니다.');
+
         } catch (error) {
             console.error('장바구니 작업 실패:', error);
             if (error.response?.status === 401) {
