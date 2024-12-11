@@ -54,7 +54,7 @@ const UserSideBox = ({ userName }) => {
                 <h4>추천 상품</h4>
                 {currentProducts.map((product) => (
                     <Link 
-                        to={`/recommend/{stockSeq}`} 
+                        to={`/recommend/${product.stockSeq}`} 
                         key={product.stockSeq}
                         className="product-item"
                     >
