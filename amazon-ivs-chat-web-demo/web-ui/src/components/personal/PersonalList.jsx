@@ -59,11 +59,15 @@ const PersonalList = () => {
             className={`yun-farmer-card ${
               currentPage === 1 && index < 4 ? `yun-rank-${index + 1}` : ""
             }`}
+
             key={farmer.userSeq}
             onClick={() => handleCardClick(farmer.userSeq)}
           >
             {currentPage === 1 && index < 4 && (
-              <div className="yun-rank-badge">{index + 1 + "등"}</div>
+
+              <div className="yun-rank-badge">
+                {index + 1+"등"}
+              </div>
             )}
             <img
               className="yun-image-preview-container"
@@ -75,6 +79,7 @@ const PersonalList = () => {
               <p className="yun-farmer-intro yun-text-ellipsis">
                 {farmer.intro}
               </p>
+
             </div>
           </div>
         ))}
