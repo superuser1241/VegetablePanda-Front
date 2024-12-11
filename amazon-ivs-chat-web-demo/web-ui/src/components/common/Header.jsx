@@ -36,6 +36,7 @@ const Header = ({ userName, userRole, streamingRoom, handleLogout, handleExitCon
         } else {
             handleLogout();
         }
+        localStorage.clear();
     };
 
     const getMyPagePath = (role) => {

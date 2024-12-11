@@ -1,14 +1,15 @@
 .user-side-box {
     position: fixed;
     right: 20px;
-    top: 30%; /* 헤더 높이에 따라 조정 */
-    width: 300px;
+    top: 15%; /* 헤더 높이에 따라 조정 */
+    width: 200px;
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     padding: 20px;
     z-index: 100;
     transition: opacity 0.3s ease;
+    opacity: 0.8;
 }
 
 .user-side-box.transparent {
