@@ -48,7 +48,7 @@ const MainPage = ({ onJoinRoom,userNames,userRole }) => {
     const navigate = useNavigate();
     const [statistics, setStatistics] = useState([]);
     const [weeklyStats, setWeeklyStats] = useState([]);
-    const [userRole, setUserRole] = useState(null);
+    const [userName, setUserName] = useState('');
 
     const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -92,35 +92,17 @@ const MainPage = ({ onJoinRoom,userNames,userRole }) => {
     }, []);
 
 
-    function decodeBase64Url(base64Url) {
-        // Base64 URL에서 일반 Base64로 변환
-        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        
-        // 패딩 추가 (필요한 경우)
-        const padding = '='.repeat((4 - base64.length % 4) % 4);
-        base64 += padding;
-        
-        return atob(base64); // 일반 Base64로 디코딩
-      }
-      
-      useEffect(() => {
+    useEffect(() => {
         if (token) {
           try {
-            // JWT 토큰을 "."으로 분리하여 페이로드 부분 가져오기
-            const payloadBase64Url = token.split(".")[1];
-      
-            // Base64 URL 디코딩
-            const decodedPayload = decodeBase64Url(payloadBase64Url);
-      
-            // 디코딩된 페이로드를 JSON으로 변환
-            const payload = JSON.parse(decodedPayload);
+            const payload = JSON.parse(atob(token.split(".")[1]));
             setUserId(payload.user_Seq);
-            setUserRole(payload.role);
           } catch (error) {
             console.error("토큰 파싱 실패:", error);
           }
         }
       }, [token]);
+
 
     useEffect(() => {
         const fetchStatistics = async () => {
@@ -368,6 +350,7 @@ const MainPage = ({ onJoinRoom,userNames,userRole }) => {
                 </div>
             </div>
             <div className="container">
+                {userNames && userRole!=='ROLE_FARMER' && userRole!=='ROLE_ADMIN' && <UserSideBox userName={userNames}/>}
                 <section className="statistics-section">
                     <div className="charts-container">
                         <div className="chart-container">
@@ -434,30 +417,33 @@ const MainPage = ({ onJoinRoom,userNames,userRole }) => {
                 </section>
 
                 <section className="shop-section">
-                    <h2 className="section-title">
-                        <Link to="/shop" className='default-link'>일반 상품 목록</Link>
-                    </h2>
+                    <h2 className="section-title"><Link to = {"/shop"} className='default-link'>일반 상품 목록</Link></h2>
                     <div className="shop-list">
                         {shopItems.slice(0, visibleShops).map((item) => (
                             <div key={item.shopSeq} className="shop-card">
-                                <Link to={`/product/${item.stockSeq}`} state={{ product: item }} className='default-link product-name'>
-                                    <div className="shop-image">
-                                        <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
-                                    </div>
-                                    <h3>{truncateText(item.productName, 25)}</h3>
-                                    <div className="shop-info">
-                                        <p><span>가격:</span> {item.price.toLocaleString()}원</p>
-                                        <p><span>수량:</span> {item.count}개</p>
-                                        <p><span>상품:</span> {item.productName}</p>
-                                        <p><span>등급:</span> {item.stockGrade}</p>
-                                        <p><span>인증:</span> {item.stockOrganic}</p>
-                                    </div>
-                                    <button 
-                                        className={`buy-button ${userRole === 'ROLE_COMPANY' ? 'disabled' : ''}`}
-                                        disabled={userRole === 'ROLE_COMPANY'}
-                                    >
-                                        구매하기
-                                    </button>
+                            <Link to = {`/product/${item.stockSeq}`} state={{ product:item }} className='default-link product-name'>
+                            {/* <div onClick={() => navigate(`/product/${item.stockSeq}`, { state: { product: item } })} className="default-link product-name"> */}
+                                <div className="shop-image">
+                                    <img src={item.file ? item.file : 'https://placehold.co/200x200?text=vegetable'} alt={item.productName} />
+                                </div>
+                                <h3>{truncateText(item.productName, 25)}</h3>
+                                <div className="shop-info">
+                                    <p><span>가격:</span> {item.price.toLocaleString()}원</p>
+                                    <p><span>수량:</span> {item.count}개</p>
+                                    <p><span>상품:</span> {item.productName}</p>
+                                    <p><span>등급:</span> {item.stockGrade}</p>
+                                    <p><span>인증:</span> {item.stockOrganic}</p>
+                                </div>
+                            {/* </div> */}
+                                {/* <button 
+                                    className="buy-button" 
+                                    onClick={() => navigate('/purchase', { state: { item } })}
+                                > */}
+                                <button 
+                                    className="buy-button" 
+                                >
+                                    구매하기
+                                </button>
                                 </Link>
                             </div>
                         ))}
