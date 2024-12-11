@@ -11,8 +11,7 @@ import Point from "./Point.jsx";
 import UserAuctionHistory from "./UserAuctionHistory.jsx";
 import UserLikedShops from "./UserLikedShops.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark, faCircle } from "@fortawesome/free-solid-svg-icons"
-
+import { faXmark, faCircle } from "@fortawesome/free-solid-svg-icons";
 
 const UserMyPage = () => {
   const token = localStorage.getItem("token");
@@ -71,8 +70,7 @@ const UserMyPage = () => {
 
         setUserId(payload.user_seq);
         fetchUserInfo(payload.user_seq);
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   }, [token]);
 
@@ -93,7 +91,6 @@ const UserMyPage = () => {
   };
 
   useEffect(() => {
-    
     if (userInfo) {
       setEditedUser({
         pw: "",
@@ -106,11 +103,8 @@ const UserMyPage = () => {
     }
   }, [userInfo]);
 
-
-
   useEffect(() => {
-    
-    if (userId) { 
+    if (userId) {
       fetchUserInfo(userId);
       fetchPoint(userId);
       fetchreview();
@@ -119,28 +113,28 @@ const UserMyPage = () => {
     }
   }, [userId]);
 
-  useEffect (() => {
+  useEffect(() => {
     // if (activeTab === "userLike") {
-      fetchStreamingInfo(userId);
+    fetchStreamingInfo(userId);
     // }
   }, [activeTab, userId]);
 
   // 주문 내역을 가져오는 함수
   const fetchOrderHistory = async (userId) => {
     try {
-// <<<<<<< HEAD
-//       setLoading(true); // 로딩 시작
-//       const response = await axios.get(`${serverIp}/myPage/buyList/${userId}`);
-//       setOrders(response.data); // 가져온 데이터를 상태에 저장
-// =======
+      // <<<<<<< HEAD
+      //       setLoading(true); // 로딩 시작
+      //       const response = await axios.get(`${serverIp}/myPage/buyList/${userId}`);
+      //       setOrders(response.data); // 가져온 데이터를 상태에 저장
+      // =======
       setLoading(true);
       const userSeq = localStorage.getItem("userSeq");
       const response = await axios.get(
         `${serverIp}/myPage/buyList/${userSeq}`,
         {
-          headers: { 
-            'Authorization': `Bearer ${token}`,
-          }
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       setBuyInfo(response.data);
@@ -159,15 +153,14 @@ const UserMyPage = () => {
       const response = await axios.get(
         `${serverIp}/like/list?userSeq=${userId}`,
         {
-          headers: { 
-            'Authorization': `Bearer ${token}`,
-          }
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      if(response.status === 200) {
+      if (response.status === 200) {
         checkStreaming(response.data, streamingInfo);
       }
-      
     } catch (err) {
       setError("구독 내역을 불러오는 중 오류가 발생했습니다.");
       console.error(err);
@@ -177,23 +170,23 @@ const UserMyPage = () => {
   };
 
   const fetchStreamingInfo = async (userId) => {
-      try {
-        const response = await axios.get(
-          `${serverIp}/api/streaming/active-rooms`, 
-          {
-            headers: { 
-              'Authorization': `Bearer ${token}`,
-            }
-          }
-        )
-        if(response.status === 200) {
-          setStreamingInfo(response.data);
-          fetchUserLikeHistory(userId);
+    try {
+      const response = await axios.get(
+        `${serverIp}/api/streaming/active-rooms`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+      if (response.status === 200) {
+        setStreamingInfo(response.data);
+        fetchUserLikeHistory(userId);
+      }
     } catch (err) {
-      console.error("방송 상태 확인 중 오류가 발생했습니다.")
+      console.error("방송 상태 확인 중 오류가 발생했습니다.");
     }
-  }
+  };
 
   const fetchAuctionHistory = async (userId) => {
     try {
@@ -221,7 +214,6 @@ const UserMyPage = () => {
     }
   };
 
-
   const fetchPoint = async (userId) => {
     try {
       const response = await axios.get(`${serverIp}/myPage/point/${userId}`, {
@@ -238,16 +230,12 @@ const UserMyPage = () => {
 
   const fetchreview = async () => {
     try {
-
       const userSeq = localStorage.getItem("userSeq");
-      const response = await axios.get(
-        `${serverIp}/myComments/${userSeq}`,
-        {
-          headers: {            
-            'Authorization': `Bearer ${token}`
+      const response = await axios.get(`${serverIp}/myComments/${userSeq}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        }
-      );
+      });
       setreview(response.data);
     } catch (error) {
       console.error("회원 리뷰 조회 실패:", error);
@@ -286,26 +274,31 @@ const UserMyPage = () => {
     if (!confirmUpdate) {
       return;
     }
-  
+
     e.preventDefault();
-  
+
     if (editedUser.pw !== pwConfirm) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-  
+
     if (!editedUser.gender) {
       alert("성별을 선택해 주세요.");
       return;
     }
-  
+
     const phoneWithoutHyphen = editedUser.phone.replace(/-/g, "");
     const formattedPhone =
       phoneWithoutHyphen.length === 10
-        ? `${phoneWithoutHyphen.slice(0, 3)}-${phoneWithoutHyphen.slice(3, 6)}-${phoneWithoutHyphen.slice(6)}`
-        : `${phoneWithoutHyphen.slice(0, 3)}-${phoneWithoutHyphen.slice(3, 7)}-${phoneWithoutHyphen.slice(7)}`;
-  
-      
+        ? `${phoneWithoutHyphen.slice(0, 3)}-${phoneWithoutHyphen.slice(
+            3,
+            6
+          )}-${phoneWithoutHyphen.slice(6)}`
+        : `${phoneWithoutHyphen.slice(0, 3)}-${phoneWithoutHyphen.slice(
+            3,
+            7
+          )}-${phoneWithoutHyphen.slice(7)}`;
+
     const formData = new FormData();
     formData.append(
       "userData",
@@ -325,13 +318,13 @@ const UserMyPage = () => {
         { type: "application/json" }
       )
     );
-  
+
     if (image) {
       formData.append("image", image);
     } else if (image === null || imagePreview === null) {
-      formData.append("image", userInfo.path); 
+      formData.append("image", userInfo.path);
     }
-  
+
     try {
       const response = await axios.put(
         `${serverIp}/myPage/user/update/${userId}`,
@@ -343,7 +336,7 @@ const UserMyPage = () => {
           },
         }
       );
-  
+
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
         await fetchUserInfo(userId);
@@ -354,7 +347,7 @@ const UserMyPage = () => {
       alert("정보 수정에 실패했습니다.");
     }
   };
-  
+
   const handleDeleteAccount = async () => {
     const confirmDelete = window.confirm(
       "정말로 회원 탈퇴를 진행하시겠습니까?"
@@ -395,19 +388,21 @@ const UserMyPage = () => {
   };
 
   const checkStreaming = (userLike, streamingInfo) => {
-    const updatedUserLike = userLike.map(user => {
+    const updatedUserLike = userLike.map((user) => {
       // streamingInfo 배열에서 farmerSeq가 일치하는 항목이 있는지 확인
-      const isStreaming = streamingInfo.some(stream => stream.farmerSeq === user.farmerSeq);
+      const isStreaming = streamingInfo.some(
+        (stream) => stream.farmerSeq === user.farmerSeq
+      );
       // 일치하는 항목이 있으면 state를 true로 설정
       return {
-          ...user,
-          state: isStreaming
+        ...user,
+        state: isStreaming,
       };
     });
 
     // 업데이트된 배열로 상태 업데이트
     setUserLike(updatedUserLike);
-  }
+  };
 
   // const handleDeletereview = async (revieweq) => {
   //   try {
@@ -425,13 +420,13 @@ const UserMyPage = () => {
   const handleReviewWrite = async (order) => {
     try {
       if (!order) {
-        console.error('주문 정보가 없습니다:', order);
-        alert('주문 정보를 찾을 수 없습니다.');
+        console.error("주문 정보가 없습니다:", order);
+        alert("주문 정보를 찾을 수 없습니다.");
         return;
       }
 
-      if (order.reviewStatus === 'COMPLETED') {
-        alert('이미 리뷰를 작성한 상품입니다.');
+      if (order.reviewStatus === "COMPLETED") {
+        alert("이미 리뷰를 작성한 상품입니다.");
         return;
       }
 
@@ -441,13 +436,13 @@ const UserMyPage = () => {
         count: order.count,
         price: order.price,
         buyDate: order.buyDate,
-        reviewSeq: order.reviewSeq
+        reviewSeq: order.reviewSeq,
       };
 
       console.log("ReviewCommentWrite로 전달되는 데이터:", orderInfo);
 
-      navigate('/reviewComment/write', {
-        state: { orderInfo }
+      navigate("/reviewComment/write", {
+        state: { orderInfo },
       });
     } catch (error) {
       console.error("리뷰 작성 준비 중 오류 발생:", error);
@@ -518,14 +513,18 @@ const UserMyPage = () => {
               ) : userLike.length > 0 ? (
                 <div className="userMyPage-card-container">
                   {userLike.map((user, index) => (
-                    <div className="userMyPage-card" key={index} onClick={() => handleCardClick(user.farmerSeq)}>
+                    <div
+                      className="userMyPage-card"
+                      key={index}
+                      onClick={() => handleCardClick(user.farmerSeq)}
+                    >
                       <img
                         src={user.path ? user.path : logo}
                         alt={user.name}
                         className="userMyPage-card-image"
                       />
                       <div className="userMyPage-card-name">
-                        {user.name} {user.state && (<span>&lt;방송중&gt;</span>)}
+                        {user.name} {user.state && <span>&lt;방송중&gt;</span>}
                       </div>
                     </div>
                   ))}
@@ -538,21 +537,18 @@ const UserMyPage = () => {
             </div>
           )}
 
-          {activeTab === "saleLike" && (
-            <UserLikedShops />
-          )}
+          {activeTab === "saleLike" && <UserLikedShops />}
 
-        {activeTab === "info" && userInfo && (
+          {activeTab === "info" && userInfo && (
             <div className="userMyPage-user-info-section">
               <h3>회원 정보</h3>
               <div className="userMyPage-user-info-details">
                 <div className="userMyPage-image-container">
                   <strong>프로필 사진</strong>
                   <div className="image-and-point-container">
-                  <div className="userMyPage-image-preview-container">
-                    <img src={userInfo?.path || logo} alt="프로필 사진" />
-                  </div>
-                  
+                    <div className="userMyPage-image-preview-container">
+                      <img src={userInfo?.path || logo} alt="프로필 사진" />
+                    </div>
                   </div>
                 </div>
                 <div className="userMyPage-info-list">
@@ -579,7 +575,14 @@ const UserMyPage = () => {
                     {new Date(userInfo.regDate).toLocaleDateString()}
                   </p>
                   <p className="userMyPage-point-container">
-                    <strong>보유 포인트: </strong> {point.toLocaleString() + "P"}<button className="mypage-charge-button" onClick={openPopup}>포인트 충전</button>
+                    <strong>보유 포인트: </strong>{" "}
+                    {point.toLocaleString() + "P"}
+                    <button
+                      className="mypage-charge-button"
+                      onClick={openPopup}
+                    >
+                      포인트 충전
+                    </button>
                   </p>
                 </div>
               </div>
@@ -591,19 +594,21 @@ const UserMyPage = () => {
               <div className="popup-container">
                 <div className="popup-header">
                   <button className="close-popup" onClick={closePopup}>
-                  <FontAwesomeIcon icon={faXmark}/>
+                    <FontAwesomeIcon icon={faXmark} />
                   </button>
                 </div>
                 <div className="popup-content">
                   <div className="popup-body">
-                    <Point userId={userId} point={point} fetchPoint={fetchPoint} />
+                    <Point
+                      userId={userId}
+                      point={point}
+                      fetchPoint={fetchPoint}
+                    />
                   </div>
                 </div>
               </div>
             </div>
           )}
-
-
 
           {activeTab === "buyList" && (
             <div className="userMyPage-order-history-display">
@@ -652,7 +657,11 @@ const UserMyPage = () => {
           )}
 
           {activeTab === "auction" && (
-            <UserAuctionHistory  auctions = {auctions} loading1 = {loading1} error = {error}/>
+            <UserAuctionHistory
+              auctions={auctions}
+              loading1={loading1}
+              error={error}
+            />
           )}
 
           {activeTab === "update" && (
@@ -671,17 +680,16 @@ const UserMyPage = () => {
                   <div className="image-preview-container">
                     {imagePreview !== null ? (
                       <img
-                      src={imagePreview}
-                      alt="imagePreview"
-                      className="image-preview"
-                    />
-                      
+                        src={imagePreview}
+                        alt="imagePreview"
+                        className="image-preview"
+                      />
                     ) : (
                       <img
-                      src={userInfo.path || logo}
-                      alt="userInfo.path"
-                      className="image-preview"
-                    />
+                        src={userInfo.path || logo}
+                        alt="userInfo.path"
+                        className="image-preview"
+                      />
                     )}
                   </div>
                   <button
