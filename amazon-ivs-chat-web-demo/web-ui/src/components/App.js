@@ -43,6 +43,7 @@ import PaymentSuccess from './Purchase/PaymentSuccess';
 import CartPurchase from './Purchase/CartPurchase';
 import TeamIntroduction from './TeamIntroduction';
 import Creator from './pages/Creator';
+import Recommend from './product/Recommend';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -238,6 +239,7 @@ function App() {
                     <Route path="/reviewComment/detail/:reviewCommentSeq" element={<ReviewCommentDetail />} />
                     <Route path="/team" element={<TeamIntroduction/>}/>
                     <Route path="/creator" element={<Creator/>}/>
+                    <Route path="/recommend/:stockSeq" element={<Recommend />} />
                     </Routes>
             </main>
             <Footer />

@@ -172,7 +172,7 @@ const Product = () => {
     const getShopLike = async (shopSeq) => {
         const userSeq = localStorage.getItem('userSeq');
         const token = localStorage.getItem('token');
-        
+        console.log('shopSeq', shopSeq);
         try {
             const response = await axios.get(
                 `${serverIp}/api/getShopLike?userSeq=${userSeq}&shopSeq=${shopSeq}`,    
@@ -374,7 +374,7 @@ const Product = () => {
                         </div>
                 <div className='button-container'>
                     <button 
-                        className={`like-btn ${shopLike?.state ? 'active' : ''}`} 
+                        className={`like-btn ${shopLike ? 'active' : ''}`}
                         onClick={() => handleLike(product.shopSeq)}
                     >
                         찜하기
