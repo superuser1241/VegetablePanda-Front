@@ -77,7 +77,6 @@ const VideoPlayer = ({ playbackUrl }) => {
                     id='video-player'
                     className='video-elem pos-absolute full-width'
                     playsInline
-                    muted
                 />
                 {/* ... 나머지 JSX ... */}
             </div>
