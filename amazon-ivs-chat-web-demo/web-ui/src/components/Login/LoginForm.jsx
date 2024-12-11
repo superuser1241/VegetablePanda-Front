@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./LoginForm.css";
 import { Link } from "react-router-dom";
-import kakaoLogin from "./kakaoLogin.png";
 
 function LoginForm({ onLoginSuccess }) {
   const [username, setUsername] = useState("");
@@ -58,10 +57,6 @@ function LoginForm({ onLoginSuccess }) {
     }
   };
 
-  // 카카오 로그인 API
-  const kakaoApiKey = "eb7cd302e757cf192dc6fb47da020c74";
-  const kakaoRedirectUri = `${serverIp}/login/auth`;
-  const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoApiKey}&redirect_uri=${kakaoRedirectUri}&prompt=select_account`;
 
   return (
     <div className="login-page-container">

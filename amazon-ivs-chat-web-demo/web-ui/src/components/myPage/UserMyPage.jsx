@@ -33,12 +33,9 @@ const UserMyPage = () => {
   const [pw, setPassword] = useState("");
   const [pwConfirm, setConfirmPassword] = useState("");
   const [pwMessage, setPwMessage] = useState("");
-
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [streamingInfo, setStreamingInfo] = useState([]);
-
   const [buyInfo, setBuyInfo] = useState(null);
-
   const [editedUser, setEditedUser] = useState({
     pw: "",
     name: "",
@@ -64,13 +61,24 @@ const UserMyPage = () => {
   };
 
   useEffect(() => {
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-
-        setUserId(payload.user_seq);
-        fetchUserInfo(payload.user_seq);
-      } catch (error) {}
+    try {
+      const userSeq = localStorage.getItem('userSeq');
+      if (userSeq) {
+        setUserId(userSeq);
+      } else {
+        if (token) {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          const seq = payload.user_seq;
+          if (seq) {
+            localStorage.setItem('userSeq', seq);
+            setUserId(seq);
+          } else {
+            console.error("사용자 시퀀스를 찾을 수 없습니다.");
+          }
+        }
+      }
+    } catch (error) {
+      console.error("사용자 정보 가져오기 실패:", error);
     }
   }, [token]);
 

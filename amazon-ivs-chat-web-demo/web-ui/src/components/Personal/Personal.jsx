@@ -31,13 +31,25 @@ const Personal = ({ onJoinRoom }) => {
   const serverIp = process.env.REACT_APP_SERVER_IP;
 
   useEffect(() => {
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        setUserId(payload.user_seq);
-      } catch (error) {
-        console.error("토큰 파싱 실패:", error);
+    try {
+      const userSeq = localStorage.getItem('userSeq');
+      if (userSeq) {
+        setUserId(userSeq);
+      } else {
+        // 로컬스토리지에 userSeq가 없는 경우 토큰에서 추출 시도
+        if (token) {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          const seq = payload.user_seq;
+          if (seq) {
+            localStorage.setItem('userSeq', seq); // 로컬스토리지에 저장
+            setUserId(seq);
+          } else {
+            console.error("사용자 시퀀스를 찾을 수 없습니다.");
+          }
+        }
       }
+    } catch (error) {
+      console.error("사용자 정보 가져오기 실패:", error);
     }
   }, [token]);
 
@@ -162,6 +174,7 @@ const Personal = ({ onJoinRoom }) => {
           <div className="yun-profile-image">
             <div className="yun-image-preview-container1">
               {farmerInfo && (
+                
                 <img
                   src={farmerInfo.path || logo}
                   alt="Profile"
@@ -190,7 +203,6 @@ const Personal = ({ onJoinRoom }) => {
             
           </div>
         </div>
-       
       </div>
 
       {/* 하단 3칸 컨테이너 */}
@@ -228,7 +240,7 @@ const Personal = ({ onJoinRoom }) => {
         <div className="yun-item-container1">
             <h2 className="yun-item-title">
               <Link to={"/shop"} className="yun-item-title">
-                판매중인 상품
+                  판매중인 상품
               </Link>
             </h2>
             {shopItems.length > 0 ? (

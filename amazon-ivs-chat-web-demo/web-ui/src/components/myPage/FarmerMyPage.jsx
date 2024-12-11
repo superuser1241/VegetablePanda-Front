@@ -69,17 +69,26 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const serverIp = process.env.REACT_APP_SERVER_IP;
 
   useEffect(() => {
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        setUserId(payload.user_seq);
-        fetchFarmerInfo(payload.user_seq);
-      } catch (error) {
-        console.error("토큰 파싱 실패:", error);
+    try {
+      const userSeq = localStorage.getItem('userSeq');
+      if (userSeq) {
+        setUserId(userSeq);
+      } else {
+        if (token) {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          const seq = payload.user_seq;
+          if (seq) {
+            localStorage.setItem('userSeq', seq);
+            setUserId(seq);
+          } else {
+            console.error("사용자 시퀀스를 찾을 수 없습니다.");
+          }
+        }
       }
+    } catch (error) {
+      console.error("사용자 정보 가져오기 실패:", error);
     }
   }, [token]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditedFarmer((prev) => ({ ...prev, [name]: value }));
