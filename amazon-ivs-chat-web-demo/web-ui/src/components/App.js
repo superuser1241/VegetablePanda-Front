@@ -76,7 +76,9 @@ function App() {
         setStreamingRoom(null);
         navigate('/');
         localStorage.removeItem("token");
-        localStorage.setItem("token", null);
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userSeq");
         alert('로그아웃 되었습니다.');
     };
 

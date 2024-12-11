@@ -43,7 +43,7 @@ const BiddingSection = memo(({
     useEffect(() => {
         const serverIp = process.env.REACT_APP_SERVER_IP;
         const client = new Client({
-            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
+            brokerURL: `wss://${serverIp.replace('https://', '')}/ws`,
             onConnect: () => {
                 client.subscribe("/top/notifications", async (message) => {
                     refreshAuctionData();
