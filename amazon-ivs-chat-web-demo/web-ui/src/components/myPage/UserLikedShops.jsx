@@ -41,7 +41,9 @@ const UserLikedShops = () => {
                     count: shop.count,
                     stockGrade: shop.stockGrade,
                     stockOrganic: shop.stockOrganic,
-                    file: shop.file
+                    file: shop.file,
+                    shopSeq: shop.shopSeq,
+                    liked: true
                 }
             }
         });

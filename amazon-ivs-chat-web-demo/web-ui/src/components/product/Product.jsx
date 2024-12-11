@@ -374,7 +374,7 @@ const Product = () => {
                         </div>
                 <div className='button-container'>
                     <button 
-                        className={`like-btn ${shopLike?.state ? 'active' : ''}`} 
+                        className={`like-btn ${shopLike ? 'active' : ''}`}
                         onClick={() => handleLike(product.shopSeq)}
                     >
                         찜하기
