@@ -62,7 +62,7 @@ const UserMyPage = () => {
 
   useEffect(() => {
     try {
-      const userSeq = localStorage.getItem('userSeq');
+      const userSeq = localStorage.getItem("userSeq");
       if (userSeq) {
         setUserId(userSeq);
       } else {
@@ -70,7 +70,7 @@ const UserMyPage = () => {
           const payload = JSON.parse(atob(token.split(".")[1]));
           const seq = payload.user_seq;
           if (seq) {
-            localStorage.setItem('userSeq', seq);
+            localStorage.setItem("userSeq", seq);
             setUserId(seq);
           } else {
             console.error("사용자 시퀀스를 찾을 수 없습니다.");

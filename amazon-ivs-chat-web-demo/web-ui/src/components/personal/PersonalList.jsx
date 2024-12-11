@@ -9,7 +9,7 @@ const PersonalList = () => {
   const [farmer, setFarmer] = useState([]);
   const navigate = useNavigate();
   const serverIp = process.env.REACT_APP_SERVER_IP;
-  
+
   // 페이징 관련 상태 추가
   const [currentPage, setCurrentPage] = useState(1);
   const farmersPerPage = 10;
@@ -56,14 +56,14 @@ const PersonalList = () => {
       <div className="yun-farmer-list">
         {currentFarmers.map((farmer, index) => (
           <div
-            className={`yun-farmer-card ${currentPage === 1 && index < 4 ? `yun-rank-${index + 1}` : ''}`}
+            className={`yun-farmer-card ${
+              currentPage === 1 && index < 4 ? `yun-rank-${index + 1}` : ""
+            }`}
             key={farmer.userSeq}
             onClick={() => handleCardClick(farmer.userSeq)}
           >
             {currentPage === 1 && index < 4 && (
-              <div className="yun-rank-badge">
-                {index + 1+"등"}
-              </div>
+              <div className="yun-rank-badge">{index + 1 + "등"}</div>
             )}
             <img
               className="yun-image-preview-container"
@@ -72,7 +72,9 @@ const PersonalList = () => {
             />
             <div className="yun-farmer-info">
               <h2 className="yun-farmer-name">{farmer.name}</h2>
-              <p className="yun-farmer-intro yun-text-ellipsis">{farmer.intro}</p>
+              <p className="yun-farmer-intro yun-text-ellipsis">
+                {farmer.intro}
+              </p>
             </div>
           </div>
         ))}
@@ -82,7 +84,9 @@ const PersonalList = () => {
           <button
             key={pageNum}
             onClick={() => handlePageChange(pageNum)}
-            className={`yun-page-button ${currentPage === pageNum ? 'active' : ''}`}
+            className={`yun-page-button ${
+              currentPage === pageNum ? "active" : ""
+            }`}
           >
             {pageNum}
           </button>

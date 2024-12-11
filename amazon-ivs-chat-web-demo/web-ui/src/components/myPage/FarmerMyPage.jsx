@@ -70,7 +70,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
 
   useEffect(() => {
     try {
-      const userSeq = localStorage.getItem('userSeq');
+      const userSeq = localStorage.getItem("userSeq");
       if (userSeq) {
         setUserId(userSeq);
       } else {
@@ -78,7 +78,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
           const payload = JSON.parse(atob(token.split(".")[1]));
           const seq = payload.user_seq;
           if (seq) {
-            localStorage.setItem('userSeq', seq);
+            localStorage.setItem("userSeq", seq);
             setUserId(seq);
           } else {
             console.error("사용자 시퀀스를 찾을 수 없습니다.");
@@ -90,7 +90,6 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
     }
   }, [token]);
 
-  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditedFarmer((prev) => ({ ...prev, [name]: value }));
