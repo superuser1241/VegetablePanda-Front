@@ -146,42 +146,6 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
         }
     };
 
-    // 컴포넌트 언마운트 시 세션 스토리지 정리
-    useEffect(() => {
-        return () => {
-            // 농부가 아닌 경우에만 세션 스토리지 정리
-            if (!isFarmer) {
-                sessionStorage.removeItem('streamingRoom');
-            }
-        };
-    }, [isFarmer]);
-
-    // 페이지 이동 시 세션 스토리지 정리를 위한 핸들러
-    const handleBeforeUnload = () => {
-        if (!isFarmer) {
-            sessionStorage.removeItem('streamingRoom');
-        }
-    };
-
-    // 페이지 이동 이벤트 리스너 등록
-    useEffect(() => {
-        window.addEventListener('beforeunload', handleBeforeUnload);
-        
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
-    }, [isFarmer]);
-
-    // Chat 컴포넌트에 전달할 핸들러
-    const handleUserExit = async () => {
-        if (!isFarmer) {
-            sessionStorage.removeItem('streamingRoom');
-        }
-        if (handleExitChat) {
-            await handleExitChat();
-        }
-    };
-
     if (isLoading) {
         return <div>경매 정를 불러오는 중...</div>;
     }
@@ -192,7 +156,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
                 <div className="chat-section">
                     <Chat 
                         streamingRoom={streamingRoom}
-                        handleExitChat={handleUserExit}
+                        handleExitChat={handleExitChat}
                     />
                 </div>
                 
