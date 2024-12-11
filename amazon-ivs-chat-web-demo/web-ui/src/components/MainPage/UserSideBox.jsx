@@ -24,7 +24,7 @@ const UserSideBox = ({ userName }) => {
         };
 
         const handleScroll = () => {
-            const bannerHeight = 200; // 배너의 실제 높이로 조정하세요
+            const bannerHeight = 300; // 배너의 실제 높이로 조정하세요
             const scrollPosition = window.scrollY;
             setIsOverBanner(scrollPosition > bannerHeight);
         };
@@ -64,7 +64,7 @@ const UserSideBox = ({ userName }) => {
                         />
                         <div className="product-info">
                             <p className="product-name">{product.productName}</p>
-                            <p className="product-price">{product.price.toLocaleString()}원</p>
+                            <p className="product-price">{product.price!==null? "상점상품":"경매상품"}</p>
                         </div>
                     </Link>
                 ))}

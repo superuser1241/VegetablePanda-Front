@@ -42,6 +42,7 @@ import ReviewCommentEdit from './ReviewComment/ReviewCommentEdit';
 import PaymentSuccess from './Purchase/PaymentSuccess';
 import CartPurchase from './Purchase/CartPurchase';
 import TeamIntroduction from './TeamIntroduction';
+import Creator from './pages/Creator';
 import Recommend from './product/Recommend';
 
 const serverIp = process.env.REACT_APP_SERVER_IP;
@@ -76,7 +77,9 @@ function App() {
         setStreamingRoom(null);
         navigate('/');
         localStorage.removeItem("token");
-        localStorage.setItem("token", null);
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userSeq");
         alert('로그아웃 되었습니다.');
     };
 
@@ -181,7 +184,7 @@ function App() {
             />
             <main style={{ minHeight: '80vh'}}>
                 <Routes>
-                    <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} userNames={userName} userRole={userRole} />} />
+                    <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} />} />
                     <Route path="/personal" element={<Personal onJoinRoom={handleJoinRoom} />} />
                     <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
                     <Route path="/UserRegister" element={<UserRegister />} />
@@ -235,6 +238,7 @@ function App() {
                     <Route path="/reviewComment/list" element={<ReviewCommentList />} />
                     <Route path="/reviewComment/detail/:reviewCommentSeq" element={<ReviewCommentDetail />} />
                     <Route path="/team" element={<TeamIntroduction/>}/>
+                    <Route path="/creator" element={<Creator/>}/>
                     <Route path="/recommend/:stockSeq" element={<Recommend />} />
                     </Routes>
             </main>
