@@ -4,10 +4,12 @@ import Header from './common/Header';
 import Footer from './common/Footer';
 import MainPage from './MainPage/MainPage';
 import LoginForm from './Login/LoginForm';
+import Chat from './chat/Chat';
 import AdminMyPage from './myPage/AdminMyPage';
 import UserMyPage from './myPage/UserMyPage';
 import CompanyMyPage from './myPage/CompanyMyPage';
 import FarmerMyPage from './myPage/FarmerMyPage';
+import FarmerRegisterStock from './myPage/RegisterStock';
 import UserRegister from './Register/UserRegister';
 import FarmerRegister from './Register/FarmerRegister';
 import CompanyRegister from './Register/CompanyRegister';
@@ -59,53 +61,25 @@ function App() {
         }
     }, []);
 
-    const handleLoginSuccess = async (name, role) => {
-    try {
-        // 상태 업데이트를 Promise로 감싸서 완료될 때까지 기다림
-        await Promise.all([
-            new Promise(resolve => {
-                setUserName(name);
-                resolve();
-            }),
-            new Promise(resolve => {
-                setUserRole(role);
-                resolve();
-            })
-        ]);
-        
-        // 상태 업데이트가 완료된 후에 페이지 이동
+    const handleLoginSuccess = (name, role) => {
+        setUserName(name);
+        setUserRole(role);
         navigate('/');
-    } catch (error) {
-        console.error('로그인 상태 업데이트 실패:', error);
-    }
-};
+    };
 
     const handleLogout = async () => {
-        try {
-            if (streamingRoom) {
-                await handleExitConfirm();
-            }
-            
-            // 먼저 모든 로컬 스토리지 항목 제거
-            localStorage.removeItem("token");
-            localStorage.removeItem("userName");
-            localStorage.removeItem("userRole");
-            localStorage.removeItem("userSeq");
-            
-            // 상태 업데이트를 동기적으로 처리
-            setUserName('');
-            setUserRole('');
-            setStreamingRoom(null);
-            
-            // 페이지 이동 전에 상태가 모두 업데이트되도록 보장
-            await new Promise(resolve => setTimeout(resolve, 0));
-            
-            navigate('/');
-            alert('로그아웃 되었습니다.');
-        } catch (error) {
-            console.error('로그아웃 중 오류 발생:', error);
-            alert('로그아웃 처리 중 오류가 발생했습니다.');
+        if (streamingRoom) {
+            await handleExitConfirm();
         }
+        setUserName('');
+        setUserRole('');
+        setStreamingRoom(null);
+        navigate('/');
+        localStorage.removeItem("token");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userSeq");
+        alert('로그아웃 되었습니다.');
     };
 
     const handleJoinRoom = (room) => {
