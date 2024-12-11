@@ -89,6 +89,8 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
       console.error("사용자 정보 가져오기 실패:", error);
     }
   }, [token]);
+
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditedFarmer((prev) => ({ ...prev, [name]: value }));
@@ -561,7 +563,7 @@ const FarmerMyPage = ({ navigateTo, onStartStreaming }) => {
   const handleStreamingRequest = async () => {
     try {
       if (!availableRoom) {
-        alert("사용 가능한 방이 없습��다.");
+        alert("사용 가능한 방이 없습니다.");
         return;
       }
 

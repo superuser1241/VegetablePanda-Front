@@ -90,6 +90,33 @@ const MainPage = ({ onJoinRoom }) => {
         return () => clearInterval(slideInterval);
     }, []);
 
+    useEffect(() => {
+        try {
+          const userSeq = localStorage.getItem('userSeq');
+          const token = localStorage.getItem('token');
+          if (userSeq) {
+            setUserId(userSeq);
+          } else {
+            if (token) {
+              const payload = JSON.parse(atob(token.split(".")[1]));
+              const seq = payload.user_seq;
+              const token = payload.token;
+              if (seq) {
+                localStorage.setItem('userSeq', seq);
+                localStorage.setItem('token', token);
+                setUserId(seq);
+              } else {
+                console.error("사용자 시퀀스를 찾을 수 없습니다.");
+              }
+            }
+          }
+        } catch (error) {
+          console.error("사용자 정보 가져오기 실패:", error);
+        }
+      }, [token]);
+    
+      
+
 
     function decodeBase64Url(base64Url) {
         // Base64 URL에서 일반 Base64로 변환

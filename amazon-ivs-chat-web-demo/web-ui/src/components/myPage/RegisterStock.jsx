@@ -24,6 +24,7 @@ const RegisterStock = () => {
 
     const [productCategory, setProductCategory] = useState([]);
     const [products, setProducts] = useState([]);
+    const [ttoken, setToken] = useState([]);
     const [grade, setGrade] = useState([]);
     const [organic, setOrganic] = useState([]);
 
@@ -42,9 +43,10 @@ const RegisterStock = () => {
     useEffect(() => {
         if (token) {
             try {
-                const payload = JSON.parse(atob(token.split('.')[1]));
+                const payload = JSON.parse(atob(token.split('.')[0]));
                 //setUserId(payload.user_seq);
                 setUserId(localStorage.getItem('userSeq'));
+                setToken(localStorage.getItem('token'));
                 console.log("사용자 시퀀스 : ", userId);
                 console.log("userSeq : ", localStorage.getItem('userSeq'));
             } catch (error) {
@@ -71,6 +73,7 @@ const RegisterStock = () => {
 
     const fetchProductCategory = async () => {
         try {
+
             const response = await axios.get(`${serverIp}/category`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
