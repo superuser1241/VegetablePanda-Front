@@ -1,0 +1,98 @@
+.user-side-box {
+    position: fixed;
+    right: 20px;
+    top: 30%; /* 헤더 높이에 따라 조정 */
+    width: 300px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    z-index: 100;
+    transition: opacity 0.3s ease;
+}
+
+.user-side-box.transparent {
+    opacity: 0.5; /* 투명도 조절 */
+}
+
+
+
+.recent-products h4 {
+    font-size: 20px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.product-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-item:last-child {
+    border-bottom: none;
+}
+
+.product-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 12px;
+}
+
+.product-info {
+    flex: 1;
+}
+
+.product-name {
+    font-size: 14px;
+    color: #333;
+    margin: 0 0 5px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.product-price {
+    font-size: 14px;
+    color: #27ae60;
+    font-weight: bold;
+    margin: 0;
+}
+
+@media (max-width: 1500px) {
+    .user-side-box {
+        display: none;
+    }
+} 
+
+.pagination-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.page-button {
+    padding: 5px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.page-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-button:hover:not(:disabled) {
+    background-color: #f5f5f5;
+}

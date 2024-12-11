@@ -13,6 +13,7 @@ import AuctionRegisterPage from '../auction/AuctionRegisterPage';
 import liveImg from '../../image/라이브.png';
 import slider1 from '../../image/광고 슬라이더1.png';
 import slider2 from '../../image/광고 슬라이더2.png';
+import UserSideBox from './UserSideBox';
 
 ChartJS.register(
     ArcElement, 
@@ -35,7 +36,7 @@ const slides = [
 
 
 
-const MainPage = ({ onJoinRoom }) => {
+const MainPage = ({ onJoinRoom,userNames,userRole }) => {
     const [rooms, setRooms] = useState([]);
     const [shopItems, setShopItems] = useState([]);
     const [error, setError] = useState('');
@@ -47,6 +48,7 @@ const MainPage = ({ onJoinRoom }) => {
     const navigate = useNavigate();
     const [statistics, setStatistics] = useState([]);
     const [weeklyStats, setWeeklyStats] = useState([]);
+    const [userName, setUserName] = useState('');
 
     const serverIp = process.env.REACT_APP_SERVER_IP;
 
@@ -348,6 +350,7 @@ const MainPage = ({ onJoinRoom }) => {
                 </div>
             </div>
             <div className="container">
+                {userNames && userRole!=='ROLE_FARMER' && userRole!=='ROLE_ADMIN' && <UserSideBox userName={userNames}/>}
                 <section className="statistics-section">
                     <div className="charts-container">
                         <div className="chart-container">

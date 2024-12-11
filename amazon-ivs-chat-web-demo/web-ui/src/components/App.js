@@ -180,7 +180,7 @@ function App() {
             />
             <main style={{ minHeight: '80vh'}}>
                 <Routes>
-                    <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} />} />
+                    <Route path="/" element={<MainPage onJoinRoom={handleJoinRoom} userNames={userName} userRole={userRole} />} />
                     <Route path="/personal" element={<Personal onJoinRoom={handleJoinRoom} />} />
                     <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
                     <Route path="/UserRegister" element={<UserRegister />} />
