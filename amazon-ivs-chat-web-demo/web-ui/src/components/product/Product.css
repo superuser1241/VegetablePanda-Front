@@ -125,11 +125,97 @@
     overflow-y: auto;  /* 세로 스크롤 활성화 */
   }
 
-  .tab-section-content {
-    padding: 20px;
-    min-height: 300px;  /* 각 섹션의 최소 높이 */
-    scroll-margin-top: 50px;  /* 스크롤 시 상단 여백 확보 */
+  /* 상세정보 스타일 */
+.tab-section-content {
+  padding: 50px 30px;
+  background: #fff;
+}
+
+.product-detail-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 상단 영역 - 이미지와 설명 */
+.product-top-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+.product-image-detail {
+  width: 100%;
+  max-width: 600px;
+}
+
+.product-image-detail img {
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-main-description {
+  padding: 20px;
+}
+
+.product-main-description h3 {
+  font-size: 32px;
+  color: #1a202c;
+  margin-bottom: 25px;
+}
+
+.product-main-description p {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #4a5568;
+}
+
+/* 하단 스펙 영역 */
+.product-specs-section {
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 20px;
+  margin-top: 40px;
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  text-align: center;
+}
+
+.spec-item-large {
+  padding: 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.spec-label-large {
+  font-size: 20px;
+  color: #2d3748;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.spec-value-large {
+  font-size: 24px;
+  color: #4CAF50;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .product-top-section {
+      grid-template-columns: 1fr;
   }
+  
+  .specs-grid {
+      grid-template-columns: repeat(2, 1fr);
+  }
+}
   
   .tabs button {
     flex: 1;

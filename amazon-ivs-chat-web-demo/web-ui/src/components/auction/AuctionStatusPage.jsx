@@ -20,18 +20,34 @@ const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAucti
 
     const findBidByAuctionSeq = async (auctionSeq) => {
         const token = localStorage.getItem('token');
+        const userRole = localStorage.getItem('userRole'); // userRole 가져오기
+    
+        if (!token) {
+            alert('로그인이 필요한 서비스입니다.');
+            return;
+        }
+
         try {
             const serverIp = process.env.REACT_APP_SERVER_IP;
-            //const currentHour = new Date().getHours(); // 현재 시간 (24시간 형식)
-        
-            const result = await axios.get(`${serverIp}/bidUser/${auctionSeq}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+            const endpoint = userRole === 'ROLE_USER' ? 'bidUser' : 'bidCom';
+            
+            const result = await axios.get(`${serverIp}/${endpoint}/${auctionSeq}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
+        
+            if (result.data) {
+                setBid(result.data);
+                console.log('입찰 정보 조회 성공:', result.data);
+            } else {
+                console.log('입찰 정보가 없습니다.');
+                setBid(null);
+            }
+
             
             setBid(result.data);
-            console.log('입찰기록설정된 데이터:', result.data);
+            console.log('설정된 데이터:', result.data);
 
         } catch (error) {
             console.error('입찰 정보 조회 실패:', error);

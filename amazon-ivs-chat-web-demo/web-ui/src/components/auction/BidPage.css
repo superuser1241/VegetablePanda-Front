@@ -325,11 +325,10 @@
     border: 1px solid #e2e8f0;
     flex-wrap: nowrap;
     width: fit-content;
-    max-width: 90%;
+    max-width: 100%;
 }
 
 .available-points-container {
-    padding: 10px 20px;
     background: white;
     border-radius: 8px;
     font-size: 0.95em;

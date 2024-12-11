@@ -69,35 +69,35 @@ const CartPurchase = () => {
     }
 
     // 장바구니 비우기
-    const handleClearCart = async () => {
+    const handleClearCart = () => {
         const userSeq = localStorage.getItem('userSeq');
         if (!userSeq) return;
+        
         try {
-            const token = localStorage.getItem('token');
-            await axios.delete(`${serverIp}/api/cart`, {
-                params: { userSeq },
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                withCredentials: true
-            });
+            // 로컬스토리지에서 장바구니 삭제
+            const cartKey = `cart_${userSeq}`;
+            localStorage.removeItem(cartKey);
         } catch (error) {
+            console.error('장바구니 비우기 실패:', error);
             alert('장바구니 비우기에 실패했습니다.');
         }
     };
 
     const handlePurchase = () => {
-        // navigate('/payment', { 
-        //     state: { 
-        //         items: items, 
-        //         totalAmount,
-        //         userSeq 
-        //     } 
-        // });
-        handlePayment(userId, userBuyDetailDTOs, totalAmount, serverIp, navigate);
-        handleClearCart();
+        // 배송비 3000원을 포함한 총 결제 금액
+        const totalAmountWithShipping = totalAmount + 3000;
+        
+        handlePayment(userId, userBuyDetailDTOs, totalAmountWithShipping, serverIp, navigate)
+            .then(success => {
+                if (success) {
+                    // 결제 성공 시에만 장바구니 비우기
+                    const cartKey = `cart_${userSeq}`;
+                    localStorage.removeItem(cartKey);
+                }
+            })
+            .catch(error => {
+                console.error('결제 실패:', error);
+            });
     };
 
     

@@ -13,6 +13,7 @@ import UserLikedShops from "./UserLikedShops.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faCircle } from "@fortawesome/free-solid-svg-icons"
 
+
 const UserMyPage = () => {
   const token = localStorage.getItem("token");
   const [userId, setUserId] = useState("");
@@ -519,7 +520,7 @@ const UserMyPage = () => {
                   {userLike.map((user, index) => (
                     <div className="userMyPage-card" key={index} onClick={() => handleCardClick(user.farmerSeq)}>
                       <img
-                        src={user.path}
+                        src={user.path ? user.path : logo}
                         alt={user.name}
                         className="userMyPage-card-image"
                       />
@@ -788,7 +789,7 @@ const UserMyPage = () => {
                       checked={editedUser.gender === "여자"}
                       onChange={() =>
                         setEditedUser({ ...editedUser, gender: "여자" })
-                      } // editedUser.gender 업데이���
+                      } // editedUser.gender 업데이트
                       className="user-gender-radio"
                     />
                     <label htmlFor="female" className="gender-label">

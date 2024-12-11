@@ -43,7 +43,7 @@ const BiddingSection = memo(({
     useEffect(() => {
         const serverIp = process.env.REACT_APP_SERVER_IP;
         const client = new Client({
-            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
+            brokerURL: `wss://${serverIp.replace('https://', '')}/ws`,
             onConnect: () => {
                 client.subscribe("/top/notifications", async (message) => {
                     refreshAuctionData();
@@ -98,10 +98,14 @@ const BiddingSection = memo(({
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
+            
             if (response.data) {
                 setLocalAuctionData(response.data);
+            }else{
+                setLocalAuctionData(null);
             }
         } catch (error) {
+            alert("경매 데이터 조회 실패:", error);
             console.error("경매 데이터 조회 실패:", error);
             setLocalAuctionData(null);
         }
@@ -125,40 +129,42 @@ const BiddingSection = memo(({
         <div className={getClassName()}>
         {isFarmer ? (
                 // 농부일 때
-                localAuctionData && localAuctionData.auctionSeq ? (
-                    <AuctionStatusPage 
-                        streamingRoom={streamingRoom}
-                        auctionData={localAuctionData}
-                        onOpenModal={onOpenModal}
-                        onEndAuction={onEndAuction}
-                        onCheckPrice={onCheckPrice}
-                        onCheckSalesHistory={onCheckSalesHistory}
-                    />
-                ) : (
+                localAuctionData === null ? (
                     <AuctionRegisterPage 
                         streamingRoom={streamingRoom}
                         onRegisterSuccess={onRegisterSuccess}
                         onCheckPrice={onCheckPrice}
                         onCheckSalesHistory={onCheckSalesHistory}
                     />
+                   
+                ) : (
+                    <AuctionStatusPage 
+                    streamingRoom={streamingRoom}
+                    auctionData={localAuctionData}
+                    onOpenModal={onOpenModal}
+                    onEndAuction={onEndAuction}
+                    onCheckPrice={onCheckPrice}
+                    onCheckSalesHistory={onCheckSalesHistory}
+                />
                 )
             ) : (
                 // 구매자일 때
-                localAuctionData && localAuctionData.auctionSeq ? (
-                    <BidPage 
-                        streamingRoom={streamingRoom}
-                        auctionData={localAuctionData}
-                        onAuctionEnd={onEndAuction}
-                        onOpenModal={onOpenModal}
-                        onCheckPrice={onCheckPrice}
-                        onCheckSalesHistory={onCheckSalesHistory}
-                        userWallet={userWallet}
-                        userRole={userRole}
-                    />
-                ) : (
+                localAuctionData ===null ? (
                     <div className="waiting-message">
                         <img src={logo} width="100%" height="100%" alt="경매 대기" srcset="" />
                     </div>
+                   
+                ) : (
+                    <BidPage 
+                    streamingRoom={streamingRoom}
+                    auctionData={localAuctionData}
+                    onAuctionEnd={onEndAuction}
+                    onOpenModal={onOpenModal}
+                    onCheckPrice={onCheckPrice}
+                    onCheckSalesHistory={onCheckSalesHistory}
+                    userWallet={userWallet}
+                    userRole={userRole}
+                />
                 )
             )}
 

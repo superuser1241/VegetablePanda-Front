@@ -272,7 +272,7 @@ const RegisterStock = () => {
                                 <option value="4">근채류</option>
                                 <option value="5">양채류</option>
                                 <option value="6">과수</option>
-                                <option value="7">기타작물</option>
+                                <option value="8">기타작물</option>
                                 {/* {
                                     productCategory.map((item) => {
                                         return <option key = {item.productCategorySeq} id = {item.productCategorySeq} value = {item.productCategorySeq}>{item.content}</option>

@@ -13,6 +13,7 @@ export const useAuctionData = (userSeq,auctionSeq) => {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setHighestBid(result.data);
+            console.log("최고 입찰가 데이터:", result.data);
         } catch (error) {
             console.error('최고 입찰가 조회 실패:', error);
         }
@@ -30,7 +31,7 @@ export const useAuctionData = (userSeq,auctionSeq) => {
             setAuction(result.data);
             console.log('설정된 데이터:', result.data);
         } catch (error) {
-            console.error('상품 정보 조회 실패:', error);
+            console.error('상품 정보 조회 실패:');
             if (error.response?.status === 401) {
                 alert('로그인이 필요한 서비스입니다.');
             }
@@ -43,7 +44,7 @@ export const useAuctionData = (userSeq,auctionSeq) => {
     useEffect(() => {
         const serverIp = process.env.REACT_APP_SERVER_IP;
         const client = new Client({
-            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
+            brokerURL: `wss://${serverIp.replace('https://', '')}/ws`,
             
             onConnect: () => {
                 client.subscribe("/top/notifications", async (message) => {

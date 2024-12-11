@@ -8,6 +8,8 @@ const StreamingStatus = ({ userId, token, onStartStreaming }) => {
     const [approvedStreaming, setApprovedStreaming] = useState(null);
     const [availableRoom, setAvailableRoom] = useState(null);
     const serverIp = process.env.REACT_APP_SERVER_IP;
+    const [copiedField, setCopiedField] = useState(null);
+
     // 초기 사용 가능한 방 조회 (상태값 0)
     const fetchAvailableRoom = async () => {
         try {
@@ -119,6 +121,16 @@ const StreamingStatus = ({ userId, token, onStartStreaming }) => {
         onStartStreaming(approvedStreaming);  // App.js의 handleStartStreaming 호출
     };
 
+    const handleCopy = async (text, field) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopiedField(field);
+            setTimeout(() => setCopiedField(null), 2000);
+        } catch (err) {
+            console.error('복사 실패:', err);
+        }
+    };
+
     return (
         <div className="streaming-section">
             <h3>스트리밍 관리</h3>
@@ -130,23 +142,15 @@ const StreamingStatus = ({ userId, token, onStartStreaming }) => {
                 <div className="streaming-info">
                     <div className="streaming-info-grid">
                         <div className="streaming-product-info">
-                            <div className="streaming-product-image">
-                                <img src={approvedStreaming?.filePath || '/default-product.png'} 
-                                     alt={approvedStreaming?.productName} />
-                            </div>
-                            <div className="streaming-product-details">
-                                <h5>상품 정보</h5>
-                                <p className="product-name">{approvedStreaming?.productName}</p>
-                            </div>
-                        </div>
-                        <div className="streaming-server-info">
-                            <div className="info-item">
-                                <span className="info-label">서버 주소</span>
-                                <span className="info-value">{approvedStreaming?.serverAddress}</span>
-                            </div>
-                            <div className="info-item">
-                                <span className="info-label">스트리밍 토큰</span>
-                                <span className="info-value">{approvedStreaming?.token}</span>
+                            <div className="product-info-left">
+                                <div className="streaming-product-image">
+                                    <img src={approvedStreaming?.filePath || '/default-product.png'} 
+                                         alt={approvedStreaming?.productName} />
+                                </div>
+                                <div className="streaming-product-details">
+                                    <h5>상품 정보</h5>
+                                    <p className="product-name">{approvedStreaming?.productName}</p>
+                                </div>
                             </div>
                             <button 
                                 className="streaming-start-btn"
@@ -154,6 +158,26 @@ const StreamingStatus = ({ userId, token, onStartStreaming }) => {
                             >
                                 방송 시작하기
                             </button>
+                        </div>
+                        <div className="streaming-server-info">
+                            <div className="info-item-streaming">
+                                <span className="info-label-streaming">서버 주소</span>
+                                <span 
+                                    className={`info-value-streaming ${copiedField === 'server' ? 'copied' : ''}`}
+                                    onClick={() => handleCopy(approvedStreaming?.serverAddress, 'server')}
+                                >
+                                    {approvedStreaming?.serverAddress}
+                                </span>
+                            </div>
+                            <div className="info-item-streaming">
+                                <span className="info-label-streaming">스트리밍 토큰</span>
+                                <span 
+                                    className={`info-value-streaming ${copiedField === 'token' ? 'copied' : ''}`}
+                                    onClick={() => handleCopy(approvedStreaming?.token, 'token')}
+                                >
+                                    {approvedStreaming?.token}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
