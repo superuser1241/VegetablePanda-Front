@@ -305,3 +305,41 @@ table {
 .point-container {
     width: 70%;
 }
+
+
+.payment-status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: #e6f3ff;
+    color: #0066cc;
+    font-size: 0.9em;
+  }
+  
+  .payment-status.completed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  .payment-complete {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  
+  .payment-button {
+    padding: 6px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+  }
+  
+  .payment-button:hover {
+    background-color: #45a049;
+  }

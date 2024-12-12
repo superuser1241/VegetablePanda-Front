@@ -7,7 +7,7 @@ import Point from "./Point";
 import UserLikedShops from "./UserLikedShops.jsx";
 import UserAuctionHistory from "./UserAuctionHistory.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 const CompanyMyPage = () => {
   const [chargeAmount, setChargeAmount] = useState("");
@@ -55,24 +55,14 @@ const CompanyMyPage = () => {
   };
 
   useEffect(() => {
-    try {
-      const userSeq = localStorage.getItem('userSeq');
-      if (userSeq) {
-        setUserId(userSeq);
-      } else {
-        if (token) {
-          const payload = JSON.parse(atob(token.split(".")[1]));
-          const seq = payload.user_seq;
-          if (seq) {
-            localStorage.setItem('userSeq', seq);
-            setUserId(seq);
-          } else {
-            console.error("사용자 시퀀스를 찾을 수 없습니다.");
-          }
-        }
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        setUserId(payload.user_seq);
+        fetchCompanyInfo(payload.user_seq);
+      } catch (error) {
+        console.error("토큰 파싱 실패:", error);
       }
-    } catch (error) {
-      console.error("사용자 정보 가져오기 실패:", error);
     }
   }, [token]);
 
@@ -123,7 +113,7 @@ const CompanyMyPage = () => {
       fetchreview(userId);
       fetchOrderHistory(userId);
       fetchAuctionHistory(userId);
-      fetchUserLikeHistory(userId);
+      fetchUserLikeHistory(userId)
     }
   }, [userId]);
 
@@ -140,13 +130,14 @@ const CompanyMyPage = () => {
     }
   };
 
+
   // 주문 내역을 가져오는 함수
-  const fetchOrderHistory = async (userId) => {
+  const fetchOrderHistory = async () => {
     try {
       setLoading(true);
       const userSeq = localStorage.getItem("userSeq");
       const response = await axios.get(
-        `${serverIp}/myPage/buyList/${userSeq}`,
+        `${serverIp}/myPage/companyBuyList/${userSeq}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -168,7 +159,7 @@ const CompanyMyPage = () => {
       const response = await axios.get(`${serverIp}/myPage/auction/${userId}`); // API 엔드포인트
       setAuctions(response.data); // 데이터 저장
     } catch (err) {
-      setError("데이터를 불러오는 중 오류가 발생했습니다.");
+      setError("데이터를 불러오는 중 오류가 발생했습니���.");
       console.error(err);
     } finally {
       setLoading1(false); // 로딩 종료
@@ -177,12 +168,9 @@ const CompanyMyPage = () => {
 
   const fetchCompanyInfo = async (userId) => {
     try {
-      const response = await axios.get(
-        `${serverIp}/myPage/company/list/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${serverIp}/myPage/company/list/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setCompanyInfo(response.data);
     } catch (error) {
       console.error("회사 정보 조회 실패:", error);
@@ -218,19 +206,15 @@ const CompanyMyPage = () => {
         return;
       }
 
-      const response = await axios.post(
-        `${serverIp}/charge`,
-        {
-          managementUserSeq: parseInt(userId),
-          price: parseInt(chargeAmount),
+      const response = await axios.post(`${serverIp}/charge`, {
+        managementUserSeq: parseInt(userId),
+        price: parseInt(chargeAmount),
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      });
 
       if (response.data) {
         setChargeAmount("");
@@ -245,14 +229,14 @@ const CompanyMyPage = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+        setImage(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImagePreview(reader.result);
+        };
+        reader.readAsDataURL(file);
     }
-  };
+};
 
   const handleImageReset = () => {
     setCompanyInfo((prevState) => ({
@@ -307,7 +291,7 @@ const CompanyMyPage = () => {
             7
           )}-${phoneWithoutHyphen.slice(7)}`;
     const code = `${codePart1}-${codePart2}-${codePart3}`;
-
+    
     const formData = new FormData();
     formData.append(
       "companyData",
@@ -331,26 +315,26 @@ const CompanyMyPage = () => {
     );
 
     if (image) {
-      formData.append("image", image);
+      formData.append("image", image); 
     } else if (image === null || imagePreview === null) {
       formData.append("image", companyInfo.path);
     }
 
     try {
       const response = await axios.put(
-        `${serverIp}/myPage/company/update/${userId}`,
-        formData,
+        `${serverIp}/myPage/company/update/${userId}`, 
+        formData, 
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
       if (response.data) {
         alert("정보 수정이 완료되었습니다.");
-        await fetchCompanyInfo(userId);
-        setActiveTab("info");
+          await fetchCompanyInfo(userId);
+          setActiveTab("info");
       }
     } catch (error) {
       console.error("회원정보 수정 실패:", error);
@@ -365,16 +349,12 @@ const CompanyMyPage = () => {
 
     if (confirmDelete) {
       try {
-        const response = await axios.put(
-          `${serverIp}/myPage/company/delete/${userId}`,
-          { userId },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await axios.put(`${serverIp}/myPage/company/delete/${userId}`, { userId }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (response.data === 1) {
           alert("회원 탈퇴가 완료되었습니다.");
           localStorage.removeItem("token");
@@ -454,60 +434,53 @@ const CompanyMyPage = () => {
         </div>
 
         <div className="main-content">
-          {activeTab === "info" && companyInfo && (
+        {activeTab === "info" && companyInfo && (
             <div className="userMyPage-user-info-section">
               <h3>회원 정보</h3>
               <div className="userMyPage-user-info-details">
                 <div className="userMyPage-image-container">
                   <strong>프로필 사진</strong>
                   <div className="image-and-point-container">
-                    <div className="userMyPage-image-preview-container">
-                      <img src={companyInfo?.path || logo} alt="프로필 사진" />
-                    </div>
+                  <div className="userMyPage-image-preview-container">
+                    <img src={companyInfo?.path || logo} alt="프로필 사진" />
+                  </div>
                   </div>
                 </div>
                 <div className="userMyPage-info-list">
-                  <p>
-                    <strong>아이디 :</strong> {companyInfo.companyId}
+                <p>
+                  <strong>아이디 :</strong> {companyInfo.companyId}
+                </p>
+                <p>
+                  <strong>기업명 :</strong> {companyInfo.comName}
+                </p>
+                <p>
+                  <strong>대표자 :</strong> {companyInfo.ownerName}
+                </p>
+                <p>
+                  <strong>가입자 :</strong> {companyInfo.regName}
+                </p>
+                <p>
+                  <strong>이메일 :</strong> {companyInfo.email}
+                </p>
+                <p>
+                  <strong>사업자 등록번호 :</strong> {companyInfo.code}
+                </p>
+                <p>
+                  <strong>기업주소 :</strong> {companyInfo.address}
+                </p>
+                <p>
+                  <strong>전화번호 :</strong> {companyInfo.phone}
+                </p>
+                <p>
+                  <strong>가입일자 :</strong>{" "}
+                  {new Date(companyInfo.regDate).toLocaleDateString()}
+                </p>
+                <p className="userMyPage-point-container">
+                    <strong>보유 포인트: </strong> {point.toLocaleString() + "P"}<button className="mypage-charge-button" onClick={openPopup}>포인트 충전</button>
                   </p>
-                  <p>
-                    <strong>기업명 :</strong> {companyInfo.comName}
-                  </p>
-                  <p>
-                    <strong>대표자 :</strong> {companyInfo.ownerName}
-                  </p>
-                  <p>
-                    <strong>가입자 :</strong> {companyInfo.regName}
-                  </p>
-                  <p>
-                    <strong>이메일 :</strong> {companyInfo.email}
-                  </p>
-                  <p>
-                    <strong>사업자 등록번호 :</strong> {companyInfo.code}
-                  </p>
-                  <p>
-                    <strong>기업주소 :</strong> {companyInfo.address}
-                  </p>
-                  <p>
-                    <strong>전화번호 :</strong> {companyInfo.phone}
-                  </p>
-                  <p>
-                    <strong>가입일자 :</strong>{" "}
-                    {new Date(companyInfo.regDate).toLocaleDateString()}
-                  </p>
-                  <p className="userMyPage-point-container">
-                    <strong>보유 포인트: </strong>{" "}
-                    {point.toLocaleString() + "P"}
-                    <button
-                      className="mypage-charge-button"
-                      onClick={openPopup}
-                    >
-                      포인트 충전
-                    </button>
-                  </p>
-                </div>
               </div>
             </div>
+          </div>
           )}
 
           {isPopupOpen && (
@@ -515,16 +488,12 @@ const CompanyMyPage = () => {
               <div className="popup-container">
                 <div className="popup-header">
                   <button className="close-popup" onClick={closePopup}>
-                    <FontAwesomeIcon icon={faXmark} />
+                  <FontAwesomeIcon icon={faXmark}/>
                   </button>
                 </div>
                 <div className="popup-content">
                   <div className="popup-body">
-                    <Point
-                      userId={userId}
-                      point={point}
-                      fetchPoint={fetchPoint}
-                    />
+                    <Point userId={userId} point={point} fetchPoint={fetchPoint} />
                   </div>
                 </div>
               </div>
@@ -545,20 +514,20 @@ const CompanyMyPage = () => {
                     className="image-upload-input"
                   />
                   <div className="image-preview-container">
-                    {imagePreview ? (
-                      <img
-                        src={imagePreview}
-                        alt="imagePreview"
-                        className="image-preview"
-                      />
-                    ) : (
-                      <img
-                        src={companyInfo?.path || logo}
-                        alt="프로필 이미지"
-                        className="image-preview"
-                        onError={(e) => (e.target.src = logo)}
-                      />
-                    )}
+                  {imagePreview ? (
+    <img
+        src={imagePreview}
+        alt="imagePreview"
+        className="image-preview"
+    />
+) : (
+    <img
+        src={companyInfo?.path || logo}
+        alt="프로필 이미지"
+        className="image-preview"
+        onError={(e) => e.target.src = logo}
+    />
+)}
                   </div>
                   <button
                     type="button"
@@ -588,7 +557,7 @@ const CompanyMyPage = () => {
                   onChange={handleChange}
                   required
                 />
-                <label htmlFor="owner">대표자명</label>
+                <label htmlFor="owner">���표자명</label>
                 <input
                   type="text"
                   name="ownerName"
@@ -745,53 +714,75 @@ const CompanyMyPage = () => {
             </div>
           )}
 
-          {activeTab === "saleLike" && <UserLikedShops />}
+{activeTab === "saleLike" && <UserLikedShops />}
 
-          {activeTab === "buyList" && (
+{activeTab === "buyList" && (
             <div className="userMyPage-order-history-display">
               <h3>주문 내역</h3>
-              {review.length > 0 ? (
-                <table className="userMyPage-order-history-table">
-                  <thead>
-                    <tr>
-                      <th>번호</th>
-                      <th>주문번호</th>
-                      <th>상품명</th>
-                      <th>수량</th>
-                      <th>가격</th>
-                      <th>주문일자</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {buyInfo.map((order, index) => (
-                      <tr key={`${index}`}>
+              {buyInfo && buyInfo.length > 0 ? (
+              <table className="userMyPage-order-history-table">
+                <thead>
+                  <tr>
+                    <th>번호</th>
+                    <th>상품명</th>
+                    <th>수량</th>
+                    <th>총 금액</th>  
+                    <th>선금 결제금액(10%)</th>
+                    <th>주문일자</th>
+                    <th>상태</th>
+                    <th>결제</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {buyInfo.map((order, index) => {
+                    const totalPrice = order.price;
+                    const depositAmount = Math.floor(totalPrice * 0.1); // 10% 계산
+
+                    return (
+                      <tr key={`${order.userBuyDetailSeq}`}>
                         <td>{index + 1}</td>
-                        <td>{order.userBuyDetailSeq}</td>
                         <td>{order.content}</td>
                         <td>{order.count}개</td>
-                        <td>{order.price}원</td>
+                        <td>{totalPrice.toLocaleString()}원</td>
+                        <td>{depositAmount.toLocaleString()}원</td>
                         <td>{new Date(order.buyDate).toLocaleDateString()}</td>
+                        <td>
+                          <span className={`payment-status ${order.state === 4 ? 'completed' : ''}`}>
+                            {order.state === 3 ? "선금결제완료" : 
+                             order.state === 4 ? "잔금결제완료" : "결제완료"}
+                          </span>
+                        </td>
+                        <td>
+                          {order.state === 3 && (
+                            <button 
+                              className="payment-button"
+                              onClick={() => alert("준비 중인 기능입니다.")}
+                            >
+                              결제하기
+                            </button>
+                          )}
+                          {order.state === 4 && (
+                            <span className="payment-complete">결제완료</span>
+                          )}
+                        </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
+                    );
+                  })}
+                </tbody>
+              </table>
+               ) : (
                 <div className="no-data-notification">
-                  주문한 내역이 없습니다.
+                  주문 내역이 없습니다.
                 </div>
               )}
             </div>
           )}
 
-          {activeTab === "auction" && (
-            <UserAuctionHistory
-              auctions={auctions}
-              loading1={loading1}
-              error={error}
-            />
+{activeTab === "auction" && (
+            <UserAuctionHistory  auctions = {auctions} loading1 = {loading1} error = {error}/>
           )}
 
-          {activeTab === "userLike" && (
+{activeTab === "userLike" && (
             <div className="main-content">
               <h3 className="userMyPage-title">구독한 판매자 목록</h3>
               {loading1 ? (
