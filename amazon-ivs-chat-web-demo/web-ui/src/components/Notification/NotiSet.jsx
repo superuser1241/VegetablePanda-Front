@@ -15,7 +15,7 @@ const NotiSet = ({ onSetStreamingRoom }) => {
     useEffect(() => {
         const token = localStorage.getItem("userSeq");
         const client = new Client({
-            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
+            brokerURL: `wss://${serverIp.replace('https://', '')}/ws`,
             headers: {
                 "Content-Type": "application/json",
                 userId: token,
