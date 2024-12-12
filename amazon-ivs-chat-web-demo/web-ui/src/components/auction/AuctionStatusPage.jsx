@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuctionData } from './useAuctionData';
 import './AuctionStatusPage.css';
 import axios from 'axios';
+import { Client } from "@stomp/stompjs";
 
 const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAuction}) => {
     const { highestBid, auction } = useAuctionData(
@@ -18,6 +19,28 @@ const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAucti
         }
     }, [auctionData?.auctionSeq]);
 
+    useEffect(() => {
+        const serverIp = process.env.REACT_APP_SERVER_IP;
+        const client = new Client({
+            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
+            onConnect: () => {
+                client.subscribe("/top/notifications", async (message) => {
+                    alert("12");
+                    if (auctionData.auctionSeq) {
+                        findBidByAuctionSeq(auctionData.auctionSeq);
+                    }
+                });
+            },
+            onDisconnect: () => console.log("WebSocket 연결 종료"),
+        });
+    
+        client.activate();
+    
+        return () => {
+            client.deactivate();
+        };
+    }, [auctionData?.auctionSeq]);
+
     const findBidByAuctionSeq = async (auctionSeq) => {
         const token = localStorage.getItem('token');
         const userRole = localStorage.getItem('userRole'); // userRole 가져오기
@@ -28,10 +51,8 @@ const AuctionStatusPage = ({ streamingRoom, auctionData ,onOpenModal, onEndAucti
         }
 
         try {
-            const serverIp = process.env.REACT_APP_SERVER_IP;
-            const endpoint = userRole === 'ROLE_USER' ? 'bidUser' : 'bidCom';
-            
-            const result = await axios.get(`${serverIp}/${endpoint}/${auctionSeq}`, {
+            const serverIp = process.env.REACT_APP_SERVER_IP;            
+            const result = await axios.get(`${serverIp}/bidUser/${auctionSeq}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
