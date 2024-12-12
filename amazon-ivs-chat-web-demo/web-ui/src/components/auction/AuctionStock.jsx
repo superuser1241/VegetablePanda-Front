@@ -30,7 +30,7 @@ const AuctionStock = ({ streamingRoom }) => {
         findStockById();
 
         const client = new Client({
-            brokerURL: `ws://${serverIp.replace('http://', '')}/ws`,
+            brokerURL: `wss://${serverIp.replace('https://', '')}/ws`,
             onConnect: () => {
                 client.subscribe(`/end/notifications`, async (message) => {
                     findStockById();
