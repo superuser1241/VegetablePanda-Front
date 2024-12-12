@@ -79,7 +79,7 @@ const AuctionChatPage = ({ streamingRoom, handleExitChat }) => {
         setAuctionData(newAuction);
         setShowRegister(false);
     };
-
+    //경매 종료 버튼 직접 눌러서 종료시
     const handleAuctionEnd = async () => {
         if (isFarmer) {
             try {
