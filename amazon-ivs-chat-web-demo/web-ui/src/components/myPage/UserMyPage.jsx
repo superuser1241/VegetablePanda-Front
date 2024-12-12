@@ -349,6 +349,7 @@ const UserMyPage = () => {
         alert("정보 수정이 완료되었습니다.");
         await fetchUserInfo(userId);
         setActiveTab("info");
+        localStorage.setItem('userName', editedUser.name);
       }
     } catch (error) {
       console.error("회원정보 수정 실패:", error);

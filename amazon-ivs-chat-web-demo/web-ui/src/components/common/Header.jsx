@@ -114,7 +114,7 @@ const Header = ({
               </div>
             ) : null}
             <div className="user-actions">
-              <span className="welcome-message">{userName}님 환영합니다</span>
+              <span className="welcome-message">{localStorage.getItem('userName')}님 환영합니다</span>
               <button onClick={handleLogoutClick} className="logout-button">
                 로그아웃
               </button>
