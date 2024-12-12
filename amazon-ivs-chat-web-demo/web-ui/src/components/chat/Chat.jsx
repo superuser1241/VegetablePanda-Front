@@ -53,16 +53,16 @@ const Chat = ({streamingRoom, handleExitChat }) => {
 
   useEffect(() => {
     if (messagesEndRef.current && messages.length > 0) {
-      // 현재 스크롤 위치 확인
-      const chatContainer = document.querySelector('.messages');
+      // messages div를 직접 참조하도록 수정
+      const chatContainer = messagesEndRef.current.parentElement;
       const isScrolledToBottom = chatContainer.scrollHeight - chatContainer.clientHeight <= chatContainer.scrollTop + 100;
       
-      // 맨 아래에 있을 때만 자동 스크롤
       if (isScrolledToBottom) {
-        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        // scrollIntoView 대신 scrollTop 사용
+        chatContainer.scrollTop = chatContainer.scrollHeight;
       }
     }
-  }, [messages]); // 메시지가 추가될 때만 실행
+  }, [messages]);
 
   useEffect(() => {
     const timer = setInterval(() => {
